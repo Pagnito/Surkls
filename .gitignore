@@ -1,0 +1,4 @@
+node_modules
+appinfo.json
+.env
+config/dev.js
