@@ -102,7 +102,7 @@ handleIceCandidate =(event)=> {
 		})
 		this.rtcPeer.onicecandidate = this.handleIceCandidate;
 		this.rtcPeer.ontrack = this.handleRemoteStreamAdded;
-    /* this.rtcPeer.onremovestream = handleRemoteStreamRemoved; */
+    /*@TODO this.rtcPeer.onremovestream = handleRemoteStreamRemoved; */
 		setUserMedia();
 		if (this.props.session.creatingSession===true) {
 			
@@ -135,7 +135,7 @@ handleIceCandidate =(event)=> {
 			});
 		}
 	}
-	componentDidUpdate(prevProps) {
+/* 	componentDidUpdate(prevProps) {
 		if (prevProps.session !== this.props.session) {
 			if (this.props.session.creatingSession) {
 				this.socket.emit('createOrJoin', this.props.session.session);
@@ -168,7 +168,7 @@ handleIceCandidate =(event)=> {
 				});
 			}
 		}
-	}
+	} */
 	sendMsg = (e) => {
 		if (e.key == 'Enter') {
 			e.preventDefault();

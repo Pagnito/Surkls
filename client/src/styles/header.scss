@@ -276,3 +276,22 @@
 }
 	
 /*three dot menu */
+/////////////////////////////////////////////////////////////////////////////////
+/*msgs menu*/
+#sendMsgBtn {
+	color: #FCCB43;
+  outline:none;
+  cursor: pointer;
+  border:none;
+  display: flex;
+	justify-content: center;
+	width:90%;
+	border-radius: 5px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	background-color: #282828;
+}
+#sendMsgBtn:hover{
+	background-color: #FECC43;
+	color:#282828;
+}

@@ -16,10 +16,12 @@ class Header extends Component {
 			sessionMenuVisible: false,
 			signInMenuVisible: false,
 			pulloutMenuVisible: false,
+			messagesMenu: false,
 			roomCategory: '',
 			roomName: '',
 			email: '',
-			password: ''
+			password: '',
+			message: ''
 		};
 	}
 	onInputChange = (e) => {
@@ -34,7 +36,8 @@ class Header extends Component {
 			notifMenuVisible: false,
 			sessionMenuVisible: false,
 			pulloutMenuVisible: false,
-			signInMenuVisible: false
+			signInMenuVisible: false,
+			messagesMenuVisible:false
 		});
 	};
 	renderNotifMenu = () => {
@@ -43,19 +46,30 @@ class Header extends Component {
 			accMenuVisible: false,
 			sessionMenuVisible: false,
 			pulloutMenuVisible: false,
-			signInMenuVisible: false
+			signInMenuVisible: false,
+			messagesMenuVisible:false
 		});
 	};
 	renderCreateSessionMenu = () => {
-		console.log(document.getElementById('checkboxInput').value)
 		this.setState({
 			sessionMenuVisible: this.state.sessionMenuVisible ? false : true,
 			accMenuVisible: false,
 			notifMenuVisible: false,
 			pulloutMenuVisible: false,
-			signInMenuVisible: false
+			signInMenuVisible: false,
+			messagesMenuVisible:false
 		});
 	};
+	renderMessagesMenu = () =>{
+		this.setState({
+			messagesMenuVisible: this.state.messagesMenuVisible ? false : true,
+			accMenuVisible: false,
+			notifMenuVisible: false,
+			pulloutMenuVisible: false,
+			signInMenuVisible: false,
+			sessionMenuVisible: false,
+		});
+	}
 	renderSignInMenu = () => {
 		this.setState({
 			signInMenuVisible: this.state.signInMenuVisible ? false : true,
@@ -68,6 +82,7 @@ class Header extends Component {
 			signInMenuVisible: false
 		});
 	};
+	
 	hideAllMenus = () => {
 		this.setState({
 			sessionMenuVisible: false,
@@ -78,9 +93,9 @@ class Header extends Component {
 			threeDotMenuVisible: false
 		});
 	};
-	hideSignInMenu = () =>{
-		this.setState({signInMenuVisible: false})
-	}
+	hideSignInMenu = () => {
+		this.setState({ signInMenuVisible: false });
+	};
 	/* 	renderPulloutMenu = () =>{
 		let bg = document.getElementById('pulloutBg')
 		let menu = document.getElementById('pullout');
@@ -120,7 +135,6 @@ class Header extends Component {
 		)
 	} */
 	notifMenu = () => {
-		
 		let visibility = this.state.notifMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu
@@ -135,14 +149,28 @@ class Header extends Component {
 		);
 	};
 
+	messagesMenu = () => {
+		let visibility = this.state.messagesMenuVisible ? 'flex' : 'none';
+		return (
+			<DropMenu menuTitle="Messages" visibility={visibility} menuTypeArrow="messagesArrow">
+				<textarea
+					onChange={this.onInputChange}
+					placeholder="Write your message"
+					className="menuTextInput"
+					name="message"
+					value={this.state.message}
+				/>
+
+				<button onClick={this.createSession} className="menuItem" id="sendMsgBtn">
+					Create
+				</button>
+			</DropMenu>
+		);
+	};
 	createSessionMenu = () => {
 		let visibility = this.state.sessionMenuVisible ? 'flex' : 'none';
 		return (
-			<DropMenu
-				menuTitle="Create Session"
-				visibility={visibility}
-				menuTypeArrow="sessionArrow"
-			>
+			<DropMenu menuTitle="Create Session" visibility={visibility} menuTypeArrow="sessionArrow">
 				<input
 					onChange={this.onInputChange}
 					placeholder="Name your session"
@@ -159,17 +187,24 @@ class Header extends Component {
 				/>
 				<div className="menuConfig">
 					Max Members
-					<input className="sessionConfig" type="number" name="members" min="1" max="6"></input>
+					<input className="sessionConfig" type="number" name="members" min="1" max="6" />
 				</div>
 				<div className="menuConfig">
 					Max Viewers
-				<input className="sessionConfig" type="number" name="members" min="1" max="10"></input>
+					<input className="sessionConfig" type="number" name="members" min="1" max="10" />
 				</div>
 				<div className="menuConfig">
 					Disable Video
 					<div id="checkbox">
-						<input value={this.state.disableVid} onChange={this.onCheckbox} id="checkboxInput" style={{marginRight:'10px'}} type="checkbox" name="disableVid"></input>
-						<label htmlFor="checkboxInput"></label>
+						<input
+							value={this.state.disableVid}
+							onChange={this.onCheckbox}
+							id="checkboxInput"
+							style={{ marginRight: '10px' }}
+							type="checkbox"
+							name="disableVid"
+						/>
+						<label htmlFor="checkboxInput" />
 					</div>
 				</div>
 				<button onClick={this.createSession} className="menuItem" id="createSessBtn">
@@ -184,27 +219,23 @@ class Header extends Component {
 			email: this.state.email,
 			password: this.state.password
 		};
-		
+
 		this.props.signUpOrLogin(JSON.stringify(user), () => {
-			this.setState({signInMenuVisible:false})
+			this.setState({ signInMenuVisible: false });
 			this.props.history.push('/dashboard');
 		});
 	};
 	signInMenu = () => {
 		let visibility = this.state.signInMenuVisible ? 'flex' : 'none';
 		return (
-			<DropMenu
-				menuTitle="Log in with"
-				menuTypeArrow="signInArrow"
-				visibility={visibility}
-			>
+			<DropMenu menuTitle="Log in with" menuTypeArrow="signInArrow" visibility={visibility}>
 				<a onClick={this.hideSignInMenu} href="/auth/google" className="menuItem signInGoogleWrap">
 					<div className="signInMenuIcon" id="signInGoogleIcon" /> Google
 				</a>
-				<a onClick={this.hideSignInMenu}  href="/auth/twitter" className="menuItem signInTwitterWrap">
+				<a onClick={this.hideSignInMenu} href="/auth/twitter" className="menuItem signInTwitterWrap">
 					<div className="signInMenuIcon" id="signInTwitterIcon" /> Twitter
 				</a>
-				<a onClick={this.hideSignInMenu}  href="/auth/twitch" className="menuItem signInTwitchWrap">
+				<a onClick={this.hideSignInMenu} href="/auth/twitch" className="menuItem signInTwitchWrap">
 					<div className="signInMenuIcon" id="signInTwitchIcon" /> Twitch
 				</a>
 				<div className="menuItemSplit">
@@ -306,24 +337,25 @@ class Header extends Component {
 			</DropMenu>
 		);
 	};
-	
+
 	createSession = () => {
-		let sessionKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-		console.log(sessionKey)
-		let name = this.state.roomName;
-		let sessionObj = {
-			room: name,
-			sessionKey: sessionKey
-		}
 		if (this.state.roomName.length >= 3) {
-			this.setState({
-				sessionMenuVisible: false,
-				roomName: ''
-			}, ()=>{
-				this.props.startSession(sessionObj, () => {		
-					this.props.history.push('/session');
-				});
-			});		
+			let sessionKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+			let sessionObj = {
+				room: this.state.roomName,
+				sessionKey: sessionKey
+			};
+			this.setState(
+				{
+					sessionMenuVisible: false,
+					roomName: ''
+				},
+				() => {
+					this.props.startSession(sessionObj, () => {
+						this.props.history.push('/session');
+					});
+				}
+			);
 		} else {
 			//@TODO show error
 		}
@@ -370,9 +402,10 @@ class Header extends Component {
 						{this.accountMenu()}
 						{this.notifMenu()}
 						{this.createSessionMenu()}
+						{this.messagesMenu()}
 						<div onClick={this.renderCreateSessionMenu} id="startSessionIcon" />
-						<Link to="/rooms" id="toRoomsIcon"></Link>
-						<div id="messageIcon" />
+						<Link to="/rooms" id="toRoomsIcon" />
+						<div onClick={this.renderMessagesMenu} id="messageIcon" />
 						<div onClick={this.renderNotifMenu} id="notifIcon" />
 						<div
 							onClick={this.renderAccMenu}

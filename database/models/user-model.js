@@ -10,7 +10,10 @@ const UserSchema = new Schema({
   userName: String,
   avatarUrl: String,
   theme: String,
-  surkls: [String]
+  surkls: [String],
+  subscriptions: [String],
+  followers: [Object],
+  following:[String]
 });
 const User = mongoose.model('users', UserSchema);
 module.exports = User;
