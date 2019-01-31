@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux';
-import TestReducer from './test-reducer';
+import SessionReducer from 'reducers/session-reducer';
+import SessionsReducer from 'reducers/sessions-reducer';
+import AuthReducer from 'reducers/auth-reducer';
 
 export default combineReducers({
-  test: TestReducer
+  auth: AuthReducer,
+  session: SessionReducer,
+  sessions: SessionsReducer
 });

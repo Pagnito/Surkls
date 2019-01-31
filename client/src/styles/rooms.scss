@@ -1,0 +1,13 @@
+#rooms {
+  height: calc( 100vh - 55px);
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  .room {
+    width:200px;
+    height:200px;
+    border-radius:8px;
+    border:1px solid #dde4e4;
+    cursor: pointer;
+  }
+}

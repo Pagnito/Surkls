@@ -1,0 +1,278 @@
+.header {
+	height: 55px;
+	width: 100%;
+	background-color: #282828;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	#customPulloutHeader {
+		display: flex;
+		width:100%;
+		height:50px;
+		align-items: center;
+		#menuBarsIcon2 {
+			cursor: pointer;
+			margin-left: 15px;
+			width:30px;
+			height:30px;
+			background-image: url('/assets/UI-icons/menu_icon.1.svg');
+			background-position: center;
+			background-size: 25px;
+			background-repeat: no-repeat;  
+		}
+		#surklsTitle {
+			max-width: 70px;
+			margin-left: 50px;
+		}
+	}
+	#leftOfHeader {
+		display: flex;
+		align-items: center;
+		#menuBarsIcon {
+			cursor: pointer;
+			margin-left: 15px;
+			width:30px;
+			height:30px;
+			background-image: url('/assets/UI-icons/menu_icon.svg');
+			background-position: center;
+			background-size: 25px;
+			background-repeat: no-repeat;   
+		}
+		.logo {
+			width: 40px;
+			height: 40px;
+			margin-left: 20px;
+		}
+	}
+	#rightOfHeader {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		#threeDotsMenu {
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+			background-image: url('/assets/UI-icons/ellipsis-v-solid.svg');
+			background-position: center;
+			background-size: 7px;
+			background-repeat: no-repeat;
+			margin-right: 20px;
+		}
+		#signInText {
+			font-family: 'Comfortaa';
+			font-size: 17px;
+			font-weight: 700;
+			color:#FCCB43;
+			margin-right: 20px;
+			cursor: pointer;
+		}
+		
+		#startSessionIcon {
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+			background-image: url('/assets/UI-icons/start_surkl.svg');
+			background-position: center;
+			background-size: 25px;
+			background-repeat: no-repeat;
+			margin-right: 20px;
+		}
+		#toRoomsIcon {
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+			background-image: url('/assets/UI-icons/th-solid.1.svg');
+			background-position: center;
+			background-size: 20px;
+			background-repeat: no-repeat;
+			margin-right: 20px;
+		}
+		#messageIcon {
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+			background-image: url('/assets/UI-icons/comment-regular.svg');
+			background-position: center;
+			background-size: 23px;
+			background-repeat: no-repeat;
+			margin-right: 20px;
+		}
+		#notifIcon {
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+			background-image: url('/assets/UI-icons/bell-regular.svg');
+			background-position: center;
+			background-size: 20px;
+			background-repeat: no-repeat;
+			margin-right: 20px;
+		}
+		#avatar {
+			cursor: pointer;
+			width: 40px;
+			height: 40px;
+			margin-right: 15px;
+			border-radius: 40px;
+			border: 1px solid #dde4e4;
+			position: relative;
+		}
+
+		.customMenuHeader {
+			display: flex;
+			background-color: #cbd2d2;
+			color: black;
+			font-size: 17px;
+			padding: 7px;
+			padding-top: 0px;
+			width:100%;
+			box-sizing: border-box;
+			border-radius: 3px;
+			#userNameNEmail {
+				font-family: 'Didact Gothic';
+				color: black;
+				margin-right: 10px;
+				display: flex;
+				flex-direction: column;
+			}
+		}
+	}
+}
+///////////////////////////////////////////////////////////////////////////////
+/*acc menu*/
+.rightAccIcon {
+	width: 25px;
+	height: 25px;
+	background-position: center;
+	background-size: 21px;
+	background-repeat: no-repeat;
+	margin-right: 21px;
+}
+
+#surklsIcon {
+	background-image: url('/assets/UI-icons/surkls_icon.svg');	
+}
+#profileIcon {
+	background-image: url('/assets/UI-icons/user-circle-solid.svg');	
+}
+#settingsIcon {
+	background-image: url('/assets/UI-icons/cogs-solid.svg');
+}
+#helpIcon {
+	background-image: url('/assets/UI-icons/question-circle-regular.svg');	
+}
+#logoutIcon {
+	background-image: url('/assets/UI-icons/sign-out-alt-solid.svg');
+}
+/*acc menu*/
+///////////////////////////////////////////////////////////////////////////////
+/*session menu*/
+#createSessBtn:hover {
+	background-color: #FCCB43;
+	color: #282828;
+}
+#createSessBtn {
+	color: #FCCB43;
+  outline:none;
+  cursor: pointer;
+  border:none;
+  display: flex;
+	justify-content: center;
+	width:90%;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	background-color: #282828;
+}
+/*session menu*/
+///////////////////////////////////////////////////////////////////////////////
+/*sign in menu */
+.signInMenuIcon {
+	width: 25px;
+	height: 25px;
+	background-position: center;
+	background-size: 21px;
+	background-repeat: no-repeat;
+	margin-right: 21px;
+}
+.signInGoogleWrap {
+	background-color: rgba(234,67,53,.9) !important;
+}
+.signInTwitterWrap {
+	background-color: rgba(29,161,242,.9) !important; 
+}
+.signInTwitchWrap {
+	background-color: rgba(100,65,164,.9) !important; 
+}
+.signInGoogleWrap:hover {
+	background-color: rgba(234,67,53,1) !important;
+}
+.signInTwitterWrap:hover {
+	background-color: rgba(29,161,242,1) !important; 
+}
+.signInTwitchWrap:hover {
+	background-color: rgba(100,65,164,1) !important; 
+}
+#signInGoogleIcon {
+	background-image: url('/assets/google_btn.png');
+}
+#signInTwitchIcon {
+	background-size: 28px !important; 
+	background-image: url('/assets/twitch_btn.png');	
+}
+#signInTwitterIcon {
+	background-image: url('/assets/twitter_btn.png');
+}
+#signInForm {
+	box-sizing: border-box;
+	width:100%;
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+}
+.loginBtn {
+	cursor: pointer;
+	background-color: #282828;
+	color:#FECC43;
+	margin-bottom: 10px;
+	height:30px;
+	font-size: 13px;
+	font-family: 'Comfortaa';
+	border:none;
+	margin-top: 10px;
+	width:90%;
+	border-radius:3px;
+}
+.loginBtn:hover{
+	background-color: #FECC43;
+	color:#282828;
+}
+.signInInput {
+	height:25px;
+	font-size: 13px;
+	font-family: 'Comfortaa';
+	border:none;
+	border-radius:3px;
+	padding:10px;
+	box-sizing: border-box;
+	outline: none;
+	margin-top: 10px;
+	width:90%;
+}
+/*sign in menu */
+///////////////////////////////////////////////////////////////////////////////
+/*three dot menu */
+.threeDotMenuIcon {
+	width: 25px;
+	height: 25px;
+	background-position: center;
+	background-size: 21px;
+	background-repeat: no-repeat;
+	margin-right: 21px;
+}
+#roomsIcon {
+	background-image: url('/assets/UI-icons/th-solid.svg');	
+}
+#aboutIcon {
+	background-image: url('/assets/UI-icons/book-open-solid.svg');	
+}
+	
+/*three dot menu */

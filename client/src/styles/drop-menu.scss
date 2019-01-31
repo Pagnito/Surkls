@@ -1,0 +1,146 @@
+.dropMenu {
+  position: absolute;
+  top:42px;
+  right:5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  z-index: 30;
+  #notifArrow {
+    margin-right:77px !important;
+  }
+  #accountArrow {
+    margin-right: 20px !important;
+  }
+  #sessionArrow {
+    margin-right: 175px !important;
+  }
+  #signInArrow {
+    margin-right: 85px !important;
+  }
+  #threeDotArrow {
+    margin-right: 20px !important;
+  }
+  .lilArrow {
+    -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+    clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+    background-color:   #CBD2D2; 
+    width:20px;
+    height:20px;
+    align-self: flex-end;
+    margin-bottom: -2px;
+    border-radius: 2px;
+  }
+  .menuItems {
+    border-radius:3px;    
+    min-width:250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    background-color: #dde4e4; 
+    display: flex;
+    flex-direction: column;
+    font-family: 'Didact Gothic';
+    .menuHeader {
+      display:flex;
+      justify-content: center;
+      background-color: #cbd2d2;
+      color: black;
+      font-size: 17px;
+      border-radius: 3px;
+      padding:7px;
+      width:100%;
+      box-sizing: border-box;
+    }
+    .menuInput {
+      padding: 10px;
+      font-size: 17px;
+      display: flex;
+      outline:none;
+      border:none;
+      border-radius:5px;
+      margin-top: 10px;
+    }
+    .menuItem:hover {
+      background-color: #cbd2d2;
+    }
+    .menuConfig {
+      padding: 10px;
+      font-size: 17px;
+      display: flex;
+      width:100%;
+      box-sizing: border-box;
+      justify-content: space-between;
+      input[type=number]::-webkit-inner-spin-button {
+        appearance: none;
+      }
+      
+      .sessionConfig {
+        width:40px;
+        height: 20px;
+        border-radius: 3px;
+        border:none;
+        padding-left:10px;
+        font-family: "Comfortaa";
+        box-sizing: border-box;
+        outline:none;
+      }
+    }
+    input[type=checkbox]{
+      visibility: hidden;
+    }
+    #checkbox input[type=checkbox]:checked + label {
+      left: 27px;
+      background-color: black;
+  }
+    #checkbox {
+      width: 40px;
+      height: 10px;
+      background: #555;
+      position: relative;
+      border-radius: 3px;
+    }
+    #checkbox label {
+      display: block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      transition: all .5s ease;
+      cursor: pointer;
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      background: #FCCB43;
+    }
+    .menuItem {
+      padding: 10px;
+      font-size: 17px;
+      display: flex;
+      width:100%;
+      box-sizing: border-box;
+    }
+    .menuItemSplit {
+      display:flex;
+      height:30px;
+      justify-content: center;
+      margin-top: 10px;
+      .or {
+        margin-top: 5px;
+      }
+      .splitLine1{
+        height:50%;
+        width:30%;
+        margin-right:10px;
+        border-bottom: 2px solid rgba(0,0,0,.3);
+      }
+      .splitLine2 {
+        height:50%;
+        width:30%;
+        margin-left: 10px;
+        border-bottom: 2px solid rgba(0,0,0,.3);
+      }
+    }
+  }
+}

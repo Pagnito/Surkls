@@ -1,0 +1,23 @@
+{
+  "graffiti": {
+    "mint-cream": "#F4FBFB",
+    "light-gray": "#cbd2d2",
+    "sunglow": "#ffcd44",
+    "platinum": "#dde4e4",
+    "charleston-green": "#282828"
+  },
+  "skies": {
+    "white-smoke": "f4f4f4",
+    "gunmetal": "#2a2d34",
+    "cerulean": "#087ca7",
+    "dark-cerulean": "#004385",
+    "cyan-process": "#05b2dc"
+  },
+  "gold-candy": {
+    "verdigris": "#3aafb9",
+    "bubbles": "#eafdf8",
+    "dark-gunmetal": "#08212c",
+    "sunglow": "#fdca40",
+    "platinum": "#e6e8e6"
+  }
+}

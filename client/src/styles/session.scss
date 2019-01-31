@@ -1,0 +1,92 @@
+#session {
+  display:flex;
+  width:100%;
+  height:calc(100vh - 55px);
+  background-color: #282828;
+  #sessionLeftAside {
+    display: flex;
+    width:50%;
+    flex-direction: column;
+    #videoStreams {
+      min-height:50%;
+      width:100%;
+      background: black;
+      display:flex;
+      align-content: flex-start;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      .streamWrap {
+        width:33.333%;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        .stream {
+          height:95%;
+          border-radius:5px;
+          width:100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          margin:0px !important;
+        }
+      }    
+    }
+    #sessionLeftAsideSettings {
+      min-height: 25%;
+    }
+  }
+ 
+  #sessionRightAside {
+    width:50%;
+    display:flex;
+    flex-direction: column;
+    border-left: 1px solid #1C1C1C;
+    box-sizing: border-box;
+    #discussContent {
+      height:50%;
+      width:100%;
+      background-color: #323131;
+    }
+    #chatSection {
+      border-top: 1px solid #1C1C1C;
+      box-sizing: border-box;
+      width:100%;
+      height:50%;
+      display:flex;
+      flex-direction: column;
+      #videoOfMe {
+        background-color:#323131;
+      }
+      #chatBox {
+        height:100%;
+        background-color: #282828;
+        display: flex;
+        flex-direction: column;
+        #chatMsgsShow {
+          width:100%;
+          height:100%;
+          background-color: #323131;
+        }
+        #chatInputBox {
+          -webkit-appearance: none;
+          resize: none;
+          appearance: none;
+          background: transparent;
+          border:none;
+          border-top:1px solid #1C1C1C;
+          width:100%;
+          height:100px;
+          outline:none;
+          font-size: 15px;
+          color:white;
+          font-family: 'Comfortaa';
+          padding:10px;
+          box-sizing: border-box;
+        }
+        #chatBtns {
+          height:50px;
+        }
+    }
+    
+    }
+  }
+}

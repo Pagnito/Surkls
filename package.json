@@ -1,8 +1,8 @@
 {
-  "name": "myReactBplate",
+  "name": "breedged",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
@@ -22,7 +22,9 @@
     "body-parser": ">=1.18.3",
     "compression": ">=1.7.3",
     "cookie-session": "^2.0.0-beta.3",
+    "cors": "^2.8.5",
     "express": ">=4.16.4",
+    "helmet": "^3.15.0",
     "ip": "^1.1.5",
     "mongoose": "^5.4.5",
     "morgan": "^1.9.1",
@@ -30,7 +32,10 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^1.0.0",
     "passport-instagram": "^1.0.0",
+    "passport-local": "^1.0.0",
     "passport-twitch": "^1.0.3",
-    "passport-twitter": "^1.0.4"
+    "passport-twitter": "^1.0.4",
+    "redis": "^2.8.0",
+    "socket.io": "^2.2.0"
   }
 }

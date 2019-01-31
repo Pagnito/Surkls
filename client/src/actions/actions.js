@@ -1,10 +1,52 @@
-import {SET_CURRENT} from './types';
+import { SET_USER, GET_USER, START_SESSION, JOIN_SESSION, GET_SESSIONS } from 'actions/types';
 import axios from 'axios';
-export const tester = () => dispatch => {
-  axios.get('https://jsonplaceholder.typicode.com/todos/1').then((data)=>{
-    dispatch({
-      type: SET_CURRENT,
-      payload: data.data
+export const getUser = () => (dispatch) => {
+	axios.get('/account').then((data) => {
+		dispatch({
+			type: GET_USER,
+			payload: data.data
+		});
+	});
+};
+export const getSessions = () => (dispatch)=> {
+	fetch('/api/sessions')
+		.then(data=>data.json())
+		.then(sessions=>{
+			dispatch({
+				type: GET_SESSIONS,
+				payload: sessions
+			})
+		})
+}
+export const signUpOrLogin = (user,cb) => (dispatch) => {
+	let options = {
+		method: 'POST',
+		mode: 'cors',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json;charset=UTF-8'
+		},
+		body: user
+	};
+	fetch('/auth/login', options).then((res) => res.json()).then((user) => {
+		dispatch({
+			type: SET_USER,
+			payload: user
     });
-  })
+    cb()
+	});
+};
+export const startSession = (sessionInfo, cb) => (dispatch) =>{
+	dispatch({
+		type: START_SESSION,
+		payload: sessionInfo
+	})
+	cb()
+}
+export const joinSession = (sessionInfo, cb) => (dispatch) =>{
+	dispatch({
+		type: JOIN_SESSION,
+		payload: sessionInfo
+	})
+	cb()
 }

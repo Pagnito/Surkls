@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
 const compression = require('compression')
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -7,15 +9,18 @@ const PORT = process.env.PORT || 4000;
 const ip = require('ip');
 const api = require('./routes/api');
 const auth = require('./routes/auth');
+const sockets = require('./routes/sockets');
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
-
+const helmet = require('helmet');
+const cors = require('cors');
 ////load schema models/////
+//@TODO set up security policy header
 console.log('\x1b[35m', 'IP is ', ip.address(), '\x1b[0m')
 //////connect to database//////
-
+mongoose.set('useFindAndModify', false);
 mongoose
   .connect(
     keys.mongoURI,
@@ -25,12 +30,14 @@ mongoose
   .catch(err => console.log(err));
 
 /////////////////////////////////////middlewares/////////////////////////////////////
+
+app.use(helmet())
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({ 
   keys: [keys.cookieSecret],
-  maxAge: 2222222222, 
+  maxAge: 22222222222, 
   }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -41,13 +48,14 @@ app.use(passport.session());
 ////////////////////////////////////activate routes/////////////////////////////////
 api(app);
 auth(app);
-if (process.env.NODE_ENV == "production") {
+sockets(io, app);
+/* if (process.env.NODE_ENV == "production") { */
   app.use(express.static(path.resolve(__dirname, "client", "build")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
-}
-app.listen(PORT, ()=>{
+//}
+server.listen(PORT,'0.0.0.0', ()=>{
   console.log('\x1b[35m%s\x1b[0m', "BACKEND ON PORT 4000");
   console.log('\x1b[36m%s\x1b[0m', "FRONTEND ON PORT 3000")
 });

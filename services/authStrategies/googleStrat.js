@@ -7,7 +7,6 @@ passport.serializeUser(function(user, done) {
 	done(null, user._id); 
 });
 passport.deserializeUser(function(id, done) {
-	console.log('wtf', id)
 	User.findById(id).then(function(user) {
 			done(null, user);
 	});
@@ -29,13 +28,16 @@ passport.use(
 				if (user) {
 					return done(err, user);
 				} else {
+					let img = typeof(profile._json.image.url) ==='string' ? profile._json.image.url : '';
+					let email = typeof(profile.emails[0].value) ==='string' ? profile.emails[0].value : '';
+					let userName = typeof(profile.displayName) ==='string' ? profile.displayName : '';
+					let googleId = typeof(profile.id) ==='string' ? profile.id : '';					
+					let imgUrl = img.substring(0,img.length-2) + '100';
 					
-					let str = profile._json.image.url;
-					let imgUrl = str.substring(0,str.length-2) + '100';
 					const newUser = new User({
-						email: profile.emails[0].value,
-						userName: profile.displayName,
-						googleId: profile.id,
+						email: email,
+						userName: userName,
+						googleId: googleId,
 						avatarUrl: imgUrl
 					});
 					newUser.save().then((user) => {

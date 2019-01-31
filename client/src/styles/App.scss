@@ -1,4 +1,9 @@
-$mainColor: lightblue;
+@import url('https://fonts.googleapis.com/css?family=Comfortaa:700|Didact+Gothic');
+$mainColor: #DEB23B;
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
 body {
   background-color: $mainColor;
   margin:0px;
