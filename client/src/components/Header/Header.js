@@ -96,7 +96,7 @@ class Header extends Component {
 	hideSignInMenu = () => {
 		this.setState({ signInMenuVisible: false });
 	};
-	/* 	renderPulloutMenu = () =>{
+		/* renderPulloutMenu = () =>{
 		let bg = document.getElementById('pulloutBg')
 		let menu = document.getElementById('pullout');
 		if(this.state.pulloutMenuVisible ===false){	
@@ -118,9 +118,9 @@ class Header extends Component {
 				bg.style.display = 'none';
 			},300)
 		}
-	} */
+	}
 
-	/* pulloutMenu = () =>{
+	pulloutMenu = () =>{
 		return (
 			<Pullout pullIn={this.renderPulloutMenu}>
 					<div id="customPulloutHeader">
@@ -364,9 +364,10 @@ class Header extends Component {
 		if (!this.props.auth.isAuthenticated) {
 			return (
 				<div className="header">
+						{/*this.pulloutMenu()*/}
 					{/* //////////////section///////////*/}
 					<div id="leftOfHeader">
-						{/* <div onClick={this.renderPulloutMenu} id="menuBarsIcon"></div> */}
+					{/*<div onClick={this.renderPulloutMenu} id="menuBarsIcon"></div>*/}
 						<Link to="/dashboard">
 							<img className="logo" src="/assets/surkls-logo2.png" />
 						</Link>
@@ -388,9 +389,10 @@ class Header extends Component {
 		} else {
 			return (
 				<div className="header">
+					{/*this.pulloutMenu()*/}
 					{/* //////////////section///////////*/}
 					<div id="leftOfHeader">
-						{/* <div onClick={this.renderPulloutMenu} id="menuBarsIcon"></div> */}
+						{/*<div onClick={this.renderPulloutMenu} id="menuBarsIcon"></div>*/}
 						<Link to="/dashboard">
 							<img className="logo" src="/assets/surkls-logo2.png" />
 						</Link>
