@@ -16,6 +16,7 @@ class Header extends Component {
 			sessionMenuVisible: false,
 			signInMenuVisible: false,
 			pulloutMenuVisible: false,
+			roomCategory: '',
 			roomName: '',
 			email: '',
 			password: ''
@@ -148,6 +149,13 @@ class Header extends Component {
 					className="menuInput"
 					name="roomName"
 					value={this.state.room}
+				/>
+				<input
+					onChange={this.onInputChange}
+					placeholder="Category"
+					className="menuInput"
+					name="roomCategory"
+					value={this.state.roomCategory}
 				/>
 				<div className="menuConfig">
 					Max Members
