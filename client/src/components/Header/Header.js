@@ -300,13 +300,19 @@ class Header extends Component {
 	};
 	
 	createSession = () => {
+		let sessionKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		console.log(sessionKey)
 		let name = this.state.roomName;
+		let sessionObj = {
+			room: name,
+			sessionKey: sessionKey
+		}
 		if (this.state.roomName.length >= 3) {
 			this.setState({
 				sessionMenuVisible: false,
 				roomName: ''
 			}, ()=>{
-				this.props.startSession(name, () => {		
+				this.props.startSession(sessionObj, () => {		
 					this.props.history.push('/session');
 				});
 			});		

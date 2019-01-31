@@ -12,9 +12,14 @@ export const getSessions = () => (dispatch)=> {
 	fetch('/api/sessions')
 		.then(data=>data.json())
 		.then(sessions=>{
+			console.log(sessions)
+			let rooms = [];
+			for(let room in sessions){
+				rooms.push(JSON.parse(sessions[room]));
+			}
 			dispatch({
 				type: GET_SESSIONS,
-				payload: sessions
+				payload: rooms
 			})
 		})
 }

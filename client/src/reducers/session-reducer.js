@@ -10,14 +10,14 @@ export default function(state = initialState, action) {
 			return {
 				...state,
 				inSession: !isEmpty(action.payload),
-				room: action.payload,
+				...action.payload,
 				creatingSession:true
 			};
 			case JOIN_SESSION:
 				return {
 					...state,
 					inSession: !isEmpty(action.payload),
-					room: action.payload,
+					sessionKey: action.payload,
 					creatingSession: false
 				};
 		default:
