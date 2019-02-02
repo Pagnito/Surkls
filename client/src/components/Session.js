@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 import { setUserMedia } from '../../tools/setUserMedia';
 import 'styles/session.scss';
-import { rejects } from 'assert';
+
 class Session extends Component {
 	constructor(props) {
 		super(props);
