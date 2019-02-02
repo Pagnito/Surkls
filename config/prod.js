@@ -1,5 +1,5 @@
 module.exports = {
-  mongoURI: 'mongodb://localhost/surkls',
+  mongoURI: process.env.MONGO_URI,
   cookieSecret: process.env.COOKIE_SECRET,
   twitchClientID: process.env.TWITCH_CLIENT_ID,
   twitchClientSecret: process.env.TWITCH_CLIENT_SECRET,
