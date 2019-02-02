@@ -32,7 +32,7 @@ class App extends Component {
 				type: GET_USER,
 				payload: user
 			})
-			//this.props.history.push('/rooms')
+			this.props.history.push('/rooms')
 		});
 	}
 

@@ -20,6 +20,14 @@
         display:flex;
         justify-content: center;
         align-items: center;
+        #stream1 {
+          height:95%;
+          border-radius:5px;
+          width:100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          margin:0px !important;
+        }
         .stream {
           height:95%;
           border-radius:5px;

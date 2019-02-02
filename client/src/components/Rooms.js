@@ -8,9 +8,14 @@ class Rooms extends Component {
 	componentDidMount() {
 		this.props.getSessions();
 	}
-	joinSession = (sessionKey) => {
+	joinSession = (sessionKey, room, clientId) => {
+		let session = {
+			sessionKey: sessionKey,
+			room: room,
+			clientId: clientId
+		}
 		if (sessionKey.length >= 3) {
-			this.props.joinSession(sessionKey, () => {
+			this.props.joinSession(session, () => {
 				this.props.history.push('/session');
 			});
 		} else {
@@ -18,9 +23,9 @@ class Rooms extends Component {
 		}
 	};
 	renderRooms = () => {
-		return this.props.sessions.sessions.map((room) => {
+		return this.props.sessions.sessions.map((room,ind) => {
 			return (
-				<div onClick={() => this.joinSession(room.sessionKey)} key={room.sessionKey} className="room">
+				<div onClick={() => this.joinSession(room.sessionKey, room.room, room.clientId)} key={ind} className="room">
 					{room.room}
 				</div>
 			);

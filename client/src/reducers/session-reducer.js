@@ -17,7 +17,7 @@ export default function(state = initialState, action) {
 				return {
 					...state,
 					inSession: !isEmpty(action.payload),
-					sessionKey: action.payload,
+					...action.payload,
 					creatingSession: false
 				};
 		default:

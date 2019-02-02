@@ -50,7 +50,7 @@ class Header extends Component {
 			messagesMenuVisible:false
 		});
 	};
-	renderCreateSessionMenu = () => {
+	renderCreateSessionMenu = () => {	
 		this.setState({
 			sessionMenuVisible: this.state.sessionMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -58,6 +58,8 @@ class Header extends Component {
 			pulloutMenuVisible: false,
 			signInMenuVisible: false,
 			messagesMenuVisible:false
+		},()=>{
+			document.getElementById('sessionNameInput').focus()
 		});
 	};
 	renderMessagesMenu = () =>{
@@ -172,6 +174,7 @@ class Header extends Component {
 		return (
 			<DropMenu menuTitle="Create Session" visibility={visibility} menuTypeArrow="sessionArrow">
 				<input
+					id="sessionNameInput"
 					onChange={this.onInputChange}
 					placeholder="Name your session"
 					className="menuInput"
@@ -341,9 +344,11 @@ class Header extends Component {
 	createSession = () => {
 		if (this.state.roomName.length >= 3) {
 			let sessionKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+			let clientId = Math.random().toString(16).substring(2, 15) + Math.random().toString(16).substring(2, 15);
 			let sessionObj = {
 				room: this.state.roomName,
-				sessionKey: sessionKey
+				sessionKey: sessionKey,
+				clientId: clientId
 			};
 			this.setState(
 				{
@@ -368,7 +373,7 @@ class Header extends Component {
 					{/* //////////////section///////////*/}
 					<div id="leftOfHeader">
 					{/*<div onClick={this.renderPulloutMenu} id="menuBarsIcon"></div>*/}
-						<Link to="/dashboard">
+						<Link to="/rooms">
 							<img className="logo" src="/assets/surkls-logo2.png" />
 						</Link>
 					</div>
@@ -393,7 +398,7 @@ class Header extends Component {
 					{/* //////////////section///////////*/}
 					<div id="leftOfHeader">
 						{/*<div onClick={this.renderPulloutMenu} id="menuBarsIcon"></div>*/}
-						<Link to="/dashboard">
+						<Link to="/rooms">
 							<img className="logo" src="/assets/surkls-logo2.png" />
 						</Link>
 					</div>

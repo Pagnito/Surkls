@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 import { setUserMedia } from '../../tools/setUserMedia';
 import 'styles/session.scss';
+import { rejects } from 'assert';
 class Session extends Component {
 	constructor(props) {
 		super(props);
@@ -20,13 +21,26 @@ class Session extends Component {
 			iceServers: [
 				{
 					urls: 'stun:stun.l.google.com:19302'
+				},
+				{
+					urls: 'turn:numb.viagenie.ca',
+					credential: 'numbass8',
+					username: 'pavelyeganov@gmail.com'
 				}
 			]
 		};
-		this.isInitiator = false;
+		this.config = {
+			iceServers: [
+				{
+					urls: 'stun1.l.google.com:19302'
+				}
+			]
+		};
+		this.creator = false
 		this.stream;
-		this.clients = 0;
-		this.rtcPeer = new webkitRTCPeerConnection(this.stunConfig);
+		this.track;
+		this.remoteClients = 0;
+		this.rtcs = {};
 		this.socket = io('http://localhost:4000');
 		this.socket.on('connect', () => {
 			this.setState({ connectedToSock: true });
@@ -35,45 +49,50 @@ class Session extends Component {
 			this.setState({ msgs: data });
 		});
 	}
-handleRemoteStreamAdded=(event)=> {
-		console.log('Remote stream added.', event.stream);
-		document.querySelector('.stream2').srcObject = event.streams[0];
-	}
-handleIceCandidate =(event)=> {
-  console.log('icecandidate event: ', event);
-  if (event.candidate) {
-    let candidate = {
-      type: 'candidate',
-      label: event.candidate.sdpMLineIndex,
-      id: event.candidate.sdpMid,
-      candidate: event.candidate.candidate
-		};
-		this.socket.emit('candidate', candidate)
-  } else {
-    console.log('End of candidates.');
-  }
-}
-	createOffer = () => {
-		console.log('Creating Offer');
-		this.rtcPeer.createOffer().then(
+	handleRemoteStreamAdded = (event) => {
+		let videos = document.getElementsByClassName('stream');
+		for (let i = 0; i < this.remoteClients; i++) {
+			if (videos[i].srcObject == null) {
+				videos[i].srcObject = event.streams[0];
+			}
+		}
+		this.socket.emit('signal', { type: 'connected' });
+	};
+	handleRemoteStreamRemoved = (event) => {
+		console.log('removed', event);
+	};
+	handleIceCandidate = (event) => {
+		//console.log('candidate', event.candidate)
+		if (event.candidate) {
+			let candidate = {
+				type: 'candidate',
+				label: event.candidate.sdpMLineIndex,
+				id: event.candidate.sdpMid,
+				candidate: event.candidate.candidate
+			};
+			this.socket.emit('signal', candidate);
+		} else {
+			console.log('End of candidates.');
+		}
+	};
+	createOffer = (peer, cb) => {
+		peer.createOffer().then(
 			(offer) => {
-				console.log('Created Offer', offer);
-				this.socket.emit('offer', offer);
-				return this.rtcPeer.setLocalDescription(new RTCSessionDescription(offer));
+				return peer.setLocalDescription(new RTCSessionDescription(offer)).then(() => {
+					cb(offer);
+				});
 			},
 			(err) => {
 				console.log('Error with creating offer ', err);
 			}
 		);
 	};
-	createAnswer = () => {
-		console.log('Creating answer');
-		this.rtcPeer.createAnswer().then(
+	createAnswer = (peer, cb) => {
+		peer.createAnswer().then(
 			(answer) => {
-				console.log('Created answer', answer);
-				this.socket.emit('answer', answer);
-				return this.rtcPeer.setLocalDescription(new RTCSessionDescription(answer),()=>{
-					console.log(this.rtcPeer)
+				//console.log('answer')
+				return peer.setLocalDescription(new RTCSessionDescription(answer)).then(() => {
+					cb(answer);
 				});
 			},
 			(err) => {
@@ -83,92 +102,90 @@ handleIceCandidate =(event)=> {
 	};
 	componentWillUnmount() {
 		let stream = document.getElementById('stream1').srcObject;
-		if(stream!==null){
+		if (stream !== null) {
 			let tracks = stream.getTracks();
 			tracks.forEach(function(track) {
 				track.stop();
 			});
 		}
-		document.getElementById('stream1').srcObject = null;
-		this.socket.emit('leave', this.props.session.session);
+		this.rtcs = {};
+		stream = null;
+		this.socket.emit('leave');
 	}
+	handleLeavingClient = (remoteId) => {
+		let videos = document.getElementsByClassName('stream');
+		for (let i = 0; i < this.remoteClients; i++) {
+			videos[i].srcObject.getTracks().forEach(function(track) {
+				track.stop();
+				videos[i].srcObject = null;
+			});
+		}
+
+		this.remoteClients -= 1;
+		delete this.rtcs[remoteId];
+	};
+	createPeerRtc = (remoteId, cb) => {
+		this.rtcs[remoteId] = new RTCPeerConnection(this.stunConfig);
+		let currentConnection = this.rtcs[remoteId];
+		currentConnection.onicecandidate = this.handleIceCandidate;
+		currentConnection.ontrack = this.handleRemoteStreamAdded;
+		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
+		currentConnection.addTrack(this.track, this.stream);
+		if (currentConnection.setRemoteDescription) {
+			cb(currentConnection);
+		}
+	};
+
 	componentDidMount() {
-		this.socket.on('candidate', candidate=>{
-			var hisCandidate = new RTCIceCandidate({
-				sdpMLineIndex: candidate.label,
-				candidate: candidate.candidate
-			});
-			this.rtcPeer.addIceCandidate(hisCandidate);
-		})
-		this.rtcPeer.onicecandidate = this.handleIceCandidate;
-		this.rtcPeer.ontrack = this.handleRemoteStreamAdded;
-    /*@TODO this.rtcPeer.onremovestream = handleRemoteStreamRemoved; */
 		setUserMedia();
-		if (this.props.session.creatingSession===true) {
-			
-			this.socket.emit('createOrJoin', this.props.session);
-			console.log('Creating Socket Room');
-			this.startStream(document.getElementById('stream1'));
-			console.log('Local Stream Started');
-			this.socket.on('newJoin', (data) => {
-				console.log(data)
-				this.isInitiator = true;
-				this.createOffer();
-			});
-			this.socket.on('answer', (answer) => {
-				console.log('recieved answer', answer);
-				this.rtcPeer.setRemoteDescription(new RTCSessionDescription(answer, ()=>{
-					console.log('set remote desc')
-				}))
-			});
-		} else if(this.props.session.inSession) {
-			this.socket.emit('createOrJoin', this.props.session);
-			console.log('Joined Socket Room');
-			this.startStream(document.getElementById('stream1'));
-			console.log('Local Stream Started');
-			this.socket.on('offer', (offer) => {
-				console.log(offer)
-				console.log('Setting Remote Description');
-				this.rtcPeer.setRemoteDescription(new RTCSessionDescription(offer),()=>{
-					this.createAnswer()
-				})			
-			});
-		}
-	}
-/* 	componentDidUpdate(prevProps) {
-		if (prevProps.session !== this.props.session) {
-			if (this.props.session.creatingSession) {
-				this.socket.emit('createOrJoin', this.props.session.session);
-				console.log('Creating Socket Room');
-				this.startStream(document.getElementById('stream1'));
-				console.log('Local Stream Started');
-				this.socket.on('newJoin', (data) => {
-					console.log(data)
-					this.isInitiator = true;
-					this.createOffer();
-				});
-				this.socket.on('answer', (answer) => {
-					console.log('recieved answer', answer);
-					this.rtcPeer.setRemoteDescription(new RTCSessionDescription(answer), ()=>{
-						console.log('set remote desc')
-						console.log(this.rtcPeer)
-					})
-				});
-			} else if(this.props.session.inSession){
-				this.socket.emit('createOrJoin', this.props.session.session);
-				console.log('Joined Socket Room');
-				this.startStream(document.getElementById('stream1'));
-				console.log('Local Stream Started');
-				this.socket.on('offer', (offer) => {
-					console.log(offer)
-					console.log('Setting Remote Description');
-					this.rtcPeer.setRemoteDescription(new RTCSessionDescription(offer),()=>{
-						this.createAnswer()
-					})			
-				});
+		this.startStream(document.getElementById('stream1')).then(() => {
+			if(this.props.session.creatingSession){
+				console.log('im creator')
+				this.creator = true
 			}
-		}
-	} */
+			this.socket.emit('createOrJoin', this.props.session);
+			this.socket.on('signal', (data, remoteId) => {
+				switch (data.type) {
+					case 'newJoin':
+						this.createPeerRtc(remoteId, (rtc) => {
+							this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
+							this.remoteClients++;
+						});
+						break;
+					case 'offer':
+							
+						this.remoteClients++;
+						this.createPeerRtc(remoteId, (rtc) => {
+							console.log(this.rtcs)
+							rtc.setRemoteDescription(new RTCSessionDescription(data), () => {
+								this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer));
+							});
+						});
+						break;
+					case 'answer':
+						this.rtcs[remoteId].setRemoteDescription(new RTCSessionDescription(data));
+						break;
+					case 'candidate':
+						let hisCandidate = new RTCIceCandidate({
+							sdpMLineIndex: data.label,
+							candidate: data.candidate
+						});
+						if (this.rtcs[remoteId] !== undefined && this.rtcs[remoteId].remoteDescription.type) {
+							this.rtcs[remoteId].addIceCandidate(hisCandidate);
+						}
+						break;
+					case 'clientLeft':
+						this.handleLeavingClient(remoteId);
+						break;
+					case 'connected':
+							
+					default:
+						this.socket.emit('signal', { type: 'failedConnection' });
+				}
+			});
+		});
+	}
+
 	sendMsg = (e) => {
 		if (e.key == 'Enter') {
 			e.preventDefault();
@@ -198,24 +215,30 @@ handleIceCandidate =(event)=> {
 			cb(cameras);
 		});
 	};
-	startStream = (videoEl, cb) => {
-		navigator.mediaDevices
-			.getUserMedia({
-				audio: false,
-				video: {
-					width: 200,
-					height: 200
-				}
-			})
-			.then((stream) => {
-				stream.getTracks().forEach(track=>{
-					this.rtcPeer.addTrack(track,stream)
-				})
-				this.stream = stream;
-				videoEl.srcObject = stream;
-			});
+	startStream = (videoEl, peer) => {
+		return new Promise((resolve, reject) => {
+			if (videoEl.srcObject === null) {
+				navigator.mediaDevices
+					.getUserMedia({
+						audio: false,
+						video: {
+							width: 200,
+							height: 200
+						}
+					})
+					.then((stream) => {
+						videoEl.srcObject = stream;
+						this.stream = stream;
+						stream.getTracks().forEach((track) => {
+							this.track = track;
+						});
+						resolve();
+					});
+			} else {
+				rejects();
+			}
+		});
 	};
-
 
 	render() {
 		return (
@@ -223,7 +246,7 @@ handleIceCandidate =(event)=> {
 				<div id="sessionLeftAside">
 					<div id="videoStreams">
 						<div className="streamWrap">
-							<video id="stream1" className="stream1 stream" autoPlay />
+							<video id="stream1" autoPlay />
 						</div>
 						<div className="streamWrap">
 							<video className="stream2 stream" autoPlay />
