@@ -35,7 +35,7 @@ class Session extends Component {
 		this.track;
 		this.remoteClients = 0;
 		this.rtcs = {};
-		this.socket = io('http://localhost:4000');
+		this.socket = io('https://surkls.herokuapp.com');
 		this.socket.on('connect', () => {
 			this.setState({ connectedToSock: true });
 		});
