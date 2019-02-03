@@ -29,13 +29,6 @@ class Session extends Component {
 				}
 			]
 		};
-		this.config = {
-			iceServers: [
-				{
-					urls: 'stun1.l.google.com:19302'
-				}
-			]
-		};
 		this.creator = false
 		this.stream;
 		this.track;
