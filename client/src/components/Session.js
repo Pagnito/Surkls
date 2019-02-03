@@ -29,7 +29,8 @@ class Session extends Component {
 				}
 			]
 		};
-		this.creator = false
+		this.imNotTheNew = false;
+		this.creator = false;
 		this.stream;
 		this.track;
 		this.remoteClients = 0;
@@ -49,7 +50,7 @@ class Session extends Component {
 				videos[i].srcObject = event.streams[0];
 			}
 		}
-		this.socket.emit('signal', { type: 'connected' });
+		
 	};
 	handleRemoteStreamRemoved = (event) => {
 		console.log('removed', event);
@@ -66,6 +67,10 @@ class Session extends Component {
 			this.socket.emit('signal', candidate);
 		} else {
 			console.log('End of candidates.');
+			console.log(this.imNotTheNew)
+			if(this.imNotTheNew==false){
+				this.socket.emit('signal', { type: 'connected' });
+			}		
 		}
 	};
 	createOffer = (peer, cb) => {
@@ -140,22 +145,24 @@ class Session extends Component {
 			this.socket.on('signal', (data, remoteId) => {
 				switch (data.type) {
 					case 'newJoin':
+						console.log('EYAAHAAAA')
 						this.createPeerRtc(remoteId, (rtc) => {
 							this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
 							this.remoteClients++;
 						});
 						break;
-					case 'offer':
-							
+					case 'offer':	
+						console.log('OFFER')			
 						this.remoteClients++;
 						this.createPeerRtc(remoteId, (rtc) => {
-							console.log(this.rtcs)
 							rtc.setRemoteDescription(new RTCSessionDescription(data), () => {
 								this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer));
 							});
 						});
 						break;
 					case 'answer':
+						console.log('ANSWA')
+						this.imNotTheNew=true;
 						this.rtcs[remoteId].setRemoteDescription(new RTCSessionDescription(data));
 						break;
 					case 'candidate':
@@ -171,9 +178,7 @@ class Session extends Component {
 						this.handleLeavingClient(remoteId);
 						break;
 					case 'connected':
-							
-					default:
-						this.socket.emit('signal', { type: 'failedConnection' });
+						break;
 				}
 			});
 		});

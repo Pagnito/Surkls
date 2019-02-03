@@ -9,11 +9,13 @@ module.exports = (io, app) => {
 	let rooms = {};
 	let reciever;
 	let sender;
-	let connections = 0;
 	let offers = {};
+	let connections;
+	let connecting = false;
 	io.on('connection', function(socket) {
 		socket.on('createOrJoin', function(session) {
 			console.log('CLIENT DESC', session);
+			if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){
 			if(session.creatingSession===false){
 				if(rooms[session.sessionKey]){
 					reciever = socket.id;
@@ -23,6 +25,8 @@ module.exports = (io, app) => {
 				}				
 			} else {	
 				if(!rooms[session.sessionKey]){
+					connecting = true;
+					
 					socket.join(session.sessionKey);	
 					msgs[session.sessionKey] = [];        
 					rooms[session.sessionKey] = {};
@@ -30,9 +34,12 @@ module.exports = (io, app) => {
 				}				
         rooms[session.sessionKey].name = session.room;
         rooms[session.sessionKey].clients.push(socket.id);
-        console.log('CREATED SESSION');
-				redClient.hset('rooms', session.sessionKey, JSON.stringify(session)) 
+				console.log('CREATED SESSION');
+				if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){
+					redClient.hset('rooms', session.sessionKey, JSON.stringify(session)) 
+				}		
 			}
+			
 			socket.on('signal', (data) => {
 				switch (data.type){
 					case 'offer':
@@ -41,8 +48,14 @@ module.exports = (io, app) => {
 							offer:data,
 							id:socket.id
 						};
-						sender = socket.id
-						io.to(reciever).emit('signal', data, socket.id);	
+						if(connecting==true){
+							connecting=false;
+							sender = socket.id
+							io.to(reciever).emit('signal', data, socket.id);		
+							delete offers[socket.id]
+							console.log('OFFERS', Object.keys(offers))
+						}	
+						
 					 break;
 				 case 'answer':
 					 console.log('answer recieved');			
@@ -58,9 +71,15 @@ module.exports = (io, app) => {
 					 }				 
 					 break;
 				case 'connected':
-					io.to(session.sessionKey).emit('signal', { type: 'connected' });
-				 default :
-					 console.log('NO CASE EXECUTED')	
+					 		console.log("CONNECTED")
+							connecting=true;			
+					 if(Object.keys(offers).length>0){		 
+						 let offerObj = offers[Object.keys(offers)[0]]
+						 sender=offerObj.id
+						 console.log('OFFER OBJ', offerObj.id)
+						 io.to(reciever).emit('signal', offerObj.offer, offerObj.id)
+						 delete offers[offerObj.id]
+					 } 
 				} 				 
 		 });
 			if(rooms[session.sessionKey]){
@@ -91,13 +110,15 @@ module.exports = (io, app) => {
 					console.log('a client disconnected');
 					console.log(rooms[session.sessionKey].clients.length, ' clients left in the room', session.room);		
 				if(rooms[session.sessionKey].clients.length==0){
-					redClient.hdel('rooms', session.sessionKey);
+					if(session.sessionKey!==null && session.sessionKey!==undefined){
+						redClient.hdel('rooms', session.sessionKey);
+					}		
 					rooms[session.sessionKey] = {};
 					delete rooms[session.sessionKey]
 				}		
       });
 			//console.log(io.sockets.adapter.rooms);
-			
+			}
 		});
 	});
 }
