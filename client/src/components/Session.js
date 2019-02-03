@@ -56,7 +56,7 @@ class Session extends Component {
 		console.log('removed', event);
 	};
 	handleIceCandidate = (event) => {
-		//console.log('candidate', event.candidate)
+		console.log('candidate', event.candidate)
 		if (event.candidate) {
 			let candidate = {
 				type: 'candidate',
@@ -67,7 +67,6 @@ class Session extends Component {
 			this.socket.emit('signal', candidate);
 		} else {
 			console.log('End of candidates.');
-			console.log(this.imNotTheNew)
 			if(this.imNotTheNew==false){
 				this.socket.emit('signal', { type: 'connected' });
 			}		
@@ -152,7 +151,7 @@ class Session extends Component {
 						});
 						break;
 					case 'offer':	
-						console.log('OFFER')			
+						console.log('OFFER', data)			
 						this.remoteClients++;
 						this.createPeerRtc(remoteId, (rtc) => {
 							rtc.setRemoteDescription(new RTCSessionDescription(data), () => {
@@ -161,7 +160,6 @@ class Session extends Component {
 						});
 						break;
 					case 'answer':
-						console.log('ANSWA')
 						this.imNotTheNew=true;
 						this.rtcs[remoteId].setRemoteDescription(new RTCSessionDescription(data));
 						break;

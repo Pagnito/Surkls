@@ -62,9 +62,8 @@ module.exports = (io, app) => {
 					 io.to(sender).emit('signal', data, socket.id);	
 					 break;
 				 case 'candidate':
-					 console.log('Recieved candidate');	
-					 sender = socket.id;	 
-					 if(socket.io==reciever){
+					 console.log('Recieved candidate');	 
+					 if(socket.id==reciever){
 						io.to(sender).emit('signal', data, socket.id);	
 					 } else {
 						io.to(reciever).emit('signal', data, socket.id);	
