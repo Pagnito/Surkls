@@ -49,13 +49,13 @@ app.use(passport.session());
 api(app);
 auth(app);
 sockets(io, app);
-if (process.env.NODE_ENV == "production") {
+/* if (process.env.NODE_ENV == "production") { */
   app.use(express.static(path.resolve(__dirname, "client", "build")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
-}
-server.listen(PORT,'0.0.0.0', ()=>{
+//}
+server.listen(PORT/* ,'192.168.1.4' */, ()=>{
   console.log('\x1b[35m%s\x1b[0m', "BACKEND ON PORT 4000");
   console.log('\x1b[36m%s\x1b[0m', "FRONTEND ON PORT 3000")
 });
