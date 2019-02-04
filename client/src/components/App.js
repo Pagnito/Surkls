@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 import { GET_USER } from 'actions/types';
 import { Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { setUserMedia } from '../../tools/setUserMedia';
 import Store from '../store';
 import Home from 'components/Home';
 import Dashboard from 'components/Dashboard';
@@ -27,6 +28,7 @@ class App extends Component {
 	}
 
 	componentDidMount() {
+		setUserMedia();
 		fetch('/account').then((res) => res.json()).then((user) =>{
 			Store.dispatch({
 				type: GET_USER,

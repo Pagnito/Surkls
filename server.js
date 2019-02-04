@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 4000;
 const ip = require('ip');
 const api = require('./routes/api');
 const auth = require('./routes/auth');
-const sockets = require('./routes/sockets');
+const sessionSockets = require('./routes/session-sockets');
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
 const passport = require("passport");
@@ -48,7 +48,7 @@ app.use(passport.session());
 ////////////////////////////////////activate routes/////////////////////////////////
 api(app);
 auth(app);
-sockets(io, app);
+sessionSockets(io, app);
 /* if (process.env.NODE_ENV == "production") { */
   app.use(express.static(path.resolve(__dirname, "client", "build")));
   app.get("*", (req, res) => {

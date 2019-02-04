@@ -5,7 +5,7 @@ module.exports = (io, app) => {
     console.log(succeeded); // will be true if successfull
   }); */
   
-	let msgs = {};
+	
 	let rooms = {};
 	let reciever;
 	let sender;
@@ -15,6 +15,7 @@ module.exports = (io, app) => {
 	io.on('connection', function(socket) {
 		socket.on('createOrJoin', function(session) {
 			console.log('CLIENT DESC', session);
+			console.log(session.sessionKey)
 			if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){
 			if(session.creatingSession===false){
 				if(rooms[session.sessionKey]){
@@ -25,11 +26,10 @@ module.exports = (io, app) => {
 				}				
 			} else {	
 				if(!rooms[session.sessionKey]){
-					connecting = true;
-					
+					connecting = true;		
 					socket.join(session.sessionKey);	
-					msgs[session.sessionKey] = [];        
 					rooms[session.sessionKey] = {};
+					rooms[session.sessionKey].msgs = [];        
 					rooms[session.sessionKey].clients = [];
 				}				
         rooms[session.sessionKey].name = session.room;
@@ -87,18 +87,19 @@ module.exports = (io, app) => {
 			
 			socket.on('sendMsg', (data) => {
 				console.log('THESE ARE ROOMS',rooms[session.sessionKey],'END OF ROOMS')
-				msgs[session.sessionKey].push(data);
-				io.to(session.sessionKey).emit('recieveMsgs', msgs[session.sessionKey]);
+				rooms[session.sessionKey].msgs.push(data);
+				io.to(session.sessionKey).emit('recieveMsgs', rooms[session.sessionKey].msgs);
       }); 
       
       //////////////////////////////////////////////
 			socket.on('leave', function(data) {
-				socket.in(session.sessionKey).emit('signal', {type:"clientLeft"}, socket.id)
+				//socket.in(session.sessionKey).emit('signal', {type:"clientLeft"}, socket.id)
 				socket.leave(data);
 				socket.disconnect();
 
 			}); 
 			socket.on('disconnect', () => {
+				socket.in(session.sessionKey).emit('signal', {type:'clientLeft'}, socket.id)
 				socket.disconnect();
 				rooms[session.sessionKey].clients.forEach((client, ind) => {
 					if (client === socket.id) {

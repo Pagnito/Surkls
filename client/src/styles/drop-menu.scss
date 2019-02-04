@@ -14,7 +14,7 @@
     margin-right: 20px !important;
   }
   #sessionArrow {
-    margin-right: 225px !important;
+    margin-right: 176px !important;
   }
   #signInArrow {
     margin-right: 85px !important;
@@ -53,7 +53,7 @@
       color: black;
       font-size: 17px;
       border-radius: 3px;
-      padding:7px;
+      padding:10px;
       width:100%;
       box-sizing: border-box;
     }
@@ -83,11 +83,23 @@
     .menuItem:hover {
       background-color: #cbd2d2;
     }
-    .menuConfig {
-      padding: 10px;
+    .menuSelect {
       font-size: 17px;
       display: flex;
-      width:100%;
+      width:94%;
+      box-sizing: border-box;
+      justify-content: space-between;
+      outline:none;
+      cursor: pointer;
+    }
+    .menuConfig {
+      cursor: default;
+      padding: 7px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 17px;
+      display: flex;
+      width:96%;
       box-sizing: border-box;
       justify-content: space-between;
       input[type=number]::-webkit-inner-spin-button {
@@ -113,6 +125,7 @@
       background-color: black;
   }
     #checkbox {
+      margin-top: 6px; 
       width: 40px;
       height: 10px;
       background: #555;
@@ -132,7 +145,7 @@
       background: #FCCB43;
     }
     .menuItem {
-      padding: 10px;
+      padding: 7px;
       font-size: 17px;
       display: flex;
       width:100%;
@@ -143,6 +156,7 @@
       height:30px;
       justify-content: center;
       margin-top: 10px;
+      width:100%;
       .or {
         margin-top: 5px;
       }

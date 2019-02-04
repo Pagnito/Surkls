@@ -3,19 +3,22 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
-/* import Pullout from 'components/Header/Pullout-menu'; */
-import { startSession, joinSession, signUpOrLogin } from 'actions/actions';
+import Pullout from 'components/Header/Pullout-menu';
+import { startSession, joinSession, signUpOrLogin, getDevices } from 'actions/actions';
 import 'styles/header.scss';
 class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			disableVid: 'off',
+			disableAud: 'on',
+			maxMembers: 5,
+			maxViewers: 10,
 			accMenuVisible: false,
 			notifMenuVisible: false,
 			sessionMenuVisible: false,
 			signInMenuVisible: false,
 			pulloutMenuVisible: false,
+
 			messagesMenu: false,
 			roomCategory: '',
 			roomName: '',
@@ -24,11 +27,15 @@ class Header extends Component {
 			message: ''
 		};
 	}
+
+	componentDidMount() {
+		this.props.getDevices();
+	}
 	onInputChange = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
 	onCheckbox = (e) => {
-		this.setState({ [e.target.name]: this.state.disableVid == 'off' ? 'on' : 'off' });
+		this.setState({ [e.target.name]: this.state.disableAud == 'off' ? 'on' : 'off' });
 	};
 	renderAccMenu = () => {
 		this.setState({
@@ -37,7 +44,7 @@ class Header extends Component {
 			sessionMenuVisible: false,
 			pulloutMenuVisible: false,
 			signInMenuVisible: false,
-			messagesMenuVisible:false
+			messagesMenuVisible: false
 		});
 	};
 	renderNotifMenu = () => {
@@ -47,31 +54,36 @@ class Header extends Component {
 			sessionMenuVisible: false,
 			pulloutMenuVisible: false,
 			signInMenuVisible: false,
-			messagesMenuVisible:false
+			messagesMenuVisible: false
 		});
 	};
-	renderCreateSessionMenu = () => {	
-		this.setState({
-			sessionMenuVisible: this.state.sessionMenuVisible ? false : true,
-			accMenuVisible: false,
-			notifMenuVisible: false,
-			pulloutMenuVisible: false,
-			signInMenuVisible: false,
-			messagesMenuVisible:false
-		},()=>{
-			document.getElementById('sessionNameInput').focus()
-		});
+	renderCreateSessionMenu = () => {
+		this.setState(
+			{
+				sessionMenuVisible: this.state.sessionMenuVisible ? false : true,
+				accMenuVisible: false,
+				notifMenuVisible: false,
+				pulloutMenuVisible: false,
+				signInMenuVisible: false,
+				messagesMenuVisible: false,
+				roomCategory: this.state.sessionMenuVisible ? this.state.roomCategory : '',
+				roomName: this.state.sessionMenuVisible ? this.state.roomName : ''
+			},
+			() => {
+				document.getElementById('sessionNameInput').focus();
+			}
+		);
 	};
-	renderMessagesMenu = () =>{
+	renderMessagesMenu = () => {
 		this.setState({
 			messagesMenuVisible: this.state.messagesMenuVisible ? false : true,
 			accMenuVisible: false,
 			notifMenuVisible: false,
 			pulloutMenuVisible: false,
 			signInMenuVisible: false,
-			sessionMenuVisible: false,
+			sessionMenuVisible: false
 		});
-	}
+	};
 	renderSignInMenu = () => {
 		this.setState({
 			signInMenuVisible: this.state.signInMenuVisible ? false : true,
@@ -84,7 +96,7 @@ class Header extends Component {
 			signInMenuVisible: false
 		});
 	};
-	
+
 	hideAllMenus = () => {
 		this.setState({
 			sessionMenuVisible: false,
@@ -98,44 +110,60 @@ class Header extends Component {
 	hideSignInMenu = () => {
 		this.setState({ signInMenuVisible: false });
 	};
-		/* renderPulloutMenu = () =>{
-		let bg = document.getElementById('pulloutBg')
+	renderPulloutMenu = () => {
+		let bg = document.getElementById('pulloutBg');
 		let menu = document.getElementById('pullout');
-		if(this.state.pulloutMenuVisible ===false){	
+		if (this.state.pulloutMenuVisible === false) {
 			bg.style.display = 'block';
-			bg.classList.remove('removeOverlay')	
+			bg.classList.remove('removeOverlay');
 			menu.classList.remove('pullinAction');
-			bg.classList.add('overlayAction')	
+			bg.classList.add('overlayAction');
 			menu.classList.add('pulloutAction');
-		
-			this.setState({pulloutMenuVisible:true,
-										 accMenuVisible: false,
-										 notifMenuVisible: false,
-										 sessionMenuVisible: false})
-		} else {
-		  bg.classList.remove('overlayAction');	
-			menu.classList.remove('pulloutAction');			
-			this.setState({pulloutMenuVisible:false});
-			setTimeout(()=>{
-				bg.style.display = 'none';
-			},300)
-		}
-	}
 
-	pulloutMenu = () =>{
+			this.setState({
+				pulloutMenuVisible: true,
+				accMenuVisible: false,
+				notifMenuVisible: false,
+				sessionMenuVisible: false
+			});
+		} else {
+			bg.classList.remove('overlayAction');
+			menu.classList.remove('pulloutAction');
+			this.setState({ pulloutMenuVisible: false });
+			setTimeout(() => {
+				bg.style.display = 'none';
+			}, 300);
+		}
+	};
+
+	pulloutMenu = () => {
 		return (
 			<Pullout pullIn={this.renderPulloutMenu}>
-					<div id="customPulloutHeader">
-						<div onClick={this.renderPulloutMenu} id="menuBarsIcon2"></div>
-						<img id="surklsTitle" src="/assets/surkls_title.png"/>
-					</div>			
-					<div className="menuItem">Home</div>
-					<div className="menuItem">About</div>
-					<div className="menuItem">Sign Up</div>
-					<div className="menuItem">Sign in</div>					
+				<div className="customPulloutHeader">
+					<div onClick={this.renderPulloutMenu} id="menuBarsIcon2" />
+					<img id="surklsTitle" src="/assets/surkls_title.png" />
+				</div>
+				<Link to="/rooms" className="menuItem">
+					<div className="threeDotMenuIcon" id="roomsIcon" />Rooms
+				</Link>
+				<div className="menuItem">
+					<div className="threeDotMenuIcon" id="surklsIcon" />Surkls
+				</div>
+				<div className="menuItem">
+					<div className="threeDotMenuIcon" id="helpIcon" />Streams
+				</div>
+				<div className="menuItem">
+					<div className="threeDotMenuIcon" id="aboutIcon" />People
+				</div>
+				<div className="menuItem">
+					<div className="threeDotMenuIcon" id="aboutIcon" />Events
+				</div>
+				<div className="menuSurkls">
+					<div className="menuSurklsHeader">Surkls</div>
+				</div>
 			</Pullout>
-		)
-	} */
+		);
+	};
 	notifMenu = () => {
 		let visibility = this.state.notifMenuVisible ? 'flex' : 'none';
 		return (
@@ -169,6 +197,24 @@ class Header extends Component {
 			</DropMenu>
 		);
 	};
+	feedCamOptions = () => {
+		return this.props.devices.devices.cams.map((cam, ind) => {
+			return (
+				<option name="cam" key={ind} value={cam.deviceId} className="option">
+					{cam.label}
+				</option>
+			);
+		});
+	};
+	feedMicOptions = () => {
+		return this.props.devices.devices.mics.map((mic, ind) => {
+			return (
+				<option name="mic" key={ind} value={mic.deviceId} className="option">
+					{mic.label}
+				</option>
+			);
+		});
+	};
 	createSessionMenu = () => {
 		let visibility = this.state.sessionMenuVisible ? 'flex' : 'none';
 		return (
@@ -179,7 +225,7 @@ class Header extends Component {
 					placeholder="Name your session"
 					className="menuInput"
 					name="roomName"
-					value={this.state.room}
+					value={this.state.roomName}
 				/>
 				<input
 					onChange={this.onInputChange}
@@ -190,26 +236,61 @@ class Header extends Component {
 				/>
 				<div className="menuConfig">
 					Max Members
-					<input className="sessionConfig" type="number" name="members" min="1" max="6" />
+					<input
+						id="maxMembers"
+						onChange={this.onInputChange}
+						value={this.state.maxMembers}
+						className="sessionConfig"
+						type="number"
+						name="maxMembers"
+						min="1"
+						max="5"
+					/>
 				</div>
 				<div className="menuConfig">
 					Max Viewers
-					<input className="sessionConfig" type="number" name="members" min="1" max="10" />
+					<input
+						id="maxViewers"
+						onChange={this.onInputChange}
+						value={this.state.maxViewers}
+						className="sessionConfig"
+						type="number"
+						name="maxViewers"
+						min="1"
+						max="10"
+					/>
 				</div>
 				<div className="menuConfig">
-					Disable Video
+					Disable Audio
 					<div id="checkbox">
 						<input
-							value={this.state.disableVid}
+							value={this.state.disableAud}
 							onChange={this.onCheckbox}
 							id="checkboxInput"
 							style={{ marginRight: '10px' }}
 							type="checkbox"
-							name="disableVid"
+							name="disableAud"
 						/>
 						<label htmlFor="checkboxInput" />
 					</div>
 				</div>
+				<div
+					style={{ display: this.state.disableAud === 'on' ? 'flex' : 'none' }}
+					className="audioInputs menuConfig"
+				>
+					Audio inputs
+				</div>
+				<select
+					style={{ display: this.state.disableAud === 'on' ? 'flex' : 'none' }}
+					id="micSelect"
+					className="menuSelect"
+				>
+					{this.feedMicOptions()}
+				</select>
+				<div className="videoInputs menuConfig">Video inputs</div>
+				<select id="camSelect" className="menuSelect">
+					{this.feedCamOptions()}
+				</select>
 				<button onClick={this.createSession} className="menuItem" id="createSessBtn">
 					Create
 				</button>
@@ -344,11 +425,17 @@ class Header extends Component {
 	createSession = () => {
 		if (this.state.roomName.length >= 3) {
 			let sessionKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-			let clientId = Math.random().toString(16).substring(2, 15) + Math.random().toString(16).substring(2, 15);
+			//let clientId = Math.random().toString(16).substring(2, 15) + Math.random().toString(16).substring(2, 15);
 			let sessionObj = {
 				room: this.state.roomName,
 				sessionKey: sessionKey,
-				clientId: clientId
+				maxMembers: this.state.maxMembers,
+				maxViewers: this.state.maxViewers,
+				category: this.state.roomCategory,
+				audio: this.state.disableAud === 'off' ? true : false,
+				cam: document.getElementById('camSelect').value,
+				mic: document.getElementById('micSelect').value,
+				disableAud: this.state.disableAud === 'on' ? true : false
 			};
 			this.setState(
 				{
@@ -369,10 +456,10 @@ class Header extends Component {
 		if (!this.props.auth.isAuthenticated) {
 			return (
 				<div className="header">
-						{/*this.pulloutMenu()*/}
+					{this.pulloutMenu()}
 					{/* //////////////section///////////*/}
 					<div id="leftOfHeader">
-					{/*<div onClick={this.renderPulloutMenu} id="menuBarsIcon"></div>*/}
+						{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />}
 						<Link to="/rooms">
 							<img className="logo" src="/assets/surkls-logo2.png" />
 						</Link>
@@ -394,10 +481,10 @@ class Header extends Component {
 		} else {
 			return (
 				<div className="header">
-					{/*this.pulloutMenu()*/}
+					{this.pulloutMenu()}
 					{/* //////////////section///////////*/}
 					<div id="leftOfHeader">
-						{/*<div onClick={this.renderPulloutMenu} id="menuBarsIcon"></div>*/}
+						{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />}
 						<Link to="/rooms">
 							<img className="logo" src="/assets/surkls-logo2.png" />
 						</Link>
@@ -411,7 +498,6 @@ class Header extends Component {
 						{this.createSessionMenu()}
 						{this.messagesMenu()}
 						<div onClick={this.renderCreateSessionMenu} id="startSessionIcon" />
-						<Link to="/rooms" id="toRoomsIcon" />
 						<div onClick={this.renderMessagesMenu} id="messageIcon" />
 						<div onClick={this.renderNotifMenu} id="notifIcon" />
 						<div
@@ -436,11 +522,14 @@ Header.propTypes = {
 	history: PropTypes.object,
 	startSession: PropTypes.func,
 	joinSession: PropTypes.func,
-	signUpOrLogin: PropTypes.func
+	signUpOrLogin: PropTypes.func,
+	devices: PropTypes.object,
+	getDevices: PropTypes.func
 };
 function stateToProps(state) {
 	return {
-		auth: state.auth
+		auth: state.auth,
+		devices: state.devices
 	};
 }
-export default connect(stateToProps, { startSession, joinSession, signUpOrLogin })(withRouter(Header));
+export default connect(stateToProps, { startSession, joinSession, signUpOrLogin, getDevices })(withRouter(Header));

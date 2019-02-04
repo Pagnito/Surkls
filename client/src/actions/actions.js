@@ -1,4 +1,4 @@
-import { SET_USER, GET_USER, START_SESSION, JOIN_SESSION, GET_SESSIONS } from 'actions/types';
+import { SET_USER, GET_USER, START_SESSION, JOIN_SESSION, GET_SESSIONS, GET_DEVICES } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
 	axios.get('/account').then((data) => {
@@ -21,6 +21,27 @@ export const getSessions = () => (dispatch)=> {
 				payload: rooms
 			})
 		})
+}
+export const getDevices = () => (dispatch)=>{
+		let cams =[];
+		let mics= [];
+		navigator.mediaDevices.enumerateDevices().then((devices) => {
+			devices.forEach((device) => {
+				if(device.kind === 'videoinput'){
+					cams.push(device);
+				} else if(device.kind === 'audioinput'){
+					mics.push(device)
+				}			 
+			});
+			let deviceObj= {
+				mics:mics,
+				cams:cams
+			}
+			dispatch({
+				type: GET_DEVICES,
+				payload: deviceObj
+			})
+		});
 }
 export const signUpOrLogin = (user,cb) => (dispatch) => {
 	let options = {
