@@ -107,80 +107,144 @@
   background-color: #282828; }
   #session #sessionLeftAside {
     display: flex;
-    width: 50%;
-    flex-direction: column; }
+    width: 500px;
+    flex-direction: column;
+    box-sizing: border-box; }
     #session #sessionLeftAside #videoStreams {
-      min-height: 50%;
+      height: 500px;
       width: 100%;
       background: black;
       display: flex;
       align-content: flex-start;
       flex-wrap: wrap;
-      justify-content: space-around; }
+      justify-content: flex-start; }
       #session #sessionLeftAside #videoStreams .streamWrap {
-        width: 33.333%;
+        width: 247px;
+        height: 247px;
+        align-self: flex-start;
         display: flex;
         justify-content: center;
-        align-items: center; }
-        #session #sessionLeftAside #videoStreams .streamWrap #stream1 {
-          height: 95%;
-          border-radius: 5px;
-          width: 100%;
-          max-width: 100%;
-          box-sizing: border-box;
-          margin: 0px !important; }
+        align-items: center;
+        padding-left: 5px;
+        padding-top: 5px;
+        box-sizing: border-box; }
         #session #sessionLeftAside #videoStreams .streamWrap .stream {
-          height: 95%;
           border-radius: 5px;
           width: 100%;
           max-width: 100%;
           box-sizing: border-box;
           margin: 0px !important; }
     #session #sessionLeftAside #sessionLeftAsideSettings {
-      min-height: 25%; }
-  #session #sessionRightAside {
-    width: 50%;
+      height: calc(100% - 500px);
+      background-color: black;
+      border-top: 1px solid #1a1a1a;
+      box-sizing: border-box;
+      display: flex;
+      align-items: flex-start;
+      align-content: flex-start;
+      overflow: hidden; }
+      #session #sessionLeftAside #sessionLeftAsideSettings #streamOfMe {
+        margin-top: 5px;
+        border-radius: 3px;
+        height: 80px;
+        width: 80px; }
+      #session #sessionLeftAside #sessionLeftAsideSettings #toggleAudWrap {
+        height: 90px;
+        width: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center; }
+        #session #sessionLeftAside #sessionLeftAsideSettings #toggleAudWrap #toggleAudio {
+          margin-top: 20px;
+          width: 40px;
+          height: 40px; }
+  #session #sessionCenterAside {
+    width: calc(100% - 700px);
     display: flex;
     flex-direction: column;
-    border-left: 1px solid #1C1C1C;
+    border-left: 1px solid #1c1c1c;
     box-sizing: border-box; }
-    #session #sessionRightAside #discussContent {
+    #session #sessionCenterAside #discussContent {
       height: 50%;
       width: 100%;
       background-color: #323131;
-      border-bottom: 1px solid #1C1C1C; }
-    #session #sessionRightAside #chatSection {
+      border-bottom: 1px solid #1c1c1c; }
+    #session #sessionCenterAside #chatSection {
       box-sizing: border-box;
       width: 100%;
       height: 50%;
       display: flex;
       flex-direction: column; }
-      #session #sessionRightAside #chatSection #chatBox {
+      #session #sessionCenterAside #chatSection #chatBox {
         height: 100%;
         background-color: #282828;
         display: flex;
         flex-direction: column; }
-        #session #sessionRightAside #chatSection #chatBox #chatMsgsShow {
+        #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow {
           width: 100%;
           height: calc(100% - 80px);
-          background-color: #323131; }
-        #session #sessionRightAside #chatSection #chatBox #chatInputBox {
+          background-color: #323131;
+          overflow: scroll;
+          padding: 10px;
+          box-sizing: border-box; }
+          #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg:hover {
+            background: #302f2f; }
+          #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg {
+            width: 100%;
+            font-family: 'Comfortaa';
+            display: flex;
+            box-sizing: border-box; }
+            #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatMsgAvatar {
+              width: 30px;
+              height: 30px;
+              border-radius: 30px;
+              margin: 10px;
+              border: 1px solid #c2c3c4; }
+            #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatHeaderNmsg .chatMsgUserInfo {
+              width: 100%;
+              height: 30px;
+              display: flex;
+              align-items: flex-end;
+              box-sizing: border-box;
+              display: flex;
+              width: 100%;
+              justify-content: flex-start; }
+              #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatHeaderNmsg .chatMsgUserInfo .chatMsgDate {
+                font-size: 10px;
+                margin-bottom: 2px !important;
+                margin-left: 5px;
+                color: rgba(0, 0, 0, 0.4); }
+              #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatHeaderNmsg .chatMsgUserInfo .chatMsgName {
+                font-size: 15px; }
+            #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatHeaderNmsg .chatMsgText {
+              overflow-wrap: break-word;
+              font-size: 13px;
+              color: #c2c3c4;
+              margin: 5px;
+              width: 90%;
+              box-sizing: border-box; }
+        #session #sessionCenterAside #chatSection #chatBox #chatInputBox {
           -webkit-appearance: none;
           resize: none;
           appearance: none;
           background: transparent;
           border: none;
-          border-top: 1px solid #1C1C1C;
+          border-top: 1px solid #1c1c1c;
           width: 100%;
           height: 80px;
           outline: none;
           font-size: 15px;
-          color: white;
+          color: #c2c3c4;
           font-family: 'Comfortaa';
           padding: 10px;
           box-sizing: border-box; }
-        #session #sessionRightAside #chatSection #chatBox #chatBtns {
+        #session #sessionCenterAside #chatSection #chatBox #chatBtns {
           height: 50px; }
+  #session #sessionRightAside {
+    background-color: #242323;
+    border-left: 1px solid #1c1c1c;
+    height: calc(100vh - 55px);
+    width: 200px; }
 
 #rooms {
   height: calc( 100vh - 55px);
@@ -208,7 +272,7 @@
   .dropMenu #accountArrow {
     margin-right: 20px !important; }
   .dropMenu #sessionArrow {
-    margin-right: 225px !important; }
+    margin-right: 176px !important; }
   .dropMenu #signInArrow {
     margin-right: 85px !important; }
   .dropMenu #threeDotArrow {
@@ -242,7 +306,7 @@
       color: black;
       font-size: 17px;
       border-radius: 3px;
-      padding: 7px;
+      padding: 10px;
       width: 100%;
       box-sizing: border-box; }
     .dropMenu .menuItems .menuInput {
@@ -268,11 +332,22 @@
       resize: none; }
     .dropMenu .menuItems .menuItem:hover {
       background-color: #cbd2d2; }
-    .dropMenu .menuItems .menuConfig {
-      padding: 10px;
+    .dropMenu .menuItems .menuSelect {
       font-size: 17px;
       display: flex;
-      width: 100%;
+      width: 94%;
+      box-sizing: border-box;
+      justify-content: space-between;
+      outline: none;
+      cursor: pointer; }
+    .dropMenu .menuItems .menuConfig {
+      cursor: default;
+      padding: 7px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 17px;
+      display: flex;
+      width: 96%;
       box-sizing: border-box;
       justify-content: space-between; }
       .dropMenu .menuItems .menuConfig input[type=number]::-webkit-inner-spin-button {
@@ -292,6 +367,7 @@
       left: 27px;
       background-color: black; }
     .dropMenu .menuItems #checkbox {
+      margin-top: 6px;
       width: 40px;
       height: 10px;
       background: #555;
@@ -309,7 +385,7 @@
       left: -3px;
       background: #FCCB43; }
     .dropMenu .menuItems .menuItem {
-      padding: 10px;
+      padding: 7px;
       font-size: 17px;
       display: flex;
       width: 100%;
@@ -318,7 +394,8 @@
       display: flex;
       height: 30px;
       justify-content: center;
-      margin-top: 10px; }
+      margin-top: 10px;
+      width: 100%; }
       .dropMenu .menuItems .menuItemSplit .or {
         margin-top: 5px; }
       .dropMenu .menuItems .menuItemSplit .splitLine1 {
@@ -332,19 +409,90 @@
         margin-left: 10px;
         border-bottom: 2px solid rgba(0, 0, 0, 0.3); }
 
+#pulloutBg {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 50;
+  overflow: hidden;
+  animation: removeOverlay .3s ease-out forwards;
+  display: none; }
+
+.pulloutAction {
+  animation: pullout .3s ease-out forwards !important; }
+
+.overlayAction {
+  animation: overlay .3s ease-out forwards !important; }
+
+#pullout {
+  animation: pullin .3s ease-out forwards;
+  transform: translateX(-100%);
+  height: 100vh;
+  width: 260px;
+  background-color: #DDE4E4; }
+
+.menuItem:hover {
+  background-color: #cbd2d2; }
+
+.menuItem {
+  padding: 10px;
+  font-size: 17px;
+  display: flex;
+  font-family: 'Didact Gothic';
+  cursor: pointer; }
+
+.menuSurkls {
+  width: 100%;
+  border-top: 1px solid #303030;
+  height: 100px;
+  margin-top: 10px;
+  overflow-y: scroll; }
+  .menuSurkls .menuSurklsHeader {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    font-family: 'Comfortaa'; }
+
+@keyframes overlay {
+  100% {
+    background-color: rgba(0, 0, 0, 0.4); } }
+
+@keyframes pullout {
+  100% {
+    transform: translate(0%, 0px); } }
+
+@keyframes removeOverlay {
+  0% {
+    background-color: rgba(0, 0, 0, 0.4); }
+  100% {
+    background-color: rgba(0, 0, 0, 0); } }
+
+@keyframes pullin {
+  0% {
+    transform: translate(0%, 0px); }
+  100% {
+    transform: translate(-100%, 0px); } }
+
 .header {
   height: 55px;
   width: 100%;
   background-color: #282828;
   display: flex;
   justify-content: space-between;
-  align-items: center; }
-  .header #customPulloutHeader {
+  align-items: center;
+  border-bottom: 1px solid #1C1C1C;
+  box-sizing: border-box; }
+  .header .customPulloutHeader {
     display: flex;
     width: 100%;
     height: 50px;
     align-items: center; }
-    .header #customPulloutHeader #menuBarsIcon2 {
+    .header .customPulloutHeader #menuBarsIcon2 {
       cursor: pointer;
       margin-left: 15px;
       width: 30px;
@@ -353,7 +501,7 @@
       background-position: center;
       background-size: 25px;
       background-repeat: no-repeat; }
-    .header #customPulloutHeader #surklsTitle {
+    .header .customPulloutHeader #surklsTitle {
       max-width: 70px;
       margin-left: 50px; }
   .header #leftOfHeader {
@@ -371,7 +519,8 @@
     .header #leftOfHeader .logo {
       width: 40px;
       height: 40px;
-      margin-left: 20px; }
+      margin-left: 20px;
+      margin-top: 3px; }
   .header #rightOfHeader {
     display: flex;
     justify-content: center;
@@ -493,6 +642,7 @@
   width: 90%;
   border-radius: 5px;
   margin-bottom: 10px;
+  margin-top: 15px;
   background-color: #282828; }
 
 /*session menu*/
@@ -603,6 +753,9 @@
 #sendMsgBtn:hover {
   background-color: #FECC43;
   color: #282828; }
+
+/*msgs menu*/
+/*pullout menu*/
 
 a {
   color: inherit;
