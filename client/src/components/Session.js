@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import {getDevices} from 'actions/actions';
+import { getDevices } from 'actions/actions';
 import PropTypes from 'prop-types';
 import 'styles/session.scss';
 import 'styles/loader.scss';
@@ -41,6 +41,10 @@ class Session extends Component {
 		this.track = [];
 		this.remoteClients = [];
 		this.rtcs = {};
+		this.remoteAdded = {
+			added: false,
+			videoEl: null
+		};
 		this.socket = io('http://localhost:4000');
 		this.socket.on('connect', () => {
 			this.setState({ connectedToSock: true });
@@ -51,45 +55,55 @@ class Session extends Component {
 	}
 	//////////////////////////////////////////////webrtc funcs////////////////////////////////////////////
 	handleOfferError = (err) => {
-		console.log(err)
+		console.log(err);
 		errors = {};
 		errors.offer = 'Someones offer to connect failed';
 		this.setState({ errors: errors });
 	};
 	handleAnswerError = (err) => {
-		console.log(err)
+		console.log(err);
 		errors = {};
 		errors.answer = 'Your browser failed open a connection';
 		this.setState({ errors: errors });
 	};
 	handleCandidateError = (err) => {
-		console.log(err)
+		console.log(err);
 		errors = {};
 		errors.candidates = "Your browser couldn't find a connection protocol";
 		this.setState({ errors: errors });
 	};
 	handleRemoteDescError = (err) => {
-		console.log(err)
+		console.log(err);
 		errors = {};
 		errors.remoteDescription = "Your browser couldn't set up a remote connection";
 		this.setState({ errors: errors });
 	};
 	handleLocalDescError = (err) => {
-		console.log(err)
+		console.log(err);
 		errors = {};
 		errors.localDescription = 'Your browser failed to establish a connection';
 		this.setState({ errors: errors });
 	};
 	handleRemoteStreamAdded = (event) => {
-		let client = this.remoteClients[this.remoteClients.length - 1];
-		this.createVideo().then((video) => {
-			if (video.vid.srcObject == null) {
+		//console.log('REMOTE',event.streams)	
+		if(this.remoteAdded.added===false){	
+			let client = this.remoteClients[this.remoteClients.length - 1];
+			this.createVideo().then((video) => {
+				this.remoteAdded.videoEl = video.vid;
+				if (video.vid.srcObject == null) {
 				video.vid.srcObject = event.streams[0];
 				video.vid.setAttribute('data-id', client);
 				video.vidWrap.setAttribute('data-id', client);
-				//video.vid.addEventListener('click', ()=>this.getStats(client, event.streams[0]))
-			}
-		});
+				this.remoteAdded.added = true;
+				this.remoteAdded.id = event.streams[0].id;
+		  	}
+	   });
+	 }	
+		if(this.remoteAdded.added === true && this.remoteAdded.id === event.streams[0].id) {
+			console.log('umm what')
+			this.remoteAdded.videoEl.srcObject = event.streams[0]; 
+			this.remoteAdded.added = false;
+		}
 	};
 
 	handleRemoteStreamRemoved = (event) => {
@@ -148,7 +162,7 @@ class Session extends Component {
 			)
 			.catch(this.handleAnswerError);
 	};
-	
+
 	handleLeavingClient = (remoteId) => {
 		let iterator = 0;
 		let streams = document.getElementsByClassName('stream');
@@ -160,14 +174,14 @@ class Session extends Component {
 					track.stop();
 					stream.srcObject = null;
 					this.remoteClients.splice(iterator, 1);
-				});	
+				});
 			}
 			iterator++;
 		}
-		let updatedList = this.clientList.filter(client=>{
-			return client.socketId!==remoteId				
-		})
-		this.setState({clientList: updatedList})
+		let updatedList = this.state.clientList.filter((client) => {
+			return client.socketId !== remoteId;
+		});
+		this.setState({ clientList: updatedList });
 		for (let streamWrap of streamWraps) {
 			if (streamWrap.dataset.id === remoteId) {
 				streamList.removeChild(streamWrap);
@@ -182,9 +196,10 @@ class Session extends Component {
 		currentConnection.onicecandidate = this.handleIceCandidate;
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-		this.track.forEach((track)=>{
-			currentConnection.addTrack(track, this.stream);
-		})	
+		this.track.forEach((track) => {
+			console.log('adding track')
+				currentConnection.addTrack(track,this.stream);
+		});
 		if (currentConnection.setRemoteDescription) {
 			cb(currentConnection);
 		}
@@ -199,7 +214,7 @@ class Session extends Component {
 		streamOfMe.srcObject.getTracks().forEach((track) => track.stop());
 		streamOfMe.srcObject = null;
 		let streams = document.querySelectorAll('.stream');
-		if (streams !== null) {
+		if (streams !== null && streams.length !== 0) {
 			for (let stream of streams) {
 				let tracks = stream.srcObject.getTracks();
 				tracks.forEach(function(track) {
@@ -211,10 +226,10 @@ class Session extends Component {
 		this.socket.emit('leave');
 	}
 	componentDidUpdate(prevProps, prevState) {
-		if(prevState.errors!== this.state.errors){
-			setTimeout(()=>{
-				this.setState({errors: {}})
-			},2000)
+		if (prevState.errors !== this.state.errors) {
+			setTimeout(() => {
+				this.setState({ errors: {} });
+			}, 2000);
 		}
 		if (this.state.msgs !== prevState.msgs) {
 			const chatBox = document.getElementById('chatMsgsShow');
@@ -224,25 +239,25 @@ class Session extends Component {
 		}
 		if (this.props.auth !== prevProps.auth || this.props.session !== prevProps.session) {
 			if (this.rendered === false) {
-				this.socket.on('clientList', clients=>{
-					this.setState({clientList: clients})
-				})
-				navigator.mediaDevices.ondevicechange = () =>{
-					this.updateDevices()
-				}
+				this.socket.on('clientList', (clients) => {
+					this.setState({ clientList: clients });
+				});
+				navigator.mediaDevices.ondevicechange = () => {
+					this.updateDevices();
+				};
 				this.startStream(document.getElementById('streamOfMe')).then(() => {
 					if (this.props.session.creatingSession) {
 						this.creator = true;
 					}
 					this.props.session.sessionKey = this.props.match.params.room.replace('room=', '');
 					this.props.session.creatingSession = false;
-					this.props.session.user = this.props.auth
+					this.props.session.user = this.props.auth;
 					this.socket.emit('createOrJoin', this.props.session);
 					this.socket.on('signal', (data, remoteId) => {
 						switch (data.type) {
 							case 'newJoin':
 								this.createPeerRtc(remoteId, (rtc) => {
-									console.log(rtc);
+									//console.log(rtc);
 									this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
 									this.remoteClients.push(remoteId);
 								});
@@ -291,24 +306,21 @@ class Session extends Component {
 	};
 	componentDidMount() {
 		if (this.props.session.sessionKey) {
-			this.socket.on('clientList', clients=>{
-				this.setState({clientList: clients})
-			})
-			navigator.mediaDevices.ondevicechange = () =>{
-				this.updateDevices()
-			}
+			this.socket.on('clientList', (clients) => {
+				this.setState({ clientList: clients });
+			});
+			navigator.mediaDevices.ondevicechange = () => {
+				this.updateDevices();
+			};
 			this.startStream(document.getElementById('streamOfMe')).then(() => {
-				if (this.props.session.creatingSession) {
-					this.creator = true;
-				}
 				this.props.session.sessionKey = this.props.match.params.room.replace('room=', '');
-				this.props.session.user = this.props.auth
+				this.props.session.user = this.props.auth;
 				this.socket.emit('createOrJoin', this.props.session);
 				this.socket.on('signal', (data, remoteId) => {
 					switch (data.type) {
 						case 'newJoin':
 							this.createPeerRtc(remoteId, (rtc) => {
-								console.log(rtc);
+								//console.log(rtc);
 								this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
 								this.remoteClients.push(remoteId);
 							});
@@ -350,20 +362,18 @@ class Session extends Component {
 			});
 		}
 	}
-///////////////////////////////////////////lifecycle^^^hooks////////////////////////////////////////
-	updateDevices = () =>{
-			this.props.getDevices()
-	}
-	updateClientList = () =>{
-		if(this.state.clientList!==undefined && this.state.clientList.length > 0){
-			return this.state.clientList.map((client,ind)=>{
-				return (
-					<img key={ind} src={client.avatarUrl} className="clientSquareAv"/>
-				)
-			})
+	///////////////////////////////////////////lifecycle^^^hooks////////////////////////////////////////
+	updateDevices = () => {
+		this.props.getDevices();
+	};
+	updateClientList = () => {
+		if (this.state.clientList !== undefined && this.state.clientList.length > 0) {
+			return this.state.clientList.map((client, ind) => {
+				return <img key={ind} src={client.avatarUrl} className="clientSquareAv" />;
+			});
 		}
-	}
- 	sendMsg = (e) => {
+	};
+	sendMsg = (e) => {
 		if (e.key == 'Enter') {
 			let date = new Date(Date.now());
 			let locale = date.toLocaleDateString();
@@ -430,7 +440,7 @@ class Session extends Component {
 	};
 	toggleVideo = () => {
 		let vid = document.getElementById('streamOfMe').srcObject.getVideoTracks();
-		if (this.state.showMyStream=== true) {
+		if (this.state.showMyStream === true) {
 			for (let i = 0; i < vid.length; i++) {
 				vid[i].enabled = false;
 			}
@@ -460,9 +470,11 @@ class Session extends Component {
 					})
 					.then((stream) => {
 						videoEl.srcObject = stream;
+						//console.log(videoEl.srcObject)
 						this.stream = stream;
 						stream.getTracks().forEach((track) => {
 							this.track.push(track);
+							console.log('TRACK',track)
 						});
 						resolve();
 					});
@@ -472,19 +484,19 @@ class Session extends Component {
 		});
 	};
 
-	renderErrors = () =>{
-		if(this.state.errors.answer){
-			return this.state.errors.answer
-		} else if(this.state.errors.offer){
-			return this.state.errors.offer
-		} else if(this.state.errors.candidates){
-			return this.state.errors.candidates
-		} else if (this.state.errors.localDescription){
-			return this.state.errors.localDescription
+	renderErrors = () => {
+		if (this.state.errors.answer) {
+			return this.state.errors.answer;
+		} else if (this.state.errors.offer) {
+			return this.state.errors.offer;
+		} else if (this.state.errors.candidates) {
+			return this.state.errors.candidates;
+		} else if (this.state.errors.localDescription) {
+			return this.state.errors.localDescription;
 		} else {
-			return this.state.errors.remoteDescription
+			return this.state.errors.remoteDescription;
 		}
-	}
+	};
 	render() {
 		if (this.props.auth == null || this.props.session === null) {
 			return (
@@ -496,9 +508,14 @@ class Session extends Component {
 			return (
 				<div id="session">
 					<div id="sessionLeftAside">
-						<div id="videoStreams">{/* streams will be appended here*/}
-							<div style={{display:Object.keys(this.state.errors).length>1 ? 'flex': 'none'}}
-							id="streamsErrorModal">
+						<div id="videoStreams">
+							 {/* <div className="streamWrap">
+								<video className="streamTest" autoPlay></video>
+							</div>  */}
+							<div
+								style={{ display: Object.keys(this.state.errors).length > 1 ? 'flex' : 'none' }}
+								id="streamsErrorModal"
+							>
 								{this.renderErrors()}
 							</div>
 						</div>
@@ -544,8 +561,8 @@ class Session extends Component {
 							</div>
 							<div id="restOfSettings">
 								<div id="shareLink">Share Link</div>
-								<select id="sessVidDevices"></select>
-								<select id="sessAudDevices"></select>
+								<select id="sessVidDevices" />
+								<select id="sessAudDevices" />
 							</div>
 						</div>
 					</div>
@@ -591,4 +608,4 @@ function stateToProps(state) {
 		devices: state.devices
 	};
 }
-export default connect(stateToProps,{getDevices})(Session);
+export default connect(stateToProps, { getDevices })(Session);
