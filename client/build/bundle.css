@@ -100,6 +100,38 @@
 .errorColor::-webkit-input-placeholder {
   color: #d84224; }
 
+#spinnerWrap {
+  width: 100%;
+  height: calc(100vh - 55px);
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin-top: -50px;
+  background-color: #333;
+  border-radius: 100%;
+  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+  animation: sk-scaleout 1.0s infinite ease-in-out; }
+
+@-webkit-keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0); }
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 0; } }
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0); }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0; } }
+
 #session {
   display: flex;
   width: 100%;
@@ -145,6 +177,7 @@
       overflow: hidden; }
       #session #sessionLeftAside #sessionLeftAsideSettings #streamOfMe {
         margin-top: 5px;
+        margin-left: 5px;
         border-radius: 3px;
         height: 80px;
         width: 80px; }
@@ -179,7 +212,23 @@
         height: 100%;
         background-color: #282828;
         display: flex;
-        flex-direction: column; }
+        flex-direction: column;
+        position: relative; }
+        #session #sessionCenterAside #chatSection #chatBox #noAuthLayer {
+          position: absolute;
+          bottom: 0px;
+          left: 0px;
+          display: flex;
+          width: 100%;
+          height: 80px;
+          outline: none;
+          justify-content: center;
+          align-items: center;
+          font-family: 'Comfortaa';
+          background: rgba(0, 0, 0, 0.6);
+          color: #c2c3c4;
+          z-index: 10;
+          font-size: 20px; }
         #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow {
           width: 100%;
           height: calc(100% - 80px);
@@ -491,6 +540,7 @@
     display: flex;
     width: 100%;
     height: 50px;
+    border-bottom: 1px solid #303030;
     align-items: center; }
     .header .customPulloutHeader #menuBarsIcon2 {
       cursor: pointer;
@@ -591,7 +641,7 @@
       color: black;
       font-size: 17px;
       padding: 7px;
-      padding-top: 0px;
+      padding-top: 9px;
       width: 100%;
       box-sizing: border-box;
       border-radius: 3px; }
