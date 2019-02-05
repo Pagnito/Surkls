@@ -16,7 +16,7 @@ class Rooms extends Component {
 		}
 		if (sessionKey.length >= 3) {
 			this.props.joinSession(session, () => {
-				this.props.history.push('/session');
+				this.props.history.push('/session/room='+sessionKey.toString());
 			});
 		} else {
 			//@TODO show error
@@ -25,7 +25,7 @@ class Rooms extends Component {
 	renderRooms = () => {
 		return this.props.sessions.sessions.map((room,ind) => {
 			return (
-				<div onClick={() => this.joinSession(room.sessionKey, room.room, room.clientId)} key={ind} className="room">
+				<div onClick={() => this.joinSession(room.sessionKey, room.room)} key={ind} className="room">
 					{room.room}
 				</div>
 			);

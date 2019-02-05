@@ -15,7 +15,6 @@ module.exports = (io, app) => {
 	io.on('connection', function(socket) {
 		socket.on('createOrJoin', function(session) {
 			console.log('CLIENT DESC', session);
-			console.log(session.sessionKey)
 			if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){
 			if(session.creatingSession===false){
 				if(rooms[session.sessionKey]){
@@ -101,21 +100,23 @@ module.exports = (io, app) => {
 			socket.on('disconnect', () => {
 				socket.in(session.sessionKey).emit('signal', {type:'clientLeft'}, socket.id)
 				socket.disconnect();
-				rooms[session.sessionKey].clients.forEach((client, ind) => {
-					if (client === socket.id) {
-						console.log('deleting')
-						rooms[session.sessionKey].clients.splice(ind, 1);
-					}
-				});		
+				if(rooms[session.sessionKey]){
+					rooms[session.sessionKey].clients.forEach((client, ind) => {
+						if (client === socket.id) {
+							console.log('deleting')
+							rooms[session.sessionKey].clients.splice(ind, 1);
+						}
+					});	
 					console.log('a client disconnected');
-					console.log(rooms[session.sessionKey].clients.length, ' clients left in the room', session.room);		
-				if(rooms[session.sessionKey].clients.length==0){
-					if(session.sessionKey!==null && session.sessionKey!==undefined){
-						redClient.hdel('rooms', session.sessionKey);
-					}		
-					rooms[session.sessionKey] = {};
-					delete rooms[session.sessionKey]
-				}		
+					console.log(rooms[session.sessionKey].clients.length, ' clients left in the room', session.room);	
+					if(rooms[session.sessionKey].clients.length==0){
+						if(session.sessionKey!==null && session.sessionKey!==undefined){
+							redClient.hdel('rooms', session.sessionKey);
+						}		
+						rooms[session.sessionKey] = {};
+						delete rooms[session.sessionKey]
+					}	
+				}						
       });
 			//console.log(io.sockets.adapter.rooms);
 			}

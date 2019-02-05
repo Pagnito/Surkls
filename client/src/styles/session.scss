@@ -47,7 +47,8 @@
       align-content: flex-start;
       overflow: hidden;
       #streamOfMe {
-        margin-top: 5px;
+				margin-top: 5px;
+				margin-left: 5px;
         border-radius: 3px;
         height:80px;
         width:80px
@@ -93,6 +94,23 @@
 				background-color: #282828;
 				display: flex;
 				flex-direction: column;
+				position: relative;
+				#noAuthLayer {
+					position: absolute;
+					bottom:0px;
+					left:0px;
+					display: flex;
+					width: 100%;
+					height: 80px;
+					outline: none;
+					justify-content: center;
+					align-items: center;
+					font-family: 'Comfortaa';
+					background: rgba(0,0,0,.6);
+					color: #c2c3c4;
+					z-index: 10;
+					font-size: 20px;
+				}
 				#chatMsgsShow {
 					width: 100%;
 					height: calc(100% - 80px);

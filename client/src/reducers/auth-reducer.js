@@ -2,7 +2,7 @@ import { SET_USER, GET_USER } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	isAuthenticated: false,
-	user: {}
+	user: null
 };
 
 export default function(state = initialState, action) {
@@ -14,6 +14,7 @@ export default function(state = initialState, action) {
 				user: action.payload
 			};
 		case SET_USER:
+			console.log(action.payload)
 			return {
 				...state,
 				isAuthenticated: !isEmpty(action.payload),

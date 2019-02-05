@@ -10,13 +10,13 @@ module.exports = (app) => {
 	app.get('/auth/twitter', passport.authenticate('twitter', { scope: [ 'profile', 'email' ] }));
   app.get('/auth/twitter/callback', 
     passport.authenticate('twitter', { failureRedirect: '/' }), function(req, res) {
-		res.redirect('/dashboard');
+		res.redirect('/rooms');
 	});
 	///////////////////////////////////////////google auth////////////////////////////////////////////
 	app.get('/auth/google', passport.authenticate('google', { scope: [ 'profile', 'email' ] }));
   app.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/' }), function(req, res) {
-		res.redirect('/dashboard');
+		res.redirect('/rooms');
 	});
 	///////////////////////////////////////////local auth/////////////////////////////////////////////
 	app.post('/auth/login', passport.authenticate('local'), (req,res)=>{
@@ -26,7 +26,7 @@ module.exports = (app) => {
 	app.get('/auth/twitch', passport.authenticate('twitch'));
   app.get('/auth/twitch/callback', 
     passport.authenticate('twitch', { failureRedirect: '/' }), function(req, res) {
-		res.redirect('/dashboard');
+		res.redirect('/rooms');
 	});
 	/////////////////////////////////////////account routes///////////////////////////////////////////
 	app.put('/account/update', requireLogin, (req, res) => {

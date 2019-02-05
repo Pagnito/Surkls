@@ -6,7 +6,13 @@ export const getUser = () => (dispatch) => {
 			type: GET_USER,
 			payload: data.data
 		});
-	});
+	}).catch((err)=>{
+		console.log(err,'yoooo')
+		dispatch({
+			type: GET_USER,
+			payload: {}
+		})
+	})
 };
 export const getSessions = () => (dispatch)=> {
 	fetch('/api/sessions')
@@ -59,7 +65,12 @@ export const signUpOrLogin = (user,cb) => (dispatch) => {
 			payload: user
     });
     cb()
-	});
+	}).catch(()=>{
+		dispatch({
+			type: SET_USER,
+			payload: {}
+		})
+	})
 };
 export const startSession = (sessionInfo, cb) => (dispatch) =>{
 	dispatch({

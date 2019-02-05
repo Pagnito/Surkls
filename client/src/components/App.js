@@ -20,13 +20,8 @@ const Entries = Loadable({
 });*/
 
 class App extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			user: {}
-		};
-	}
 
+	
 	componentDidMount() {
 		setUserMedia();
 		fetch('/account').then((res) => res.json()).then((user) =>{
@@ -34,24 +29,32 @@ class App extends Component {
 				type: GET_USER,
 				payload: user
 			})
-			this.props.history.push('/rooms')
-		});
+			if(this.props.location.pathname === '/' ){
+				this.props.history.push('/rooms')
+			}		
+		}).catch(()=>{
+			Store.dispatch({
+				type: GET_USER,
+				payload: {}
+			})
+		})
 	}
 
 	render() {
-		return (
-			<Provider store={Store}>	
-				<Header />
-				<Route exact path="/" component={Home}  />
-        <Route exact path="/dashboard" component={Dashboard}  />
-				<Route exact path="/session" component={Session}  />
-				<Route exact path="/rooms" component={Rooms}  />
-			</Provider>
-		);
+			return (
+				<Provider store={Store}>	
+					<Header />
+					<Route exact path="/" component={Home}  />
+					<Route exact path="/dashboard" component={Dashboard}  />
+					<Route exact path="/session/:room" component={Session}  />
+					<Route exact path="/rooms" component={Rooms}  />
+				</Provider>
+			);
 	}
 }
 App.propTypes = {
 	getUser: PropTypes.func,
-	history: PropTypes.object
+	history: PropTypes.object,
+	location: PropTypes.object
 };
 export default withRouter(App);

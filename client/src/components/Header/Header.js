@@ -306,7 +306,7 @@ class Header extends Component {
 
 		this.props.signUpOrLogin(JSON.stringify(user), () => {
 			this.setState({ signInMenuVisible: false });
-			this.props.history.push('/dashboard');
+			this.props.history.push('/rooms');
 		});
 	};
 	signInMenu = () => {
@@ -380,7 +380,7 @@ class Header extends Component {
 	accountMenu = () => {
 		let visibility = this.state.accMenuVisible ? 'flex' : 'none';
 		return (
-			<DropMenu hideMenu={this.hideAllMenus} menuTypeArrow="accountArrow" visibility={visibility}>
+			<DropMenu hideHeader={true} hideMenu={this.hideAllMenus} menuTypeArrow="accountArrow" visibility={visibility}>
 				<div className="customMenuHeader">
 					<div
 						id="avatar"
@@ -444,7 +444,7 @@ class Header extends Component {
 				},
 				() => {
 					this.props.startSession(sessionObj, () => {
-						this.props.history.push('/session');
+						this.props.history.push('/session/room='+sessionKey.toString());
 					});
 				}
 			);

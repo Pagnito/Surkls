@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 import 'styles/session.scss';
-
+import 'styles/loader.scss'
 class Session extends Component {
 	constructor(props) {
 		super(props);
@@ -31,13 +31,14 @@ class Session extends Component {
 				}
 			]
 		};
+		this.rendered = false;
 		this.imNotTheNew = false;
 		this.creator = false;
 		this.stream;
 		this.track;
 		this.remoteClients = [];
 		this.rtcs = {};
-		this.socket = io('https://surkls.herokuapp.com');
+		this.socket = io('http://localhost:4000');
 		this.socket.on('connect', () => {
 			this.setState({ connectedToSock: true });
 		});
@@ -189,10 +190,66 @@ class Session extends Component {
 			cb(currentConnection);
 		}
 	};
-	componentDidUpdate(prevState) {
+	componentDidUpdate(prevProps,prevState) {
 		if (this.state.msgs !== prevState.msgs) {
 			const chatBox = document.getElementById('chatMsgsShow');
-			chatBox.scrollTop = chatBox.scrollHeight;
+			if(chatBox!==null){
+				chatBox.scrollTop = chatBox.scrollHeight;
+			}			
+		}
+		if(this.props.auth!==prevProps.auth || this.props.session !== prevProps.session){
+			if(this.rendered === false) {
+			this.startStream(document.getElementById('streamOfMe')).then(() => {
+				if (this.props.session.creatingSession) {
+					this.creator = true;
+				}
+				this.props.session.sessionKey = this.props.match.params.room.replace('room=', '');
+				this.props.session.creatingSession = false
+				this.socket.emit('createOrJoin', this.props.session);
+				this.socket.on('signal', (data, remoteId) => {
+					switch (data.type) {
+						case 'newJoin':
+							this.createPeerRtc(remoteId, (rtc) => {
+								console.log(rtc);
+								this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
+								this.remoteClients.push(remoteId);
+							});
+							break;
+						case 'offer':
+							this.remoteClients.push(remoteId);
+							this.createPeerRtc(remoteId, (rtc) => {
+								rtc
+									.setRemoteDescription(new RTCSessionDescription(data))
+									.then(() => {
+										this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer));
+									})
+									.catch(this.handleRemoteDescError);
+							});
+							break;
+						case 'answer':
+							this.imNotTheNew = true;
+							this.rtcs[remoteId]
+								.setRemoteDescription(new RTCSessionDescription(data))
+								.catch(this.handleRemoteDescError);
+							break;
+						case 'candidate':
+							let hisCandidate = new RTCIceCandidate({
+								sdpMLineIndex: data.label,
+								candidate: data.candidate
+							});
+							if (this.rtcs[remoteId] !== undefined && this.rtcs[remoteId].remoteDescription.type) {
+								this.rtcs[remoteId].addIceCandidate(hisCandidate).catch(this.handleCandidateError);
+							}
+							break;
+						case 'clientLeft':
+							this.handleLeavingClient(remoteId);
+							break;
+						case 'connected':
+							break;
+					}
+				});
+			});
+		}
 		}
 	}
 	getStats = (id, stream) => {
@@ -201,55 +258,59 @@ class Session extends Component {
 		});
 	};
 	componentDidMount() {
-		console.log(this.props.session);
-		this.startStream(document.getElementById('streamOfMe')).then(() => {
-			if (this.props.session.creatingSession) {
-				this.creator = true;
-			}
-			this.socket.emit('createOrJoin', this.props.session);
-			this.socket.on('signal', (data, remoteId) => {
-				switch (data.type) {
-					case 'newJoin':
-						this.createPeerRtc(remoteId, (rtc) => {
-							console.log(rtc);
-							this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
-							this.remoteClients.push(remoteId);
-						});
-						break;
-					case 'offer':
-						this.remoteClients.push(remoteId);
-						this.createPeerRtc(remoteId, (rtc) => {
-							rtc
-								.setRemoteDescription(new RTCSessionDescription(data))
-								.then(() => {
-									this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer));
-								})
-								.catch(this.handleRemoteDescError);
-						});
-						break;
-					case 'answer':
-						this.imNotTheNew = true;
-						this.rtcs[remoteId]
-							.setRemoteDescription(new RTCSessionDescription(data))
-							.catch(this.handleRemoteDescError);
-						break;
-					case 'candidate':
-						let hisCandidate = new RTCIceCandidate({
-							sdpMLineIndex: data.label,
-							candidate: data.candidate
-						});
-						if (this.rtcs[remoteId] !== undefined && this.rtcs[remoteId].remoteDescription.type) {
-							this.rtcs[remoteId].addIceCandidate(hisCandidate).catch(this.handleCandidateError);
-						}
-						break;
-					case 'clientLeft':
-						this.handleLeavingClient(remoteId);
-						break;
-					case 'connected':
-						break;
+		if(this.props.session.sessionKey){
+			this.startStream(document.getElementById('streamOfMe')).then(() => {
+				if (this.props.session.creatingSession) {
+					this.creator = true;
 				}
+				this.props.session.sessionKey = this.props.match.params.room.replace('room=', '')
+				this.socket.emit('createOrJoin', this.props.session);
+				this.socket.on('signal', (data, remoteId) => {
+					switch (data.type) {
+						case 'newJoin':
+							this.createPeerRtc(remoteId, (rtc) => {
+								console.log(rtc);
+								this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
+								this.remoteClients.push(remoteId);
+							});
+							break;
+						case 'offer':
+							this.remoteClients.push(remoteId);
+							this.createPeerRtc(remoteId, (rtc) => {
+								rtc
+									.setRemoteDescription(new RTCSessionDescription(data))
+									.then(() => {
+										this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer));
+									})
+									.catch(this.handleRemoteDescError);
+							});
+							break;
+						case 'answer':
+							this.imNotTheNew = true;
+							this.rtcs[remoteId]
+								.setRemoteDescription(new RTCSessionDescription(data))
+								.catch(this.handleRemoteDescError);
+							break;
+						case 'candidate':
+							let hisCandidate = new RTCIceCandidate({
+								sdpMLineIndex: data.label,
+								candidate: data.candidate
+							});
+							if (this.rtcs[remoteId] !== undefined && this.rtcs[remoteId].remoteDescription.type) {
+								this.rtcs[remoteId].addIceCandidate(hisCandidate).catch(this.handleCandidateError);
+							}
+							break;
+						case 'clientLeft':
+							this.handleLeavingClient(remoteId);
+							break;
+						case 'connected':
+							break;
+					}
+				});
+				this.rendered = true
 			});
-		});
+		}
+			
 	}
 
 	sendMsg = (e) => {
@@ -290,7 +351,7 @@ class Session extends Component {
 		});
 	};
 
-	createVideo = (cb) => {
+	createVideo = () => {
 		return new Promise((resolve, reject) => {
 			let streamRows = document.getElementById('videoStreams');
 			let videoWrap = document.createElement('div');
@@ -317,7 +378,7 @@ class Session extends Component {
 			this.setState({ talk: true });
 		}
 	};
-	startStream = (videoEl, peer) => {
+	startStream = (videoEl) => {
 		return new Promise((resolve, reject) => {
 			if (videoEl.srcObject === null) {
 				navigator.mediaDevices
@@ -336,7 +397,6 @@ class Session extends Component {
 					.then((stream) => {
 						videoEl.srcObject = stream;
 						this.stream = stream;
-						console.log(stream);
 						stream.getTracks().forEach((track) => {
 							this.track = track;
 						});
@@ -349,58 +409,70 @@ class Session extends Component {
 	};
 
 	render() {
-		return (
-			<div id="session">
-				<div id="sessionLeftAside">
-					<div id="videoStreams">{/* streams will be appended here*/}</div>
-					<div id="sessionLeftAsideSettings">
-						<video id="streamOfMe" autoPlay />
-						<div id="toggleAudWrap">
-							<div onClick={this.toggleAudio} id="toggleAudio">
-								<svg
-									aria-hidden="true"
-									focusable="false"
-									data-prefix="fas"
-									data-icon="microphone-slash"
-									className="mic-icon"
-									role="img"
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 640 512"
-								>
-									<path
-										fill="#585858"
-										d="M633.82 458.1l-157.8-121.96C488.61 312.13 496 285.01 496 256v-48c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v48c0 17.92-3.96 34.8-10.72 50.2l-26.55-20.52c3.1-9.4 5.28-19.22 5.28-29.67V96c0-53.02-42.98-96-96-96s-96 42.98-96 96v45.36L45.47 3.37C38.49-2.05 28.43-.8 23.01 6.18L3.37 31.45C-2.05 38.42-.8 48.47 6.18 53.9l588.36 454.73c6.98 5.43 17.03 4.17 22.46-2.81l19.64-25.27c5.41-6.97 4.16-17.02-2.82-22.45zM400 464h-56v-33.77c11.66-1.6 22.85-4.54 33.67-8.31l-50.11-38.73c-6.71.4-13.41.87-20.35.2-55.85-5.45-98.74-48.63-111.18-101.85L144 241.31v6.85c0 89.64 63.97 169.55 152 181.69V464h-56c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16z"
-									/>
-								</svg>
+		if(this.props.auth==null || this.props.session===null){
+			return (
+				<div id="spinnerWrap">
+					<div className="spinner"></div>
+				</div>		
+			)
+		}else {
+			return (
+				<div id="session">
+					<div id="sessionLeftAside">
+						<div id="videoStreams">{/* streams will be appended here*/}</div>
+						<div id="sessionLeftAsideSettings">
+							<video id="streamOfMe" autoPlay />
+							<div id="toggleAudWrap">
+								<div onClick={this.toggleAudio} id="toggleAudio">
+									<svg
+										aria-hidden="true"
+										focusable="false"
+										data-prefix="fas"
+										data-icon="microphone-slash"
+										className="mic-icon"
+										role="img"
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 640 512"
+									>
+										<path
+											fill="#585858"
+											d="M633.82 458.1l-157.8-121.96C488.61 312.13 496 285.01 496 256v-48c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v48c0 17.92-3.96 34.8-10.72 50.2l-26.55-20.52c3.1-9.4 5.28-19.22 5.28-29.67V96c0-53.02-42.98-96-96-96s-96 42.98-96 96v45.36L45.47 3.37C38.49-2.05 28.43-.8 23.01 6.18L3.37 31.45C-2.05 38.42-.8 48.47 6.18 53.9l588.36 454.73c6.98 5.43 17.03 4.17 22.46-2.81l19.64-25.27c5.41-6.97 4.16-17.02-2.82-22.45zM400 464h-56v-33.77c11.66-1.6 22.85-4.54 33.67-8.31l-50.11-38.73c-6.71.4-13.41.87-20.35.2-55.85-5.45-98.74-48.63-111.18-101.85L144 241.31v6.85c0 89.64 63.97 169.55 152 181.69V464h-56c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16z"
+										/>
+									</svg>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div id="sessionCenterAside">
-					<div id="discussContent">{/* <iframe src=""></iframe> */}</div>
-					<div id="chatSection">
-						<div id="chatBox">
-							<div id="chatMsgsShow">{this.renderChatText()}</div>
-							<textarea
-								value={this.state.msg}
-								onChange={this.onInputChange}
-								onKeyDown={this.sendMsg}
-								name="msg"
-								placeholder="Type here to chat"
-								id="chatInputBox"
-							/>
+					<div id="sessionCenterAside">
+						<div id="discussContent">{/* <iframe src=""></iframe> */}</div>
+						<div id="chatSection">
+							<div id="chatBox">
+								<div id="chatMsgsShow">{this.renderChatText()}</div>
+								<textarea
+									value={this.state.msg}
+									onChange={this.onInputChange}
+									onKeyDown={this.sendMsg}
+									name="msg"
+									placeholder="Type here to chat"
+									id="chatInputBox"
+								/>
+								<div style={{display:this.props.auth.userName? 'none' :'flex'}} id="noAuthLayer">
+									You need to log in to chat.
+								</div>
+							</div>
 						</div>
 					</div>
+					<div id="sessionRightAside" />
 				</div>
-				<div id="sessionRightAside" />
-			</div>
-		);
+			);
+		}		
 	}
 }
 Session.propTypes = {
 	auth: PropTypes.object,
 	session: PropTypes.object,
-	history: PropTypes.object
+	history: PropTypes.object,
+	match: PropTypes.object
 };
 function stateToProps(state) {
 	return {

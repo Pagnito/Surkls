@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUser, signUpOrLogin } from 'actions/actions';
 import 'styles/home.scss';
+import 'styles/loader.scss';
 
 class Home extends Component {
 	constructor(props) {
@@ -102,18 +103,26 @@ class Home extends Component {
 		}
 	};
 	render() {
-		return( 
-			<div id="home">
-				<div id="overlay"></div>
-				<div id="registerTitle">Start Your Surkle!</div>
-				<div id="loginStrategies">
-					<a href="/auth/twitch" className="loginStrat" id="twitchStrat"></a>
-					<a href="/auth/twitter" className="loginStrat" id="twitterStrat"></a>
-					<a href="/auth/google" className="loginStrat" id="googleStrat"></a>
+		if(this.props.auth.user==null){
+			return (
+				<div id="spinnerWrap">
+					<div className="spinner"></div>
+				</div>		
+			)
+		} else  {
+			return( 
+				<div id="home">
+					<div id="overlay"></div>
+					<div id="registerTitle">Start Your Surkle!</div>
+					<div id="loginStrategies">
+						<a href="/auth/twitch" className="loginStrat" id="twitchStrat"></a>
+						<a href="/auth/twitter" className="loginStrat" id="twitterStrat"></a>
+						<a href="/auth/google" className="loginStrat" id="googleStrat"></a>
+					</div>
+					{this.toggleForm()}
 				</div>
-				{this.toggleForm()}
-			</div>
-		)
+			)
+		}	
 	}
 }
 Home.propTypes = {
