@@ -423,7 +423,7 @@ class Header extends Component {
 	};
 
 	createSession = () => {
-		if (this.state.roomName.length >= 3) {
+		if (this.state.roomName.length >= 3 && window.location.pathname.indexOf('/session') < 0) {
 			let sessionKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 			//let clientId = Math.random().toString(16).substring(2, 15) + Math.random().toString(16).substring(2, 15);
 			let sessionObj = {

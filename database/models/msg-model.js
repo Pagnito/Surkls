@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const MsgSchema = new Schema({
-  userName: String,
-  avatarUrl: String
+const msgSchema = newSchema({
+  msg: {
+    userName: String,
+    msg:String
+  }
+})
+const MsgsSchema = new Schema({
+  msgs: [msgSchema]
 });
-const Msg = mongoose.model('msgs', MsgSchema);
-module.exports = Msg;
+const Msgs = mongoose.model('msgs', MsgsSchema);
+module.exports = Msgs;

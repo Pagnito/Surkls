@@ -10,21 +10,25 @@ module.exports = (io, app) => {
 	let reciever;
 	let sender;
 	let offers = {};
-	let connections;
+	let client;
 	let connecting = false;
 	io.on('connection', function(socket) {
 		socket.on('createOrJoin', function(session) {
-			console.log('CLIENT DESC', session);
 			if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){
 			if(session.creatingSession===false){
 				if(rooms[session.sessionKey]){
 					reciever = socket.id;
 					socket.join(session.sessionKey);
-        	rooms[session.sessionKey].clients.push(socket.id); 
+					client = Object.assign({socketId:socket.id}, session.user)
+					console.log('CLIENT', client)
+					rooms[session.sessionKey].clients.push(client); 
+					io.in(session.sessionKey).emit('clientList', rooms[session.sessionKey].clients)
 					socket.in(session.sessionKey).emit('signal',{type:'newJoin'}, socket.id);
 				}				
 			} else {	
 				if(!rooms[session.sessionKey]){
+					client = Object.assign({socketId:socket.id}, session.user)
+					console.log('CLIENT', client)
 					connecting = true;		
 					socket.join(session.sessionKey);	
 					rooms[session.sessionKey] = {};
@@ -32,7 +36,8 @@ module.exports = (io, app) => {
 					rooms[session.sessionKey].clients = [];
 				}				
         rooms[session.sessionKey].name = session.room;
-        rooms[session.sessionKey].clients.push(socket.id);
+				rooms[session.sessionKey].clients.push(client);
+				io.in(session.sessionKey).emit('clientList', rooms[session.sessionKey].clients)
 				console.log('CREATED SESSION');
 				if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){
 					redClient.hset('rooms', session.sessionKey, JSON.stringify(session)) 
@@ -101,8 +106,8 @@ module.exports = (io, app) => {
 				socket.in(session.sessionKey).emit('signal', {type:'clientLeft'}, socket.id)
 				socket.disconnect();
 				if(rooms[session.sessionKey]){
-					rooms[session.sessionKey].clients.forEach((client, ind) => {
-						if (client === socket.id) {
+					rooms[session.sessionKey].clients.forEach((loopClient, ind) => {
+						if (loopClient.socketId === socket.id) {
 							console.log('deleting')
 							rooms[session.sessionKey].clients.splice(ind, 1);
 						}

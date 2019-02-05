@@ -8,16 +8,29 @@
 		width: 500px;
 		flex-direction: column;
 		box-sizing: border-box;
+		background-color:black;
 		#videoStreams {
 			height: 500px;
 			width: 100%;
-
-
-			background: black;
 			display: flex;
 			align-content: flex-start;
 			flex-wrap: wrap;
 			justify-content: flex-start;
+			position: relative;
+			#streamsErrorModal {
+				position: absolute;
+				left:0px;
+				right: 0px;
+				display: none;
+				justify-content: center;
+				width:100%;
+				height:120px;
+				align-items: center;
+				font-family: 'Comfortaa';
+				font-size: 18px;
+				background-color: rgba(253,66,57,.4);
+				z-index: 20;
+			}
 			.streamWrap {
 				width: 247px;
 				height: 247px;
@@ -38,14 +51,17 @@
 			}
 		}
 		#sessionLeftAsideSettings {
-			height: calc(100% - 500px);
-			background-color: black;
+			height: 100px;
+			width:500px;
 			border-top: 1px solid #1a1a1a;
       box-sizing: border-box;
       display:flex;
-      align-items: flex-start; 
+			align-items: center; 
       align-content: flex-start;
-      overflow: hidden;
+			overflow: hidden;
+			position: fixed;
+			bottom:5px;
+			left:0px;
       #streamOfMe {
 				margin-top: 5px;
 				margin-left: 5px;
@@ -53,20 +69,71 @@
         height:80px;
         width:80px
 			}
-			#toggleAudWrap{
-				height:90px;
-				width:90px;
+			#toggleDevices{
 				display:flex;
 				align-items: center; 
-				justify-content: center;
+				justify-content: space-around;
+				width: 200px;
+				height:100%;
 				#toggleAudio {
 					margin-top: 20px;
+					cursor: pointer;
+					//background-image: url('/assets/UI-icon/microphone-slash-solid.svg');
+					width:40px;
+					height:40px;					
+				}
+				#toggleVideo {
+					margin-top: 20px;
+					cursor: pointer;
 					//background-image: url('/assets/UI-icon/microphone-slash-solid.svg');
 					width:40px;
 					height:40px;
-			
+					
 				}
-			}	
+			}
+			#restOfSettings {
+				display:flex;
+				width:calc(100% - 280px);
+				height:100%;
+				flex-direction: column;
+				#sessVidDevices {
+					font-size: 17px;
+					display: flex;
+					width:94%;
+					box-sizing: border-box;
+					justify-content: space-between;
+					outline:none;
+					cursor: pointer;
+					margin-top: 3px;
+				}
+				#sessAudDevices {
+					font-size: 17px;
+					margin-top: 3px;
+					display: flex;
+					width:94%;
+					box-sizing: border-box;
+					justify-content: space-between;
+					outline:none;
+					cursor: pointer;
+				}
+				#shareLink {
+					font-family: 'Comfortaa';
+					font-size: 17px;
+					width:94%;
+					box-sizing: border-box;
+					cursor: pointer;
+					padding:5px;
+					border:2px solid #F4FBFB;
+					border-radius: 5px;
+					margin-top: 5px;
+					text-align: center;
+					color: #F4FBFB
+				}	
+				#shareLink:hover {
+					background-color: rgba(240,194,65,.9)
+				}
+			}
+			
 		}
 	}
 
@@ -77,7 +144,7 @@
 		border-left: 1px solid #1c1c1c;
 		box-sizing: border-box;
 		#discussContent {
-			height: 50%;
+			height: 320px;
 			width: 100%;
 			background-color: #323131;
 			border-bottom: 1px solid #1c1c1c;
@@ -85,7 +152,7 @@
 		#chatSection {
 			box-sizing: border-box;
 			width: 100%;
-			height: 50%;
+			height: calc(100vh - 320px);
 			display: flex;
 			flex-direction: column;
 
@@ -111,17 +178,30 @@
 					z-index: 10;
 					font-size: 20px;
 				}
+				#chatMsgsShow::-webkit-scrollbar {
+					width:10px;
+				}
+				#chatMsgsShow::-webkit-scrollbar-thumb {
+					background: #282828; 
+					border-radius: 10px;
+				}
+				#chatMsgsShow::-webkit-scrollbar-corner {
+					background: transparent;
+				}
 				#chatMsgsShow {
 					width: 100%;
 					height: calc(100% - 80px);
 					background-color: #323131;
           overflow: scroll;
           padding:10px;
-          box-sizing: border-box;
+					box-sizing: border-box;
+				
           .chatMsg:hover {
             background: #302f2f;
           }
 					.chatMsg {
+						margin-right:5px;
+						animation: fadeOut 2s ease-out forwards;
 						width: 100%;
 						font-family: 'Comfortaa';
 						display: flex;
@@ -193,5 +273,27 @@
 		border-left: 1px solid#1c1c1c;
 		height: calc(100vh - 55px);
 		width: 200px;
+		#whosInRoom {
+			width:100%;
+			box-sizing: border-box;
+			border-bottom: 1px solid #1c1c1c;
+			flex-wrap: wrap;
+			align-content: flex-start;
+			.clientSquareAv {
+				width:44px;
+				height:44px;
+				margin-top:5px;
+				margin-left: 5px;
+				border-radius:5px;
+			}
+		}
+	}
+}
+@keyframes fadeOut {
+	0% {
+		border-right: 2px solid #FECC43;
+	}
+	100% {
+		border-right: 2px solid rgba(0,0,0,0,);
 	}
 }
