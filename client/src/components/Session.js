@@ -38,7 +38,7 @@ class Session extends Component {
 		this.imNotTheNew = false;
 		this.creator = false;
 		this.stream;
-		this.track;
+		this.track = [];
 		this.remoteClients = [];
 		this.rtcs = {};
 		this.socket = io('http://localhost:4000');
@@ -160,13 +160,14 @@ class Session extends Component {
 					track.stop();
 					stream.srcObject = null;
 					this.remoteClients.splice(iterator, 1);
-					let updatedList = this.state.clientList.splice(iterator,1)
-					this.setState({clientList: updatedList})
-				});
-		
+				});	
 			}
 			iterator++;
 		}
+		let updatedList = this.clientList.filter(client=>{
+			return client.socketId!==remoteId				
+		})
+		this.setState({clientList: updatedList})
 		for (let streamWrap of streamWraps) {
 			if (streamWrap.dataset.id === remoteId) {
 				streamList.removeChild(streamWrap);
@@ -181,7 +182,9 @@ class Session extends Component {
 		currentConnection.onicecandidate = this.handleIceCandidate;
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-		currentConnection.addTrack(this.track, this.stream);
+		this.track.forEach((track)=>{
+			currentConnection.addTrack(track, this.stream);
+		})	
 		if (currentConnection.setRemoteDescription) {
 			cb(currentConnection);
 		}
@@ -459,7 +462,7 @@ class Session extends Component {
 						videoEl.srcObject = stream;
 						this.stream = stream;
 						stream.getTracks().forEach((track) => {
-							this.track = track;
+							this.track.push(track);
 						});
 						resolve();
 					});
@@ -475,7 +478,7 @@ class Session extends Component {
 		} else if(this.state.errors.offer){
 			return this.state.errors.offer
 		} else if(this.state.errors.candidates){
-			return this.state.errrors.candidates
+			return this.state.errors.candidates
 		} else if (this.state.errors.localDescription){
 			return this.state.errors.localDescription
 		} else {
@@ -500,7 +503,7 @@ class Session extends Component {
 							</div>
 						</div>
 						<div id="sessionLeftAsideSettings">
-							<video id="streamOfMe" autoPlay />
+							<video id="streamOfMe" muted="muted" autoPlay />
 							<div id="toggleDevices">
 								<div onClick={this.toggleAudio} id="toggleAudio">
 									{
