@@ -196,8 +196,11 @@ class Session extends Component {
 		currentConnection.onicecandidate = this.handleIceCandidate;
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
+		if(this.track[0].kind ==='audio'){
+			this.track.reverse();
+		}
 		this.track.forEach((track) => {
-			console.log('adding track')
+			console.log(track)
 				currentConnection.addTrack(track,this.stream);
 		});
 		if (currentConnection.setRemoteDescription) {
@@ -412,7 +415,7 @@ class Session extends Component {
 	};
 
 	createVideo = () => {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			let streamRows = document.getElementById('videoStreams');
 			let videoWrap = document.createElement('div');
 			videoWrap.setAttribute('class', 'streamWrap');
@@ -457,11 +460,7 @@ class Session extends Component {
 			if (videoEl.srcObject === null) {
 				navigator.mediaDevices
 					.getUserMedia({
-						audio: !this.props.session.disableAud
-							? false
-							: {
-									deviceId: this.props.session.mic ? this.props.session.mic : 'default'
-								},
+						audio: true,
 						video: {
 							width: 200,
 							height: 200,

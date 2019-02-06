@@ -43,6 +43,7 @@ export const getDevices = () => (dispatch)=>{
 				mics:mics,
 				cams:cams
 			}
+			console.log(deviceObj)
 			dispatch({
 				type: GET_DEVICES,
 				payload: deviceObj
