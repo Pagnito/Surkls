@@ -10,7 +10,6 @@ class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			disableAud: 'on',
 			maxMembers: 5,
 			maxViewers: 10,
 			accMenuVisible: false,
@@ -260,31 +259,9 @@ class Header extends Component {
 						max="10"
 					/>
 				</div>
-				<div className="menuConfig">
-					Disable Audio
-					<div id="checkbox">
-						<input
-							value={this.state.disableAud}
-							onChange={this.onCheckbox}
-							id="checkboxInput"
-							style={{ marginRight: '10px' }}
-							type="checkbox"
-							name="disableAud"
-						/>
-						<label htmlFor="checkboxInput" />
-					</div>
-				</div>
-				<div
-					style={{ display: this.state.disableAud === 'on' ? 'flex' : 'none' }}
-					className="audioInputs menuConfig"
-				>
-					Audio inputs
-				</div>
-				<select
-					style={{ display: this.state.disableAud === 'on' ? 'flex' : 'none' }}
-					id="micSelect"
-					className="menuSelect"
-				>
+
+				<div className="audioInputs menuConfig">Audio inputs</div>
+				<select id="micSelect" className="menuSelect">
 					{this.feedMicOptions()}
 				</select>
 				<div className="videoInputs menuConfig">Video inputs</div>
@@ -380,7 +357,12 @@ class Header extends Component {
 	accountMenu = () => {
 		let visibility = this.state.accMenuVisible ? 'flex' : 'none';
 		return (
-			<DropMenu hideHeader={true} hideMenu={this.hideAllMenus} menuTypeArrow="accountArrow" visibility={visibility}>
+			<DropMenu
+				hideHeader={true}
+				hideMenu={this.hideAllMenus}
+				menuTypeArrow="accountArrow"
+				visibility={visibility}
+			>
 				<div className="customMenuHeader">
 					<div
 						id="avatar"
@@ -432,10 +414,8 @@ class Header extends Component {
 				maxMembers: this.state.maxMembers,
 				maxViewers: this.state.maxViewers,
 				category: this.state.roomCategory,
-				audio: this.state.disableAud === 'off' ? true : false,
-				cam: document.getElementById('camSelect').value,
-				mic: document.getElementById('micSelect').value,
-				disableAud: this.state.disableAud === 'on' ? true : false
+				cam: document.getElementById('camSelect').value ? document.getElementById('camSelect').value : 'default',
+				mic: document.getElementById('micSelect').value ? document.getElementById('micSelect').value : 'default',
 			};
 			this.setState(
 				{
@@ -444,7 +424,7 @@ class Header extends Component {
 				},
 				() => {
 					this.props.startSession(sessionObj, () => {
-						this.props.history.push('/session/room='+sessionKey.toString());
+						this.props.history.push('/session/room=' + sessionKey.toString());
 					});
 				}
 			);

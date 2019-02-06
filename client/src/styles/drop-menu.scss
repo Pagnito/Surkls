@@ -117,33 +117,7 @@
         outline:none;
       }
     }
-    input[type=checkbox]{
-      visibility: hidden;
-    }
-    #checkbox input[type=checkbox]:checked + label {
-      left: 27px;
-      background-color: black;
-  }
-    #checkbox {
-      margin-top: 6px; 
-      width: 40px;
-      height: 10px;
-      background: #555;
-      position: relative;
-      border-radius: 3px;
-    }
-    #checkbox label {
-      display: block;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      transition: all .5s ease;
-      cursor: pointer;
-      position: absolute;
-      top: -3px;
-      left: -3px;
-      background: #FCCB43;
-    }
+   
     .menuItem {
       padding: 7px;
       font-size: 17px;

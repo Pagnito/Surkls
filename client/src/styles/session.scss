@@ -237,7 +237,9 @@
 
 							.chatMsgText {
 								overflow-wrap: break-word;
+								word-break: break-all;
 								font-size: 13px;
+								max-width:90%;
 								color: #c2c3c4;
                 margin: 5px;
                 width:90%;
@@ -288,6 +290,12 @@
 			}
 		}
 	}
+}
+#mic-icon {
+	fill:#F4FBFB;
+}
+#cam-icon {
+	fill: #F4FBFB;
 }
 @keyframes fadeOut {
 	0% {
