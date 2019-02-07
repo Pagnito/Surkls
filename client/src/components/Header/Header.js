@@ -281,6 +281,7 @@ class Header extends Component {
 					<option value="">Category</option>
 					<option value="gaming">Gaming</option>
 					<option value="music">Music</option>
+					<option value="joe+rogan">Joe Rogan</option>
 					<option value="trending">Trending</option>
 					<option value="animal">Animals</option>
 					<option value="food">Food</option>

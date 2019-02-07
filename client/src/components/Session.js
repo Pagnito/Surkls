@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import { getDevices } from 'actions/actions';
 import PropTypes from 'prop-types';
+import Dropdown from 'components/smalls/drop-menu-toRight';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
 import 'styles/session.scss';
 import 'styles/loader.scss';
@@ -20,7 +21,8 @@ class Session extends Component {
 			errors: {},
 			talk: true,
 			showMyStream: true,
-			clientList: []
+			clientList: [],
+			platformMenuVisible: false
 		};
 		//////////////////////////////////////
 		this.stunConfig = {
@@ -477,7 +479,23 @@ class Session extends Component {
 			}
 		});
 	};
-
+	platformsMenu = () => {
+		let visibility = this.state.platformMenuVisible ? 'flex' : 'none';
+		return (
+			<Dropdown menuTitle="Platforms" menuTypeArrow="platformsArrow" visibility={visibility}>
+				<div className="menuItem_toright">Youtube</div>
+				<div className="menuItem_toright">Daily Motion</div>
+				<div className="menuItem_toright">Soundcloud</div>
+				<div className="menuItem_toright">Medium</div>
+				<div className="menuItem_toright">Twitter</div>
+				<div className="menuItem_toright">Instagram</div>
+				<div className="menuItem_toright">Reddit</div>
+			</Dropdown>
+		);
+	};
+	renderPlatformMenu = () => {
+		this.setState({ platformMenuVisible: this.state.platformMenuVisible ? false : true });
+	};
 	renderErrors = () => {
 			let error = (this.state.errors.answer) ? this.state.errors.answer :
 									(this.state.errors.offer) ? this.state.errors.offer :
@@ -550,6 +568,12 @@ class Session extends Component {
 					</div>
 					<div id="sessionCenterAside">
 						<div id="discussContent">
+						<div id="platformMenuAligner">
+							<div onClick={this.renderPlatformMenu} id="contentDropdownIcon" className="discHeaderIcon">
+								{this.platformsMenu()}
+							</div>
+						</div>
+						
 							<SessionContentYoutube />
 						</div>
 						<div id="chatSection">

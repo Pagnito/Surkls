@@ -38,21 +38,16 @@
       background-position: center;
 			background-size: 20px;
       background-repeat: no-repeat;
-      margin-left: 15px;
+      margin-left: 30px;
     }
     #contentBack {
       background-image: url('/assets/UI-icons/angle-left-solid.svg');
       margin-top: 3px;
+      margin-left: 75px !important; 
       background-size: 15px;
     }
-    #contentDropdown {
-      background-image: url('/assets/UI-icons/sort-down-solid.svg');
-      margin-bottom: 8px;
-      background-size: 23px;
-      height:28px;
-      width:28px;
-      position: relative;
-    }
+   
+    
     #contentDice {
       background-image: url('/assets/UI-icons/dice-solid.svg');
       margin-top: 3px;

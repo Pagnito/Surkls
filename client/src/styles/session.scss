@@ -152,6 +152,21 @@
 			border-bottom: 1px solid #1c1c1c;
 			position: relative;
 			box-sizing: border-box;
+			#platformMenuAligner {
+				position: absolute;
+				left:20px;
+				#contentDropdownIcon {
+					background-image: url('/assets/UI-icons/sort-down-solid.svg');
+					margin-bottom: 12px;
+					background-size: 23px;
+					height:28px;
+					width:28px;
+					position: relative;
+					background-position: center !important;
+					background-repeat: no-repeat; 
+					cursor: pointer;
+				}
+			}
 		}
 		#chatSection {
 			box-sizing: border-box;

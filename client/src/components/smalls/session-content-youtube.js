@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Dropdown from 'components/smalls/drop-menu-toRight';
 import 'styles/session-content-youtube.scss';
 import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions'
@@ -10,7 +9,6 @@ class SessionContentYoutube extends Component {
 		super(props);
 		this.state = {
 			search: '',
-			platformMenuVisible: false,
 			videos: [],
 			videoPicked: false
 		};
@@ -23,9 +21,7 @@ class SessionContentYoutube extends Component {
 	handleInput = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
-	renderPlatformMenu = () => {
-		this.setState({ platformMenuVisible: this.state.platformMenuVisible ? false : true });
-	};
+
 
 	/* searchVideos = (e) => {
 		if (e.key === 'Enter') {
@@ -84,20 +80,7 @@ class SessionContentYoutube extends Component {
 			);
 		});
 	};
-	platformsMenu = () => {
-		let visibility = this.state.platformMenuVisible ? 'flex' : 'none';
-		return (
-			<Dropdown menuTitle="Platforms" menuTypeArrow="platformsArrow" visibility={visibility}>
-				<div className="menuItem_toright">Youtube</div>
-				<div className="menuItem_toright">Daily Motion</div>
-				<div className="menuItem_toright">Soundcloud</div>
-				<div className="menuItem_toright">Medium</div>
-				<div className="menuItem_toright">Twitter</div>
-				<div className="menuItem_toright">Instagram</div>
-				<div className="menuItem_toright">Reddit</div>
-			</Dropdown>
-		);
-	};
+	
 	renderHeader = () => {
 		if (this.props.session.isAdmin) {
 			return (
@@ -107,16 +90,14 @@ class SessionContentYoutube extends Component {
 						id="contentBack"
 						className="discHeaderIcon"
 					/>
-					<div onClick={this.renderPlatformMenu} id="contentDropdown" className="discHeaderIcon">
-						{this.platformsMenu()}
-					</div>
+					
 					<div id="contentDice" className="discHeaderIcon" />
 				</div>
 			);
 		}
 	};
 	render() {
-		if (this.props.session.isAdmin) {
+		//if (this.props.session.isAdmin) {
 			if (this.state.videoPicked) {
 				return (
 					<div className="discContent">
@@ -144,33 +125,30 @@ class SessionContentYoutube extends Component {
 								id="contentBack"
 								className="discHeaderIcon"
 							/>
-							<div onClick={this.renderPlatformMenu} id="contentDropdown" className="discHeaderIcon">
-								{this.platformsMenu()}
-							</div>
 							<div id="contentDice" className="discHeaderIcon" />
 						</div>
 						<div className="discContentPreview">{this.displayVideoSnippets()}</div>
 					</div>
 				);
 			}
-		} else {
+		/* } else {
 			return (
 				<div className="discContent">
 					<div className="discContentViewer">
 						<div style={{ marginTop: '40px' }} className="videoFrameWrap">
 							<iframe
-								style={{ display: 'none' }}
+								style={{ display: 'block' }}
 								height="100%"
 								width="100%"
 								className="videoFrame"
-								allow="autoplay; encrypted-media"
-								src={this.YTurl + this.state.playingVideo}
+								allow="autoplay"
+								src={this.YTurl + 'ZA106wrMUe4'}
 							/>
 						</div>
 					</div>
 				</div>
 			);
-		}
+		} */
 	}
 }
 
