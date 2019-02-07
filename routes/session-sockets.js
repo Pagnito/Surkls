@@ -113,7 +113,9 @@ module.exports = (io, app) => {
 			 redClient.hset('youtubeLists', session.sessionKey, listString);
 			 console.log('KEY', session.sessionKey)
 		 })
-
+		 socket.on('playThisVideo', (videoId)=>{
+			 io.to(session.sessionKey).emit('playThisVideo', videoId)
+		 })
 		 ///////////////////////////^^^^^^handling discussion content^^^^//////////////////////////////
 
 			if(rooms[session.sessionKey]){

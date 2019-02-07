@@ -1,11 +1,17 @@
-import {START_SESSION, JOIN_SESSION, UPDATE_SESSION } from "actions/types";
+import {START_SESSION, JOIN_SESSION, UPDATE_SESSION, PLAY_VIDEO } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
-	inSession: false
+	inSession: false,
+	videoId: ''
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
+		case PLAY_VIDEO:
+			return {
+				...state,
+				videoId: action.payload
+			}
 		case UPDATE_SESSION:
 			return {
 				...state,

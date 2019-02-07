@@ -43,8 +43,9 @@ class SessionContentYoutube extends Component {
 		}
 	}; */
 	componentDidUpdate = (prevProps) => {
-		let prop = this.props.session;
-	
+		if(this.props.session.videoId!==prevProps.session.videoId){
+			this.playVideo(this.props.session.videoId);
+		}
 	};
 	componentDidMount = () => {
 		let prop = this.props.session;
@@ -65,11 +66,16 @@ class SessionContentYoutube extends Component {
 			videoPicked: true
 		});
 	};
-
+	sendPickedVideo = (videoId) =>{
+		if(this.props.session.isAdmin){
+			this.props.sendPlayVideoSignal(videoId)
+		}
+	}
 	displayVideoSnippets = () => {
 		return this.state.videos.map((snippet, ind) => {
 			return (
 				<div onClick={() => this.playVideo(snippet.id.videoId)} key={ind} className="vidSnippet">
+				<div onClick={()=>this.sendPickedVideo(snippet.id.videoId)} className="videoSignalBtn"></div>
 					<img className="snippetImg" src={snippet.snippet.thumbnails.default.url} />
 					<div className="channelTitle">{snippet.snippet.channelTitle}</div>
 					<div className="videoDate">
@@ -82,7 +88,7 @@ class SessionContentYoutube extends Component {
 	};
 	
 	renderHeader = () => {
-		if (this.props.session.isAdmin) {
+
 			return (
 				<div className="discContentHeader">
 					<div
@@ -95,7 +101,7 @@ class SessionContentYoutube extends Component {
 				</div>
 			);
 		}
-	};
+
 	render() {
 		//if (this.props.session.isAdmin) {
 			if (this.state.videoPicked) {
@@ -105,7 +111,7 @@ class SessionContentYoutube extends Component {
 							{this.renderHeader()}
 							<div style={{ marginTop: '5px' }} className="videoFrameWrap">
 								<iframe
-									style={{ display: !this.props.session.isAdmin ? 'none' : 'block' }}
+
 									height="100%"
 									width="100%"
 									className="videoFrame"
@@ -157,7 +163,8 @@ SessionContentYoutube.propTypes = {
 	region: PropTypes.string,
 	session: PropTypes.object,
 	videoUrl: PropTypes.string,
-	updateSession: PropTypes.func
+	updateSession: PropTypes.func,
+	sendPlayVideoSignal: PropTypes.func
 };
 function stateToProps(state) {
 	return {

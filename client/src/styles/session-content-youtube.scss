@@ -6,6 +6,7 @@
     height:100%;
     height: calc(100% - 35px);
     position: relative;
+    
     .videoFrame {
       width:100%;
       height:100%;
@@ -93,6 +94,14 @@
       padding-bottom: 10px;
       padding-top: 10px;
       cursor: pointer;
+      position: relative;
+      .videoSignalBtn{
+        height:200px;
+        position: absolute;
+        height:100%;
+        width:100%;
+        background: rgba(0,0,0,.3);
+      }
       .snippetImg {
         width: 100%;
         padding-top:10px;

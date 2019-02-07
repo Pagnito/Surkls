@@ -5,7 +5,8 @@ import {
 	JOIN_SESSION,
 	GET_SESSIONS,
 	GET_DEVICES,
-	UPDATE_SESSION
+	UPDATE_SESSION,
+	PLAY_VIDEO
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -105,3 +106,9 @@ export const joinSession = (sessionInfo, cb) => (dispatch) => {
 	});
 	cb();
 };
+export const playThisVideo = (videoId,cb) => (dispatch)=>{
+	dispatch({
+		type:PLAY_VIDEO,
+		payload:videoId
+	})
+}

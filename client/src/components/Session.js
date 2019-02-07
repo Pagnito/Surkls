@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { getDevices } from 'actions/actions';
+import { getDevices, playThisVideo } from 'actions/actions';
 import PropTypes from 'prop-types';
 import Dropdown from 'components/smalls/drop-menu-toRight';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
@@ -54,6 +54,13 @@ class Session extends Component {
 		this.socket.on('recieveMsgs', (data) => {
 			this.setState({ msgs: data });
 		});
+		this.socket.on('playThisVideo', (videoId)=>{
+			this.props.playThisVideo(videoId);
+		})
+	}
+	/////////////////////////////////////////end of state//////////////////////////////////
+	sendPlayVideoSignal = (videoId) =>{
+		this.socket.emit('playThisVideo', videoId)
 	}
 	//////////////////////////////////////////////webrtc funcs////////////////////////////////////////////
 	handleOfferError = (err) => {
@@ -361,6 +368,7 @@ class Session extends Component {
 			});
 		}
 	};
+	
 	sendMsg = (e) => {
 		if (e.key == 'Enter') {
 			let date = new Date(Date.now());
@@ -574,7 +582,7 @@ class Session extends Component {
 							</div>
 						</div>
 						
-							<SessionContentYoutube />
+							<SessionContentYoutube sendPlayVideoSignal={this.sendPlayVideoSignal} />
 						</div>
 						<div id="chatSection">
 							<div id="chatBox">
@@ -607,13 +615,14 @@ Session.propTypes = {
 	history: PropTypes.object,
 	match: PropTypes.object,
 	devices: PropTypes.object,
-	getDevices: PropTypes.func
+	getDevices: PropTypes.func,
+	playThisVideo: PropTypes.func
 };
 function stateToProps(state) {
 	return {
 		auth: state.auth.user,
 		session: state.session,
-		devices: state.devices
+		devices: state.devices,
 	};
 }
-export default connect(stateToProps, { getDevices })(Session);
+export default connect(stateToProps, { getDevices, playThisVideo })(Session);
