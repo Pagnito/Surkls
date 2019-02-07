@@ -102,6 +102,11 @@ class Session extends Component {
 		if (this.remoteAdded.added === true && this.remoteAdded.id === event.streams[0].id) {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
+			if (this.imNotTheNew == false) {
+				console.log('ADDED STREAM')
+				/* this.socket.emit('signal', {type:'wtf'}) */
+			}
+		
 		}
 	};
 
@@ -109,7 +114,9 @@ class Session extends Component {
 		console.log('removed', event);
 	};
 	handleIceCandidate = (event) => {
+		
 		if (event.candidate) {
+			console.log(event.candidate)
 			let candidate = {
 				type: 'candidate',
 				label: event.candidate.sdpMLineIndex,
@@ -119,9 +126,9 @@ class Session extends Component {
 			this.socket.emit('signal', candidate);
 		} else {
 			console.log('End of candidates.');
-			if (this.imNotTheNew == false) {
+			//if (this.imNotTheNew == false) {
 				this.socket.emit('signal', { type: 'connected' });
-			}
+			//}
 		}
 	};
 	createOffer = (peer, cb) => {
@@ -305,25 +312,20 @@ class Session extends Component {
 				chatBox.scrollTop = chatBox.scrollHeight;
 			}
 		}
-		/* if(this.props.auth!==prevProps.auth){
+		if(this.props.auth!==prevProps.auth){
 			if(!this.props.session.notShareLink && !this.alreadyStarted){
 				this.socket.on('clientList', (clients) => {
 					this.setState({ clientList: clients });
 				});
 				this.startOrJoin()
 			}
-		} */
+		} 
 		/* navigator.mediaDevices.ondevicechange = () => {
 			this.updateDevices();
-		}; */
+		};*/
 		///////////////////////////////////////////////
 	}
 
-	getStats = (id, stream) => {
-		this.rtcs[id].getStats().then(stream).then((data) => {
-			console.log(data);
-		});
-	};
 	componentDidMount() {
 		navigator.mediaDevices.ondevicechange = () => {
 			this.updateDevices();
@@ -477,17 +479,15 @@ class Session extends Component {
 	};
 
 	renderErrors = () => {
-		if (this.state.errors.answer) {
-			return <div>{this.state.errors.answer}</div>;
-		} else if (this.state.errors.offer) {
-			return <div>{this.state.errors.offer}</div>;
-		} else if (this.state.errors.candidates) {
-			return <div>{this.state.errors.candidates}</div>;
-		} else if (this.state.errors.localDescription) {
-			return <div>{this.state.errors.localDescription}</div>;
-		} else {
-			return <div>{this.state.errors.remoteDescription}</div>;
-		}
+			let error = (this.state.errors.answer) ? this.state.errors.answer :
+									(this.state.errors.offer) ? this.state.errors.offer :
+									(this.state.errors.candidates) ? this.state.errors.candidates :
+									(this.state.errors.localDescription) ? this.state.errors.localDescription :
+									 this.state.errors.remoteDescription 
+			return (
+				<div style={{ display: Object.keys(this.state.errors).length > 1 ? 'flex' : 'none' }}
+							id="streamsErrorModal">{error}</div>
+			)
 	};
 
 	render() {
@@ -504,13 +504,8 @@ class Session extends Component {
 						<div id="videoStreams">
 							{/* <div className="streamWrap">
 								<video className="streamTest" autoPlay></video>
-							</div>  */}
-							<div
-								style={{ display: Object.keys(this.state.errors).length > 1 ? 'flex' : 'none' }}
-								id="streamsErrorModal"
-							>
-								{this.renderErrors()}
-							</div>
+							</div>  */}	
+								{this.renderErrors()}				
 						</div>
 						<div id="sessionLeftAsideSettings">
 							<video id="streamOfMe" muted="muted" autoPlay />

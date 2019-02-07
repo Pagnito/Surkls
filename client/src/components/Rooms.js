@@ -25,11 +25,20 @@ class Rooms extends Component {
 	};
 	renderRooms = () => {
 		return this.props.sessions.sessions.map((room,ind) => {
-			return (
-				<div onClick={() => this.joinSession(room.sessionKey, room.room)} key={ind} className="room">
-					{room.room}
-				</div>
-			);
+			if(!room.maxedOut){
+				return (
+					<div onClick={() => this.joinSession(room.sessionKey, room.room)} key={ind} className="room">
+						{room.room}
+					</div>
+				);
+			}	else {
+				return (
+					<div  key={ind} className="room">
+						{room.room}
+						room is maxed out
+					</div>
+				);
+			}	
 		});
 	};
 	render() {

@@ -9,6 +9,7 @@
 		flex-direction: column;
 		box-sizing: border-box;
 		background-color:black;
+		overflow-y:scroll;
 		#videoStreams {
 			height: 500px;
 			width: 100%;
@@ -143,17 +144,19 @@
 		flex-direction: column;
 		border-left: 1px solid #1c1c1c;
 		box-sizing: border-box;
+		overflow-y:scroll;
 		#discussContent {
 			height: 320px;
 			width: 100%;
 			background-color: black;
 			border-bottom: 1px solid #1c1c1c;
 			position: relative;
+			box-sizing: border-box;
 		}
 		#chatSection {
 			box-sizing: border-box;
 			width: 100%;
-			height: calc(100vh - 320px);
+			height: calc(100% - 320px);
 			display: flex;
 			flex-direction: column;
 
@@ -190,6 +193,7 @@
 					background: transparent;
 				}
 				#chatMsgsShow {
+					align-self: flex-start;
 					width: 100%;
 					height: calc(100% - 65px);
 					background-color: #323131;

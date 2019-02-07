@@ -11,7 +11,7 @@ class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			maxMembers: 5,
+			maxMembers: 3,
 			maxViewers: 10,
 			category: '',
 			subCategory: '',
@@ -202,7 +202,7 @@ class Header extends Component {
 		return this.props.devices.devices.cams.map((cam, ind) => {
 			return (
 				<option name="cam" key={ind} value={cam.deviceId} className="option">
-					{cam.label}
+					{cam.label.length>0 ? cam.label : '(Default)'}
 				</option>
 			);
 		});
@@ -211,7 +211,7 @@ class Header extends Component {
 		return this.props.devices.devices.mics.map((mic, ind) => {
 			return (
 				<option name="mic" key={ind} value={mic.deviceId} className="option">
-					{mic.label}
+					{mic.label.length>0 ? mic.label : '(Default)'}
 				</option>
 			);
 		});
@@ -309,11 +309,11 @@ class Header extends Component {
 						className="sessionConfig"
 						type="number"
 						name="maxMembers"
-						min="1"
-						max="5"
+						min="2"
+						max="3"
 					/>
 				</div>
-				<div className="menuConfig">
+			{/* 	<div className="menuConfig">
 					Max Viewers
 					<input
 						id="maxViewers"
@@ -325,7 +325,7 @@ class Header extends Component {
 						min="1"
 						max="10"
 					/>
-				</div>
+				</div> */}
 
 				<div className="audioInputs menuConfig">Audio inputs</div>
 				<select id="micSelect" className="menuSelect">
@@ -479,7 +479,6 @@ class Header extends Component {
 				room: this.state.roomName,
 				sessionKey: sessionKey,
 				maxMembers: this.state.maxMembers,
-				maxViewers: this.state.maxViewers,
 				category: this.state.category,
 				subCategory: this.state.subCategory,
 				isAdmin: true,

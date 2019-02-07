@@ -1,7 +1,10 @@
 import {GET_DEVICES } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
-	devices: []
+	devices: {
+		mics: [],
+		cams: []
+	}
 };
 
 export default function(state = initialState, action) {
