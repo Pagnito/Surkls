@@ -1,5 +1,6 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require('webpack');
 module.exports = {
   entry: "./src/index.js",
   output: {
@@ -7,6 +8,7 @@ module.exports = {
     filename: "bundle.js",
     publicPath: '/build'
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {

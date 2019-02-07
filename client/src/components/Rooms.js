@@ -8,11 +8,12 @@ class Rooms extends Component {
 	componentDidMount() {
 		this.props.getSessions();
 	}
-	joinSession = (sessionKey, room, clientId) => {
+	joinSession = (sessionKey, room) => {
 		let session = {
 			sessionKey: sessionKey,
 			room: room,
-			clientId: clientId
+			isAdmin: false,
+			notShareLink: true
 		}
 		if (sessionKey.length >= 3) {
 			this.props.joinSession(session, () => {

@@ -1,0 +1,143 @@
+.discContentViewer {
+  height: calc(100% - 35px);
+  .videoFrameWrap {
+    margin-top:5px;
+    width:100;
+    height:100%;
+    height: calc(100% - 35px);
+    position: relative;
+    .videoFrame {
+      width:100%;
+      height:100%;
+      border:none;
+      position: absolute;
+      left:0px;
+      top:0px;
+    }
+  }
+}
+ 
+.discContent {
+  width:100%;
+  height:100%;
+  top:0px;
+  left:0px;
+  background: black;
+  .discContentHeader {
+    width:100%;
+    height: 35px;
+    display:flex;
+    align-items: center;
+    background: rgb(2,0,36);
+    background: linear-gradient(0deg, rgba(2,0,36,0) 0%, rgba(255,0,0,.3) 88%);
+    box-sizing: content-box;
+    .discHeaderIcon{
+      height:25px;
+      width:25px;
+      cursor: pointer;
+      background-position: center;
+			background-size: 20px;
+      background-repeat: no-repeat;
+      margin-left: 15px;
+    }
+    #contentBack {
+      background-image: url('/assets/UI-icons/angle-left-solid.svg');
+      margin-top: 3px;
+      background-size: 15px;
+    }
+    #contentDropdown {
+      background-image: url('/assets/UI-icons/sort-down-solid.svg');
+      margin-bottom: 8px;
+      background-size: 23px;
+      height:28px;
+      width:28px;
+      position: relative;
+    }
+    #contentDice {
+      background-image: url('/assets/UI-icons/dice-solid.svg');
+      margin-top: 3px;
+    }
+    .discHeaderSearch {
+      display: flex;
+      width: calc(100% - 40px);
+      margin-right: 10px;
+      justify-content: flex-end;
+      
+      #discSearchIcon {
+        background-image: url('/assets/UI-icons/search-solid.svg');
+        background-size: 17px !important;
+        margin-top:3px;
+        margin-left:10px !important
+      }
+      .searchBar {
+        background: #D4DADA;
+        border:none;
+        border-radius: 20px;
+        margin-top:5px;
+        width:85%;
+        outline:none;
+        color:black;
+        font-size: 13px;
+        padding-left: 10px;
+      }
+    }  
+  }
+  .discContentPreview{
+    height: calc(100% - 35px);
+    overflow-y: scroll;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+   
+    .vidSnippet {
+      width: calc(33.333% - 10px);  
+      padding-right: 10px;
+      border-bottom: 1px solid #D4DADA;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      cursor: pointer;
+      .snippetImg {
+        width: 100%;
+        padding-top:10px;
+         padding-left: 10px;
+         box-sizing: border-box;
+         
+      }
+      .channelTitle {
+        font-family: 'Comfortaa';
+        font-size: 11px;
+        color:rgb(143, 151, 151);
+        margin-top:5px;
+        margin-left:5px;
+      }
+      .videoDate {
+        font-family: 'Comfortaa';
+        font-size: 11px;
+        color:rgb(143, 151, 151);
+        margin-top:5px;
+        margin-left:5px;
+      }
+      .videoTitle{
+       font-family: 'Comfortaa';
+       font-weight:700;
+       font-size: 15px;
+       color:#D4DADA;
+       margin-top:5px;
+       margin-left:5px;
+      }
+    }
+   
+  }
+  .discContentViwer::-webkit-scrollbar {
+    width:10px;
+  }
+  .discContentViwer::-webkit-scrollbar-thumb {
+    background: #D4DADA; 
+    border-radius: 10px;
+  }
+  .discContentViwer::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

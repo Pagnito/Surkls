@@ -1,31 +1,17 @@
-.dropMenu {
+.dropMenu_toright {
   position: absolute;
-  top:42px;
-  right:5px;
+  top:30px;
+  left:-15px;
   display: flex;
   flex-direction: column;
   align-items: center;
   align-content: center;
   z-index: 30;
-  #notifArrow {
-    margin-right:77px !important;
+
+  #platformsArrow {
+    margin-right:112px !important;
   }
-  #accountArrow {
-    margin-right: 20px !important;
-  }
-  #sessionArrow {
-    margin-right: 176px !important;
-  }
-  #signInArrow {
-    margin-right: 85px !important;
-  }
-  #threeDotArrow {
-    margin-right: 20px !important;
-  }
-  #messagesArrow {
-    margin-right: 126px !important;
-  }
-  .lilArrow {
+  .lilArrow_toright {
     -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
     clip-path: polygon(50% 45%, 0 100%, 100% 100%);
     background-color:   #CBD2D2; 
@@ -35,9 +21,9 @@
     margin-bottom: -2px;
     border-radius: 2px;
   }
-  .menuItems {
+  .menuItems_toright {
     border-radius:3px;    
-    min-width:270px;
+    min-width:150px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -46,7 +32,7 @@
     display: flex;
     flex-direction: column;
     font-family: 'Didact Gothic';
-    .menuHeader {
+    .menuHeader_toright {
       display:flex;
       justify-content: center;
       background-color: #cbd2d2;
@@ -57,7 +43,7 @@
       width:100%;
       box-sizing: border-box;
     }
-    .menuInput {
+    .menuInput_toright {
       padding: 10px;
       font-size: 17px;
       display: flex;
@@ -68,7 +54,7 @@
       margin-top: 10px;
       resize: none;
     }
-    .menuTextInput {
+    .menuTextInput_toright {
       padding: 10px;
       height:50px;
       font-size: 17px;
@@ -80,20 +66,19 @@
       margin-top: 10px;
       resize: none;
     }
-    .menuItem:hover {
+    .menuItem_toright:hover {
       background-color: #cbd2d2;
     }
-    .menuSelect {
+    .menuSelect_toright {
       font-size: 17px;
       display: flex;
-      height: 35px;
-      width:92%;
+      width:94%;
       box-sizing: border-box;
       justify-content: space-between;
       outline:none;
       cursor: pointer;
     }
-    .menuConfig {
+    .menuConfig_toright {
       cursor: default;
       padding: 7px;
       padding-left: 10px;
@@ -107,7 +92,7 @@
         appearance: none;
       }
       
-      .sessionConfig {
+      .sessionConfig_toright {
         width:40px;
         height: 20px;
         border-radius: 3px;
@@ -119,14 +104,14 @@
       }
     }
    
-    .menuItem {
+    .menuItem_toright {
       padding: 7px;
       font-size: 17px;
       display: flex;
       width:100%;
       box-sizing: border-box;
     }
-    .menuItemSplit {
+    .menuItemSplit_toright {
       display:flex;
       height:30px;
       justify-content: center;
@@ -135,13 +120,13 @@
       .or {
         margin-top: 5px;
       }
-      .splitLine1{
+      .splitLine1_toright{
         height:50%;
         width:30%;
         margin-right:10px;
         border-bottom: 2px solid rgba(0,0,0,.3);
       }
-      .splitLine2 {
+      .splitLine2_toright {
         height:50%;
         width:30%;
         margin-left: 10px;

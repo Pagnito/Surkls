@@ -5,6 +5,7 @@ import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import { startSession, joinSession, signUpOrLogin, getDevices } from 'actions/actions';
+import { subCategories } from 'components/smalls/sub-categories';
 import 'styles/header.scss';
 class Header extends Component {
 	constructor(props) {
@@ -12,15 +13,14 @@ class Header extends Component {
 		this.state = {
 			maxMembers: 5,
 			maxViewers: 10,
+			category: '',
+			subCategory: '',
+			roomName: '',
 			accMenuVisible: false,
 			notifMenuVisible: false,
 			sessionMenuVisible: false,
 			signInMenuVisible: false,
 			pulloutMenuVisible: false,
-
-			messagesMenu: false,
-			roomCategory: '',
-			roomName: '',
 			email: '',
 			password: '',
 			message: ''
@@ -57,21 +57,23 @@ class Header extends Component {
 		});
 	};
 	renderCreateSessionMenu = () => {
-		this.setState(
-			{
-				sessionMenuVisible: this.state.sessionMenuVisible ? false : true,
-				accMenuVisible: false,
-				notifMenuVisible: false,
-				pulloutMenuVisible: false,
-				signInMenuVisible: false,
-				messagesMenuVisible: false,
-				roomCategory: this.state.sessionMenuVisible ? this.state.roomCategory : '',
-				roomName: this.state.sessionMenuVisible ? this.state.roomName : ''
-			},
-			() => {
-				document.getElementById('sessionNameInput').focus();
-			}
-		);
+		if (window.location.pathname.indexOf('/session') < 0) {
+			this.setState(
+				{
+					sessionMenuVisible: this.state.sessionMenuVisible ? false : true,
+					accMenuVisible: false,
+					notifMenuVisible: false,
+					pulloutMenuVisible: false,
+					signInMenuVisible: false,
+					messagesMenuVisible: false,
+					roomCategory: this.state.sessionMenuVisible ? this.state.roomCategory : '',
+					roomName: this.state.sessionMenuVisible ? this.state.roomName : ''
+				},
+				() => {
+					document.getElementById('sessionNameInput').focus();
+				}
+			);
+		}
 	};
 	renderMessagesMenu = () => {
 		this.setState({
@@ -214,6 +216,49 @@ class Header extends Component {
 			);
 		});
 	};
+	populateSubCategories = () => {
+		if (this.state.category === 'gaming') {
+			return subCategories.gaming.map((cat, ind) => {
+				return (
+					<option key={ind} value={cat}>
+						{cat}
+					</option>
+				);
+			});
+		} else if (this.state.category === 'music') {
+			return subCategories.music.map((cat, ind) => {
+				return (
+					<option key={ind} value={cat}>
+						{cat}
+					</option>
+				);
+			});
+		} else if (this.state.category === 'sports') {
+			return subCategories.sports.map((cat, ind) => {
+				return (
+					<option key={ind} value={cat}>
+						{cat}
+					</option>
+				);
+			});
+		}
+	};
+	renderSubCategories = () => {
+		let visible = (this.state.category === 'sports' || 
+										 this.state.category === 'gaming' ||
+										 this.state.category === 'music') ? 'block' : 'none'
+		return (
+			<select
+				onChange={this.onInputChange}
+				name="subCategory"
+				style={{display:visible, marginTop: '10px', marginBottom: '5px' }}
+				id="subCategory"
+				className="menuSelect"
+			>
+				{this.populateSubCategories()}
+			</select>
+		);
+	};
 	createSessionMenu = () => {
 		let visibility = this.state.sessionMenuVisible ? 'flex' : 'none';
 		return (
@@ -226,13 +271,35 @@ class Header extends Component {
 					name="roomName"
 					value={this.state.roomName}
 				/>
-				<input
+				<select
 					onChange={this.onInputChange}
-					placeholder="Category"
-					className="menuInput"
-					name="roomCategory"
-					value={this.state.roomCategory}
-				/>
+					name="category"
+					style={{ marginTop: '10px', marginBottom: '5px' }}
+					id="categorySelect"
+					className="menuSelect"
+				>
+					<option value="">Category</option>
+					<option value="gaming">Gaming</option>
+					<option value="music">Music</option>
+					<option value="trending">Trending</option>
+					<option value="animal">Animals</option>
+					<option value="food">Food</option>
+					<option value="travel">Travel</option>
+					<option value="politics">Politics</option>
+					<option value="entertainment">Entertainment</option>
+					<option value="sports">Sports</option>
+					<option value="entrepreneurship">Entrepreneurship</option>
+					<option value="religion">Religion</option>
+					<option value="spirituality">Spirituality</option>
+					<option value="business">Business</option>
+					<option value="health">Health</option>
+					<option value="fashion">Fashion</option>
+					<option value="cars">Cars</option>
+					<option value="movies">Movies</option>
+					<option value="technology">Technology</option>
+					<option value="other">I want it all</option>
+				</select>
+				{this.renderSubCategories()}
 				<div className="menuConfig">
 					Max Members
 					<input
@@ -413,9 +480,14 @@ class Header extends Component {
 				sessionKey: sessionKey,
 				maxMembers: this.state.maxMembers,
 				maxViewers: this.state.maxViewers,
-				category: this.state.roomCategory,
-				cam: document.getElementById('camSelect').value ? document.getElementById('camSelect').value : 'default',
-				mic: document.getElementById('micSelect').value ? document.getElementById('micSelect').value : 'default',
+				category: this.state.category,
+				subCategory: this.state.subCategory,
+				isAdmin: true,
+				notShareLink: true,
+				cam: document.getElementById('camSelect').value
+					? document.getElementById('camSelect').value
+					: 'default',
+				mic: document.getElementById('micSelect').value ? document.getElementById('micSelect').value : 'default'
 			};
 			this.setState(
 				{
