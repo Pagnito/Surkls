@@ -74,7 +74,7 @@ class SessionContentYoutube extends Component {
 	displayVideoSnippets = () => {
 		return this.props.session.youtubeList.map((snippet, ind) => {
 			return (
-				<div onClick={() => this.playVideo(snippet.id.videoId)} key={ind} className="vidSnippet">
+				<div key={ind} className="vidSnippet">
 				<div onClick={()=>this.sendPickedVideo(snippet.id.videoId)} className="videoSignalBtn"></div>
 					<img className="snippetImg" src={snippet.snippet.thumbnails.default.url} />
 					<div className="channelTitle">{snippet.snippet.channelTitle}</div>

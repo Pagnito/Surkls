@@ -1,6 +1,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require('webpack');
+//const Visualizer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 module.exports = {
   entry: "./src/index.js",
   output: {

@@ -58,7 +58,6 @@ class Session extends Component {
 			this.props.sendThisVideo(videoId);
 		})
 		this.socket.on('adminLeftImAdminNow', (socketId)=>{
-			console.log('IM ADMIN NOW')
 			this.props.newAdmin(socketId)
 		})
 		this.socket.on('youtubeList', (youtubeList)=>{
@@ -119,8 +118,7 @@ class Session extends Component {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
 			if (this.imNotTheNew == false) {
-				console.log('ADDED STREAM')
-				
+				console.log('ADDED STREAM')			
 			}
 		
 		}
@@ -132,7 +130,7 @@ class Session extends Component {
 	handleIceCandidate = (event) => {
 		
 		if (event.candidate) {
-			console.log(event.candidate)
+			//console.log(event.candidate)
 			let candidate = {
 				type: 'candidate',
 				label: event.candidate.sdpMLineIndex,
@@ -250,7 +248,6 @@ class Session extends Component {
 		this.socket.emit('leave');
 	}
 	startOrJoin = () => {
-		console.log('THIS CODE STARTED');
 		this.startStream(document.getElementById('streamOfMe'))
 			.then(() => {
 				this.alreadyStarted = true;
@@ -260,7 +257,6 @@ class Session extends Component {
 				} else {
 					startingOrJoining = false;
 				}
-				console.log(startingOrJoining);
 				this.props.session.inSession = true;
 				this.props.session.sessionKey = this.props.match.params.room.replace('room=', '');
 				this.props.session.creatingSession = startingOrJoining;
@@ -356,7 +352,6 @@ class Session extends Component {
 				this.startOrJoin();
 			} else {
 				if (!this.props.session.notShareLink && !this.alreadyStarted) {
-					console.log(this.props.session);
 					this.socket.on('clientList', (clients) => {
 						this.setState({ clientList: clients });
 					});
@@ -488,7 +483,7 @@ class Session extends Component {
 						this.stream = stream;
 						stream.getTracks().forEach((track) => {
 							this.track.push(track);
-							console.log('TRACK', track);
+							//console.log('TRACK', track);
 						});
 						resolve();
 					});

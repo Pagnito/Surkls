@@ -56,7 +56,6 @@ export const getDevices = () => (dispatch) => {
 			mics: mics,
 			cams: cams
 		};
-		console.log(deviceObj);
 		dispatch({
 			type: GET_DEVICES,
 			payload: deviceObj
@@ -104,7 +103,6 @@ export const joinSession = (sessionInfo, cb) => (dispatch) => {
 	cb();
 };
 export const updateSession = (payload) => (dispatch) => {
-	console.log(payload)
 	dispatch({
 		type: UPDATE_SESSION,
 		payload: payload
