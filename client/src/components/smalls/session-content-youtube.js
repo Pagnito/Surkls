@@ -15,7 +15,7 @@ class SessionContentYoutube extends Component {
 
 		this.YTkey = 'AIzaSyBYjnyqxqjLo5B5cJjlo-KkEzQYLp6dqPE';
 		this.YTapi =
-			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyC-NVEgdByg61B92oFIbXkWBm-mqrW6FwU&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
+			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyAPW2QscyTsEPKUzDgEpR321HEouBt7A2o&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
 		this.YTurl = 'https://www.youtube.com/embed/';
 	}
 	handleInput = (e) => {
@@ -44,7 +44,7 @@ class SessionContentYoutube extends Component {
 	}; */
 	componentDidUpdate = (prevProps) => {
 		if(this.props.session.videoId!==prevProps.session.videoId){
-			this.playVideo(this.props.session.videoId);
+			this.showVideo(this.props.session.videoId);
 		}
 	};
 	componentDidMount = () => {
@@ -54,13 +54,13 @@ class SessionContentYoutube extends Component {
 				if (data.items) {
 					this.setState({ videos: data.items }, () => {
 						this.rendered = true;
-						this.props.updateSession(data.items)
+						this.props.updateSession({youtubeList:data.items})
 					});
 				}
 			});
 		}
 	};
-	playVideo = (videoId) => {
+	showVideo = (videoId) => {
 		this.setState({
 			playingVideo: videoId,
 			videoPicked: true
@@ -72,7 +72,7 @@ class SessionContentYoutube extends Component {
 		}
 	}
 	displayVideoSnippets = () => {
-		return this.state.videos.map((snippet, ind) => {
+		return this.props.session.youtubeList.map((snippet, ind) => {
 			return (
 				<div onClick={() => this.playVideo(snippet.id.videoId)} key={ind} className="vidSnippet">
 				<div onClick={()=>this.sendPickedVideo(snippet.id.videoId)} className="videoSignalBtn"></div>

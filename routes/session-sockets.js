@@ -35,12 +35,17 @@ module.exports = (io, app) => {
 						})
 					}
 					io.in(session.sessionKey).emit('clientList', rooms[session.sessionKey].clients)
-					socket.in(session.sessionKey).emit('signal',{type:'newJoin'}, socket.id);
+					redClient.hget('youtubeLists', session.sessionKey, (err,list)=>{
+						io.to(socket.id).emit('youtubeList', JSON.parse(list))
+						socket.in(session.sessionKey).emit('signal',{type:'newJoin'}, socket.id);
+						})
+		
+					
 					
 				}				
 			} else {	
 				if(!rooms[session.sessionKey]){
-					client = Object.assign({socketId:socket.id}, session.user)
+					client = Object.assign({socketId:socket.id, isAdmin:true}, session.user)
 					//console.log('CLIENT', client)
 					connecting = true;		
 					socket.join(session.sessionKey);	
@@ -57,7 +62,7 @@ module.exports = (io, app) => {
 					redClient.hset('rooms', session.sessionKey, JSON.stringify(session)) 
 				}		
 			}
-		
+			console.log(rooms[session.sessionKey])
 			////////////////////////////////////webrtc signaling////////////////////////////////////////
 			socket.on('signal', (data) => {
 				switch (data.type){
@@ -108,7 +113,7 @@ module.exports = (io, app) => {
 		 /////////////////////////////////^^^^^^^^signaling^^^^^^//////////////////////////////////////
 		 //////////////////////////////////////////////////////////////////////////////////////////////
 		 /////////////////////////////////handling discussion content//////////////////////////////////
-		 socket.on('wtf', (videoList)=>{
+		 socket.on('youtubeList', (videoList)=>{
 			 let listString = JSON.stringify(videoList);			
 			 redClient.hset('youtubeLists', session.sessionKey, listString);
 			 console.log('KEY', session.sessionKey)
@@ -143,7 +148,13 @@ module.exports = (io, app) => {
 				if(rooms[session.sessionKey]){
 					rooms[session.sessionKey].clients.forEach((loopClient, ind) => {
 						if (loopClient.socketId === socket.id) {
-							rooms[session.sessionKey].clients.splice(ind, 1);
+							rooms[session.sessionKey].clients.splice(ind, 1);	
+							if(loopClient.isAdmin){
+								if(rooms[session.sessionKey].clients.length>0){
+									rooms[session.sessionKey].clients[0].isAdmin=true;
+									io.to(rooms[session.sessionKey].clients[0].socketId).emit('adminLeftImAdminNow', loopClient.socketId)
+								}			
+							}
 						}
 					});	
 					if(rooms[session.sessionKey].clients.length<rooms[session.sessionKey].maxClients

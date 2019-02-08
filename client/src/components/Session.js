@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { getDevices, playThisVideo } from 'actions/actions';
+import { getDevices, sendThisVideo, newAdmin, updateSession } from 'actions/actions';
 import PropTypes from 'prop-types';
 import Dropdown from 'components/smalls/drop-menu-toRight';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
@@ -55,7 +55,14 @@ class Session extends Component {
 			this.setState({ msgs: data });
 		});
 		this.socket.on('playThisVideo', (videoId)=>{
-			this.props.playThisVideo(videoId);
+			this.props.sendThisVideo(videoId);
+		})
+		this.socket.on('adminLeftImAdminNow', (socketId)=>{
+			console.log('IM ADMIN NOW')
+			this.props.newAdmin(socketId)
+		})
+		this.socket.on('youtubeList', (youtubeList)=>{
+			this.props.updateSession({youtubeList:youtubeList})
 		})
 	}
 	/////////////////////////////////////////end of state//////////////////////////////////
@@ -113,7 +120,7 @@ class Session extends Component {
 			this.remoteAdded.added = false;
 			if (this.imNotTheNew == false) {
 				console.log('ADDED STREAM')
-				/* this.socket.emit('signal', {type:'wtf'}) */
+				
 			}
 		
 		}
@@ -254,6 +261,7 @@ class Session extends Component {
 					startingOrJoining = false;
 				}
 				console.log(startingOrJoining);
+				this.props.session.inSession = true;
 				this.props.session.sessionKey = this.props.match.params.room.replace('room=', '');
 				this.props.session.creatingSession = startingOrJoining;
 				this.props.session.user = this.props.auth;
@@ -308,9 +316,10 @@ class Session extends Component {
 		/* console.log('PREV',prevProps)
 		console.log('THIS',this.props) */
 		if (this.props.session.youtubeList !== prevProps.session.youtubeList) {
-			this.socket.emit('wtf', this.props.session.youtubeList);
+			this.socket.emit('youtubeList', this.props.session.youtubeList);
 		}
 		if (prevState.errors !== this.state.errors) {
+			
 			setTimeout(() => {
 				this.setState({ errors: {} });
 			}, 2000);
@@ -358,6 +367,7 @@ class Session extends Component {
 	}
 
 	///////////////////////////////////////////lifecycle^^^hooks////////////////////////////////////////
+
 	updateDevices = () => {
 		this.props.getDevices();
 	};
@@ -616,7 +626,9 @@ Session.propTypes = {
 	match: PropTypes.object,
 	devices: PropTypes.object,
 	getDevices: PropTypes.func,
-	playThisVideo: PropTypes.func
+	sendThisVideo: PropTypes.func,
+	newAdmin: PropTypes.func,
+	updateSession: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -625,4 +637,4 @@ function stateToProps(state) {
 		devices: state.devices,
 	};
 }
-export default connect(stateToProps, { getDevices, playThisVideo })(Session);
+export default connect(stateToProps, { getDevices, sendThisVideo, newAdmin, updateSession })(Session);

@@ -6,7 +6,9 @@ import {
 	GET_SESSIONS,
 	GET_DEVICES,
 	UPDATE_SESSION,
-	PLAY_VIDEO
+	PLAY_VIDEO,
+	NEW_ADMIN,
+
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -38,12 +40,7 @@ export const getSessions = () => (dispatch) => {
 		});
 	});
 };
-export const updateSession = (payload) => (dispatch) => {
-	dispatch({
-		type: UPDATE_SESSION,
-		payload: payload
-	});
-};
+
 export const getDevices = () => (dispatch) => {
 	let cams = [];
 	let mics = [];
@@ -106,7 +103,23 @@ export const joinSession = (sessionInfo, cb) => (dispatch) => {
 	});
 	cb();
 };
-export const playThisVideo = (videoId,cb) => (dispatch)=>{
+export const updateSession = (payload) => (dispatch) => {
+	console.log(payload)
+	dispatch({
+		type: UPDATE_SESSION,
+		payload: payload
+	});
+};
+export const newAdmin = (socketId) => (dispatch)=>{
+	dispatch({
+		type: NEW_ADMIN,
+		payload: {
+			isAdmin: true,
+			socketId: socketId
+		}
+	})
+}
+export const sendThisVideo = (videoId,cb) => (dispatch)=>{
 	dispatch({
 		type:PLAY_VIDEO,
 		payload:videoId
