@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { getDevices, sendThisVideoAction, newAdmin, updateSession } from 'actions/actions';
+import { getDevices, sendThisVideoAction, newAdmin, updateSession, unpickThisVideoAction } from 'actions/actions';
 import PropTypes from 'prop-types';
 import Dropdown from 'components/smalls/drop-menu-toRight';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
@@ -22,7 +22,8 @@ class Session extends Component {
 			talk: true,
 			showMyStream: true,
 			clientList: [],
-			platformMenuVisible: false
+			platformMenuVisible: false,
+			sessionExists: true,
 		};
 		//////////////////////////////////////
 		this.stunConfig = {
@@ -57,22 +58,28 @@ class Session extends Component {
 		this.socket.on('pickThisVideo', (playState)=>{
 			this.props.sendThisVideoAction(playState);
 		})
+		this.socket.on('unpickThisVideo', (playState)=>{
+			this.props.unpickThisVideoAction(playState);
+		})
 		this.socket.on('adminLeftImAdminNow', (socketId)=>{
 			this.props.newAdmin(socketId)
 		})
 		this.socket.on('youtubeList', (youtubeList)=>{
 			this.props.updateSession({youtubeList:youtubeList})
 		})
-
+		this.socket.on('sessionExpired', ()=>{
+			this.setState({sessionExists:false})
+		})
 	}
 	/////////////////////////////////////////end of state//////////////////////////////////
 	sendVideoSignal = (playState) =>{ ///will go into props
 		this.socket.emit('pickThisVideo', playState)
 	}
-
+	unpickThisVideo = (playState) =>{
+		this.socket.emit('unpickThisVideo', playState)
+	}
 	saveYoutubeListRedis = (youtubeList) =>{
 		if(this.props.session.isAdmin){
-			console.log('imAdmin')
 			this.socket.emit('youtubeList', youtubeList);
 		}	
 	}
@@ -538,6 +545,11 @@ class Session extends Component {
 		} else {
 			return (
 				<div id="session">
+					<div style={{display:this.state.sessionExists ? 'none' : 'flex'}}
+					id="sessionExpiredContainer">
+						<div id="sessionExpiredModal">This session has expired :/</div>
+					</div>
+					{/*////////////////////////////////////*/}
 					<div id="sessionLeftAside">
 						<div id="videoStreams">
 							{/* <div className="streamWrap">
@@ -597,7 +609,8 @@ class Session extends Component {
 							<SessionContentYoutube
 							 playThisVideo={this.playThisVideo} 
 							 sendVideoSignal={this.sendVideoSignal}
-							 saveYoutubeListRedis={this.saveYoutubeListRedis} />
+							 saveYoutubeListRedis={this.saveYoutubeListRedis}
+							 unpickThisVideo={this.unpickThisVideo} />
 						</div>
 						<div id="chatSection">
 							<div id="chatBox">
@@ -634,7 +647,8 @@ Session.propTypes = {
 	sendThisVideoAction: PropTypes.func,
 	playThisVideoAction: PropTypes.func,
 	newAdmin: PropTypes.func,
-	updateSession: PropTypes.func
+	updateSession: PropTypes.func,
+	unpickThisVideoAction: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -643,4 +657,8 @@ function stateToProps(state) {
 		devices: state.devices,
 	};
 }
-export default connect(stateToProps, { getDevices, sendThisVideoAction, newAdmin, updateSession })(Session);
+export default connect(stateToProps, { getDevices, 
+	sendThisVideoAction, 
+	newAdmin,
+	unpickThisVideoAction, 
+	updateSession })(Session);

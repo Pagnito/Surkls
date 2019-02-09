@@ -1,4 +1,4 @@
-import {START_SESSION, JOIN_SESSION, UPDATE_SESSION, SEND_VIDEO, PLAY_VIDEO, NEW_ADMIN } from "actions/types";
+import {START_SESSION, JOIN_SESSION, UPDATE_SESSION, SEND_VIDEO, UNPICK_VIDEO, NEW_ADMIN } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	inSession: false,
@@ -14,11 +14,17 @@ export default function(state = initialState, action) {
 			...action.payload
 		}
 		case SEND_VIDEO:
+		console.log(action.payload)
 			return {
 				...state,
 				playState: action.payload
 			}
-		case UPDATE_SESSION:		
+		case UNPICK_VIDEO:
+			return {
+				...state,
+				playState: action.payload
+			}
+		case UPDATE_SESSION:
 			return {
 				...state,
 			 ...action.payload

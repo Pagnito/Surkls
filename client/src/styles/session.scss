@@ -1,4 +1,27 @@
 #session {
+	position: relative;
+	#sessionExpiredContainer {
+		justify-content: center;
+		align-items: center;
+		height:100%;
+		width:100%;
+		z-index: 60;
+		font-size: 40px;	
+		position:absolute;
+		left:0px;
+		top:0px;
+		background: rgba(0,0,0,.6);
+		#sessionExpiredModal {
+			display:flex;
+			justify-content: center;
+		  align-items: center;
+			font-family: 'Comfortaa';
+			width: 60%;
+			height:200px;
+			border-radius: 10px;
+			background-color: #DEB23B;
+		}
+	}
 	display: flex;
 	width: 100%;
 	height: calc(100vh - 55px);

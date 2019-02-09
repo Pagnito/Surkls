@@ -16,7 +16,7 @@ class SessionContentYoutube extends Component {
 
 		this.YTkey = 'AIzaSyBYjnyqxqjLo5B5cJjlo-KkEzQYLp6dqPE';
 		this.YTapi =
-			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyC-NVEgdByg61B92oFIbXkWBm-mqrW6FwU&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
+			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyDws9NT1IvkAYPH98VYsIKFXffKNVmU-Jc&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
 		this.YTurl = 'https://www.youtube.com/embed/';
 		this.YTPlayer;
 	}
@@ -46,17 +46,16 @@ class SessionContentYoutube extends Component {
 	}; */
 	componentDidUpdate = (prevProps) => {
 		let prop = this.props.session;
-		if(prop.playState!==prevProps.session.playState){
+		if(prop.playState.videoId!==prevProps.session.playState.videoId && prop.playState.videoId.length>0){
 			this.showVideo(prop.playState.videoId);
 		}
 		if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
-			console.log('kicking off')
 			this.props.saveYoutubeListRedis(prop.youtubeList)
 		}
 	};
 	componentDidMount = () => {
 		let prop = this.props.session;
-		if (this.props.session.category && this.state.videos.length === 0) {
+		if (this.props.session.category && this.state.videos.length === 0 && prop.isAdmin) {
 			fetch(this.YTapi + prop.category + '+' + prop.subCategory).then((res) => res.json()).then((data) => {
 				if (data.items) {
 					this.setState({ videos: data.items }, () => {
@@ -69,10 +68,18 @@ class SessionContentYoutube extends Component {
 	};
 	hideVideo = () =>{
 		if(this.state.videoPicked){
-			this.YTPlayer.destroy()
-			this.setState({
-				videoPicked: false
-			})
+			if(this.YTPlayer!==null){
+				this.YTPlayer.destroy()
+			}	
+			if(this.YTPlayer.destroyed){
+				this.YTPlayer = null;
+				if(this.props.session.isAdmin){
+					this.props.unpickThisVideo({host:'youtube', videoId:''})
+				}		
+				this.setState({
+					videoPicked: false
+				})
+			}	
 		}
 	}
 	showVideo = (videoId) => {
@@ -198,7 +205,7 @@ SessionContentYoutube.propTypes = {
 	videoUrl: PropTypes.string,
 	updateSession: PropTypes.func,
 	sendVideoSignal: PropTypes.func,
-	playThisVideo: PropTypes.func,
+	unpickThisVideo: PropTypes.func,
 	saveYoutubeListRedis: PropTypes.func
 };
 function stateToProps(state) {

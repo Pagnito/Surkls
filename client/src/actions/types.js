@@ -7,7 +7,7 @@ export const GET_SESSION= 'GET_SESSION';
 export const GET_DEVICES= 'GET_DEVICES';
 export const UPDATE_SESSION= 'UPDATE_SESSION';
 export const SEND_VIDEO = 'SEND_VIDEO';
-export const PLAY_VIDEO = 'PLAY_VIDEO';
+export const UNPICK_VIDEO = 'UNPICK_VIDEO';
 export const NEW_ADMIN = 'NEW_ADMIN';
 
 

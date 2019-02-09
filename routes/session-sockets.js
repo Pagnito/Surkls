@@ -8,7 +8,6 @@ module.exports = (io, app) => {
 		console.log(str)
 	})
  */
-	let rooms = {};
 	let reciever;
 	let sender;
 	let offers = {};
@@ -46,7 +45,7 @@ module.exports = (io, app) => {
 								}
 							});
 						} else {
-							io.to(socket.id).emit('roomDoesntExist');
+							io.to(socket.id).emit('sessionExpired');
 						}
 					});
 					redClient.hget('youtubeLists', session.sessionKey, (err, list) => {
@@ -143,17 +142,28 @@ module.exports = (io, app) => {
 				});
 
 				socket.on('pickThisVideo', (playState) => {
-					console.log(rooms[session.sessionKey]);
-					redClient.hget('rooms', session.sessionKey, (err, room) => {
+					console.log(playState)
+					redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
 						if (err) {
 							console.log(err);
 						}
-						let roomObj = JSON.parse(room);
-						roomObj.playState = playState;
-						redClient.hset('rooms', session.sessionKey, JSON.stringify(roomObj));
+						let sessionObj = JSON.parse(sessionStr);
+						sessionObj.playState = playState;
+						redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj));
 						io.to(session.sessionKey).emit('pickThisVideo', playState);
 					});
 				});
+				socket.on('unpickThisVideo', (playState) =>{
+					redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
+						if (err) {
+							console.log(err);
+						}
+						let sessionObj = JSON.parse(sessionStr);
+						sessionObj.playState = playState;
+						redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj));
+						io.to(session.sessionKey).emit('unpickThisVideo', playState);
+					});
+				})
 				socket.on('sendMsg', (msg) => {
 					redClient.hget('videoChatMsgs', session.sessionKey, (err, msgs) => {
 						if (err) {
@@ -193,14 +203,16 @@ module.exports = (io, app) => {
 											//////////make new admin/////////
 											if (loopClient.isAdmin && sessionObj.clients.length > 0) {
 												sessionObj.clients[0].isAdmin = true;
+												sessionObj.admin = sessionObj.clients[0].socketId;
 												io.to(sessionObj.clients[0].socketId).emit('adminLeftImAdminNow', loopClient.socketId);									
 											}
 										}
 									});
 									console.log(sessionObj.clients.length,' clients left in the room',sessionObj.room);
-									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj));
+									
 									if (sessionObj.clients.length < sessionObj.maxMembers) {
 											sessionObj.maxedOut = false;
+											redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj));
 											if (sessionObj.clients.length == 0) {
 												if (session.sessionKey !== null && session.sessionKey !== undefined) {
 													redClient.hdel('rooms', session.sessionKey);
