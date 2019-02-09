@@ -27,16 +27,7 @@
 		}
 	}
 	
-	#sessionLeftAside::-webkit-scrollbar {
-		width:10px;
-	}
-	#sessionLeftAside::-webkit-scrollbar-thumb {
-		background: #282828; 
-		border-radius: 10px;
-	}
-	#sessionLeftAside::-webkit-scrollbar-corner {
-		background: transparent;
-	}
+
 	#sessionLeftAside {
 		scrollbar-color: light;
 		display: flex;
@@ -45,15 +36,24 @@
 		box-sizing: border-box;
 		background-color:black;
 		overflow-y:scroll;
-
+		#videoStreams::-webkit-scrollbar {
+			width:10px;
+		}
+		#videoStreams::-webkit-scrollbar-thumb {
+			background: #282828; 
+			border-radius: 10px;
+		}
+		#videoStreams::-webkit-scrollbar-corner {
+			background: transparent;
+		}
 		#videoStreams {
-			height: 250px;
+			height: 505px;
 			width: 100%;
-			display: flex;
-			align-content: flex-start;
-			flex-wrap: wrap;
-			justify-content: flex-start;
 			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
 			#streamsErrorModal {
 				position: absolute;
 				left:0px;
@@ -69,15 +69,19 @@
 				z-index: 20;
 			}
 			.streamWrap {
-				width: 244px;
-				height: 244px;
-				align-self: flex-start;
+			/* 	width: 244px;
+				height: 244px; */
+				/* width: 400px;
+				height:50%; */
+				border-radius: 5px;
 				display: flex;
+				padding-right: 5px;
+				padding-left: 5px;
 				justify-content: center;
 				align-items: center;
-				padding-left: 5px;
-				padding-top: 5px;
+				margin-top: 5px;
 				box-sizing: border-box;
+				overflow: hidden;
 				.stream {
 					border-radius: 5px;
 					width: 100%;

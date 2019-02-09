@@ -332,12 +332,7 @@ class Session extends Component {
 			.catch((err) => console.log(err));
 	};
 	componentDidUpdate(prevProps, prevState) {
-		console.log('UPDATE');
-		/* console.log('PREV',prevProps)
-		console.log('THIS',this.props) */
-	
-		if (prevState.errors !== this.state.errors) {
-			
+		if (prevState.errors !== this.state.errors) {	
 			setTimeout(() => {
 				this.setState({ errors: {} });
 			}, 2000);
@@ -356,6 +351,17 @@ class Session extends Component {
 				this.startOrJoin()
 			}
 		} 
+		if(this.props.session.clients!==prevProps.session.clients){
+			let constraints = {
+				width: this.props.session.clients.length<3 ? '100%' : '400px',
+				height: this.props.session.clients.length<3 ? '100%' : '50%',
+			}
+			let streams = document.getElementsByClassName('streamWrap');
+			for(let stream of streams){
+				stream.style.width = constraints.width;
+				stream.style.height = constraints.height;
+			}
+		}
 		/* navigator.mediaDevices.ondevicechange = () => {
 			this.updateDevices();
 		};*/
@@ -464,9 +470,15 @@ class Session extends Component {
 
 	createVideo = () => {
 		return new Promise((resolve) => {
+			let constraints = {
+				width: this.props.session.clients.length<3 ? '100%' : '400px',
+				height: this.props.session.clients.length<3 ? '100%' : '50%',
+			}
 			let streamRows = document.getElementById('videoStreams');
 			let videoWrap = document.createElement('div');
 			videoWrap.setAttribute('class', 'streamWrap');
+			videoWrap.style.width = constraints.width;
+			videoWrap.style.height = constraints.height;
 			let video = document.createElement('video');
 			video.autoplay = true;
 			video.setAttribute('class', 'stream');
@@ -522,8 +534,8 @@ class Session extends Component {
 							deviceId: this.props.session.mic ? this.props.session.mic : 'default'
 						},
 						video: {
-							width: 200,
-							height: 200,
+							width: 250,
+							height: 250,
 							deviceId: this.props.session.cam ? this.props.session.cam : 'default'
 						}
 					})
