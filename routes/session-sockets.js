@@ -207,8 +207,7 @@ module.exports = (io, app) => {
 					socket.leave(data);
 					socket.disconnect();
 				});
-				socket.on('disconnect', () => {
-					socket.in(session.sessionKey).emit('signal', { type: 'clientLeft' }, socket.id);		
+				socket.on('disconnect', () => {		
 						redClient.hexists('rooms', session.sessionKey,(err,exists)=>{
 							if(err){console.log(err)}
 							if(exists===1){
@@ -226,6 +225,7 @@ module.exports = (io, app) => {
 											}
 										}
 									});
+									socket.in(session.sessionKey).emit('signal', { type: 'clientLeft', sessionObj: sessionObj }, socket.id);
 									console.log(sessionObj.clients.length,' clients left in the room',sessionObj.room);
 									
 									if (sessionObj.clients.length < sessionObj.maxMembers) {

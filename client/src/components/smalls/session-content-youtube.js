@@ -50,7 +50,7 @@ class SessionContentYoutube extends Component {
 			this.showVideo(prop.playState.videoId);
 		}		
 		if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
-			setTimeout(()=>{this.props.saveYoutubeListRedis(prop.youtubeList)},200)
+			setTimeout(()=>{this.props.saveYoutubeListRedis(prop.youtubeList)},500)
 		}
 		/* if(prop.playState.requestingTime!==prevProps.session.playState.requestingTime){	
 			this.props.sendVideoCurrentTime(this.getVideosCurrentTime(),()=>{

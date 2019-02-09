@@ -1,5 +1,9 @@
 #session {
 	position: relative;
+	display: flex;
+	width: 100%;
+	height: calc(100vh - 55px);
+	background-color: #282828;
 	#sessionExpiredContainer {
 		justify-content: center;
 		align-items: center;
@@ -22,10 +26,7 @@
 			background-color: #DEB23B;
 		}
 	}
-	display: flex;
-	width: 100%;
-	height: calc(100vh - 55px);
-	background-color: #282828;
+	
 	#sessionLeftAside::-webkit-scrollbar {
 		width:10px;
 	}
@@ -37,6 +38,7 @@
 		background: transparent;
 	}
 	#sessionLeftAside {
+		scrollbar-color: light;
 		display: flex;
 		width: 500px;
 		flex-direction: column;
@@ -45,7 +47,7 @@
 		overflow-y:scroll;
 
 		#videoStreams {
-			height: 500px;
+			height: 250px;
 			width: 100%;
 			display: flex;
 			align-content: flex-start;
@@ -67,8 +69,8 @@
 				z-index: 20;
 			}
 			.streamWrap {
-				width: 247px;
-				height: 247px;
+				width: 244px;
+				height: 244px;
 				align-self: flex-start;
 				display: flex;
 				justify-content: center;
@@ -171,23 +173,24 @@
 			
 		}
 	}
- 	#sessionContentAside::-webkit-scrollbar {
+ 	/* #sessionCenterAside::-webkit-scrollbar {
 			width:10px;
 		}
-		#sessionContentAside::-webkit-scrollbar-thumb {
+		#sessionCenterAside::-webkit-scrollbar-thumb {
 			background: #282828; 
 			border-radius: 10px;
 		}
-		#sessionContentAside::-webkit-scrollbar-corner {
+		#sessionCenterAside::-webkit-scrollbar-corner {
 			background: transparent;
-		}
+		} */
 	#sessionCenterAside {
+		scrollbar-color: light;
 		width: calc(100% - 700px);
 		display: flex;
 		flex-direction: column;
 		border-left: 1px solid #1c1c1c;
 		box-sizing: border-box;
-		overflow-y:scroll;
+		/* overflow-y:scroll; */
 	
 		#discussContent {
 			height: 320px;
@@ -252,6 +255,7 @@
 					background: transparent;
 				}
 				#chatMsgsShow {
+					scrollbar-color: light;
 					align-self: flex-start;
 					width: 100%;
 					height: calc(100% - 65px);

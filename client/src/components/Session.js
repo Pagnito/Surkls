@@ -123,16 +123,17 @@ class Session extends Component {
 		this.setState({ errors: errors });
 	};
 	handleRemoteStreamAdded = (event) => {
-		//console.log('REMOTE',event.streams)
+		console.log('REMOTE',event.streams)
 		if (this.remoteAdded.added === false) {
+			this.remoteAdded.added = true;
 			let client = this.remoteClients[this.remoteClients.length - 1];
 			this.createVideo().then((video) => {
+				console.log('HOW')
 				this.remoteAdded.videoEl = video.vid;
 				if (video.vid.srcObject == null) {
 					video.vid.srcObject = event.streams[0];
 					video.vid.setAttribute('data-id', client);
 					video.vidWrap.setAttribute('data-id', client);
-					this.remoteAdded.added = true;
 					this.remoteAdded.id = event.streams[0].id;
 				}
 			});
@@ -140,6 +141,7 @@ class Session extends Component {
 		if (this.remoteAdded.added === true && this.remoteAdded.id === event.streams[0].id) {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
+			console.log(	'wtf')
 			if (this.imNotTheNew == false) {
 				console.log('ADDED STREAM')			
 			}
@@ -206,7 +208,7 @@ class Session extends Component {
 			.catch(this.handleAnswerError);
 	};
 
-	handleLeavingClient = (remoteId) => {
+	handleLeavingClient = (sessionObj, remoteId) => {
 		let iterator = 0;
 		let streams = document.getElementsByClassName('stream');
 		let streamWraps = document.getElementsByClassName('streamWrap');
@@ -221,16 +223,15 @@ class Session extends Component {
 			}
 			iterator++;
 		}
-		let updatedList = this.state.clientList.filter((client) => {
-			return client.socketId !== remoteId;
-		});
-		this.setState({ clientList: updatedList });
+		this.rtcs[remoteId].close();
 		for (let streamWrap of streamWraps) {
 			if (streamWrap.dataset.id === remoteId) {
 				streamList.removeChild(streamWrap);
 			}
 		}
-		this.rtcs[remoteId].close();
+		console.log(sessionObj)
+		this.props.updateSession({clients:sessionObj.clients})
+	
 		delete this.rtcs[remoteId];
 	};
 	createPeerRtc = (remoteId, cb) => {
@@ -321,7 +322,7 @@ class Session extends Component {
 							}
 							break;
 						case 'clientLeft':
-							this.handleLeavingClient(remoteId);
+							this.handleLeavingClient(data.sessionObj, remoteId);
 							break;
 						case 'connected':
 							break;
