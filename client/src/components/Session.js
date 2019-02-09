@@ -5,6 +5,7 @@ import { getDevices, sendThisVideoAction, newAdmin, updateSession, unpickThisVid
 import PropTypes from 'prop-types';
 import Dropdown from 'components/smalls/drop-menu-mutable';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
+import SessionContentDailymotion from 'components/smalls/session-content-dailymotion';
 import 'styles/session.scss';
 import 'styles/loader.scss';
 class Session extends Component {
@@ -23,7 +24,7 @@ class Session extends Component {
 			showMyStream: true,
 			clientList: [],
 			platformMenuVisible: false,
-			sessionExists: true,
+			sessionExists: true
 		};
 		//////////////////////////////////////
 		this.stunConfig = {
@@ -55,42 +56,43 @@ class Session extends Component {
 		this.socket.on('recieveMsgs', (data) => {
 			this.setState({ msgs: data });
 		});
-		this.socket.on('pickThisVideo', (playState)=>{
+		this.socket.on('pickThisVideo', (playState) => {
 			this.props.sendThisVideoAction(playState);
-		})
-		this.socket.on('unpickThisVideo', (playState)=>{
+		});
+		this.socket.on('unpickThisVideo', (playState) => {
 			this.props.unpickThisVideoAction(playState);
-		})
-		this.socket.on('adminLeftImAdminNow', (socketId)=>{
-			this.props.newAdmin(socketId)
-		})
-		this.socket.on('youtubeList', (youtubeList)=>{
-			this.props.updateSession({youtubeList:youtubeList})
-		})
-		this.socket.on('sessionExpired', ()=>{
-			this.setState({sessionExists:false})
-		})
-		this.socket.on('giveMeVideoCurrentTime', (playState)=>{
-			console.log('requesting=true')
-			this.props.updateSession({playState:playState})
-		})
-		this.socket.on('hereIsVideoCurrentTime', (playState)=>{
-			console.log(playState)
-			this.props.updateSession({playState:playState})
-		})
+		});
+		this.socket.on('adminLeftImAdminNow', (socketId) => {
+			this.props.newAdmin(socketId);
+		});
+		this.socket.on('youtubeList', (youtubeList) => {
+			this.props.updateSession({ youtubeList: youtubeList });
+		});
+		this.socket.on('sessionExpired', () => {
+			this.setState({ sessionExists: false });
+		});
+		this.socket.on('giveMeVideoCurrentTime', (playState) => {
+			console.log('requesting=true');
+			this.props.updateSession({ playState: playState });
+		});
+		this.socket.on('hereIsVideoCurrentTime', (playState) => {
+			console.log(playState);
+			this.props.updateSession({ playState: playState });
+		});
 	}
 	/////////////////////////////////////////end of state//////////////////////////////////
-	sendVideoSignal = (playState) =>{ ///will go into props
-		this.socket.emit('pickThisVideo', playState)
-	}
-	unpickThisVideo = (playState) =>{
-		this.socket.emit('unpickThisVideo', playState)
-	}
-	saveYoutubeListRedis = (youtubeList) =>{
-		if(this.props.session.isAdmin){
+	sendVideoSignal = (playState) => {
+		///will go into props
+		this.socket.emit('pickThisVideo', playState);
+	};
+	unpickThisVideo = (playState) => {
+		this.socket.emit('unpickThisVideo', playState);
+	};
+	saveYoutubeListRedis = (youtubeList) => {
+		if (this.props.session.isAdmin) {
 			this.socket.emit('youtubeList', youtubeList);
-		}	
-	}
+		}
+	};
 	//////////////////////////////////////////////webrtc funcs////////////////////////////////////////////
 	handleOfferError = (err) => {
 		console.log(err);
@@ -123,12 +125,12 @@ class Session extends Component {
 		this.setState({ errors: errors });
 	};
 	handleRemoteStreamAdded = (event) => {
-		console.log('REMOTE',event.streams)
+		console.log('REMOTE', event.streams);
 		if (this.remoteAdded.added === false) {
 			this.remoteAdded.added = true;
 			let client = this.remoteClients[this.remoteClients.length - 1];
 			this.createVideo().then((video) => {
-				console.log('HOW')
+				console.log('HOW');
 				this.remoteAdded.videoEl = video.vid;
 				if (video.vid.srcObject == null) {
 					video.vid.srcObject = event.streams[0];
@@ -141,11 +143,10 @@ class Session extends Component {
 		if (this.remoteAdded.added === true && this.remoteAdded.id === event.streams[0].id) {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
-			console.log(	'wtf')
+			console.log('wtf');
 			if (this.imNotTheNew == false) {
-				console.log('ADDED STREAM')			
+				console.log('ADDED STREAM');
 			}
-		
 		}
 	};
 
@@ -153,7 +154,6 @@ class Session extends Component {
 		console.log('removed', event);
 	};
 	handleIceCandidate = (event) => {
-		
 		if (event.candidate) {
 			//console.log(event.candidate)
 			let candidate = {
@@ -166,7 +166,7 @@ class Session extends Component {
 		} else {
 			console.log('End of candidates.');
 			//if (this.imNotTheNew == false) {
-				this.socket.emit('signal', { type: 'connected' });
+			this.socket.emit('signal', { type: 'connected' });
 			//}
 		}
 	};
@@ -229,9 +229,9 @@ class Session extends Component {
 				streamList.removeChild(streamWrap);
 			}
 		}
-		console.log(sessionObj)
-		this.props.updateSession({clients:sessionObj.clients})
-	
+		console.log(sessionObj);
+		this.props.updateSession({ clients: sessionObj.clients });
+
 		delete this.rtcs[remoteId];
 	};
 	createPeerRtc = (remoteId, cb) => {
@@ -332,7 +332,7 @@ class Session extends Component {
 			.catch((err) => console.log(err));
 	};
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.errors !== this.state.errors) {	
+		if (prevState.errors !== this.state.errors) {
 			setTimeout(() => {
 				this.setState({ errors: {} });
 			}, 2000);
@@ -343,21 +343,21 @@ class Session extends Component {
 				chatBox.scrollTop = chatBox.scrollHeight;
 			}
 		}
-		if(this.props.auth!==prevProps.auth){
-			if(!this.props.session.notShareLink && !this.alreadyStarted){
+		if (this.props.auth !== prevProps.auth) {
+			if (!this.props.session.notShareLink && !this.alreadyStarted) {
 				this.socket.on('thisSession', (sessionObj) => {
-					this.props.updateSession(sessionObj)
+					this.props.updateSession(sessionObj);
 				});
-				this.startOrJoin()
+				this.startOrJoin();
 			}
-		} 
-		if(this.props.session.clients!==prevProps.session.clients){
+		}
+		if (this.props.session.clients !== prevProps.session.clients) {
 			let constraints = {
-				width: this.props.session.clients.length<3 ? '100%' : '400px',
-				height: this.props.session.clients.length<3 ? '100%' : '50%',
-			}
+				width: this.props.session.clients.length < 3 ? '100%' : '400px',
+				height: this.props.session.clients.length < 3 ? '100%' : '50%'
+			};
 			let streams = document.getElementsByClassName('streamWrap');
-			for(let stream of streams){
+			for (let stream of streams) {
 				stream.style.width = constraints.width;
 				stream.style.height = constraints.height;
 			}
@@ -375,13 +375,13 @@ class Session extends Component {
 		if (this.props.session.notShareLink || this.props.session.creatingSession) {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
 				this.socket.on('thisSession', (sessionObj) => {
-					this.props.updateSession(sessionObj)
+					this.props.updateSession(sessionObj);
 				});
 				this.startOrJoin();
 			} else {
 				if (!this.props.session.notShareLink && !this.alreadyStarted) {
 					this.socket.on('thisSession', (sessionObj) => {
-						this.props.updateSession(sessionObj)
+						this.props.updateSession(sessionObj);
 					});
 					this.startOrJoin();
 				}
@@ -390,34 +390,61 @@ class Session extends Component {
 	}
 
 	///////////////////////////////////////////lifecycle^^^hooks////////////////////////////////////////
-	askForVideoCurrentTime = () =>{
-		setTimeout(()=>{
-			this.socket.emit('giveMeVideoCurrentTime','wtf')
-		},500)	
-	}
-	sendVideoCurrentTime = (playState, cb) =>{
-		setTimeout(()=>{
-			this.socket.emit('hereIsVideoCurrentTime',playState)
+	askForVideoCurrentTime = () => {
+		setTimeout(() => {
+			this.socket.emit('giveMeVideoCurrentTime', 'wtf');
+		}, 500);
+	};
+	sendVideoCurrentTime = (playState, cb) => {
+		setTimeout(() => {
+			this.socket.emit('hereIsVideoCurrentTime', playState);
 			cb();
-		},1000)	
-	}
-	renderPlatform = () =>{
-		if(this.props.session.playState.host === 'youtube'){
+		}, 1000);
+	};
+	pickPlatform = (platform) => {
+		this.props.updateSession({
+			playState: {
+				host: platform,
+				videoId: '',
+				playing: false,
+				requestingTime: false,
+				currentTime: false
+			}
+		});
+	};
+	renderPlatform = () => {
+		if (this.props.session.playState.host === 'youtube') {
 			return (
 				<SessionContentYoutube
-				playThisVideo={this.playThisVideo} 
-				sendVideoSignal={this.sendVideoSignal}
-				saveYoutubeListRedis={this.saveYoutubeListRedis}
-				unpickThisVideo={this.unpickThisVideo}
-				sendVideoCurrentTime={this.sendVideoCurrentTime}
-				askForVideoCurrentTime={this.askForVideoCurrentTime} />
-			)
-		} else if( this.props.session.playState.host === 'dailymotion'){
+					sendVideoSignal={this.sendVideoSignal}
+					saveYoutubeListRedis={this.saveYoutubeListRedis}
+					unpickThisVideo={this.unpickThisVideo}
+					sendVideoCurrentTime={this.sendVideoCurrentTime}
+					askForVideoCurrentTime={this.askForVideoCurrentTime}
+				/>
+			);
+		} else if (this.props.session.playState.host === 'dailymotion') {
 			return (
-				<div></div>
-			)
+				<SessionContentDailymotion
+					sendVideoSignal={this.sendVideoSignal}
+					saveYoutubeListRedis={this.saveYoutubeListRedis}
+					unpickThisVideo={this.unpickThisVideo}
+					sendVideoCurrentTime={this.sendVideoCurrentTime}
+					askForVideoCurrentTime={this.askForVideoCurrentTime}
+				/>
+			);
+		} else {
+			return (
+				<SessionContentDailymotion
+					sendVideoSignal={this.sendVideoSignal}
+					saveYoutubeListRedis={this.saveYoutubeListRedis}
+					unpickThisVideo={this.unpickThisVideo}
+					sendVideoCurrentTime={this.sendVideoCurrentTime}
+					askForVideoCurrentTime={this.askForVideoCurrentTime}
+				/>
+			);
 		}
-	}
+	};
 
 	updateDevices = () => {
 		this.props.getDevices();
@@ -429,7 +456,7 @@ class Session extends Component {
 			});
 		}
 	};
-	
+
 	sendMsg = (e) => {
 		if (e.key == 'Enter') {
 			let date = new Date(Date.now());
@@ -471,9 +498,9 @@ class Session extends Component {
 	createVideo = () => {
 		return new Promise((resolve) => {
 			let constraints = {
-				width: this.props.session.clients.length<3 ? '100%' : '400px',
-				height: this.props.session.clients.length<3 ? '100%' : '50%',
-			}
+				width: this.props.session.clients.length < 3 ? '100%' : '400px',
+				height: this.props.session.clients.length < 3 ? '100%' : '50%'
+			};
 			let streamRows = document.getElementById('videoStreams');
 			let videoWrap = document.createElement('div');
 			videoWrap.setAttribute('class', 'streamWrap');
@@ -558,8 +585,12 @@ class Session extends Component {
 		let visibility = this.state.platformMenuVisible ? 'flex' : 'none';
 		return (
 			<Dropdown menuTitle="Platforms" menuTypeArrow="platformsArrow" visibility={visibility}>
-				<div className="menuItem_mutable">Youtube</div>
-				<div className="menuItem_mutable">Daily Motion</div>
+				<div onClick={() => this.pickPlatform('youtube')} className="menuItem_mutable">
+					Youtube
+				</div>
+				<div onClick={() => this.pickPlatform('dailymotion')} className="menuItem_mutable">
+					Daily Motion
+				</div>
 				<div className="menuItem_mutable">Soundcloud</div>
 				<div className="menuItem_mutable">Medium</div>
 				<div className="menuItem_mutable">Twitter</div>
@@ -572,18 +603,22 @@ class Session extends Component {
 		this.setState({ platformMenuVisible: this.state.platformMenuVisible ? false : true });
 	};
 	renderErrors = () => {
-			let error = (this.state.errors.answer) ? this.state.errors.answer :
-									(this.state.errors.offer) ? this.state.errors.offer :
-									(this.state.errors.candidates) ? this.state.errors.candidates :
-									(this.state.errors.localDescription) ? this.state.errors.localDescription :
-									 (this.state.errors.remoteDescription) ? this.state.errors.remoteDescription :
-									 ''
-			return (
-				<div style={{ display: error.length > 1 ? 'flex' : 'none' }}
-							id="streamsErrorModal">{error}</div>
-			)
+		let error = this.state.errors.answer
+			? this.state.errors.answer
+			: this.state.errors.offer
+				? this.state.errors.offer
+				: this.state.errors.candidates
+					? this.state.errors.candidates
+					: this.state.errors.localDescription
+						? this.state.errors.localDescription
+						: this.state.errors.remoteDescription ? this.state.errors.remoteDescription : '';
+		return (
+			<div style={{ display: error.length > 1 ? 'flex' : 'none' }} id="streamsErrorModal">
+				{error}
+			</div>
+		);
 	};
-//////////////////////////////////////////////RENDER//////////////////////////////////////////////////
+	//////////////////////////////////////////////RENDER//////////////////////////////////////////////////
 	render() {
 		if (this.props.auth == null || this.props.session === null) {
 			return (
@@ -594,8 +629,7 @@ class Session extends Component {
 		} else {
 			return (
 				<div id="session">
-					<div style={{display:this.state.sessionExists ? 'none' : 'flex'}}
-					id="sessionExpiredContainer">
+					<div style={{ display: this.state.sessionExists ? 'none' : 'flex' }} id="sessionExpiredContainer">
 						<div id="sessionExpiredModal">This session has expired :/</div>
 					</div>
 					{/*////////////////////////////////////*/}
@@ -603,8 +637,8 @@ class Session extends Component {
 						<div id="videoStreams">
 							{/* <div className="streamWrap">
 								<video className="streamTest" autoPlay></video>
-							</div>  */}	
-								{this.renderErrors()}				
+							</div>  */}
+							{this.renderErrors()}
 						</div>
 						<div id="sessionLeftAsideSettings">
 							<video id="streamOfMe" muted="muted" autoPlay />
@@ -649,19 +683,16 @@ class Session extends Component {
 					</div>
 					<div id="sessionCenterAside">
 						<div id="discussContent">
-						<div id="platformMenuAligner">
-							<div onClick={this.renderPlatformMenu} id="contentDropdownIcon" className="discHeaderIcon">
-								{this.platformsMenu()}
+							<div id="platformMenuAligner">
+								<div
+									onClick={this.renderPlatformMenu}
+									id="contentDropdownIcon"
+									className="discHeaderIcon"
+								>
+									{this.platformsMenu()}
+								</div>
 							</div>
-						</div>
-						
-						<SessionContentYoutube
-							playThisVideo={this.playThisVideo} 
-							sendVideoSignal={this.sendVideoSignal}
-							saveYoutubeListRedis={this.saveYoutubeListRedis}
-							unpickThisVideo={this.unpickThisVideo}
-							sendVideoCurrentTime={this.sendVideoCurrentTime}
-							askForVideoCurrentTime={this.askForVideoCurrentTime} />
+							{this.renderPlatform()}
 						</div>
 						<div id="chatSection">
 							<div id="chatBox">
@@ -696,7 +727,6 @@ Session.propTypes = {
 	devices: PropTypes.object,
 	getDevices: PropTypes.func,
 	sendThisVideoAction: PropTypes.func,
-	playThisVideoAction: PropTypes.func,
 	newAdmin: PropTypes.func,
 	updateSession: PropTypes.func,
 	unpickThisVideoAction: PropTypes.func
@@ -705,11 +735,13 @@ function stateToProps(state) {
 	return {
 		auth: state.auth.user,
 		session: state.session,
-		devices: state.devices,
+		devices: state.devices
 	};
 }
-export default connect(stateToProps, { getDevices, 
-	sendThisVideoAction, 
+export default connect(stateToProps, {
+	getDevices,
+	sendThisVideoAction,
 	newAdmin,
-	unpickThisVideoAction, 
-	updateSession })(Session);
+	unpickThisVideoAction,
+	updateSession
+})(Session);

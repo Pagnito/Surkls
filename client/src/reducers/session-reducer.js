@@ -3,6 +3,7 @@ import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	inSession: false,
 	youtubeList: [],
+	dailymotionList: [],
 	playState:{
 		playing:false,
 		host: '',

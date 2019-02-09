@@ -69,10 +69,6 @@
 				z-index: 20;
 			}
 			.streamWrap {
-			/* 	width: 244px;
-				height: 244px; */
-				/* width: 400px;
-				height:50%; */
 				border-radius: 5px;
 				display: flex;
 				padding-right: 5px;
@@ -353,11 +349,12 @@
 			flex-wrap: wrap;
 			align-content: flex-start;
 			.clientSquareAv {
-				width:44px;
-				height:44px;
-				margin-top:5px;
-				margin-left: 5px;
-				border-radius:5px;
+				width:32.333%;
+				height:32.333%;
+				padding-top:5px;
+				padding-left: 5px;
+				border-radius:10px;
+				box-sizing: border-box;
 			}
 		}
 	}

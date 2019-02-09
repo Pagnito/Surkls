@@ -16,7 +16,7 @@ class SessionContentYoutube extends Component {
 
 		this.YTkey = 'AIzaSyBYjnyqxqjLo5B5cJjlo-KkEzQYLp6dqPE';
 		this.YTapi =
-			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyDws9NT1IvkAYPH98VYsIKFXffKNVmU-Jc&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
+			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyC-NVEgdByg61B92oFIbXkWBm-mqrW6FwU&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
 		this.YTurl = 'https://www.youtube.com/embed/';
 		this.YTPlayer;
 	}

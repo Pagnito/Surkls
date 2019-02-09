@@ -143,7 +143,12 @@ module.exports = (io, app) => {
 					redClient.hset('youtubeLists', session.sessionKey, listString);
 					console.log('KEY', session.sessionKey);
 				});
-
+				/* socket.on('dailymotionList', (videoList) => {
+					let listString = JSON.stringify(videoList);
+					redClient.hset('dailymotionLists', session.sessionKey, listString);
+					console.log('KEY', session.sessionKey);
+				});
+ */
 				socket.on('pickThisVideo', (playState) => {
 					redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
 						if (err) {

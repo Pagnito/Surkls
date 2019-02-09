@@ -1,0 +1,171 @@
+.DMdiscContentViewer {
+  height: calc(100% - 35px);
+  .DMvideoFrameWrap {
+    margin-top:5px;
+    width:100;
+    height:100%;
+    height: calc(100% - 35px);
+    position: relative;
+   
+    .DMplayVideoOverlayBtn {
+      position: absolute;
+      height:85%;
+      width:100%;
+      left:0px;
+      top:0px;
+      z-index: 50;
+      background: rgba(0,0,0,.0);
+    }
+    .DMvideoFrame {
+      width:100%;
+      height:100%;
+      border:none;
+      position: absolute;
+      left:0px;
+      top:0px;
+    }
+  }
+}
+ 
+.DMdiscContent {
+  width:100%;
+  height:100%;
+  top:0px;
+  left:0px;
+  background: black;
+  .DMdiscContentHeader {
+    width:calc(100% + 1px);
+    height: 35px;
+    display:flex;
+    align-items: center;
+    background: rgb(2,0,36);
+    background: linear-gradient(0deg, rgba(2,0,36,0) 0%, rgba(0,185,251,.3) 88%);
+    box-sizing: content-box;
+    .DMdiscHeaderIcon{
+      height:25px;
+      width:25px;
+      cursor: pointer;
+      background-position: center;
+			background-size: 20px;
+      background-repeat: no-repeat;
+      margin-left: 30px;
+    }
+    #DMcontentBack {
+      background-image: url('/assets/UI-icons/angle-left-solid.svg');
+      margin-top: 3px;
+      margin-left: 20px !important; 
+      background-size: 15px;
+    }
+   
+    
+    #DMcontentDice {
+      background-image: url('/assets/UI-icons/dice-solid.svg');
+      margin-top: 3px;
+    }
+    .DMdiscHeaderSearch {
+      display: flex;
+      width: calc(100% - 200px);
+      margin-left: 30px;
+      justify-content: flex-start;
+      position: relative;
+      #DMdiscSearchIcon {
+        background-image: url('/assets/UI-icons/search-solid.svg');
+        background-size: 17px !important;
+        margin-top:3px;
+        right:7px !important;
+        position:absolute;
+      }
+      .DMsearchBar {
+        background: #D4DADA;
+        border:none;
+        border-radius: 20px;
+        margin-top:5px;
+        width:100%;
+        outline:none;
+        color:black;
+        font-size: 13px;
+        height:20px;
+        padding-left: 10px;
+      }
+    }  
+  }
+  .DMdiscContentPreview::-webkit-scrollbar {
+    width:10px;
+  }
+  .DMdiscContentPreview::-webkit-scrollbar-thumb {
+    background: #282828; 
+    border-radius: 10px;
+  }
+  .DMdiscContentPreview::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  .DMdiscContentPreview{
+    scrollbar-color: light;
+    height: calc(100% - 35px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    
+    .DMvidSnippet {
+      width: calc(33.333% - 10px);  
+      padding-right: 10px;
+      border-bottom: 1px solid #D4DADA;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      cursor: pointer;
+      position: relative;
+      .DMvideoSignalBtn{
+        height:200px;
+        position: absolute;
+        height:100%;
+        width:100%;
+        background: rgba(0,0,0,.3);
+      }
+      .DMsnippetImg {
+        width: 100%;
+        padding-top:10px;
+         padding-left: 10px;
+         box-sizing: border-box;
+         
+      }
+      .DMchannelTitle {
+        font-family: 'Comfortaa';
+        font-size: 11px;
+        color:rgb(143, 151, 151);
+        margin-top:5px;
+        margin-left:5px;
+        word-break: break-word;
+      }
+      .DMvideoDate {
+        font-family: 'Comfortaa';
+        font-size: 11px;
+        color:rgb(143, 151, 151);
+        margin-top:5px;
+        margin-left:5px;
+      }
+      .DMvideoTitle{
+       font-family: 'Comfortaa';
+       font-weight:700;
+       font-size: 15px;
+       color:#D4DADA;
+       margin-top:5px;
+       margin-left:5px;
+      }
+    }
+   
+  }
+  .DMdiscContentViwer::-webkit-scrollbar {
+    width:10px;
+  }
+  .DMdiscContentViwer::-webkit-scrollbar-thumb {
+    background: #D4DADA; 
+    border-radius: 10px;
+  }
+  .DMdiscContentViwer::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
