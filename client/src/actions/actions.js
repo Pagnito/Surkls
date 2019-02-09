@@ -6,7 +6,7 @@ import {
 	GET_SESSIONS,
 	GET_DEVICES,
 	UPDATE_SESSION,
-	PLAY_VIDEO,
+	SEND_VIDEO,
 	NEW_ADMIN,
 
 } from 'actions/types';
@@ -117,9 +117,9 @@ export const newAdmin = (socketId) => (dispatch)=>{
 		}
 	})
 }
-export const sendThisVideo = (videoId,cb) => (dispatch)=>{
+export const sendThisVideoAction = (videoId,cb) => (dispatch)=>{
 	dispatch({
-		type:PLAY_VIDEO,
+		type:SEND_VIDEO,
 		payload:videoId
 	})
 }

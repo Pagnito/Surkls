@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import 'styles/session-content-youtube.scss';
 import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions'
-
+import YTplayer from 'yt-player';
+//const player = new YTPlayer('#player')
 class SessionContentYoutube extends Component {
 	constructor(props) {
 		super(props);
@@ -15,8 +16,9 @@ class SessionContentYoutube extends Component {
 
 		this.YTkey = 'AIzaSyBYjnyqxqjLo5B5cJjlo-KkEzQYLp6dqPE';
 		this.YTapi =
-			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyAPW2QscyTsEPKUzDgEpR321HEouBt7A2o&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
+			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyC-NVEgdByg61B92oFIbXkWBm-mqrW6FwU&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
 		this.YTurl = 'https://www.youtube.com/embed/';
+		this.YTPlayer;
 	}
 	handleInput = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
@@ -43,8 +45,13 @@ class SessionContentYoutube extends Component {
 		}
 	}; */
 	componentDidUpdate = (prevProps) => {
-		if(this.props.session.videoId!==prevProps.session.videoId){
-			this.showVideo(this.props.session.videoId);
+		let prop = this.props.session;
+		if(prop.playState!==prevProps.session.playState){
+			this.showVideo(prop.playState.videoId);
+		}
+		if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
+			console.log('kicking off')
+			this.props.saveYoutubeListRedis(prop.youtubeList)
 		}
 	};
 	componentDidMount = () => {
@@ -60,43 +67,66 @@ class SessionContentYoutube extends Component {
 			});
 		}
 	};
+	hideVideo = () =>{
+		if(this.state.videoPicked){
+			this.YTPlayer.destroy()
+			this.setState({
+				videoPicked: false
+			})
+		}
+	}
 	showVideo = (videoId) => {
 		this.setState({
 			playingVideo: videoId,
 			videoPicked: true
+		},()=>{
+			this.YTPlayer = new YTplayer('#YTPlayer',{
+				height: '100%',
+				width: '100%',
+				host: 'https://www.youtube.com',
+				autoplay:true,
+				related: false
+			})
+			this.YTPlayer.load(videoId,{autoplay:true})
+			this.YTPlayer.on('error', (err) => {console.log("YT error", err)})
 		});
 	};
 	sendPickedVideo = (videoId) =>{
 		if(this.props.session.isAdmin){
-			this.props.sendPlayVideoSignal(videoId)
+			this.props.sendVideoSignal({host:'youtube',videoId:videoId})
 		}
 	}
+	getVideosCurrentTime = () =>{
+		console.log(this.YTPlayer.getCurrentTime())
+	}
+
 	displayVideoSnippets = () => {
-		return this.props.session.youtubeList.map((snippet, ind) => {
-			return (
-				<div key={ind} className="vidSnippet">
-				<div onClick={()=>this.sendPickedVideo(snippet.id.videoId)} className="videoSignalBtn"></div>
-					<img className="snippetImg" src={snippet.snippet.thumbnails.default.url} />
-					<div className="channelTitle">{snippet.snippet.channelTitle}</div>
-					<div className="videoDate">
-						{new Date(Date.parse(snippet.snippet.publishedAt)).toLocaleDateString()}
+		let youtubeList = this.props.session.youtubeList===null ?  [] : this.props.session.youtubeList
+		if(this.props.session){
+			return youtubeList.map((snippet, ind) => {
+				return (
+					<div onClick={()=>this.sendPickedVideo(snippet.id.videoId)} key={ind} className="vidSnippet">
+					{/* <div  className="videoSignalBtn"></div> */}
+						<img className="snippetImg" src={snippet.snippet.thumbnails.default.url} />
+						<div className="channelTitle">{snippet.snippet.channelTitle}</div>
+						<div className="videoDate">
+							{new Date(Date.parse(snippet.snippet.publishedAt)).toLocaleDateString()}
+						</div>
+						<div className="videoTitle">{snippet.snippet.title}</div>
 					</div>
-					<div className="videoTitle">{snippet.snippet.title}</div>
-				</div>
-			);
-		});
+				);
+			});
+		}
 	};
 	
 	renderHeader = () => {
-
 			return (
 				<div className="discContentHeader">
 					<div
-						onClick={() => this.setState({ videoPicked: false })}
+						onClick={() => this.hideVideo()}
 						id="contentBack"
 						className="discHeaderIcon"
-					/>
-					
+					/>			
 					<div id="contentDice" className="discHeaderIcon" />
 				</div>
 			);
@@ -110,14 +140,17 @@ class SessionContentYoutube extends Component {
 						<div className="discContentViewer">
 							{this.renderHeader()}
 							<div style={{ marginTop: '5px' }} className="videoFrameWrap">
-								<iframe
-
+							<div onClick={this.getVideosCurrentTime} 
+								className="playVideoOverlayBtn"></div>
+								<div id="YTPlayer"></div>
+							{/* 	<iframe
+									id="iFrame"
 									height="100%"
 									width="100%"
 									className="videoFrame"
 									allow="autoplay; encrypted-media"
 									src={this.YTurl + this.state.playingVideo}
-								/>
+								/> */}
 							</div>
 						</div>
 					</div>
@@ -164,7 +197,9 @@ SessionContentYoutube.propTypes = {
 	session: PropTypes.object,
 	videoUrl: PropTypes.string,
 	updateSession: PropTypes.func,
-	sendPlayVideoSignal: PropTypes.func
+	sendVideoSignal: PropTypes.func,
+	playThisVideo: PropTypes.func,
+	saveYoutubeListRedis: PropTypes.func
 };
 function stateToProps(state) {
 	return {

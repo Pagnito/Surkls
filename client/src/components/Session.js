@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { getDevices, sendThisVideo, newAdmin, updateSession } from 'actions/actions';
+import { getDevices, sendThisVideoAction, newAdmin, updateSession } from 'actions/actions';
 import PropTypes from 'prop-types';
 import Dropdown from 'components/smalls/drop-menu-toRight';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
@@ -54,8 +54,8 @@ class Session extends Component {
 		this.socket.on('recieveMsgs', (data) => {
 			this.setState({ msgs: data });
 		});
-		this.socket.on('playThisVideo', (videoId)=>{
-			this.props.sendThisVideo(videoId);
+		this.socket.on('pickThisVideo', (playState)=>{
+			this.props.sendThisVideoAction(playState);
 		})
 		this.socket.on('adminLeftImAdminNow', (socketId)=>{
 			this.props.newAdmin(socketId)
@@ -63,10 +63,18 @@ class Session extends Component {
 		this.socket.on('youtubeList', (youtubeList)=>{
 			this.props.updateSession({youtubeList:youtubeList})
 		})
+
 	}
 	/////////////////////////////////////////end of state//////////////////////////////////
-	sendPlayVideoSignal = (videoId) =>{
-		this.socket.emit('playThisVideo', videoId)
+	sendVideoSignal = (playState) =>{ ///will go into props
+		this.socket.emit('pickThisVideo', playState)
+	}
+
+	saveYoutubeListRedis = (youtubeList) =>{
+		if(this.props.session.isAdmin){
+			console.log('imAdmin')
+			this.socket.emit('youtubeList', youtubeList);
+		}	
 	}
 	//////////////////////////////////////////////webrtc funcs////////////////////////////////////////////
 	handleOfferError = (err) => {
@@ -311,9 +319,7 @@ class Session extends Component {
 		console.log('UPDATE');
 		/* console.log('PREV',prevProps)
 		console.log('THIS',this.props) */
-		if (this.props.session.youtubeList !== prevProps.session.youtubeList) {
-			this.socket.emit('youtubeList', this.props.session.youtubeList);
-		}
+	
 		if (prevState.errors !== this.state.errors) {
 			
 			setTimeout(() => {
@@ -514,9 +520,10 @@ class Session extends Component {
 									(this.state.errors.offer) ? this.state.errors.offer :
 									(this.state.errors.candidates) ? this.state.errors.candidates :
 									(this.state.errors.localDescription) ? this.state.errors.localDescription :
-									 this.state.errors.remoteDescription 
+									 (this.state.errors.remoteDescription) ? this.state.errors.remoteDescription :
+									 ''
 			return (
-				<div style={{ display: Object.keys(this.state.errors).length > 1 ? 'flex' : 'none' }}
+				<div style={{ display: error.length > 1 ? 'flex' : 'none' }}
 							id="streamsErrorModal">{error}</div>
 			)
 	};
@@ -587,7 +594,10 @@ class Session extends Component {
 							</div>
 						</div>
 						
-							<SessionContentYoutube sendPlayVideoSignal={this.sendPlayVideoSignal} />
+							<SessionContentYoutube
+							 playThisVideo={this.playThisVideo} 
+							 sendVideoSignal={this.sendVideoSignal}
+							 saveYoutubeListRedis={this.saveYoutubeListRedis} />
 						</div>
 						<div id="chatSection">
 							<div id="chatBox">
@@ -621,7 +631,8 @@ Session.propTypes = {
 	match: PropTypes.object,
 	devices: PropTypes.object,
 	getDevices: PropTypes.func,
-	sendThisVideo: PropTypes.func,
+	sendThisVideoAction: PropTypes.func,
+	playThisVideoAction: PropTypes.func,
 	newAdmin: PropTypes.func,
 	updateSession: PropTypes.func
 };
@@ -632,4 +643,4 @@ function stateToProps(state) {
 		devices: state.devices,
 	};
 }
-export default connect(stateToProps, { getDevices, sendThisVideo, newAdmin, updateSession })(Session);
+export default connect(stateToProps, { getDevices, sendThisVideoAction, newAdmin, updateSession })(Session);

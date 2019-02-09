@@ -1,9 +1,9 @@
-import {START_SESSION, JOIN_SESSION, UPDATE_SESSION, PLAY_VIDEO, NEW_ADMIN } from "actions/types";
+import {START_SESSION, JOIN_SESSION, UPDATE_SESSION, SEND_VIDEO, PLAY_VIDEO, NEW_ADMIN } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	inSession: false,
-	videoId: '',
-	youtubeList: []
+	youtubeList: [],
+	playState:false
 };
 
 export default function(state = initialState, action) {
@@ -13,13 +13,12 @@ export default function(state = initialState, action) {
 			...state,
 			...action.payload
 		}
-		case PLAY_VIDEO:
+		case SEND_VIDEO:
 			return {
 				...state,
-				videoId: action.payload
+				playState: action.payload
 			}
-		case UPDATE_SESSION:
-			
+		case UPDATE_SESSION:		
 			return {
 				...state,
 			 ...action.payload

@@ -15,6 +15,7 @@ module.exports = (io, app) => {
 	let client;
 	let connecting = false;
 	let endOfCandidates = 0;
+
 	io.on('connection', function(socket) {
 		socket.on('createOrJoin', function(session) {
 			//console.log('SESSION', session)
@@ -36,6 +37,9 @@ module.exports = (io, app) => {
 					}
 					io.in(session.sessionKey).emit('clientList', rooms[session.sessionKey].clients)
 					redClient.hget('youtubeLists', session.sessionKey, (err,list)=>{
+						if(err){
+							console.log(err)
+						}
 						io.to(socket.id).emit('youtubeList', JSON.parse(list))
 						socket.in(session.sessionKey).emit('signal',{type:'newJoin'}, socket.id);
 						})
@@ -62,7 +66,7 @@ module.exports = (io, app) => {
 					redClient.hset('rooms', session.sessionKey, JSON.stringify(session)) 
 				}		
 			}
-			console.log(rooms[session.sessionKey])
+			//console.log(rooms[session.sessionKey])
 			////////////////////////////////////webrtc signaling////////////////////////////////////////
 			socket.on('signal', (data) => {
 				switch (data.type){
@@ -118,9 +122,20 @@ module.exports = (io, app) => {
 			 redClient.hset('youtubeLists', session.sessionKey, listString);
 			 console.log('KEY', session.sessionKey)
 		 })
-		 socket.on('playThisVideo', (videoId)=>{
-			 io.to(session.sessionKey).emit('playThisVideo', videoId)
+	
+		 socket.on('pickThisVideo', (playState)=>{
+				console.log(rooms[session.sessionKey])
+				redClient.hget('rooms', session.sessionKey,(err, room)=>{
+					if(err){
+						console.log(err)
+					}
+					let roomObj = JSON.parse(room);
+					roomObj.playState = playState;
+					redClient.hset('rooms', session.sessionKey, JSON.stringify(roomObj))
+					io.to(session.sessionKey).emit('pickThisVideo', playState)
+				})	 
 		 })
+		
 		 ///////////////////////////^^^^^^handling discussion content^^^^//////////////////////////////
 
 			if(rooms[session.sessionKey]){
@@ -135,9 +150,8 @@ module.exports = (io, app) => {
 				io.to(session.sessionKey).emit('recieveMsgs', rooms[session.sessionKey].msgs);
       }); 
       
-      //////////////////////////////////////////////
+      /////////////////////////////////////////////////////////////////////////////
 			socket.on('leave', function(data) {
-				//socket.in(session.sessionKey).emit('signal', {type:"clientLeft"}, socket.id)
 				socket.leave(data);
 				socket.disconnect();
 
@@ -157,8 +171,7 @@ module.exports = (io, app) => {
 							}
 						}
 					});	
-					if(rooms[session.sessionKey].clients.length<rooms[session.sessionKey].maxClients
-						/* && rooms[session.sessionKey].clients.length!==1 */){
+					if(rooms[session.sessionKey].clients.length<rooms[session.sessionKey].maxClients){
 						redClient.hget('rooms', session.sessionKey, (err,data)=>{
 							let room = JSON.parse(data);
 							room.maxedOut = false;
@@ -177,8 +190,7 @@ module.exports = (io, app) => {
 							}	 
 						})
 					}
-					console.log(rooms[session.sessionKey].clients.length, ' clients left in the room', session.room);	
-				
+					console.log(rooms[session.sessionKey].clients.length, ' clients left in the room', session.room);					
 				}						
       });
 			//console.log(io.sockets.adapter.rooms);
