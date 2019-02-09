@@ -53,7 +53,7 @@
     #contentBack {
       background-image: url('/assets/UI-icons/angle-left-solid.svg');
       margin-top: 3px;
-      margin-left: 75px !important; 
+      margin-left: 20px !important; 
       background-size: 15px;
     }
    
@@ -87,6 +87,16 @@
       }
     }  
   }
+  .discContentPreview::-webkit-scrollbar {
+    width:10px;
+  }
+  .discContentPreview::-webkit-scrollbar-thumb {
+    background: #282828; 
+    border-radius: 10px;
+  }
+  .discContentPreview::-webkit-scrollbar-corner {
+    background: transparent;
+  }
   .discContentPreview{
     height: calc(100% - 35px);
     overflow-y: scroll;
@@ -94,7 +104,7 @@
     flex-wrap: wrap;
     justify-content: space-around;
     align-content: flex-start;
-   
+    
     .vidSnippet {
       width: calc(33.333% - 10px);  
       padding-right: 10px;

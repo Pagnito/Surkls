@@ -26,6 +26,16 @@
 	width: 100%;
 	height: calc(100vh - 55px);
 	background-color: #282828;
+	#sessionLeftAside::-webkit-scrollbar {
+		width:10px;
+	}
+	#sessionLeftAside::-webkit-scrollbar-thumb {
+		background: #282828; 
+		border-radius: 10px;
+	}
+	#sessionLeftAside::-webkit-scrollbar-corner {
+		background: transparent;
+	}
 	#sessionLeftAside {
 		display: flex;
 		width: 500px;
@@ -33,6 +43,7 @@
 		box-sizing: border-box;
 		background-color:black;
 		overflow-y:scroll;
+
 		#videoStreams {
 			height: 500px;
 			width: 100%;
@@ -160,7 +171,16 @@
 			
 		}
 	}
-
+ 	#sessionContentAside::-webkit-scrollbar {
+			width:10px;
+		}
+		#sessionContentAside::-webkit-scrollbar-thumb {
+			background: #282828; 
+			border-radius: 10px;
+		}
+		#sessionContentAside::-webkit-scrollbar-corner {
+			background: transparent;
+		}
 	#sessionCenterAside {
 		width: calc(100% - 700px);
 		display: flex;
@@ -168,6 +188,7 @@
 		border-left: 1px solid #1c1c1c;
 		box-sizing: border-box;
 		overflow-y:scroll;
+	
 		#discussContent {
 			height: 320px;
 			width: 100%;
@@ -177,7 +198,7 @@
 			box-sizing: border-box;
 			#platformMenuAligner {
 				position: absolute;
-				left:20px;
+				right:25px;
 				#contentDropdownIcon {
 					background-image: url('/assets/UI-icons/sort-down-solid.svg');
 					margin-bottom: 12px;

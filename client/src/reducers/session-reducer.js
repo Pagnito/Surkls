@@ -3,7 +3,12 @@ import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	inSession: false,
 	youtubeList: [],
-	playState:false
+	playState:{
+		playing:false,
+		host: '',
+		videoId: '',
+		requestingTime: false
+	}
 };
 
 export default function(state = initialState, action) {
@@ -14,7 +19,6 @@ export default function(state = initialState, action) {
 			...action.payload
 		}
 		case SEND_VIDEO:
-		console.log(action.payload)
 			return {
 				...state,
 				playState: action.payload

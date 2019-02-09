@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import { getDevices, sendThisVideoAction, newAdmin, updateSession, unpickThisVideoAction } from 'actions/actions';
 import PropTypes from 'prop-types';
-import Dropdown from 'components/smalls/drop-menu-toRight';
+import Dropdown from 'components/smalls/drop-menu-mutable';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
 import 'styles/session.scss';
 import 'styles/loader.scss';
@@ -69,6 +69,14 @@ class Session extends Component {
 		})
 		this.socket.on('sessionExpired', ()=>{
 			this.setState({sessionExists:false})
+		})
+		this.socket.on('giveMeVideoCurrentTime', (playState)=>{
+			console.log('requesting=true')
+			this.props.updateSession({playState:playState})
+		})
+		this.socket.on('hereIsVideoCurrentTime', (playState)=>{
+			console.log(playState)
+			this.props.updateSession({playState:playState})
 		})
 	}
 	/////////////////////////////////////////end of state//////////////////////////////////
@@ -375,6 +383,34 @@ class Session extends Component {
 	}
 
 	///////////////////////////////////////////lifecycle^^^hooks////////////////////////////////////////
+	askForVideoCurrentTime = () =>{
+		setTimeout(()=>{
+			this.socket.emit('giveMeVideoCurrentTime','wtf')
+		},500)	
+	}
+	sendVideoCurrentTime = (playState, cb) =>{
+		setTimeout(()=>{
+			this.socket.emit('hereIsVideoCurrentTime',playState)
+			cb();
+		},1000)	
+	}
+	renderPlatform = () =>{
+		if(this.props.session.playState.host === 'youtube'){
+			return (
+				<SessionContentYoutube
+				playThisVideo={this.playThisVideo} 
+				sendVideoSignal={this.sendVideoSignal}
+				saveYoutubeListRedis={this.saveYoutubeListRedis}
+				unpickThisVideo={this.unpickThisVideo}
+				sendVideoCurrentTime={this.sendVideoCurrentTime}
+				askForVideoCurrentTime={this.askForVideoCurrentTime} />
+			)
+		} else if( this.props.session.playState.host === 'dailymotion'){
+			return (
+				<div></div>
+			)
+		}
+	}
 
 	updateDevices = () => {
 		this.props.getDevices();
@@ -509,13 +545,13 @@ class Session extends Component {
 		let visibility = this.state.platformMenuVisible ? 'flex' : 'none';
 		return (
 			<Dropdown menuTitle="Platforms" menuTypeArrow="platformsArrow" visibility={visibility}>
-				<div className="menuItem_toright">Youtube</div>
-				<div className="menuItem_toright">Daily Motion</div>
-				<div className="menuItem_toright">Soundcloud</div>
-				<div className="menuItem_toright">Medium</div>
-				<div className="menuItem_toright">Twitter</div>
-				<div className="menuItem_toright">Instagram</div>
-				<div className="menuItem_toright">Reddit</div>
+				<div className="menuItem_mutable">Youtube</div>
+				<div className="menuItem_mutable">Daily Motion</div>
+				<div className="menuItem_mutable">Soundcloud</div>
+				<div className="menuItem_mutable">Medium</div>
+				<div className="menuItem_mutable">Twitter</div>
+				<div className="menuItem_mutable">Instagram</div>
+				<div className="menuItem_mutable">Reddit</div>
 			</Dropdown>
 		);
 	};
@@ -534,7 +570,7 @@ class Session extends Component {
 							id="streamsErrorModal">{error}</div>
 			)
 	};
-
+//////////////////////////////////////////////RENDER//////////////////////////////////////////////////
 	render() {
 		if (this.props.auth == null || this.props.session === null) {
 			return (
@@ -606,11 +642,13 @@ class Session extends Component {
 							</div>
 						</div>
 						
-							<SessionContentYoutube
-							 playThisVideo={this.playThisVideo} 
-							 sendVideoSignal={this.sendVideoSignal}
-							 saveYoutubeListRedis={this.saveYoutubeListRedis}
-							 unpickThisVideo={this.unpickThisVideo} />
+						<SessionContentYoutube
+							playThisVideo={this.playThisVideo} 
+							sendVideoSignal={this.sendVideoSignal}
+							saveYoutubeListRedis={this.saveYoutubeListRedis}
+							unpickThisVideo={this.unpickThisVideo}
+							sendVideoCurrentTime={this.sendVideoCurrentTime}
+							askForVideoCurrentTime={this.askForVideoCurrentTime} />
 						</div>
 						<div id="chatSection">
 							<div id="chatBox">

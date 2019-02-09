@@ -1,7 +1,7 @@
-.dropMenu_toright {
+.dropMenu_mutable {
   position: absolute;
   top:30px;
-  left:-15px;
+  right:-15px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,9 +9,9 @@
   z-index: 40;
 
   #platformsArrow {
-    margin-right:110px !important;
+    margin-right:17px !important;
   }
-  .lilArrow_toright {
+  .lilArrow_mutable {
     -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
     clip-path: polygon(50% 45%, 0 100%, 100% 100%);
     background-color:   #CBD2D2; 
@@ -21,7 +21,7 @@
     margin-bottom: -2px;
     border-radius: 2px;
   }
-  .menuItems_toright {
+  .menuItems_mutable {
     border-radius:3px;    
     min-width:150px;
     display: flex;
@@ -32,7 +32,7 @@
     display: flex;
     flex-direction: column;
     font-family: 'Didact Gothic';
-    .menuHeader_toright {
+    .menuHeader_mutable {
       display:flex;
       justify-content: center;
       background-color: #cbd2d2;
@@ -43,7 +43,7 @@
       width:100%;
       box-sizing: border-box;
     }
-    .menuInput_toright {
+    .menuInput_mutable {
       padding: 10px;
       font-size: 17px;
       display: flex;
@@ -54,7 +54,7 @@
       margin-top: 10px;
       resize: none;
     }
-    .menuTextInput_toright {
+    .menuTextInput_mutable {
       padding: 10px;
       height:50px;
       font-size: 17px;
@@ -66,10 +66,10 @@
       margin-top: 10px;
       resize: none;
     }
-    .menuItem_toright:hover {
+    .menuItem_mutable:hover {
       background-color: #cbd2d2;
     }
-    .menuSelect_toright {
+    .menuSelect_mutable {
       font-size: 17px;
       display: flex;
       width:94%;
@@ -78,7 +78,7 @@
       outline:none;
       cursor: pointer;
     }
-    .menuConfig_toright {
+    .menuConfig_mutable {
       cursor: default;
       padding: 7px;
       padding-left: 10px;
@@ -92,7 +92,7 @@
         appearance: none;
       }
       
-      .sessionConfig_toright {
+      .sessionConfig_mutable {
         width:40px;
         height: 20px;
         border-radius: 3px;
@@ -104,14 +104,14 @@
       }
     }
    
-    .menuItem_toright {
+    .menuItem_mutable {
       padding: 7px;
       font-size: 17px;
       display: flex;
       width:100%;
       box-sizing: border-box;
     }
-    .menuItemSplit_toright {
+    .menuItemSplit_mutable {
       display:flex;
       height:30px;
       justify-content: center;
@@ -120,13 +120,13 @@
       .or {
         margin-top: 5px;
       }
-      .splitLine1_toright{
+      .splitLine1_mutable{
         height:50%;
         width:30%;
         margin-right:10px;
         border-bottom: 2px solid rgba(0,0,0,.3);
       }
-      .splitLine2_toright {
+      .splitLine2_mutable {
         height:50%;
         width:30%;
         margin-left: 10px;

@@ -48,13 +48,23 @@ class SessionContentYoutube extends Component {
 		let prop = this.props.session;
 		if(prop.playState.videoId!==prevProps.session.playState.videoId && prop.playState.videoId.length>0){
 			this.showVideo(prop.playState.videoId);
-		}
+		}		
 		if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
-			this.props.saveYoutubeListRedis(prop.youtubeList)
+			setTimeout(()=>{this.props.saveYoutubeListRedis(prop.youtubeList)},200)
 		}
+		/* if(prop.playState.requestingTime!==prevProps.session.playState.requestingTime){	
+			this.props.sendVideoCurrentTime(this.getVideosCurrentTime(),()=>{
+				console.log('sending back')
+				prop.playState.requestingTime = false;
+				this.props.updateSession({playState:prop.playState});
+			})	
+		} */
 	};
-	componentDidMount = () => {
+	componentDidMount = () => {	
 		let prop = this.props.session;
+		/* if(prop.creatingSession===false){
+			this.props.askForVideoCurrentTime()
+		} */
 		if (this.props.session.category && this.state.videos.length === 0 && prop.isAdmin) {
 			fetch(this.YTapi + prop.category + '+' + prop.subCategory).then((res) => res.json()).then((data) => {
 				if (data.items) {
@@ -74,7 +84,12 @@ class SessionContentYoutube extends Component {
 			if(this.YTPlayer.destroyed){
 				this.YTPlayer = null;
 				if(this.props.session.isAdmin){
-					this.props.unpickThisVideo({host:'youtube', videoId:''})
+					this.props.unpickThisVideo({
+						host:'youtube',
+						videoId:'', 
+						playing:false,
+						requestingTime: false,
+						currentTime: false})
 				}		
 				this.setState({
 					videoPicked: false
@@ -94,17 +109,28 @@ class SessionContentYoutube extends Component {
 				autoplay:true,
 				related: false
 			})
-			this.YTPlayer.load(videoId,{autoplay:true})
+			if(this.props.session.playState.currentTime){
+				this.YTPlayer.load(videoId)
+				this.YTPlayer.load(currentTime)
+			} else {
+				this.YTPlayer.load(videoId,{autoplay:true})
+			}
+			
 			this.YTPlayer.on('error', (err) => {console.log("YT error", err)})
 		});
 	};
 	sendPickedVideo = (videoId) =>{
 		if(this.props.session.isAdmin){
-			this.props.sendVideoSignal({host:'youtube',videoId:videoId})
+			this.props.sendVideoSignal({
+				host:'youtube',
+				videoId:videoId, 
+				playing:true,
+				requestingTime:false
+			})
 		}
 	}
 	getVideosCurrentTime = () =>{
-		console.log(this.YTPlayer.getCurrentTime())
+		return this.YTPlayer.getCurrentTime();
 	}
 
 	displayVideoSnippets = () => {
@@ -206,7 +232,9 @@ SessionContentYoutube.propTypes = {
 	updateSession: PropTypes.func,
 	sendVideoSignal: PropTypes.func,
 	unpickThisVideo: PropTypes.func,
-	saveYoutubeListRedis: PropTypes.func
+	saveYoutubeListRedis: PropTypes.func,
+	askForVideoCurrentTime: PropTypes.func,
+	sendVideoCurrentTime: PropTypes.func,
 };
 function stateToProps(state) {
 	return {

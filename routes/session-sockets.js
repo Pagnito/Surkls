@@ -40,20 +40,14 @@ module.exports = (io, app) => {
 										sessionObj.maxedOut = true;
 									}
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
-										io.in(session.sessionKey).emit('thisSession', sessionObj);
+										io.in(session.sessionKey).emit('thisSession', sessionObj)
+										socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		
 									});
 								}
 							});
 						} else {
 							io.to(socket.id).emit('sessionExpired');
 						}
-					});
-					redClient.hget('youtubeLists', session.sessionKey, (err, list) => {
-						if (err) {
-							console.log(err);
-						}
-						io.to(socket.id).emit('youtubeList', JSON.parse(list));
-						socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);
 					});
 				} else {//////////creating session//////////
 					if (session.sessionKey !== undefined && session.sessionKey !== 'undefined') {
@@ -128,6 +122,15 @@ module.exports = (io, app) => {
 									console.log('OFFER OBJ', offerObj.id);
 									io.to(reciever).emit('signal', offerObj.offer, offerObj.id);
 									delete offers[offerObj.id];
+								} else {
+									redClient.hexists('youtubeLists', session.sessionKey,(err,exists)=>{
+										if(exists===1){
+											redClient.hget('youtubeLists', session.sessionKey, (err, list) => {
+												if (err) {console.log(err)}
+												io.to(reciever).emit('youtubeList', JSON.parse(list));		
+											});
+										}
+									})				
 								}
 							}
 					}
@@ -142,7 +145,6 @@ module.exports = (io, app) => {
 				});
 
 				socket.on('pickThisVideo', (playState) => {
-					console.log(playState)
 					redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
 						if (err) {
 							console.log(err);
@@ -163,6 +165,22 @@ module.exports = (io, app) => {
 						redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj));
 						io.to(session.sessionKey).emit('unpickThisVideo', playState);
 					});
+				})
+				socket.on('giveMeVideoCurrentTime', (wtf)=>{
+					let asker = socket.id;
+					redClient.hget('rooms', session.sessionKey, (err, sessionStr)=>{
+						if(err) {console.log(err)}
+						let sessionObj = JSON.parse(sessionStr);
+						if(sessionObj.playState.playing){
+							sessionObj.playState.requestingTime=true;
+							io.to(sessionObj.clients[0].socketId).emit('giveMeVideoCurrentTime', sessionObj.playState);
+						}	
+						socket.on('hereIsVideoCurrentTime', (currentTime)=>{
+							console.log(currentTime)
+							sessionObj.playState.currentTime = currentTime+50;
+							io.to(asker).emit('hereIsVideoCurrentTime', sessionObj.playState);
+						})
+					})		
 				})
 				socket.on('sendMsg', (msg) => {
 					redClient.hget('videoChatMsgs', session.sessionKey, (err, msgs) => {
