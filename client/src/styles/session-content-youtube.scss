@@ -34,7 +34,7 @@
   left:0px;
   background: black;
   .discContentHeader {
-    width:100%;
+    width:calc(100% + 1px);
     height: 35px;
     display:flex;
     align-items: center;
