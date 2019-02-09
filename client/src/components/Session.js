@@ -334,8 +334,8 @@ class Session extends Component {
 		}
 		if(this.props.auth!==prevProps.auth){
 			if(!this.props.session.notShareLink && !this.alreadyStarted){
-				this.socket.on('clientList', (clients) => {
-					this.setState({ clientList: clients });
+				this.socket.on('thisSession', (sessionObj) => {
+					this.props.updateSession(sessionObj)
 				});
 				this.startOrJoin()
 			}
@@ -352,14 +352,14 @@ class Session extends Component {
 		};
 		if (this.props.session.notShareLink || this.props.session.creatingSession) {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
-				this.socket.on('clientList', (clients) => {
-					this.setState({ clientList: clients });
+				this.socket.on('thisSession', (sessionObj) => {
+					this.props.updateSession(sessionObj)
 				});
 				this.startOrJoin();
 			} else {
 				if (!this.props.session.notShareLink && !this.alreadyStarted) {
-					this.socket.on('clientList', (clients) => {
-						this.setState({ clientList: clients });
+					this.socket.on('thisSession', (sessionObj) => {
+						this.props.updateSession(sessionObj)
 					});
 					this.startOrJoin();
 				}
@@ -373,8 +373,8 @@ class Session extends Component {
 		this.props.getDevices();
 	};
 	updateClientList = () => {
-		if (this.state.clientList !== undefined && this.state.clientList.length > 0) {
-			return this.state.clientList.map((client, ind) => {
+		if (this.props.session.clients !== undefined && this.props.session.clients.length > 0) {
+			return this.props.session.clients.map((client, ind) => {
 				return <img key={ind} src={client.avatarUrl} className="clientSquareAv" />;
 			});
 		}

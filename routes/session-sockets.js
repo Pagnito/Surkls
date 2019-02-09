@@ -15,28 +15,32 @@ module.exports = (io, app) => {
 	let client;
 	let connecting = false;
 	let endOfCandidates = 0;
-
+	
 	io.on('connection', function(socket) {
 		socket.on('createOrJoin', function(session) {
 			//console.log('SESSION', session)
-			if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){
+			///////////////////////////checking if client has the key//////////////////////////
+			if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){		
+			//////////////////////if this client joining or creating session///////////////////
 			if(session.creatingSession===false){
+			//////////////////////if the room exists and is maxed out//////////////////////////
 				if(rooms[session.sessionKey] && rooms[session.sessionKey].clients.length < rooms[session.sessionKey].maxClients){
 					reciever = socket.id;
 					socket.join(session.sessionKey);
 					client = Object.assign({socketId:socket.id}, session.user)
 					//console.log('CLIENT', client)
 					rooms[session.sessionKey].clients.push(client); 
-					if(rooms[session.sessionKey].clients.length === rooms[session.sessionKey].maxClients){
-						redClient.hget('rooms', session.sessionKey, (err,data)=>{
-							console.log('MAXED OUT')
-							let room = JSON.parse(data);
-							room.maxedOut = true;
-							redClient.hset('rooms', session.sessionKey, JSON.stringify(room)) 
-						})
-					}
-					io.in(session.sessionKey).emit('clientList', rooms[session.sessionKey].clients)
-					redClient.hget('youtubeLists', session.sessionKey, (err,list)=>{
+					redClient.hget('rooms', session.sessionKey, (err,data)=>{
+						let sessionObj = JSON.parse(data);
+						if(rooms[session.sessionKey].clients.length === rooms[session.sessionKey].maxClients){			
+							sessionObj.maxedOut = true;					
+						}
+						sessionObj.clients.push(client)
+						redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj),()=>{
+							io.in(session.sessionKey).emit('thisSession', sessionObj)
+						}) 
+					})			
+						redClient.hget('youtubeLists', session.sessionKey, (err,list)=>{
 						if(err){
 							console.log(err)
 						}
@@ -48,22 +52,39 @@ module.exports = (io, app) => {
 					
 				}				
 			} else {	
-				if(!rooms[session.sessionKey]){
-					client = Object.assign({socketId:socket.id, isAdmin:true}, session.user)
-					//console.log('CLIENT', client)
-					connecting = true;		
-					socket.join(session.sessionKey);	
-					rooms[session.sessionKey] = {};
-					rooms[session.sessionKey].msgs = [];        
-					rooms[session.sessionKey].clients = [];
-					rooms[session.sessionKey].maxClients = session.maxMembers
-				}				
-        rooms[session.sessionKey].name = session.room;
-				rooms[session.sessionKey].clients.push(client);
-				io.in(session.sessionKey).emit('clientList', rooms[session.sessionKey].clients)
-				if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){		
-					session.admin = socket.id
-					redClient.hset('rooms', session.sessionKey, JSON.stringify(session)) 
+				if(session.sessionKey!==undefined && session.sessionKey!=='undefined'){	
+					if(!rooms[session.sessionKey]){
+						client = Object.assign({socketId:socket.id, isAdmin:true}, session.user)
+						let sessionObj = {
+							sessionKey: session.sessionKey,
+							exists: true,
+							admin: socket.id,
+							playState: session.playState,
+							clients: [client],
+							category: session.category,
+							subCategory: session.subCategory,
+							room: session.room,
+							maxMembers: session.maxMembers,
+							maxedOut: false
+						}
+						let sessionChatMsgs = [];
+						
+						//console.log('CLIENT', client)
+						connecting = true;		
+						socket.join(session.sessionKey);	
+						rooms[session.sessionKey] = {};
+						rooms[session.sessionKey].msgs = [];        
+						rooms[session.sessionKey].clients = [];
+						rooms[session.sessionKey].maxClients = session.maxMembers			 				
+						rooms[session.sessionKey].name = session.room;
+						rooms[session.sessionKey].clients.push(client);						
+						session.admin = socket.id
+						redClient.hset('chatMsgs', session.sessionKey, JSON.stringify([]));
+						redClient.hset('videoChatMsgs', session.sessionKey, JSON.stringify([]));
+						redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj),()=>{
+							io.in(session.sessionKey).emit('thisSession', sessionObj)	
+						}) 
+					}
 				}		
 			}
 			//console.log(rooms[session.sessionKey])
@@ -97,21 +118,19 @@ module.exports = (io, app) => {
 					 }				 
 					 break;				
 				 case 'connected':
-							/* rooms[session.sessionKey].clients.push(client); 
-							io.in(session.sessionKey).emit('clientList', rooms[session.sessionKey].clients) */
-							console.log("CONNECTED")
-							endOfCandidates++
-							if(endOfCandidates===2){
-								connecting=true;	
-								endOfCandidates=0;		
-								if(Object.keys(offers).length>0){		 
-									let offerObj = offers[Object.keys(offers)[0]]
-									sender=offerObj.id
-									console.log('OFFER OBJ', offerObj.id)
-									io.to(reciever).emit('signal', offerObj.offer, offerObj.id)
-									delete offers[offerObj.id]
-								} 
-							}	
+					 console.log("CONNECTED")
+					 endOfCandidates++
+					 if(endOfCandidates===2){
+						 connecting=true;	
+						 endOfCandidates=0;		
+						 if(Object.keys(offers).length>0){		 
+								let offerObj = offers[Object.keys(offers)[0]]
+								sender=offerObj.id
+								console.log('OFFER OBJ', offerObj.id)
+								io.to(reciever).emit('signal', offerObj.offer, offerObj.id)
+								delete offers[offerObj.id]
+							} 
+						}	
 				} 				 
 		 });
 		 /////////////////////////////////^^^^^^^^signaling^^^^^^//////////////////////////////////////
@@ -142,12 +161,19 @@ module.exports = (io, app) => {
 				console.log(rooms[session.sessionKey].clients.length, ' CLIENTS IN ROOM', session.room);
 			}
 			
-			socket.on('sendMsg', (data) => {
-				rooms[session.sessionKey].msgs.push(data);
-				if(rooms[session.sessionKey].msgs.length>100){
-					rooms[session.sessionKey].msgs = rooms[session.sessionKey].msgs.slice(0,100);
-				}
-				io.to(session.sessionKey).emit('recieveMsgs', rooms[session.sessionKey].msgs);
+			socket.on('sendMsg', (msg) => {
+				redClient.hget('videoChatMsgs', session.sessionKey, (err, msgs)=>{
+					if(err){socket.emit('videoChatError')}
+					let msgsArr = JSON.parse(msgs);			
+					if(msgsArr.length>100){
+						msgsArr = msgsArr.slice(0,100);
+					}
+					msgsArr.push(msg);
+					redClient.hset('videoChatMsgs', session.sessionKey, JSON.stringify(msgsArr),(err, done)=>{
+						if(err) {io.to(socket.id).emit('videoChatError')}
+					  io.to(session.sessionKey).emit('recieveMsgs', msgsArr);
+					})
+				})
       }); 
       
       /////////////////////////////////////////////////////////////////////////////
@@ -163,6 +189,7 @@ module.exports = (io, app) => {
 					rooms[session.sessionKey].clients.forEach((loopClient, ind) => {
 						if (loopClient.socketId === socket.id) {
 							rooms[session.sessionKey].clients.splice(ind, 1);	
+							//////////make new admin/////////
 							if(loopClient.isAdmin){
 								if(rooms[session.sessionKey].clients.length>0){
 									rooms[session.sessionKey].clients[0].isAdmin=true;
