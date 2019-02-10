@@ -143,7 +143,6 @@ class Session extends Component {
 		if (this.remoteAdded.added === true && this.remoteAdded.id === event.streams[0].id) {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
-			console.log('wtf');
 			if (this.imNotTheNew == false) {
 				console.log('ADDED STREAM');
 			}

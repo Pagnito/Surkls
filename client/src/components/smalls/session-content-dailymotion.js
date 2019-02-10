@@ -57,7 +57,12 @@ class SessionContentYoutube extends Component {
 		let prop = this.props.session;
 		/* if(prop.creatingSession===false){
 			this.props.askForVideoCurrentTime()
-		} */
+    } */
+    if(prop){
+      if(prop.playState.videoId.length>0 && prop.playState.playing) {
+        this.showVideo(prop.playState.videoId);
+      }
+    }
 		if (this.props.session.category && this.state.videos.length === 0) {
 			fetch(this.DMapi + prop.category + '+' + prop.subCategory).then((res) => res.json()).then((data) => {
 				if (data.list) {

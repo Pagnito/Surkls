@@ -46,7 +46,9 @@ class SessionContentYoutube extends Component {
 	}; */
 	componentDidUpdate = (prevProps) => {
 		let prop = this.props.session;
+		console.log('ummmmMM')
 		if(prop.playState.videoId!==prevProps.session.playState.videoId && prop.playState.videoId.length>0){
+			console.log('wtf ITS NOT PLAYING')
 			this.showVideo(prop.playState.videoId);
 		}		
 		if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
@@ -65,6 +67,11 @@ class SessionContentYoutube extends Component {
 		/* if(prop.creatingSession===false){
 			this.props.askForVideoCurrentTime()
 		} */
+		if(prop){
+      if(prop.playState.videoId.length>0 && prop.playState.playing) {
+        this.showVideo(prop.playState.videoId);
+      }
+    }
 		if (this.props.session.category && this.state.videos.length === 0 && prop.isAdmin) {
 			fetch(this.YTapi + prop.category + '+' + prop.subCategory).then((res) => res.json()).then((data) => {
 				if (data.items) {
