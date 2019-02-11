@@ -69,7 +69,7 @@
 				z-index: 20;
 			}
 			.streamWrap {
-				border-radius: 5px;
+		/* 		border-radius: 5px; */
 				display: flex;
 				padding-right: 5px;
 				padding-left: 5px;
@@ -79,7 +79,6 @@
 				box-sizing: border-box;
 				overflow: hidden;
 				.stream {
-					border-radius: 5px;
 					width: 100%;
 					max-width: 100%;
 					box-sizing: border-box;
@@ -204,7 +203,7 @@
 				right:25px;
 				#contentDropdownIcon {
 					background-image: url('/assets/UI-icons/sort-down-solid.svg');
-					margin-bottom: 12px;
+					margin-top: -2px;
 					background-size: 23px;
 					height:28px;
 					width:28px;

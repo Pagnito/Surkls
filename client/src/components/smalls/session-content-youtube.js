@@ -46,13 +46,13 @@ class SessionContentYoutube extends Component {
 	}; */
 	componentDidUpdate = (prevProps) => {
 		let prop = this.props.session;
-		console.log('ummmmMM')
-		if(prop.playState.videoId!==prevProps.session.playState.videoId && prop.playState.videoId.length>0){
-			console.log('wtf ITS NOT PLAYING')
-			this.showVideo(prop.playState.videoId);
-		}		
-		if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
-			setTimeout(()=>{this.props.saveYoutubeListRedis(prop.youtubeList)},500)
+		if(prop){
+			if(prop.videoId!==prevProps.session.videoId && prop.videoId.length>0){
+				this.showVideo(prop.videoId);
+			}		
+			if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
+				setTimeout(()=>{this.props.saveYoutubeListRedis(prop.youtubeList)},500)
+			}
 		}
 		/* if(prop.playState.requestingTime!==prevProps.session.playState.requestingTime){	
 			this.props.sendVideoCurrentTime(this.getVideosCurrentTime(),()=>{
@@ -68,8 +68,8 @@ class SessionContentYoutube extends Component {
 			this.props.askForVideoCurrentTime()
 		} */
 		if(prop){
-      if(prop.playState.videoId.length>0 && prop.playState.playing) {
-        this.showVideo(prop.playState.videoId);
+      if(prop.videoId.length>0 && prop.playing) {
+        this.showVideo(prop.videoId);
       }
     }
 		if (this.props.session.category && this.state.videos.length === 0 && prop.isAdmin) {
@@ -94,9 +94,8 @@ class SessionContentYoutube extends Component {
 					this.props.unpickThisVideo({
 						host:'youtube',
 						videoId:'', 
-						playing:false,
-						requestingTime: false,
-						currentTime: false})
+						playing:false
+					})
 				}		
 				this.setState({
 					videoPicked: false
@@ -116,7 +115,7 @@ class SessionContentYoutube extends Component {
 				autoplay:true,
 				related: false
 			})
-			if(this.props.session.playState.currentTime){
+			if(this.props.session.currentTime){
 				this.YTPlayer.load(videoId)
 				this.YTPlayer.load(currentTime)
 			} else {
@@ -132,7 +131,8 @@ class SessionContentYoutube extends Component {
 				host:'youtube',
 				videoId:videoId, 
 				playing:true,
-				requestingTime:false
+				requestingTime:false,
+				
 			})
 		}
 	}
@@ -180,8 +180,6 @@ class SessionContentYoutube extends Component {
 						<div className="discContentViewer">
 							{this.renderHeader()}
 							<div style={{ marginTop: '5px' }} className="videoFrameWrap">
-							<div onClick={this.getVideosCurrentTime} 
-								className="playVideoOverlayBtn"></div>
 								<div id="YTPlayer"></div>
 							{/* 	<iframe
 									id="iFrame"

@@ -1,0 +1,305 @@
+
+ 
+.TWdiscContent {
+  width:100%;
+  height:100%;
+  top:0px;
+  left:0px;
+  background: black;
+  .TWdiscContentHeader {
+    width:100%;
+    height: 35px;
+    display:flex;
+    align-items: center;
+    background: rgb(2,0,36);
+    background: #FFFFFF;
+    box-sizing: content-box;
+    .TWdiscHeaderIcon{
+      height:25px;
+      width:25px;
+      cursor: pointer;
+      background-position: center;
+			background-size: 20px;
+      background-repeat: no-repeat;
+      margin-left: 30px;
+    }
+    #TWcontentBack {
+      background-image: url('/assets/UI-icons/angle-left-solid.svg');
+      margin-top: 3px;
+      margin-left: 20px !important; 
+      background-size: 15px;
+    }
+   
+    
+    #TWcontentDice {
+      background-image: url('/assets/UI-icons/dice-solid.svg');
+      margin-top: 3px;
+    }
+    .TWdiscHeaderSearch {
+      display: flex;
+      width: calc(100% - 370px);
+      margin-left: 20px;
+      justify-content: flex-start;
+      position: relative;
+      #TWdiscSearchIcon {
+        background-image: url('/assets/UI-icons/search-solid.svg');
+        background-size: 17px !important;
+        right:7px !important;
+        position:absolute;
+      }
+      .TWsearchBar {
+        background: #F5F8FA;
+        border:none;
+        border: 1px solid #E6ECF0;
+        border-radius: 20px;
+        width:100%;
+        outline:none;
+        color:black;
+        font-size: 13px;
+        height:20px;
+        padding-left: 10px;
+      }
+    }  
+  }
+  .TWdiscContentPreview::-webkit-scrollbar {
+    width:10px;
+  }
+  .TWdiscContentPreview::-webkit-scrollbar-thumb {
+    background: #282828; 
+    border-radius: 10px;
+  }
+  .TWdiscContentPreview::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  .TWdiscContentPreview{
+    scrollbar-color: light;
+    height: calc(100% - 35px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    background-color: #E6ECF0;
+    .TWsnippet:hover {
+      background-color: #F5F8FA;
+    }
+    .TWtrendWrap:hover {
+      background-color: #F5F8FA;
+    }
+    .trendTitle {
+      font-size: 20px;
+      margin-top: 10px;
+      margin-bottom: 10px; 
+      color:black;
+      font-weight: 900;
+      font-family: Arial, Helvetica , sans-serif,
+    }
+    .TWtrendWrap {
+      font-family: Arial, Helvetica , sans-serif;
+      padding: 10px;
+      box-sizing: border-box;
+      color:#1DA1F2;
+      font-weight: 700;
+      width: 90%;
+      background-color: #FFFFFF;  
+      padding-right: 10px;
+      border-top: 1px solid #E6ECF0;
+      cursor: pointer;
+      position: relative;
+      .trendTweetsNum{
+        color:black;
+        font-size: 11px;
+        margin-top: 6px;
+      }
+    }
+    .TWsnippet {
+      width: 90%;
+      background-color: #FFFFFF;  
+      padding-right: 10px;
+      border-top: 1px solid #E6ECF0;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      cursor: pointer;
+      position: relative;
+      display:flex;
+      
+      .tweetUser {
+        width:30px;
+        height:30px;
+        border-radius: 30px; 
+        margin-left:8px;
+        margin-right: 8px;
+        margin-top: 4px; 
+      }
+      .tweetData {
+
+        .tweetUserName {
+          font-family: Arial, Helvetica , sans-serif;
+          font-size: 14px;
+          color:black;
+          font-weight: 500;
+          margin-top:5px;
+          margin-left:5px;
+          word-break: break-word;
+          display:flex;
+          align-items: center;
+          .tweetBadge {
+            height:12px;
+            width:12px;
+            margin-top: -1px;
+            margin-left:2px;
+            margin-right: 4px;
+          }
+        }
+        .tweetDate {
+          font-family: Arial, Helvetica , sans-serif;
+          font-size: 14px;
+          color:rgba(0,0,0,.5);
+        
+          margin-top:2px;
+          margin-left:5px;
+        }
+        .tweetDate:before {
+          content: "\00b7";
+          margin-right:3px;
+          margin-left: 3px;
+        }
+        .tweetText{
+         font-family: Arial, Helvetica , sans-serif;
+         font-weight:700;
+         font-size: 15px;
+         color:black;
+         font-weight: 200;
+         margin-top:5px;
+         margin-left:5px;
+        }
+        .tweetUI-icons {
+          display:flex;
+          margin-top:10px;
+          .TWicon {
+            margin-left: 20px;
+            background-position: center;
+            background-size: 15px;
+            width:20px;
+            height:20px;
+            background-repeat: no-repeat 
+          }
+          .TWreplyIcon {
+            background-image: url('/assets/UI-icons/comment-regular-black.svg');
+          }
+          .TWretweetIcon {
+            background-image: url('/assets/UI-icons/retweet-solid.svg');
+          }
+          .TWlikeIcon {
+            background-image: url('/assets/UI-icons/heart-regular.svg');
+          }
+          .TWdirectMsgIcon {
+            background-image: url('/assets/UI-icons/envelope-regular.svg');
+          }
+          .shareTweet {
+            font-family: Arial, Helvetica , sans-serif;
+            font-weight:600;
+            font-size: 15px;
+            margin-left:50px;
+          }
+          .TWicon:hover {
+            color: #4AB3F4;
+          }
+          .shareTweet:hover {
+            color:#4AB3F4;
+          }
+        }     
+      }   
+    }
+    .twitterSnippet {
+      background-color: white;
+      width:45%;
+      min-height:220px;
+      margin-top:5px;
+      border: 1px solid #E6ECF0;
+      box-sizing: border-box;
+      cursor: pointer;
+      .twitterBanner {
+        height:100px;
+        background-size: cover;
+        background-position: top;
+        background-repeat: no-repeat;
+      } 
+      .twitterInfo{
+     
+        .twitterBio {
+          position: relative;
+          .twitterAvatar {
+            position: absolute;
+            border:3px solid white;
+            height:45px;
+            width:45px;
+            border-radius:35px;
+            top:-30px;
+            left:10px;
+            background-position: center;
+          }
+          .twitterName {
+            font-family: Arial, Helvetica , sans-serif;
+            font-size: 14px;
+            color:black;
+            font-weight: 800;
+            margin-top:5px;
+            margin-left:5px;
+            word-break: break-word;
+            margin-left: 65px;
+          }
+          .twitterScreen_name {
+            font-family: Arial, Helvetica , sans-serif;
+            font-size: 13px;
+            color:rgba(0,0,0,.6);
+            font-weight: 500;
+            margin-top:5px;
+            margin-left:5px;
+            word-break: break-word;
+            margin-left: 65px;
+          }       
+        }
+        .twitterDescript{
+          padding: 10px;
+          box-sizing:border-box;
+          font-family: Arial, Helvetica , sans-serif;
+          font-weight:200;
+          font-size: 13px;
+          color:black;
+         }
+        .twitterStats{
+          display:flex;
+          justify-content: space-around;
+          width:90%; 
+          margin-bottom: 15px;     
+          .twitterStatTitle{
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 600;
+            font-size: 11px;
+            color:rgba(0,0,0,.6)
+          }
+          .twitterStat {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            color: #4AB3F4;
+            font-size: 15px;
+          }
+        }
+      }
+    }
+   
+  }
+  .TWdiscContentViwer::-webkit-scrollbar {
+    width:10px;
+  }
+  .TWdiscContentViwer::-webkit-scrollbar-thumb {
+    background: #D4DADA; 
+    border-radius: 10px;
+  }
+  .TWdiscContentViwer::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

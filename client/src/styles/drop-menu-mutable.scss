@@ -7,9 +7,8 @@
   align-items: center;
   align-content: center;
   z-index: 40;
-
   #platformsArrow {
-    margin-right:17px !important;
+    margin-right:18px !important;
   }
   .lilArrow_mutable {
     -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
@@ -32,6 +31,7 @@
     display: flex;
     flex-direction: column;
     font-family: 'Didact Gothic';
+
     .menuHeader_mutable {
       display:flex;
       justify-content: center;
@@ -43,17 +43,21 @@
       width:100%;
       box-sizing: border-box;
     }
-    .menuInput_mutable {
-      padding: 10px;
-      font-size: 17px;
-      display: flex;
-      outline:none;
-      border:none;
-      width:86%;
-      border-radius:5px;
-      margin-top: 10px;
-      resize: none;
+    .menuInputWrap_mutable {
+      padding:5px;
+      box-sizing: border-box;
+      .menuInput_mutable {
+        padding: 10px;
+        font-size: 17px;
+        display: flex;
+        outline:none;
+        border:none;
+        width:86%;
+        border-radius:5px;
+       
+      }
     }
+    
     .menuTextInput_mutable {
       padding: 10px;
       height:50px;

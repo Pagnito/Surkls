@@ -283,6 +283,7 @@ class Header extends Component {
 					<option value="music">Music</option>
 					<option value="joe+rogan">Joe Rogan</option>
 					<option value="wearechange">We Are Change</option>
+					<option value="hodgetwins">Hodgetwins</option>
 					<option value="trending">Trending</option>
 					<option value="animal">Animals</option>
 					<option value="food">Food</option>

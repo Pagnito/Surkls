@@ -8,7 +8,8 @@ import {
 	UPDATE_SESSION,
 	SEND_VIDEO,
 	NEW_ADMIN,
-	UNPICK_VIDEO
+	UNPICK_VIDEO,
+	SEND_TWEET
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -115,6 +116,12 @@ export const newAdmin = (socketId) => (dispatch)=>{
 			isAdmin: true,
 			socketId: socketId
 		}
+	})
+}
+export const sendTweetAction = (tweetObj) => (dispatch)=>{
+	dispatch({
+		type:SEND_TWEET,
+		payload:tweetObj
 	})
 }
 export const sendThisVideoAction = (playState) => (dispatch)=>{

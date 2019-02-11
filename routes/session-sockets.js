@@ -41,6 +41,7 @@ module.exports = (io, app) => {
 									}
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
 										io.in(session.sessionKey).emit('thisSession', sessionObj)
+										console.log(sessionObj)
 										socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		
 									});
 								}
@@ -147,8 +148,11 @@ module.exports = (io, app) => {
 					let listString = JSON.stringify(videoList);
 					redClient.hset('dailymotionLists', session.sessionKey, listString);
 					console.log('KEY', session.sessionKey);
-				});
- */
+				});*/
+ 				socket.on('sharingLink', (link)=>{
+					 console.log('wtf')
+					 socket.to(session.sessionKey).emit('sharingLink', link);
+ 				})
 				socket.on('pickThisVideo', (playState) => {
 					redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
 						if (err) {
@@ -181,11 +185,19 @@ module.exports = (io, app) => {
 							io.to(sessionObj.clients[0].socketId).emit('giveMeVideoCurrentTime', sessionObj.playState);
 						}	
 						socket.on('hereIsVideoCurrentTime', (currentTime)=>{
-							console.log(currentTime)
+
 							sessionObj.playState.currentTime = currentTime+50;
 							io.to(asker).emit('hereIsVideoCurrentTime', sessionObj.playState);
 						})
 					})		
+				})
+				socket.on('sharingTweet', (tweetObj)=>{
+					redClient.hget('rooms', session.sessionKey, (err,sessionStr)=>{
+						let sessionObj = JSON.parse(sessionStr);
+						sessionObj.tweet = tweetObj;
+						redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj));
+						socket.to(session.sessionKey).emit('sharingTweet', tweetObj);
+					})					
 				})
 				socket.on('sendMsg', (msg) => {
 					redClient.hget('videoChatMsgs', session.sessionKey, (err, msgs) => {

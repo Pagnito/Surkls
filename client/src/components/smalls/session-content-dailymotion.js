@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions';
 
 //const player = new YTPlayer('#player')
-class SessionContentYoutube extends Component {
+class SessionContentDailymotion extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -41,10 +41,12 @@ class SessionContentYoutube extends Component {
 		}
 	};
 	componentDidUpdate = (prevProps) => {
-		let prop = this.props.session;
-		if (prop.playState.videoId !== prevProps.session.playState.videoId && prop.playState.videoId.length > 0) {
-			this.showVideo(prop.playState.videoId+'?autoplay=1');
-		}
+    let prop = this.props.session;
+    if(prop){
+      if (prop.videoId !== prevProps.session.videoId && prop.videoId.length > 0) {
+        this.showVideo(prop.videoId+'?autoplay=1');
+      }
+    }
 		/* if(prop.playState.requestingTime!==prevProps.session.playState.requestingTime){	
 			this.props.sendVideoCurrentTime(this.getVideosCurrentTime(),()=>{
 				console.log('sending back')
@@ -53,14 +55,15 @@ class SessionContentYoutube extends Component {
 			})	
 		} */
 	};
+	
 	componentDidMount = () => {
 		let prop = this.props.session;
 		/* if(prop.creatingSession===false){
 			this.props.askForVideoCurrentTime()
     } */
     if(prop){
-      if(prop.playState.videoId.length>0 && prop.playState.playing) {
-        this.showVideo(prop.playState.videoId);
+      if(prop.videoId.length>0 && prop.playing) {
+        this.showVideo(prop.videoId);
       }
     }
 		if (this.props.session.category && this.state.videos.length === 0) {
@@ -77,11 +80,9 @@ class SessionContentYoutube extends Component {
 			this.YTPlayer = null;
 			if (this.props.session.isAdmin) {
 				this.props.unpickThisVideo({
-					host: 'dailymotion',
+					activePlatform: 'dailymotion',
 					videoId: '',
-					playing: false,
-					requestingTime: false,
-					currentTime: false
+					playing: false,				
 				});
 			}
 			this.setState({
@@ -98,10 +99,11 @@ class SessionContentYoutube extends Component {
 	sendPickedVideo = (videoId) => {
 		if (this.props.session.isAdmin) {
 			this.props.sendVideoSignal({
-				host: 'dailymotion',
+				activePlatform: 'dailymotion',
 				videoId: videoId,
 				playing: true,
-				requestingTime: false
+				requestingTime: false,
+			
 			});
 		}
 	};
@@ -194,7 +196,7 @@ class SessionContentYoutube extends Component {
 	}
 }
 
-SessionContentYoutube.propTypes = {
+SessionContentDailymotion.propTypes = {
 	contentType: PropTypes.object,
 	region: PropTypes.string,
 	session: PropTypes.object,
@@ -211,62 +213,5 @@ function stateToProps(state) {
 		session: state.session
 	};
 }
-export default connect(stateToProps, { updateSession })(SessionContentYoutube);
-/* with higher quotas, can implement search
-if (this.state.videoPicked) {
-			return (
-				<div className="discContent">
-					<div className="discContentHeader">
-						<div onClick={this.renderPlatformMenu} id="contentDropdown" className="discHeaderIcon">
-							{this.platformsMenu()}
-						</div>
-						<div id="contentDice" className="discHeaderIcon" />
-						<div className="discHeaderSearch">
-						{	<input
-								onKeyDown={this.searchVideos}
-								id={this.props.contentType}
-								className="searchBar"
-								name="search"
-								value={this.state.search}
-								onChange={this.handleInput}
-							/>
-							<div id="discSearchIcon" className="discHeaderIcon" />}
-							</div>
-							</div>
-							<div className="discContentViewer">
-								<div className="videoFrameWrap">
-									<iframe
-										height="100%" width="100%"
-										className="videoFrame"
-										allow="autoplay; encrypted-media"
-										src={this.YTurl + this.state.playingVideo}
-									/>
-								</div>
-							</div>
-						</div>
-					);
-				} else {
-					return (
-						<div className="discContent">
-							<div className="discContentHeader">
-								<div onClick={this.renderPlatformMenu} id="contentDropdown" className="discHeaderIcon">
-									{this.platformsMenu()}
-								</div>
-								<div id="contentDice" className="discHeaderIcon" />
-								<div className="discHeaderSearch">
-									{<input
-										onKeyDown={this.searchVideos}
-										id={this.props.contentType}
-										className="searchBar"
-										name="search"
-										value={this.state.search}
-										onChange={this.handleInput}
-									/>
-									<div id="discSearchIcon" className="discHeaderIcon" />}
-								</div>
-							</div>
-							<div className="discContentPreview">{this.displayVideoSnippets()}</div>
-						</div>
-					);
-				}
- */
+export default connect(stateToProps, { updateSession })(SessionContentDailymotion);
+

@@ -4,7 +4,7 @@ import 'styles/drop-menu-mutable.scss'
 export default class DropMenu extends Component {
 	render() {
 		return (
-			<div onClick={this.props.hideMenu} style={{display:this.props.visibility}} className="dropMenu_mutable">
+			<div style={{display:this.props.visibility}} className="dropMenu_mutable">
 				<div id={this.props.menuTypeArrow} className="lilArrow_mutable" />
 				<div className="menuItems_mutable">
 					<div style={{display: this.props.hideHeader ? 'none' : 'flex'}} className="menuHeader_mutable">

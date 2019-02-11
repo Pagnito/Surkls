@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { getDevices, sendThisVideoAction, newAdmin, updateSession, unpickThisVideoAction } from 'actions/actions';
+import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction } from 'actions/actions';
 import PropTypes from 'prop-types';
 import Dropdown from 'components/smalls/drop-menu-mutable';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
 import SessionContentDailymotion from 'components/smalls/session-content-dailymotion';
+import SessionContentTwitter from 'components/smalls/session-content-twitter';
 import 'styles/session.scss';
 import 'styles/loader.scss';
 class Session extends Component {
@@ -14,8 +15,10 @@ class Session extends Component {
 		this.state = {
 			streamSize: {
 				height: 400,
-				width: 400
+				width: 400,
+				
 			},
+			shareLink: '',
 			connectedToSock: false,
 			msgs: [],
 			msg: '',
@@ -56,11 +59,11 @@ class Session extends Component {
 		this.socket.on('recieveMsgs', (data) => {
 			this.setState({ msgs: data });
 		});
-		this.socket.on('pickThisVideo', (playState) => {
-			this.props.sendThisVideoAction(playState);
+		this.socket.on('pickThisVideo', (videoObj) => {
+			this.props.sendThisVideoAction(videoObj);
 		});
-		this.socket.on('unpickThisVideo', (playState) => {
-			this.props.unpickThisVideoAction(playState);
+		this.socket.on('unpickThisVideo', (videoObj) => {
+			this.props.unpickThisVideoAction(videoObj);
 		});
 		this.socket.on('adminLeftImAdminNow', (socketId) => {
 			this.props.newAdmin(socketId);
@@ -71,14 +74,18 @@ class Session extends Component {
 		this.socket.on('sessionExpired', () => {
 			this.setState({ sessionExists: false });
 		});
-		this.socket.on('giveMeVideoCurrentTime', (playState) => {
-			console.log('requesting=true');
-			this.props.updateSession({ playState: playState });
+		this.socket.on('giveMeVideoCurrentTime', (videoObj) => {
+			this.props.updateSession(videoObj);
 		});
-		this.socket.on('hereIsVideoCurrentTime', (playState) => {
-			console.log(playState);
-			this.props.updateSession({ playState: playState });
+		this.socket.on('hereIsVideoCurrentTime', (videoObj) => {
+			this.props.updateSession(videoObj);
 		});
+		this.socket.on('sharingTweet', (tweetObj)=>{
+			this.props.sendTweetAction(tweetObj)
+		})
+		this.socket.on('sharingLink', (link)=>{
+			window.open(link, 'mywin', 'width=860,height=620,screenX=950,right=50,screenY=50,top=50,status=yes');
+		})
 	}
 	/////////////////////////////////////////end of state//////////////////////////////////
 	sendVideoSignal = (playState) => {
@@ -93,6 +100,16 @@ class Session extends Component {
 			this.socket.emit('youtubeList', youtubeList);
 		}
 	};
+	sendTweetToOthers = (tweetObj) =>{
+		this.socket.emit('sharingTweet', tweetObj)
+	}
+	shareLink = (e) => {
+		if(e.key ==='Enter'){
+			this.setState({shareLink:''},()=>{
+				this.socket.emit('sharingLink', this.state.shareLink)
+			})		
+		}	
+	}
 	//////////////////////////////////////////////webrtc funcs////////////////////////////////////////////
 	handleOfferError = (err) => {
 		console.log(err);
@@ -228,7 +245,6 @@ class Session extends Component {
 				streamList.removeChild(streamWrap);
 			}
 		}
-		console.log(sessionObj);
 		this.props.updateSession({ clients: sessionObj.clients });
 
 		delete this.rtcs[remoteId];
@@ -269,6 +285,10 @@ class Session extends Component {
 			}
 		}
 		this.socket.emit('leave');
+		this.props.updateSession({
+			inSession: false,
+			activePlatform: 'dailymotion'
+		})
 	}
 	startOrJoin = () => {
 		this.startStream(document.getElementById('streamOfMe'))
@@ -401,18 +421,11 @@ class Session extends Component {
 		}, 1000);
 	};
 	pickPlatform = (platform) => {
-		this.props.updateSession({
-			playState: {
-				host: platform,
-				videoId: '',
-				playing: false,
-				requestingTime: false,
-				currentTime: false
-			}
-		});
+		this.renderPlatformMenu()
+		this.props.updateSession({activePlatform: platform});
 	};
 	renderPlatform = () => {
-		if (this.props.session.playState.host === 'youtube') {
+		if (this.props.session.activePlatform === 'youtube') {
 			return (
 				<SessionContentYoutube
 					sendVideoSignal={this.sendVideoSignal}
@@ -422,7 +435,7 @@ class Session extends Component {
 					askForVideoCurrentTime={this.askForVideoCurrentTime}
 				/>
 			);
-		} else if (this.props.session.playState.host === 'dailymotion') {
+		} else if (this.props.session.activePlatform === 'dailymotion') {
 			return (
 				<SessionContentDailymotion
 					sendVideoSignal={this.sendVideoSignal}
@@ -432,7 +445,13 @@ class Session extends Component {
 					askForVideoCurrentTime={this.askForVideoCurrentTime}
 				/>
 			);
-		} else {
+		} else if (this.props.session.activePlatform === 'twitter') {
+			return (
+				<SessionContentTwitter
+					sendTweetToOthers={this.sendTweetToOthers}
+				/>
+			);
+		} /* else {
 			return (
 				<SessionContentDailymotion
 					sendVideoSignal={this.sendVideoSignal}
@@ -442,7 +461,7 @@ class Session extends Component {
 					askForVideoCurrentTime={this.askForVideoCurrentTime}
 				/>
 			);
-		}
+		} */
 	};
 
 	updateDevices = () => {
@@ -580,6 +599,9 @@ class Session extends Component {
 			}
 		});
 	};
+	openGoogleWindow = () =>{
+		window.open('https://google.com/'+this.props.session.category, 'mywin', 'width=860,height=620,screenX=950,right=50,screenY=50,top=50,status=yes');
+	}
 	platformsMenu = () => {
 		let visibility = this.state.platformMenuVisible ? 'flex' : 'none';
 		return (
@@ -590,11 +612,23 @@ class Session extends Component {
 				<div onClick={() => this.pickPlatform('dailymotion')} className="menuItem_mutable">
 					Daily Motion
 				</div>
-				<div className="menuItem_mutable">Soundcloud</div>
+				<div onClick={() => this.pickPlatform('twitter')}  className="menuItem_mutable">
+					Twitter
+				</div>
+				<div  onClick={this.openGoogleWindow} className="menuItem_mutable">Google</div>
+				<div className="menuInputWrap_mutable">
+					<input 
+					onKeyDown={this.shareLink} 
+					onChange={this.onInputChange}
+					placeholder="Share Link" 
+					value={this.state.shareLink}
+					name="shareLink"
+					className="menuInput_mutable"></input>
+				</div>
+				{/*<div className="menuItem_mutable">Soundcloud</div>
 				<div className="menuItem_mutable">Medium</div>
-				<div className="menuItem_mutable">Twitter</div>
 				<div className="menuItem_mutable">Instagram</div>
-				<div className="menuItem_mutable">Reddit</div>
+				<div className="menuItem_mutable">Reddit</div> */}
 			</Dropdown>
 		);
 	};
@@ -688,8 +722,8 @@ class Session extends Component {
 									id="contentDropdownIcon"
 									className="discHeaderIcon"
 								>
-									{this.platformsMenu()}
-								</div>
+									</div>
+									{this.platformsMenu()}			
 							</div>
 							{this.renderPlatform()}
 						</div>
@@ -728,7 +762,8 @@ Session.propTypes = {
 	sendThisVideoAction: PropTypes.func,
 	newAdmin: PropTypes.func,
 	updateSession: PropTypes.func,
-	unpickThisVideoAction: PropTypes.func
+	unpickThisVideoAction: PropTypes.func,
+	sendTweetAction: PropTypes.func,
 };
 function stateToProps(state) {
 	return {
@@ -738,6 +773,7 @@ function stateToProps(state) {
 	};
 }
 export default connect(stateToProps, {
+	sendTweetAction,
 	getDevices,
 	sendThisVideoAction,
 	newAdmin,
