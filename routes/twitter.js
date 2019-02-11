@@ -11,6 +11,8 @@ module.exports = (app)=> {
     T.get('search/tweets', { q: `${req.params.keyword} since:2018-12-01`, count: 50 }, function(err, data, response) {
       let filteredTwits = [];
       let statusObj = {};
+      let respon = typeof(data) ==='object' ? data : {};
+      if(Object.keys(respon).lenth>0){
       for(let tweet of data.statuses){
         statusObj = {
           user: {
@@ -32,6 +34,7 @@ module.exports = (app)=> {
         }
         filteredTwits.push(statusObj);
       }
+    }
       res.json(filteredTwits)
      })
   })
@@ -40,34 +43,36 @@ module.exports = (app)=> {
       //console.log(data.statuses)
       let filteredTwits = [];
       let twitterObj = {};
-      for(let twitter of data){
-        twitterObj = {
-          id: twitter.id,
-          id_str: twitter.id_str,
-          name: twitter.name,
-          screen_name: twitter.screen_name,
-          location: twitter.location,
-          description: twitter.description,
-          url: twitter.url,
-          latestStatus: twitter.status,
-          profile_banner: twitter.profile_banner_url,
-          avatar_https: twitter.profile_image_url_https,
-          avatar:twitter.profile_image_url,
-          followers_count: twitter.followers_count,
-          friends_count: twitter.friends_count,
-          statuses_count: twitter.statuses_count,
-        }
-        filteredTwits.push(twitterObj);
-      }
+      let respon = typeof(data) ==='object' ? data : {};
+      if(Object.keys(respon).lenth>0){
+        for(let twitter of data){
+          twitterObj = {
+            id: twitter.id,
+            id_str: twitter.id_str,
+            name: twitter.name,
+            screen_name: twitter.screen_name,
+            location: twitter.location,
+            description: twitter.description,
+            url: twitter.url,
+            latestStatus: twitter.status,
+            profile_banner: twitter.profile_banner_url,
+            avatar_https: twitter.profile_image_url_https,
+            avatar:twitter.profile_image_url,
+            followers_count: twitter.followers_count,
+            friends_count: twitter.friends_count,
+            statuses_count: twitter.statuses_count,
+          }
+          filteredTwits.push(twitterObj);
+        }    
+      }  
       res.json(filteredTwits)
      })
   })
   app.get('/api/twitter/trends', (req,res)=>{
     T.get('trends/place', { id: `23424977`}, function(err, data, response) {
       if(err) console.log(err)
-      console.log(response)
-      console.log(data)
-      res.json(data[0].trends)
+      let respon = typeof(data[0].trends)==='array' ? data[0].trends : ['Something wrong with the server', err];
+      res.json(respon)
      })
   })
 }
