@@ -600,7 +600,7 @@ class Session extends Component {
 		});
 	};
 	openGoogleWindow = () =>{
-		window.open('https://google.com/'+this.props.session.category, 'mywin', 'width=860,height=620,screenX=950,right=50,screenY=50,top=50,status=yes');
+		window.open('https://google.com/', 'mywin', 'width=860,height=620,screenX=950,right=50,screenY=50,top=50,status=yes');
 	}
 	platformsMenu = () => {
 		let visibility = this.state.platformMenuVisible ? 'flex' : 'none';

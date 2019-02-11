@@ -63,7 +63,10 @@ module.exports = (app)=> {
      })
   })
   app.get('/api/twitter/trends', (req,res)=>{
-    T.get('trends/place', { id: `23424977`, count: 50 }, function(err, data, response) {
+    T.get('trends/place', { id: `23424977`}, function(err, data, response) {
+      if(err) console.log(err)
+      console.log(response)
+      console.log(data)
       res.json(data[0].trends)
      })
   })
