@@ -142,7 +142,7 @@ class Header extends Component {
 			<Pullout pullIn={this.renderPulloutMenu}>
 				<div className="customPulloutHeader">
 					<div onClick={this.renderPulloutMenu} id="menuBarsIcon2" />
-					<img id="surklsTitle" src="/assets/surkls_title.png" />
+					<img id="surklsTitle" src="/assets/surkls-title2.png" />
 				</div>
 				<Link to="/rooms" className="menuItem">
 					<div className="threeDotMenuIcon" id="roomsIcon" />Rooms
