@@ -7,6 +7,7 @@ import Dropdown from 'components/smalls/drop-menu-mutable';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
 import SessionContentDailymotion from 'components/smalls/session-content-dailymotion';
 import SessionContentTwitter from 'components/smalls/session-content-twitter';
+import SessionContentTwitch from 'components/smalls/session-content-twitch';
 import 'styles/session.scss';
 import 'styles/loader.scss';
 class Session extends Component {
@@ -445,6 +446,15 @@ class Session extends Component {
 					askForVideoCurrentTime={this.askForVideoCurrentTime}
 				/>
 			);
+		} else if (this.props.session.activePlatform === 'twitch') {
+			return (
+				<SessionContentTwitch
+					sendVideoSignal={this.sendVideoSignal}
+					unpickThisVideo={this.unpickThisVideo}
+					sendVideoCurrentTime={this.sendVideoCurrentTime}
+					askForVideoCurrentTime={this.askForVideoCurrentTime}
+				/>
+			);
 		} else if (this.props.session.activePlatform === 'twitter') {
 			return (
 				<SessionContentTwitter
@@ -470,7 +480,15 @@ class Session extends Component {
 	updateClientList = () => {
 		if (this.props.session.clients !== undefined && this.props.session.clients.length > 0) {
 			return this.props.session.clients.map((client, ind) => {
-				return <img key={ind} src={client.avatarUrl} className="clientSquareAv" />;
+				if(client.isAdmin){
+					return(
+						<img key={ind} style={{
+							border:'2px solid #FECC44',
+							 boxSizing:'border-box'}} src={client.avatarUrl} className="clientSquareAv" />
+					)
+				} else {
+					return <img key={ind} src={client.avatarUrl} className="clientSquareAv" />
+				}		
 			});
 		}
 	};
@@ -615,6 +633,9 @@ class Session extends Component {
 				<div onClick={() => this.pickPlatform('twitter')}  className="menuItem_mutable">
 					Twitter
 				</div>
+				<div onClick={() => this.pickPlatform('twitch')}  className="menuItem_mutable">
+					Twitch
+				</div>
 				<div  onClick={this.openGoogleWindow} className="menuItem_mutable">Google</div>
 				<div className="menuInputWrap_mutable">
 					<input 
@@ -708,7 +729,7 @@ class Session extends Component {
 								</div>
 							</div>
 							<div id="restOfSettings">
-								<div id="shareLink">Share Link</div>
+								<div id="shareLink">Invite Link</div>
 								<select id="sessVidDevices" />
 								<select id="sessAudDevices" />
 							</div>

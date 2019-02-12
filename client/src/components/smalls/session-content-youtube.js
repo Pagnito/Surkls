@@ -13,37 +13,60 @@ class SessionContentYoutube extends Component {
 			videos: [],
 			videoPicked: false
 		};
-
-		this.YTkey = 'AIzaSyBYjnyqxqjLo5B5cJjlo-KkEzQYLp6dqPE';
+		this.apiKeys = ['AIzaSyDws9NT1IvkAYPH98VYsIKFXffKNVmU-Jc',
+										'AIzaSyC-NVEgdByg61B92oFIbXkWBm-mqrW6FwU',
+										'AIzaSyBYjnyqxqjLo5B5cJjlo-KkEzQYLp6dqPE',
+										'AIzaSyAPW2QscyTsEPKUzDgEpR321HEouBt7A2o',
+										'AIzaSyAGfR5YzyHv7_nXDqy3djJfYEs-NIVXiik',
+										'AIzaSyCRwoKB-wr5Sc0OhN4sD7yY_oZuV5UN_es',
+										'AIzaSyAh_DJv3EwDi7ROzvzY35zqEFFh433sHMs',
+										'AIzaSyDE03mlW16M0wP6KzjX7jTJbl4mevEDoNo'
+										]
 		this.YTapi =
-			'https://www.googleapis.com/youtube/v3/search?key=AIzaSyC-NVEgdByg61B92oFIbXkWBm-mqrW6FwU&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30&q=';
+			'https://www.googleapis.com/youtube/v3/search?&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30';
+		this.onMountYTapi = 'https://www.googleapis.com/youtube/v3/videos?&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=50&chart=mostPopular&key=AIzaSyDE03mlW16M0wP6KzjX7jTJbl4mevEDoNo'
 		this.YTurl = 'https://www.youtube.com/embed/';
-		this.YTPlayer;
+		this.YTPlayer = null;
+		this.keyInd=0;
 	}
 	handleInput = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
 
-
-	/* searchVideos = (e) => {
-		if (e.key === 'Enter') {
-      if(this.state.videoPicked===true){
-        this.setState({
-          playingVideo: '',
-          videoPicked: false},()=>{
-            fetch(this.YTapi + this.state.search.replace(' ', '+')).then((res) => res.json()).then((data) => {
-              console.log(data);
-              this.setState({ videos: data.items });
-            });
-          })
-      } else {
-        fetch(this.YTapi +  +  this.props.contentType.replace(' ', '+')).then((res) => res.json()).then((data) => {
-          console.log(data);
-          this.setState({ videos: data.items });
-        });
-      }   
+	fetchIt = (keys, keyword)=> {
+		 keyword = keyword.length>0 ? '&q='+keyword : '';
+		 let url = keyword.length>0 ? this.YTapi : this.onMountYTapi;
+		if(this.keyInd>7){
+			return;
 		}
-	}; */
+		this.keyInd++
+		fetch(url + keyword+'&key='+keys[this.keyInd])
+		.then((res) => res.json())
+		.then((data) => {
+			if(data.items){
+				this.props.updateSession({youtubeList:data.items})
+			} else {
+				this.fetchIt(this.apiKeys, keyword)
+			}		
+		}).catch((err)=>{
+			this.fetchIt(this.apiKeys, keyword)
+		})
+	}
+	searchVideos = (e) => {
+		if (e.key === 'Enter') {
+			if(this.YTPlayer!==null){
+				this.YTPlayer.destroy()
+			}	
+				this.setState({
+					playingVideo: '',
+					videoPicked: false},()=>{
+						this.fetchIt(this.apiKeys, this.state.search, (list)=>{
+							this.props.updateSession({youtubeList:list})
+						})   
+				 })  
+			}    
+		}
+
 	componentDidUpdate = (prevProps) => {
 		let prop = this.props.session;
 		if(prop){
@@ -72,16 +95,9 @@ class SessionContentYoutube extends Component {
         this.showVideo(prop.videoId);
       }
     }
-		if (this.props.session.category && this.state.videos.length === 0 && prop.isAdmin) {
-			fetch(this.YTapi + prop.category + '+' + prop.subCategory).then((res) => res.json()).then((data) => {
-				if (data.items) {
-					this.setState({ videos: data.items }, () => {
-						this.rendered = true;
-						this.props.updateSession({youtubeList:data.items})
-					});
-				}
-			});
-		}
+		//if (this.props.session.category && this.state.videos.length === 0 && prop.isAdmin) {
+			this.fetchIt(this.apiKeys, '')		
+		//}
 	};
 	hideVideo = () =>{
 		if(this.state.videoPicked){
@@ -101,6 +117,8 @@ class SessionContentYoutube extends Component {
 					videoPicked: false
 				})
 			}	
+		} else {
+			this.fetchIt(this.apiKeys, '')
 		}
 	}
 	showVideo = (videoId) => {
@@ -143,19 +161,21 @@ class SessionContentYoutube extends Component {
 	displayVideoSnippets = () => {
 		let youtubeList = this.props.session.youtubeList===null ?  [] : this.props.session.youtubeList
 		if(this.props.session){
-			return youtubeList.map((snippet, ind) => {
-				return (
-					<div onClick={()=>this.sendPickedVideo(snippet.id.videoId)} key={ind} className="vidSnippet">
-					{/* <div  className="videoSignalBtn"></div> */}
-						<img className="snippetImg" src={snippet.snippet.thumbnails.default.url} />
-						<div className="channelTitle">{snippet.snippet.channelTitle}</div>
-						<div className="videoDate">
-							{new Date(Date.parse(snippet.snippet.publishedAt)).toLocaleDateString()}
+			if(youtubeList.length){
+				return youtubeList.map((snippet, ind) => {
+					return (
+						<div onClick={()=>this.sendPickedVideo(snippet.id.videoId || snippet.id)} key={ind} className="vidSnippet">
+						{/* <div  className="videoSignalBtn"></div> */}
+							<img className="snippetImg" src={snippet.snippet.thumbnails.default.url} />
+							<div className="channelTitle">{snippet.snippet.channelTitle}</div>
+							<div className="videoDate">
+								{new Date(Date.parse(snippet.snippet.publishedAt)).toLocaleDateString()}
+							</div>
+							<div className="videoTitle">{snippet.snippet.title}</div>
 						</div>
-						<div className="videoTitle">{snippet.snippet.title}</div>
-					</div>
-				);
-			});
+					);
+				});
+			}	
 		}
 	};
 	
@@ -168,6 +188,17 @@ class SessionContentYoutube extends Component {
 						className="discHeaderIcon"
 					/>			
 					<div id="contentDice" className="discHeaderIcon" />
+					<div className="discHeaderSearch">
+						<input
+								onKeyDown={this.searchVideos}
+								id={this.props.contentType}
+								className="searchBar"
+								name="search"
+								value={this.state.search}
+								onChange={this.handleInput}
+							/>
+						<div id="discSearchIcon" className="discHeaderIcon" />
+					</div>
 				</div>
 			);
 		}
@@ -196,36 +227,11 @@ class SessionContentYoutube extends Component {
 			} else {
 				return (
 					<div className="discContent">
-						<div className="discContentHeader">
-							<div
-								onClick={() => this.setState({ videoPicked: false })}
-								id="contentBack"
-								className="discHeaderIcon"
-							/>
-							<div id="contentDice" className="discHeaderIcon" />
-						</div>
+						{this.renderHeader()}
 						<div className="discContentPreview">{this.displayVideoSnippets()}</div>
 					</div>
 				);
 			}
-		/* } else {
-			return (
-				<div className="discContent">
-					<div className="discContentViewer">
-						<div style={{ marginTop: '40px' }} className="videoFrameWrap">
-							<iframe
-								style={{ display: 'block' }}
-								height="100%"
-								width="100%"
-								className="videoFrame"
-								allow="autoplay"
-								src={this.YTurl + 'ZA106wrMUe4'}
-							/>
-						</div>
-					</div>
-				</div>
-			);
-		} */
 	}
 }
 
@@ -247,61 +253,3 @@ function stateToProps(state) {
 	};
 }
 export default connect(stateToProps,{updateSession})(SessionContentYoutube);
-/* with higher quotas, can implement search
-if (this.state.videoPicked) {
-			return (
-				<div className="discContent">
-					<div className="discContentHeader">
-						<div onClick={this.renderPlatformMenu} id="contentDropdown" className="discHeaderIcon">
-							{this.platformsMenu()}
-						</div>
-						<div id="contentDice" className="discHeaderIcon" />
-						<div className="discHeaderSearch">
-						{	<input
-								onKeyDown={this.searchVideos}
-								id={this.props.contentType}
-								className="searchBar"
-								name="search"
-								value={this.state.search}
-								onChange={this.handleInput}
-							/>
-							<div id="discSearchIcon" className="discHeaderIcon" />}
-							</div>
-							</div>
-							<div className="discContentViewer">
-								<div className="videoFrameWrap">
-									<iframe
-										height="100%" width="100%"
-										className="videoFrame"
-										allow="autoplay; encrypted-media"
-										src={this.YTurl + this.state.playingVideo}
-									/>
-								</div>
-							</div>
-						</div>
-					);
-				} else {
-					return (
-						<div className="discContent">
-							<div className="discContentHeader">
-								<div onClick={this.renderPlatformMenu} id="contentDropdown" className="discHeaderIcon">
-									{this.platformsMenu()}
-								</div>
-								<div id="contentDice" className="discHeaderIcon" />
-								<div className="discHeaderSearch">
-									{<input
-										onKeyDown={this.searchVideos}
-										id={this.props.contentType}
-										className="searchBar"
-										name="search"
-										value={this.state.search}
-										onChange={this.handleInput}
-									/>
-									<div id="discSearchIcon" className="discHeaderIcon" />}
-								</div>
-							</div>
-							<div className="discContentPreview">{this.displayVideoSnippets()}</div>
-						</div>
-					);
-				}
- */

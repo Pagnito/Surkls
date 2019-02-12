@@ -64,23 +64,25 @@
     }
     .discHeaderSearch {
       display: flex;
-      width: calc(100% - 40px);
-      margin-right: 10px;
+      width:calc(100% - 200px);
+      margin-left: 30px;
       justify-content: flex-end;
-      
+      position: relative;
       #discSearchIcon {
         background-image: url('/assets/UI-icons/search-solid.svg');
         background-size: 17px !important;
         margin-top:3px;
-        margin-left:10px !important
+        right:7px !important;
+        position:absolute;
       }
       .searchBar {
         background: #D4DADA;
         border:none;
         border-radius: 20px;
         margin-top:5px;
-        width:85%;
+        width:100%;
         outline:none;
+        height:20px;
         color:black;
         font-size: 13px;
         padding-left: 10px;

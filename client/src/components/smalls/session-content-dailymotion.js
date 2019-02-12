@@ -112,15 +112,17 @@ class SessionContentDailymotion extends Component {
 	displayVideoSnippets = () => {
 		let dailymotionList = this.props.session.dailymotionList === null ? [] : this.props.session.dailymotionList;
 		if (this.props.session) {
-			return dailymotionList.map((snippet, ind) => {
-				return (
-					<div onClick={() => this.sendPickedVideo(snippet.id)} key={ind} className="DMvidSnippet">
-						{/* <div  className="videoSignalBtn"></div> */}
-						<img className="DMsnippetImg" src={snippet.thumbnail_medium_url} />
-						<div className="DMchannelTitle">{snippet.title}</div>
-					</div>
-				);
-			});
+			if(dailymotionList.length){
+				return dailymotionList.map((snippet, ind) => {
+					return (
+						<div onClick={() => this.sendPickedVideo(snippet.id)} key={ind} className="DMvidSnippet">
+							{/* <div  className="videoSignalBtn"></div> */}
+							<img className="DMsnippetImg" src={snippet.thumbnail_medium_url} />
+							<div className="DMchannelTitle">{snippet.title}</div>
+						</div>
+					);
+				});
+			}	
 		}
 	};
 

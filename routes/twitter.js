@@ -11,8 +11,7 @@ module.exports = (app)=> {
     T.get('search/tweets', { q: `${req.params.keyword} since:2018-12-01`, count: 50 }, function(err, data, response) {
       let filteredTwits = [];
       let statusObj = {};
-      let respon = typeof(data) ==='object' ? data : {};
-      if(Object.keys(respon).lenth>0){
+      if(response.rawHeaders.indexOf('200 OK')>-1){
       for(let tweet of data.statuses){
         statusObj = {
           user: {
@@ -34,8 +33,11 @@ module.exports = (app)=> {
         }
         filteredTwits.push(statusObj);
       }
-    }
       res.json(filteredTwits)
+    } else {
+      res.json({err: 'Something wrong with the server'})
+    }
+     
      })
   })
   app.get('/api/search/twitters/:keyword',(req,res)=>{ 
@@ -43,8 +45,7 @@ module.exports = (app)=> {
       //console.log(data.statuses)
       let filteredTwits = [];
       let twitterObj = {};
-      let respon = typeof(data) ==='object' ? data : {};
-      if(Object.keys(respon).lenth>0){
+      if(response.rawHeaders.indexOf('200 OK')>-1){
         for(let twitter of data){
           twitterObj = {
             id: twitter.id,
@@ -63,16 +64,22 @@ module.exports = (app)=> {
             statuses_count: twitter.statuses_count,
           }
           filteredTwits.push(twitterObj);
-        }    
-      }  
-      res.json(filteredTwits)
+        }  
+        res.json(filteredTwits)  
+      } else {
+        res.json({err: 'Something wrong with the server'})
+      } 
+     
      })
   })
   app.get('/api/twitter/trends', (req,res)=>{
     T.get('trends/place', { id: `23424977`}, function(err, data, response) {
       if(err) console.log(err)
-      let respon = typeof(data[0].trends)==='array' ? data[0].trends : ['Something wrong with the server', err];
-      res.json(respon)
+      if(response.rawHeaders.indexOf('200 OK')>-1){
+        res.json(data[0].trends)
+      } else {
+        res.json({err:"something wrong with the server"})
+      }
      })
   })
 }

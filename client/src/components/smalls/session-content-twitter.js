@@ -144,111 +144,117 @@ class SessionContentTwitter extends Component {
 	displayTrends = () => {
 		if(this.props.session){
 			let trends = this.props.session.trends === null ? [] : this.props.session.trends;
-		return trends.map((trend, ind) => {
-			return (
-				<div onClick={() => this.openTrend(trend.url)} key={ind} className="TWtrendWrap">
-					<div>{trend.name}</div>
-					<div className="trendTweetsNum">
-						Tweets <span style={{ marginLeft: '5px', color: 'rgba(0,0,0,.5)' }}>{trend.tweet_volume}</span>
-					</div>
-				</div>
-			);
-		});
+			if(!trends.err){
+				return trends.map((trend, ind) => {
+					return (
+						<div onClick={() => this.openTrend(trend.url)} key={ind} className="TWtrendWrap">
+							<div>{trend.name}</div>
+							<div className="trendTweetsNum">
+								Tweets <span style={{ marginLeft: '5px', color: 'rgba(0,0,0,.5)' }}>{trend.tweet_volume}</span>
+							</div>
+						</div>
+					);
+				});
+			}
 		}	
 	};
 	displayTwitters = () => {
 		let twitters = this.props.session.twitters === null ? [] : this.props.session.twitters;
 		if (this.props.session) {
-			return twitters.map((snippet, ind) => {
-				return (
-					<div
-						onClick={() => this.openTwitterProfile(snippet.screen_name)}
-						key={ind}
-						className="twitterSnippet"
-					>
-						<div style={{ backgroundImage: `url(${snippet.profile_banner})` }} className="twitterBanner" />
-						<div className="twitterInfo">
-							<div className="twitterBio">
-								<div style={{ backgroundImage: `url(${snippet.avatar})` }} className="twitterAvatar" />
-								<div className="twitterName">{snippet.name}</div>
-								<div className="twitterScreen_name">@{snippet.screen_name}</div>
-							</div>
-							<div className="twitterDescript">{snippet.description}</div>
-							<div className="twitterStats">
-								<div className="tweetCount">
-									<div className="twitterStatTitle">Tweets</div>
-									<div className="twitterStat">{snippet.statuses_count}</div>
+			if(!twitters.err){
+				return twitters.map((snippet, ind) => {
+					return (
+						<div
+							onClick={() => this.openTwitterProfile(snippet.screen_name)}
+							key={ind}
+							className="twitterSnippet"
+						>
+							<div style={{ backgroundImage: `url(${snippet.profile_banner})` }} className="twitterBanner" />
+							<div className="twitterInfo">
+								<div className="twitterBio">
+									<div style={{ backgroundImage: `url(${snippet.avatar})` }} className="twitterAvatar" />
+									<div className="twitterName">{snippet.name}</div>
+									<div className="twitterScreen_name">@{snippet.screen_name}</div>
 								</div>
-								<div className="followingCount">
-									<div className="twitterStatTitle">Following</div>
-									<div className="twitterStat">{snippet.friends_count}</div>
-								</div>
-								<div className="followerCount">
-									<div className="twitterStatTitle">Followers</div>
-									<div className="twitterStat">{snippet.followers_count}</div>
+								<div className="twitterDescript">{snippet.description}</div>
+								<div className="twitterStats">
+									<div className="tweetCount">
+										<div className="twitterStatTitle">Tweets</div>
+										<div className="twitterStat">{snippet.statuses_count}</div>
+									</div>
+									<div className="followingCount">
+										<div className="twitterStatTitle">Following</div>
+										<div className="twitterStat">{snippet.friends_count}</div>
+									</div>
+									<div className="followerCount">
+										<div className="twitterStatTitle">Followers</div>
+										<div className="twitterStat">{snippet.followers_count}</div>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				);
-			});
+					);
+				});
+			}
 		}
 	};
 
 	displayTweets = () => {
 		let tweets = this.props.session.tweets === null ? [] : this.props.session.tweets;
 		if (this.props.session) {
-			return tweets.map((snippet, ind) => {
-				let minutesAgo = (Date.now() - Date.parse(snippet.date)) / 1000 / 60;
-				let date =
-					minutesAgo < 60
-						? Math.floor(minutesAgo) + 'm'
-						: minutesAgo < 1440
-							? Math.floor(minutesAgo / 60) + 'h'
-							: new Date(Date.parse(snippet.date)).toLocaleDateString();
-				return (
-					<div key={ind} className="TWsnippet">
-						<div>
-							<img className="tweetUser" src={snippet.user.img} />
-						</div>
-						<div className="tweetData">
-							<div className="tweetUserName">
-								{snippet.user.name}
-								<img className="tweetBadge" src="/assets/UI-icons/twitter_badge.png" />
-								<span style={{ color: 'rgba(0,0,0,.6)', fontSize: '11px' }}>
-									@{snippet.user.screen_name}
-								</span>
-								<div className="tweetDate">{date}</div>
+			if(!tweets.err){
+				return tweets.map((snippet, ind) => {
+					let minutesAgo = (Date.now() - Date.parse(snippet.date)) / 1000 / 60;
+					let date =
+						minutesAgo < 60
+							? Math.floor(minutesAgo) + 'm'
+							: minutesAgo < 1440
+								? Math.floor(minutesAgo / 60) + 'h'
+								: new Date(Date.parse(snippet.date)).toLocaleDateString();
+					return (
+						<div key={ind} className="TWsnippet">
+							<div>
+								<img className="tweetUser" src={snippet.user.img} />
 							</div>
-							<div className="tweetText">{snippet.text}</div>
-							<div className="tweetUI-icons">
-								<div
-									onClick={() => this.openTweet(snippet.tweetId, snippet.user.id)}
-									className="TWreplyIcon TWicon"
-								/>
-								<div
-									onClick={() => this.openTweet(snippet.tweetId, snippet.user.id)}
-									className="TWretweetIcon TWicon"
-								/>
-								<div
-									onClick={() => this.openTweet(snippet.tweetId, snippet.user.id)}
-									className="TWlikeIcon TWicon"
-								/>
-								<div
-									onClick={() => this.openTweet(snippet.tweetId, snippet.user.id)}
-									className="TWdirectMsgIcon TWicon"
-								/>
-								<div
-									onClick={() => this.shareTweet(snippet.tweetId, snippet.user.id)}
-									className="shareTweet"
-								>
-									Share With Others
+							<div className="tweetData">
+								<div className="tweetUserName">
+									{snippet.user.name}
+									<img className="tweetBadge" src="/assets/UI-icons/twitter_badge.png" />
+									<span style={{ color: 'rgba(0,0,0,.6)', fontSize: '11px' }}>
+										@{snippet.user.screen_name}
+									</span>
+									<div className="tweetDate">{date}</div>
+								</div>
+								<div className="tweetText">{snippet.text}</div>
+								<div className="tweetUI-icons">
+									<div
+										onClick={() => this.openTweet(snippet.tweetId, snippet.user.id)}
+										className="TWreplyIcon TWicon"
+									/>
+									<div
+										onClick={() => this.openTweet(snippet.tweetId, snippet.user.id)}
+										className="TWretweetIcon TWicon"
+									/>
+									<div
+										onClick={() => this.openTweet(snippet.tweetId, snippet.user.id)}
+										className="TWlikeIcon TWicon"
+									/>
+									<div
+										onClick={() => this.openTweet(snippet.tweetId, snippet.user.id)}
+										className="TWdirectMsgIcon TWicon"
+									/>
+									<div
+										onClick={() => this.shareTweet(snippet.tweetId, snippet.user.id)}
+										className="shareTweet"
+									>
+										Share With Others
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				);
-			});
+					);
+				});
+			}
 		}
 	};
 
