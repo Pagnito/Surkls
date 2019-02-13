@@ -252,7 +252,7 @@ module.exports = (io, app) => {
 											if (loopClient.isAdmin && sessionObj.clients.length > 0) {
 												sessionObj.clients[0].isAdmin = true;
 												sessionObj.admin = sessionObj.clients[0].socketId;
-												io.to(sessionObj.clients[0].socketId).emit('adminLeftImAdminNow', loopClient.socketId);									
+												io.to(sessionObj.clients[0].socketId).emit('adminLeftImAdminNow');									
 											}
 										}
 									});

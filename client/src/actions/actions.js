@@ -109,12 +109,11 @@ export const updateSession = (payload) => (dispatch) => {
 		payload: payload
 	});
 };
-export const newAdmin = (socketId) => (dispatch)=>{
+export const newAdmin = () => (dispatch)=>{
 	dispatch({
 		type: NEW_ADMIN,
 		payload: {
-			isAdmin: true,
-			socketId: socketId
+			isAdmin: true
 		}
 	})
 }

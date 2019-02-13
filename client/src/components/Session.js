@@ -66,8 +66,8 @@ class Session extends Component {
 		this.socket.on('unpickThisVideo', (videoObj) => {
 			this.props.unpickThisVideoAction(videoObj);
 		});
-		this.socket.on('adminLeftImAdminNow', (socketId) => {
-			this.props.newAdmin(socketId);
+		this.socket.on('adminLeftImAdminNow', () => {
+			this.props.newAdmin();
 		});
 		this.socket.on('youtubeList', (youtubeList) => {
 			this.props.updateSession({ youtubeList: youtubeList });

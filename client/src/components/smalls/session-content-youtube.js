@@ -72,7 +72,12 @@ class SessionContentYoutube extends Component {
 		let prop = this.props.session;
 		if(prop){
 			if(prop.videoId!==prevProps.session.videoId && prop.videoId.length>0){
-				this.showVideo(prop.videoId);
+				if(this.YTPlayer!==null){
+					this.YTPlayer.load(prop.videoId,{autoplay:true})
+				} else {
+					this.showVideo(prop.videoId);
+				}
+				
 			}		
 			if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
 				setTimeout(()=>{this.props.saveYoutubeListRedis(prop.youtubeList)},500)
@@ -108,7 +113,6 @@ class SessionContentYoutube extends Component {
 			if(this.YTPlayer.destroyed){
 				this.YTPlayer = null;
 				if(this.props.session.isAdmin){
-					console.log("WTFFFFF")
 					this.props.unpickThisVideo({
 						activePlatform:'youtube',
 						videoId:'', 

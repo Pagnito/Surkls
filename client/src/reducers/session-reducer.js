@@ -47,7 +47,6 @@ export default function(state = initialState, action) {
 				...action.payload
 			};
 		case UNPICK_VIDEO:
-			console.log(action.payload)
 			return {
 				...state,
 				... action.payload
