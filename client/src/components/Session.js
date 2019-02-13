@@ -240,7 +240,9 @@ class Session extends Component {
 			}
 			iterator++;
 		}
-		this.rtcs[remoteId].close();
+		if(this.rtcs[remoteId]){
+			this.rtcs[remoteId].close();
+		}
 		for (let streamWrap of streamWraps) {
 			if (streamWrap.dataset.id === remoteId) {
 				streamList.removeChild(streamWrap);
@@ -288,7 +290,13 @@ class Session extends Component {
 		this.socket.emit('leave');
 		this.props.updateSession({
 			inSession: false,
-			activePlatform: 'dailymotion'
+			activePlatform: 'youtube',
+			room: '',
+			admin: '',
+			clients: [],
+			exists: false,
+			sessionKey: '',
+			creatingSession: false
 		})
 	}
 	startOrJoin = () => {

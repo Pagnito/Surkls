@@ -17,7 +17,7 @@ const initialState = {
 	twitchStreams: [],
 	tweets: [],
 	twitters: [],
-	activePlatform: 'dailymotion',
+	activePlatform: 'youtube',
 	tweetId: '',
 	twitterId: '',
 	trends: [],

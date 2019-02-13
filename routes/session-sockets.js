@@ -30,7 +30,6 @@ module.exports = (io, app) => {
 							redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
 								if (err){socket.emit('roomEntranceError', err)}							
 								let sessionObj = JSON.parse(sessionStr);
-								console.log(sessionObj)
 								if (sessionObj.clients.length < sessionObj.maxMembers) {
 									reciever = socket.id;
 									socket.join(session.sessionKey);
@@ -41,12 +40,12 @@ module.exports = (io, app) => {
 										sessionObj.isAdmin = true;
 									}
 									sessionObj.clients.push(client);
+									console.log(sessionObj.clients)
 									if (sessionObj.clients.length === sessionObj.maxMembers) {
 										sessionObj.maxedOut = true;
 									}
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
-										io.in(session.sessionKey).emit('thisSession', {clients:sessionObj.clients})
-										console.log(sessionObj)
+										io.in(session.sessionKey).emit('thisSession', {clients:sessionObj.clients});
 										socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		
 									});
 								}
@@ -159,7 +158,6 @@ module.exports = (io, app) => {
 					console.log('KEY', session.sessionKey);
 				});*/
  				socket.on('sharingLink', (link)=>{
-					 console.log('wtf')
 					 socket.to(session.sessionKey).emit('sharingLink', link);
  				})
 				socket.on('pickThisVideo', (videoObj) => {
@@ -181,7 +179,6 @@ module.exports = (io, app) => {
 							console.log(err);
 						}
 						let sessionObj = JSON.parse(sessionStr);
-						console.log(videoObj)
 						io.to(session.sessionKey).emit('unpickThisVideo', videoObj);
 						let updatedSession = Object.assign(videoObj, sessionObj);
 						updatedSession.activePlatform = videoObj.activePlatform;		

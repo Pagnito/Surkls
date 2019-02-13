@@ -173,11 +173,12 @@ class SessionContentYoutube extends Component {
 						<div onClick={()=>this.sendPickedVideo(snippet.id.videoId || snippet.id)} key={ind} className="vidSnippet">
 						{/* <div  className="videoSignalBtn"></div> */}
 							<img className="snippetImg" src={snippet.snippet.thumbnails.default.url} />
+							<div className="videoTitle">{snippet.snippet.title}</div>
 							<div className="channelTitle">{snippet.snippet.channelTitle}</div>
 							<div className="videoDate">
 								{new Date(Date.parse(snippet.snippet.publishedAt)).toLocaleDateString()}
 							</div>
-							<div className="videoTitle">{snippet.snippet.title}</div>
+							
 						</div>
 					);
 				});
