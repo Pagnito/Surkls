@@ -22,8 +22,10 @@ const initialState = {
 	twitterId: '',
 	trends: [],
 	playing: false,
-	host: '',
-	videoId: '',
+	videoId:'',
+	twitchVidId: '',
+	youtubeVidId: '',
+	dailymotionVidId: '',
 	requestingTime: false
 };
 
@@ -45,9 +47,10 @@ export default function(state = initialState, action) {
 				...action.payload
 			};
 		case UNPICK_VIDEO:
+			console.log(action.payload)
 			return {
 				...state,
-				playState: action.payload
+				... action.payload
 			};
 		case UPDATE_SESSION:
 			return {

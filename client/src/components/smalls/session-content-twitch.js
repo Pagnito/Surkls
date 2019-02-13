@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import 'styles/session-content-twitch.scss';
 import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions';
-
+import Loader2 from 'components/smalls/loader2';
 
 class SessionContentTwitch extends Component {
 	constructor(props) {
@@ -20,6 +20,8 @@ class SessionContentTwitch extends Component {
 			'https://api.twitch.tv/kraken/search/games?type=suggest&client_id=z0zn6hk34j09blpvy8bji7tzfdvvmc&query=';
 		this.twitchByStreams =
 			'https://api.twitch.tv/kraken/search/streams?limit=81&client_id=z0zn6hk34j09blpvy8bji7tzfdvvmc&query=';
+		this.twitchByClips = 
+			'https://api.twitch.tv/kraken/clips?limit=81&client_id=z0zn6hk34j09blpvy8bji7tzfdvvmc&query='
 	
 	}
 	handleInput = (e) => {
@@ -35,7 +37,6 @@ class SessionContentTwitch extends Component {
 						this.props.updateSession({twitchChannels:data.channels})
 					}				
 				} else {
-					console.log(apiUrl, query)
 					this.fetchIt(apiUrl, query)
 				}		
 			}).catch(err=>{
@@ -143,8 +144,7 @@ class SessionContentTwitch extends Component {
 									 	<span style={{marginLeft:'5px'}}></span>Viewers
 									 </div>
 								</div>
-							</div>
-							
+							</div>						
 						</div>
 					);
 				});
@@ -199,7 +199,9 @@ class SessionContentTwitch extends Component {
 			return (
 				<div className="twitchDiscContent">
             {this.renderHeader()}
-					<div className="twitchDiscContentPreview">{this.displayStreamSnippets()}</div>
+					<div className="twitchDiscContentPreview">
+					{this.props.session.twitchStreams.length > 0 ? this.displayStreamSnippets() :
+						<Loader2 color="#4B367C" />}</div>
 				</div>
 			);
 		}

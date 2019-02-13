@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import 'styles/session-content-twitter.scss';
 import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions';
-
+import Loader2 from 'components/smalls/loader2';
 class SessionContentTwitter extends Component {
 	constructor(props) {
 		super(props);
@@ -296,7 +296,7 @@ class SessionContentTwitter extends Component {
 					{this.renderHeader()}
 					<div className="TWdiscContentPreview">
 						<div className="trendTitle">TRENDS</div>
-						{this.displayTrends()}
+						{this.props.session.trends.length>0?this.displayTrends():<Loader2 color="#1DA1F2"/>}
 					</div>
 				</div>
 			);

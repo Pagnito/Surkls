@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import 'styles/session-content-dailymotion.scss';
 import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions';
+import Loader2 from 'components/smalls/loader2';
 
-//const player = new YTPlayer('#player')
 class SessionContentDailymotion extends Component {
 	constructor(props) {
 		super(props);
@@ -173,7 +173,9 @@ class SessionContentDailymotion extends Component {
 			return (
 				<div className="DMdiscContent">
             {this.renderHeader()}
-					<div className="DMdiscContentPreview">{this.displayVideoSnippets()}</div>
+					<div className="DMdiscContentPreview">
+					{this.props.session.dailymotionList.length > 0 ? this.displayVideoSnippets():
+						<Loader2 color="#00B6FB" />}</div>
 				</div>
 			);
 		}

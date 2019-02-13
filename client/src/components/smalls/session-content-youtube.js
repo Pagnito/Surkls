@@ -4,7 +4,8 @@ import 'styles/session-content-youtube.scss';
 import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions'
 import YTplayer from 'yt-player';
-//const player = new YTPlayer('#player')
+import Loader2 from 'components/smalls/loader2';
+
 class SessionContentYoutube extends Component {
 	constructor(props) {
 		super(props);
@@ -48,7 +49,7 @@ class SessionContentYoutube extends Component {
 			} else {
 				this.fetchIt(this.apiKeys, keyword)
 			}		
-		}).catch((err)=>{
+		}).catch(()=>{
 			this.fetchIt(this.apiKeys, keyword)
 		})
 	}
@@ -107,8 +108,9 @@ class SessionContentYoutube extends Component {
 			if(this.YTPlayer.destroyed){
 				this.YTPlayer = null;
 				if(this.props.session.isAdmin){
+					console.log("WTFFFFF")
 					this.props.unpickThisVideo({
-						host:'youtube',
+						activePlatform:'youtube',
 						videoId:'', 
 						playing:false
 					})
@@ -146,7 +148,7 @@ class SessionContentYoutube extends Component {
 	sendPickedVideo = (videoId) =>{
 		if(this.props.session.isAdmin){
 			this.props.sendVideoSignal({
-				host:'youtube',
+				activePlatform:'youtube',
 				videoId:videoId, 
 				playing:true,
 				requestingTime:false,
@@ -228,7 +230,9 @@ class SessionContentYoutube extends Component {
 				return (
 					<div className="discContent">
 						{this.renderHeader()}
-						<div className="discContentPreview">{this.displayVideoSnippets()}</div>
+						<div className="discContentPreview">
+						{this.props.session.youtubeList.length > 0? this.displayVideoSnippets() : 
+						<Loader2 color="#FF0000" />}</div>
 					</div>
 				);
 			}

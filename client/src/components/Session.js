@@ -342,6 +342,7 @@ class Session extends Component {
 							}
 							break;
 						case 'clientLeft':
+						
 							this.handleLeavingClient(data.sessionObj, remoteId);
 							break;
 						case 'connected':
@@ -395,12 +396,18 @@ class Session extends Component {
 		if (this.props.session.notShareLink || this.props.session.creatingSession) {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
 				this.socket.on('thisSession', (sessionObj) => {
+					if(sessionObj.clients.length===1){
+						sessionObj.isAdmin=true
+					}
 					this.props.updateSession(sessionObj);
 				});
 				this.startOrJoin();
 			} else {
 				if (!this.props.session.notShareLink && !this.alreadyStarted) {
 					this.socket.on('thisSession', (sessionObj) => {
+						if(sessionObj.clients.length===1){
+							sessionObj.isAdmin=true
+						}
 						this.props.updateSession(sessionObj);
 					});
 					this.startOrJoin();
