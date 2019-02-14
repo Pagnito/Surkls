@@ -23,9 +23,9 @@ const initialState = {
 	trends: [],
 	playing: false,
 	videoId:'',
-	twitchVidId: '',
+/* 	twitchVidId: '',
 	youtubeVidId: '',
-	dailymotionVidId: '',
+	dailymotionVidId: '', */
 	requestingTime: false
 };
 

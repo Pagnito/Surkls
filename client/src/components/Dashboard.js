@@ -105,7 +105,7 @@ class Dashboard extends Component {
           }
         }
         ///////////
-        if(length3.length>0){
+        if(length3>0){
           let promise3 = await fetch(this.newsApi+this.state.search3)
           let json3 = await promise3.json();
           if(json3.articles.length>0 ){
@@ -128,7 +128,7 @@ class Dashboard extends Component {
           <div key={ind} className="article">
             <a href={article.url} rel="noopener noreferrer" target="_blank" >
             <div style={{backgroundImage:`url(${article.urlToImage})`}} className="articleImg"></div>
-            <div className="articleAuthor">By<span style={{marginLeft:'5px'}}>{author}</span>
+            <div className="articleAuthor">By<span style={{marginLeft:'5px',color:'#DEB23B'}}>{author}</span>
               <span style={{marginLeft: '10px'}}>{article.source.name}</span>
               <span style={{marginLeft: '10px'}}>{date}</span>
             </div>
@@ -190,7 +190,9 @@ class Dashboard extends Component {
        
         </div>
         </section>
-       
+       <section id="dashboardSurkls">
+          <div id="dashboardSurklsHeader">Surkls</div>
+       </section>
       </div>
     )
   }

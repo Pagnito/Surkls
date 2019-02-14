@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getUser, signUpOrLogin } from 'actions/actions';
+import { getUser, signUp } from 'actions/actions';
 import 'styles/home.scss';
 import 'styles/loader.scss';
 
@@ -10,11 +10,13 @@ class Home extends Component {
 		super(props);
 		this.state = {
 			email: '',
+			userName: '',
 			password: '',
 			confirmPassword: '',
 			registerMe: true,
       errors: {
-        email: 'Email',
+				email: 'Email',
+				userName: 'Username',
         password: 'Password',
         confirmPassword: 'Confirm password'
       }
@@ -28,8 +30,8 @@ class Home extends Component {
 		console.log(this.props)
 		let errors = {};
 		e.preventDefault();
-		if(this.state.password!==this.state.confirmPassword
-			|| this.state.email.length<5){
+		if(this.state.password!==this.state.confirmPassword && this.state.password.length<6){
+			errors = {}
 			document.getElementById('password').classList.add('errorColor');
 			document.getElementById('cPassword').classList.add('errorColor');
 			errors.password = 'Passwords must match'
@@ -37,12 +39,25 @@ class Home extends Component {
 			this.setState({errors: errors,
 										password: '',
 										confirmPassword:''})
-		} else {	
+		} else if(this.state.email.length<5){
+			errors = {}
+			document.getElementById('regEmail').classList.add('errorColor');
+			errors.email = "Email is required"
+			this.setState({errors: errors,
+										 email: ''})
+		} else if(this.state.userName.length<3){
+			errors = {}
+			document.getElementById('regUsername').classList.add('errorColor');
+			errors.userName = "Username must be at least 3 characters"
+			this.setState({errors: errors,
+										userName: ''})
+		}  else  {	
 			let user = {
+				userName: this.state.userName,
 				email: this.state.email,
 				password: this.state.password,
 			}
-			this.props.signUpOrLogin(JSON.stringify(user),()=>{
+			this.props.signUp(JSON.stringify(user),()=>{
 				this.props.history.push('/dashboard')
 			});
 		}	
@@ -51,8 +66,16 @@ class Home extends Component {
 		if (this.state.registerMe) {
 			return (
 				<form onSubmit={this.handleSubmit} className="form" id="registerForm">
-					
-          <input 
+					<input 
+						id="regUsername"
+            className="homeInput" 
+            onChange={this.handleInputs} 
+            name="userName" 
+            value={this.state.userName}
+						placeholder={this.state.errors.userName} 
+            />
+					<input 
+						id="regEmail"
             className="homeInput" 
             onChange={this.handleInputs} 
             name="email" 
@@ -128,7 +151,7 @@ class Home extends Component {
 Home.propTypes = {
 	auth: PropTypes.object,
 	getUser: PropTypes.func,
-	signUpOrLogin: PropTypes.func,
+	signUp: PropTypes.func,
 	history: PropTypes.object
 };
 function stateToProps(state) {
@@ -138,4 +161,4 @@ function stateToProps(state) {
 	};
 }
 
-export default connect(stateToProps, { getUser, signUpOrLogin })(Home);
+export default connect(stateToProps, { getUser, signUp })(Home);

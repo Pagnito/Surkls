@@ -11,17 +11,14 @@ function ProfileModal(props) {
   return (
     <div onMouseLeave={props.hideProfileModal} style={styles} className="profileModal">
       <div className="profileBanner">
-        <div style={{backgroundImage:`url(${user.avatar})`}} className="profileImg"></div>
-      </div>
-         
+        <div style={{backgroundImage:`url(${user.avatar ? user.avatar : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
+      </div>       
           <div className="profileModalUsername">{user.userName}</div>
           <div className="profileModalDesc">{user.description}</div>
           <div className="profileModalActions">
             <div className="modalAction">Add To Surkl</div>
             <div className="modalAction">Send a Message</div>
-          </div>
-      
-      
+          </div>   
     </div>
   )
 }

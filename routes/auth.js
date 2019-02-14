@@ -1,6 +1,8 @@
 const passport = require('passport');
 const User = require('../database/models/user-model');
 const requireLogin = require('../middlewares/requireLogin');
+const crypto = require('crypto');
+const keys = require('../config/keys');
 require('../services/authStrategies/googleStrat');
 require('../services/authStrategies/twitterStrat');
 require('../services/authStrategies/localStrat');
@@ -22,6 +24,33 @@ module.exports = (app) => {
 	app.post('/auth/login', passport.authenticate('local'), (req,res)=>{
 		res.json(req.user)
 	});
+	app.post('/auth/register', (req,res)=>{
+		console.log(req.body)
+		User.findOne({email:req.body.email}).then(user=>{
+			if(user){
+				console.log(user)
+				res.status(401).json({msg:"Email already exists"})
+			} else {
+				const hashedPassword = crypto.createHmac('sha256', keys.cookieSecret)
+                   .update(req.body.password)
+                   .digest('hex');
+				let newUser = new User ({
+					email: req.body.email,
+					userName: req.body.userName,
+					hashedPassword: hashedPassword
+				})
+				newUser.save().then(()=>{
+					passport.authenticate('local')(req,res, ()=>{
+						if(req.user){
+							res.json(req.user);
+						} else {
+							res.status(401).json({msg: 'Couldnt find user'})
+						}						
+					})
+				})
+			}
+		})
+	})
 	///////////////////////////////////////////twitch auth////////////////////////////////////////////
 	app.get('/auth/twitch', passport.authenticate('twitch'));
   app.get('/auth/twitch/callback', 

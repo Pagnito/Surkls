@@ -64,7 +64,33 @@ export const getDevices = () => (dispatch) => {
 		});
 	});
 };
-export const signUpOrLogin = (user, cb) => (dispatch) => {
+export const signUp = (user, cb) => (dispatch) => {
+	let options = {
+		method: 'POST',
+		mode: 'cors',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json;charset=UTF-8'
+		},
+		body: user
+	};
+	fetch('/auth/register', options)
+		.then((res) => res.json())
+		.then((user) => {
+			dispatch({
+				type: SET_USER,
+				payload: user
+			});
+			cb();
+		})
+		.catch(() => {
+			dispatch({
+				type: SET_USER,
+				payload: {}
+			});
+		});
+};
+export const signIn = (user, cb) => (dispatch) => {
 	let options = {
 		method: 'POST',
 		mode: 'cors',

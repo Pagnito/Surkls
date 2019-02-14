@@ -415,6 +415,9 @@ class Session extends Component {
 	componentDidMount() {
 		////start session button provides creatingSession = true in props
 		////notShareLink is provided if clicked via join button
+		///those props being passed to the server which will handle 
+		///those entrances accordingly
+		///never pass the whole sessionObj around to everyone
 		navigator.mediaDevices.ondevicechange = () => {
 			this.updateDevices();
 		};
@@ -422,6 +425,8 @@ class Session extends Component {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
 				this.socket.on('session', (sessionObj) => {
 					if(sessionObj.clients.length===1){
+						//on join on client list is passed back
+						//on creating saved redis sessionObj is passed to creator
 						sessionObj.isAdmin=true
 					}
 					this.props.updateSession(sessionObj);
@@ -514,11 +519,12 @@ class Session extends Component {
 	updateClientList = () => {
 		if (this.props.session.clients !== undefined && this.props.session.clients.length > 0) {
 			return this.props.session.clients.map((client, ind) => {
+				let url = client.avatarUrl ? client.avatarUrl : '/assets/whitehat.jpg'
 				if(client.isAdmin){
 					return(
 						<img key={ind} style={{
 							border:'2px solid #FECC44',
-							 boxSizing:'border-box'}} src={client.avatarUrl} className="clientSquareAv" />
+							 boxSizing:'border-box'}} src={url} className="clientSquareAv" />
 					)
 				} else {
 					return <img key={ind} src={client.avatarUrl} className="clientSquareAv" />
@@ -550,9 +556,10 @@ class Session extends Component {
 	};
 	renderChatText = () => {
 		return this.state.msgs.map((msg, ind) => {
+			let url = msg.avatar ? msg.avatar : '/assets/whitehat.jpg'
 			return (
 				<div key={ind} className="chatMsg">
-					<img data-user={JSON.stringify(msg)} onMouseEnter={this.showProfileModal} className="chatMsgAvatar" src={msg.avatar} />
+					<img data-user={JSON.stringify(msg)} onMouseEnter={this.showProfileModal} className="chatMsgAvatar" src={url} />
 					<div className="chatHeaderNmsg">
 						<div className="chatMsgUserInfo">
 							<div className="chatMsgName">{msg.userName}</div>

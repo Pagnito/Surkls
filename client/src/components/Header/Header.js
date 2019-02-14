@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
-import { startSession, joinSession, signUpOrLogin, getDevices } from 'actions/actions';
+import { startSession, joinSession, signIn, getDevices } from 'actions/actions';
 import { subCategories } from 'components/smalls/sub-categories';
 import 'styles/header.scss';
 class Header extends Component {
@@ -351,7 +351,7 @@ class Header extends Component {
 			password: this.state.password
 		};
 
-		this.props.signUpOrLogin(JSON.stringify(user), () => {
+		this.props.signIn(JSON.stringify(user), () => {
 			this.setState({ signInMenuVisible: false });
 			this.props.history.push('/rooms');
 		});
@@ -440,7 +440,7 @@ class Header extends Component {
 							backgroundPosition: 'center',
 							backgroundRepeat: 'no-repeat',
 							backgroundSize: 'cover',
-							backgroundImage: `url(${this.props.auth.user.avatarUrl})`
+							backgroundImage: this.props.auth.user.avatarUrl ? `url(${this.props.auth.user.avatarUrl})` : `url('/assets/whitehat.jpg')`
 						}}
 					/>
 					<div id="userNameNEmail">
@@ -561,7 +561,7 @@ class Header extends Component {
 								backgroundPosition: 'center',
 								backgroundRepeat: 'no-repeat',
 								backgroundSize: 'cover',
-								backgroundImage: `url(${this.props.auth.user.avatarUrl})`
+								backgroundImage: this.props.auth.user.avatarUrl ? `url(${this.props.auth.user.avatarUrl})` : `url('/assets/whitehat.jpg')`
 							}}
 						/>
 					</div>
@@ -576,7 +576,7 @@ Header.propTypes = {
 	history: PropTypes.object,
 	startSession: PropTypes.func,
 	joinSession: PropTypes.func,
-	signUpOrLogin: PropTypes.func,
+	signIn: PropTypes.func,
 	devices: PropTypes.object,
 	getDevices: PropTypes.func
 };
@@ -586,4 +586,4 @@ function stateToProps(state) {
 		devices: state.devices
 	};
 }
-export default connect(stateToProps, { startSession, joinSession, signUpOrLogin, getDevices })(withRouter(Header));
+export default connect(stateToProps, { startSession, joinSession, signIn, getDevices })(withRouter(Header));

@@ -23,6 +23,7 @@ passport.use(new LocalStrategy({
       if(hashedPassword===user.hashedPassword){
         let userRes = {
           email: user.email,
+          userName: user.userName,
           _id:user._id
         }
         done(null, userRes)
@@ -30,17 +31,7 @@ passport.use(new LocalStrategy({
         done(null, false)
       }     
     } else {
-      let newUser = new User({
-        email:email,
-        hashedPassword: hashedPassword
-      })
-      newUser.save().then((user)=>{
-        let userRes = {
-          email: user.email,
-          _id:user._id
-        }
-        done(null, userRes)
-      })
+      done(null, false)
     }
   })
 }));
