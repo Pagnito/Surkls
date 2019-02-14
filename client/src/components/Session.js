@@ -382,12 +382,13 @@ class Session extends Component {
 				chatBox.scrollTop = chatBox.scrollHeight;
 			}
 		}
-		if (this.props.auth !== prevProps.auth) {
+		if (this.props.auth !== prevProps.auth) {///waiting for props to load
+			//if using a invite link /room=:id also handles reloads
+			//notShareLink wont exist in props because its a direct enter via share link
 			if (!this.props.session.notShareLink && !this.alreadyStarted) {
 				this.socket.on('session', (sessionObj) => {
 					if(sessionObj.clients.length===1){			
 						sessionObj.isAdmin=true;
-						console.log(sessionObj)
 					}
 					this.props.updateSession(sessionObj);
 				});
@@ -412,24 +413,25 @@ class Session extends Component {
 	}
 
 	componentDidMount() {
+		////start session button provides creatingSession = true in props
+		////notShareLink is provided if clicked via join button
 		navigator.mediaDevices.ondevicechange = () => {
 			this.updateDevices();
 		};
 		if (this.props.session.notShareLink || this.props.session.creatingSession) {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
 				this.socket.on('session', (sessionObj) => {
-					console.log(sessionObj)
 					if(sessionObj.clients.length===1){
 						sessionObj.isAdmin=true
 					}
 					this.props.updateSession(sessionObj);
 				});
 				this.startOrJoin();
-				console.log('wtf')
-			} else {
+			} /* else {
+				//handles a join
+				console.log('joined')
 				if (!this.props.session.notShareLink && !this.alreadyStarted) {
 					this.socket.on('session', (sessionObj) => {
-						console.log(sessionObj)
 						if(sessionObj.clients.length===1){
 							sessionObj.isAdmin=true
 						}
@@ -437,7 +439,7 @@ class Session extends Component {
 					});
 					this.startOrJoin();
 				}
-			}
+			} */
 		}
 	}
 
