@@ -9,13 +9,11 @@ class Rooms extends Component {
 		this.props.getSessions();
 	}
 	closeMenus = () =>{
-		this.props.closeMenus('close-menus');
+    if(this.props.app.menuState === 'open'){
+      this.props.closeMenus({menu:'close-menus'});
+    }	
 	}
-	componentDidUpdate =()=>{
-		if(this.props.app.menus ==='close-menus'){
-			this.props.closeMenus('rdy-to-open');
-		}
-	}
+
 	joinSession = (sessionKey, room) => {
 		let session = {
 			sessionKey: sessionKey,

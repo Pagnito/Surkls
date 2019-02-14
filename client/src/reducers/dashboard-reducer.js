@@ -6,7 +6,10 @@ const initialState = {
   activeSources: [],
   feed: [],
 	chat: [],
-	activeFeed: {}
+	activeFeed: {},
+	search1:'',
+	search2:'',
+	search3: ''
 };
 
 export default function(state = initialState, action) {

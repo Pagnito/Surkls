@@ -12,4 +12,5 @@ export const SEND_TWEET = 'SEND_TWEET';
 export const NEW_ADMIN = 'NEW_ADMIN';
 export const UPDATE_DASHBOARD = 'UPDATE_DASHBOARD';
 export const CLOSE_ALLMENUS = 'CLOSE_ALLMENUS';
+export const TOGGLE_MENU = 'TOGGLE_MENU';
 

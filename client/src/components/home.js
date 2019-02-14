@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getUser, signUp } from 'actions/actions';
+import { getUser, signUp, closeMenus } from 'actions/actions';
 import 'styles/home.scss';
 import 'styles/loader.scss';
 
@@ -26,6 +26,11 @@ class Home extends Component {
 	handleInputs = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
+	closeMenus = () =>{
+    if(this.props.app.menuState === 'open'){
+      this.props.closeMenus({menu:'close-menus'});
+    }	
+	}
 	handleSubmit = (e) =>{
 		console.log(this.props)
 		let errors = {};
@@ -134,7 +139,7 @@ class Home extends Component {
 			)
 		} else  {
 			return( 
-				<div id="home">
+				<div onClick={this.closeMenus} id="home">
 					<div id="overlay"></div>
 					<div id="registerTitle">Start Your Surkle!</div>
 					<div id="loginStrategies">
@@ -152,13 +157,15 @@ Home.propTypes = {
 	auth: PropTypes.object,
 	getUser: PropTypes.func,
 	signUp: PropTypes.func,
-	history: PropTypes.object
+	history: PropTypes.object,
+	closeMenus: PropTypes.func,
+	app: PropTypes.object
 };
 function stateToProps(state) {
 	return {
-		auth: state.auth
-		
+		auth: state.auth,
+		app: state.app
 	};
 }
 
-export default connect(stateToProps, { getUser, signUp })(Home);
+export default connect(stateToProps, { getUser, signUp, closeMenus })(Home);

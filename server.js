@@ -11,6 +11,7 @@ const api = require('./routes/api');
 const auth = require('./routes/auth');
 const twitter = require('./routes/twitter');
 const sessionSockets = require('./routes/session-sockets');
+const msgsSockets = require('./routes/msgs-sockets');
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
 const passport = require("passport");
@@ -51,6 +52,7 @@ api(app);
 auth(app);
 twitter(app);
 sessionSockets(io, app);
+msgsSockets(io, app);
 /* if (process.env.NODE_ENV == "production") { */
   app.use(express.static(path.resolve(__dirname, "client", "build")));
   app.get("*", (req, res) => {

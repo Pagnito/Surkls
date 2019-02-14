@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
-import { startSession, joinSession, signIn, getDevices } from 'actions/actions';
+import io from 'socket.io-client';
+import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus } from 'actions/actions';
 import { subCategories } from 'components/smalls/sub-categories';
 import 'styles/header.scss';
 class Header extends Component {
@@ -16,33 +17,21 @@ class Header extends Component {
 			category: '',
 			subCategory: '',
 			roomName: '',
-			accMenuVisible: false,
-			notifMenuVisible: false,
-			sessionMenuVisible: false,
-			signInMenuVisible: false,
-			pulloutMenuVisible: false,
 			email: '',
 			password: '',
 			message: ''
 		};
 		this.menusClosed = true;
+	
 	}
 
 	componentDidMount() {
 		this.props.getDevices();
 	}
 	componentDidUpdate(){
-		console.log(this.props.app)
-		if(this.props.app.menus==='close-menus' && this.menusClosed === false){
+		if(this.props.app.menu==='close-menus' && this.menusClosed === false){		
+			this.hideAllMenus()
 			this.menusClosed=true;
-			this.setState({
-				notifMenuVisible: false,
-				accMenuVisible: false,
-				sessionMenuVisible: false,
-				pulloutMenuVisible: false,
-				signInMenuVisible: false,
-				messagesMenuVisible: false
-			});
 		}
 	}
 	onInputChange = (e) => {
@@ -53,39 +42,41 @@ class Header extends Component {
 	};
 	renderAccMenu = () => {
 		this.menusClosed=false;
-		this.setState({
-			accMenuVisible: this.state.accMenuVisible ? false : true,
+		this.props.toggleMenu({accMenuVisible: this.props.app.accMenuVisible ? false : true,
 			notifMenuVisible: false,
 			sessionMenuVisible: false,
 			pulloutMenuVisible: false,
 			signInMenuVisible: false,
-			messagesMenuVisible: false
-		});
+			messagesMenuVisible: false,
+			menuState: 'open'
+		})
 	};
 	renderNotifMenu = () => {
 		this.menusClosed=false;
-		this.setState({
-			notifMenuVisible: this.state.notifMenuVisible ? false : true,
+		this.props.toggleMenu({
+			notifMenuVisible: this.props.app.notifMenuVisible ? false : true,
 			accMenuVisible: false,
 			sessionMenuVisible: false,
 			pulloutMenuVisible: false,
 			signInMenuVisible: false,
-			messagesMenuVisible: false
+			messagesMenuVisible: false,
+			menuState: 'open'
 		});
 	};
 	renderCreateSessionMenu = () => {
 		this.menusClosed=false;
 		if (window.location.pathname.indexOf('/session') < 0) {
-			this.setState(
+			this.props.toggleMenu(
 				{
-					sessionMenuVisible: this.state.sessionMenuVisible ? false : true,
+					sessionMenuVisible: this.props.app.sessionMenuVisible ? false : true,
 					accMenuVisible: false,
 					notifMenuVisible: false,
 					pulloutMenuVisible: false,
 					signInMenuVisible: false,
 					messagesMenuVisible: false,
 					roomCategory: this.state.sessionMenuVisible ? this.state.roomCategory : '',
-					roomName: this.state.sessionMenuVisible ? this.state.roomName : ''
+					roomName: this.state.sessionMenuVisible ? this.state.roomName : '',
+					menuState: 'open'
 				},
 				() => {
 					document.getElementById('sessionNameInput').focus();
@@ -95,54 +86,66 @@ class Header extends Component {
 	};
 	renderMessagesMenu = () => {
 		this.menusClosed=false;
-		this.setState({
-			messagesMenuVisible: this.state.messagesMenuVisible ? false : true,
+		this.props.toggleMenu({
+			messagesMenuVisible: this.props.app.messagesMenuVisible ? false : true,
 			accMenuVisible: false,
 			notifMenuVisible: false,
 			pulloutMenuVisible: false,
 			signInMenuVisible: false,
-			sessionMenuVisible: false
+			sessionMenuVisible: false,
+			menuState: 'open'
 		});
+		fetch('/api/connect').then(()=>{
+			this.socket = io('http://localhost:4000');
+			this.socket.on('connect', ()=>{
+				console.log('sup homes')
+			})
+		})
 	};
 	renderSignInMenu = () => {
 		this.menusClosed=false;
-		this.setState({
-			signInMenuVisible: this.state.signInMenuVisible ? false : true,
-			threeDotMenuVisible: false
+		this.props.toggleMenu({
+			signInMenuVisible: this.props.app.signInMenuVisible ? false : true,
+			threeDotMenuVisible: false,
+			menuState: 'open'
 		});
 	};
 	renderThreeDotMenu = () => {
 		this.menusClosed=false;
-		this.setState({
-			threeDotMenuVisible: this.state.threeDotMenuVisible ? false : true,
-			signInMenuVisible: false
+		this.props.toggleMenu({
+			threeDotMenuVisible: this.props.app.threeDotMenuVisible ? false : true,
+			signInMenuVisible: false,
+			menuState: 'open'
 		});
 	};
 
 	hideAllMenus = () => {
-		this.setState({
+		this.props.closeMenus({
 			sessionMenuVisible: false,
 			accMenuVisible: false,
 			notifMenuVisible: false,
 			pulloutMenuVisible: false,
 			signInMenuVisible: false,
-			threeDotMenuVisible: false
+			threeDotMenuVisible: false,
+			messagesMenuVisible:false,
+			menuState:'closed',
+			menu: 'rdy-to-open'
 		});
 	};
 	hideSignInMenu = () => {
-		this.setState({ signInMenuVisible: false });
+		this.props.toggleMenu({ signInMenuVisible: false });
 	};
 	renderPulloutMenu = () => {
 		let bg = document.getElementById('pulloutBg');
 		let menu = document.getElementById('pullout');
-		if (this.state.pulloutMenuVisible === false) {
+		if (this.props.app.pulloutMenuVisible === false) {
 			bg.style.display = 'block';
 			bg.classList.remove('removeOverlay');
 			menu.classList.remove('pullinAction');
 			bg.classList.add('overlayAction');
 			menu.classList.add('pulloutAction');
 
-			this.setState({
+			this.props.toggleMenu({
 				pulloutMenuVisible: true,
 				accMenuVisible: false,
 				notifMenuVisible: false,
@@ -151,7 +154,7 @@ class Header extends Component {
 		} else {
 			bg.classList.remove('overlayAction');
 			menu.classList.remove('pulloutAction');
-			this.setState({ pulloutMenuVisible: false });
+			this.props.toggleMenu({ pulloutMenuVisible: false });
 			setTimeout(() => {
 				bg.style.display = 'none';
 			}, 300);
@@ -187,7 +190,7 @@ class Header extends Component {
 		);
 	};
 	notifMenu = () => {
-		let visibility = this.state.notifMenuVisible ? 'flex' : 'none';
+		let visibility = this.props.app.notifMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu
 				hideMenu={this.hideAllMenus}
@@ -202,7 +205,7 @@ class Header extends Component {
 	};
 
 	messagesMenu = () => {
-		let visibility = this.state.messagesMenuVisible ? 'flex' : 'none';
+		let visibility = this.props.app.messagesMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu menuTitle="Messages" visibility={visibility} menuTypeArrow="messagesArrow">
 				<textarea
@@ -281,7 +284,7 @@ class Header extends Component {
 		);
 	};
 	createSessionMenu = () => {
-		let visibility = this.state.sessionMenuVisible ? 'flex' : 'none';
+		let visibility = this.props.app.sessionMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu menuTitle="Create Session" visibility={visibility} menuTypeArrow="sessionArrow">
 				<input
@@ -378,7 +381,7 @@ class Header extends Component {
 		});
 	};
 	signInMenu = () => {
-		let visibility = this.state.signInMenuVisible ? 'flex' : 'none';
+		let visibility = this.props.app.signInMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu menuTitle="Log in with" menuTypeArrow="signInArrow" visibility={visibility}>
 				<a onClick={this.hideSignInMenu} href="/auth/google" className="menuItem signInGoogleWrap">
@@ -418,7 +421,7 @@ class Header extends Component {
 		);
 	};
 	threeDotMenu = () => {
-		let visibility = this.state.threeDotMenuVisible ? 'flex' : 'none';
+		let visibility = this.props.app.threeDotMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu
 				hideMenu={this.hideAllMenus}
@@ -446,7 +449,7 @@ class Header extends Component {
 		);
 	};
 	accountMenu = () => {
-		let visibility = this.state.accMenuVisible ? 'flex' : 'none';
+		let visibility = this.props.app.accMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu
 				hideHeader={true}
@@ -600,7 +603,9 @@ Header.propTypes = {
 	signIn: PropTypes.func,
 	devices: PropTypes.object,
 	getDevices: PropTypes.func,
-	app: PropTypes.object
+	app: PropTypes.object,
+	toggleMenu: PropTypes.func,
+	closeMenus: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -609,4 +614,4 @@ function stateToProps(state) {
 		app: state.app
 	};
 }
-export default connect(stateToProps, { startSession, joinSession, signIn, getDevices })(withRouter(Header));
+export default connect(stateToProps, { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus })(withRouter(Header));

@@ -11,7 +11,8 @@ import {
 	UNPICK_VIDEO,
 	SEND_TWEET,
 	UPDATE_DASHBOARD,
-	CLOSE_ALLMENUS
+	CLOSE_ALLMENUS,
+	TOGGLE_MENU
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -173,5 +174,11 @@ export const closeMenus =(action)=>{
 	return {
 		type: CLOSE_ALLMENUS,
 		payload:action
+	}
+}
+export const toggleMenu = (menu) =>{
+	return {
+		type: TOGGLE_MENU,
+		payload: menu
 	}
 }

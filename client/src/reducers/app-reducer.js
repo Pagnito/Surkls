@@ -1,7 +1,14 @@
-import { CLOSE_ALLMENUS } from "actions/types";
+import { CLOSE_ALLMENUS, TOGGLE_MENU } from "actions/types";
 //import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
-	menus: ''
+	menu: '',
+	menuState: 'closed',
+	accMenuVisible: false,
+	notifMenuVisible: false,
+	sessionMenuVisible: false,
+	signInMenuVisible: false,
+	pulloutMenuVisible: false,
+	messagesMenuVisible: false,
 };
 
 export default function(state = initialState, action) {
@@ -9,9 +16,13 @@ export default function(state = initialState, action) {
 		case CLOSE_ALLMENUS:
 			return {
 				...state,
-				menus: action.payload
+				...action.payload
 			};
-		
+		case TOGGLE_MENU:
+			return {
+				...state,
+				...action.payload
+			};
 		default:
 			return state;
 	}

@@ -17,7 +17,9 @@ class Dashboard extends Component {
     this.topHeadlines = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=97956770cdd74961adbd7079b5dd6257'
   }
   componentDidMount(){
-    this.fetchNewsSources()
+    if(Object.keys(this.props.dashboard.sourcesObj).length===0){
+      this.fetchNewsSources()
+    }
     this.fetchNews()
     setInterval(()=>{
       this.fetchNews()
@@ -30,17 +32,16 @@ class Dashboard extends Component {
    }
   }
   onInputChange = (e) =>{
-    this.setState({[e.target.name]: e.target.value})
+    this.props.updateDashboard({[e.target.name]: e.target.value})
   }
   closeMenus = () =>{
-		this.props.closeMenus('close-menus');
+    if(this.props.app.menuState === 'open'){
+      this.props.closeMenus({menu:'close-menus'});
+    }	
 	}
 
   componentDidUpdate(prevProps){
     let prop = this.props.dashboard;
-    if(this.props.app.menus ==='close-menus'){
-			this.props.closeMenus('rdy-to-open');
-		}
     if(prop.activeSources!==prevProps.dashboard.activeSources){
         this.fetchNews()
       }
@@ -75,12 +76,12 @@ class Dashboard extends Component {
      return feed;
    }
    fetchNews = async () => { 
-     console.log('FETCHING')
       let responsesObj = {};
-      let length1 = this.state.search1.length;
-      let length2 = this.state.search2.length;
-      let length3 = this.state.search3.length;
-      if(length1===0 && length2===0 && length3===0){
+      let search1 = this.props.dashboard.search1;
+      let search2 = this.props.dashboard.search2;
+      let search3 = this.props.dashboard.search3;
+      if(search1.length===0 && search2.length===0 && search3.length===0){
+          console.log('wtf')
         let tops = await fetch(this.topHeadlines);
         let topsJson = await tops.json();
         if(this.props.dashboard.activeSources.length>0){
@@ -90,39 +91,42 @@ class Dashboard extends Component {
         }   
         responsesObj["Top Headlines"] = topsJson.articles;      
       } else {
-        if(length1>0){
-          let promise1 = await fetch(this.newsApi+this.state.search1);
+        if(search1.length>0){
+          let promise1 = await fetch(this.newsApi+search1);
           let json1 = await promise1.json();
           json1 = json1.articles.filter(article=>{
             return this.props.dashboard.activeSources.indexOf(article.source.id) >-1;
           }) 
-          responsesObj[this.state.search1] = json1;
+          responsesObj[search1] = json1;
         }
         ////////////
-        if(length2>0){
-          let promise2 = await fetch(this.newsApi+this.state.search2);
+        if(search2.length>0){
+          let promise2 = await fetch(this.newsApi+search2);
           let json2 = await promise2.json();
   
         if(json2.articles.length>0 ){
           json2 = json2.articles.filter(article=>{
             return this.props.dashboard.activeSources.indexOf(article.source.id) >-1;
             });
-            responsesObj[this.state.search2] = json2;  
+            responsesObj[search2] = json2;  
           }
         }
         ///////////
-        if(length3>0){
-          let promise3 = await fetch(this.newsApi+this.state.search3)
+        if(search3.length>0){
+          let promise3 = await fetch(this.newsApi+search3)
           let json3 = await promise3.json();
           if(json3.articles.length>0 ){
             json3 = json3.articles.filter(article=>{
               return this.props.dashboard.activeSources.indexOf(article.source.id) >-1;
             }) 
-            responsesObj[this.state.search3] = json3;  
+            responsesObj[search3] = json3;  
           } 
         }  
       }
-      this.props.updateDashboard({activeFeed: responsesObj});
+      if(Object.keys(responsesObj).length!==0){
+        console.log(responsesObj)
+        this.props.updateDashboard({activeFeed: responsesObj});
+      }    
     }
    
    renderNewsSection = (newsSection) =>{
@@ -179,28 +183,35 @@ class Dashboard extends Component {
         sourcesObj: sources})    
    }
   render() {
-    return (
-      <div onClick={this.closeMenus} id="dashboard">
-        <section id="newsSources">
-          <div id="newsSourcesHeader">Subscribe To</div>
-          <div id="newsSourcesFeed">{this.renderNewsSources()}</div>      
-         </section>
-        <section id="dashboardCenter">
-          <div id="feedInputs">
-            <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.state.search1} id="dashSearch1" className="dashSearch" name="search1" placeholder="Subscribe to a topic"/>
-            <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.state.search2} id="dashSearch2" className="dashSearch" name="search2" placeholder="Subscribe to a topic"/>
-            <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.state.search3} id="dashSearch3" className="dashSearch" name="search3" placeholder="Subscribe to a topic"/>
+    if(this.props.auth.isAuthenticated){
+      return (
+        <div onClick={this.closeMenus} id="dashboard">
+          <section id="newsSources">
+            <div id="newsSourcesHeader">Subscribe To</div>
+            <div id="newsSourcesFeed">{this.renderNewsSources()}</div>      
+           </section>
+          <section id="dashboardCenter">
+            <div id="feedInputs">
+              <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.dashboard.search1} id="dashSearch1" className="dashSearch" name="search1" placeholder="Subscribe to a topic"/>
+              <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.dashboard.search2} id="dashSearch2" className="dashSearch" name="search2" placeholder="Subscribe to a topic"/>
+              <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.dashboard.search3} id="dashSearch3" className="dashSearch" name="search3" placeholder="Subscribe to a topic"/>
+            </div>
+          <div id="dashboardFeed">
+          {this.renderNews()}
+         
           </div>
-        <div id="dashboardFeed">
-        {this.renderNews()}
-       
+          </section>
+         <section id="dashboardSurkls">
+            <div id="dashboardSurklsHeader">Surkls</div>
+         </section>
         </div>
-        </section>
-       <section id="dashboardSurkls">
-          <div id="dashboardSurklsHeader">Surkls</div>
-       </section>
-      </div>
-    )
+      )
+    } else {
+      return (
+        <div id="notLoggedIn">You are not logged in</div>
+      )
+    }
+   
   }
 }
 Dashboard.propTypes = {
@@ -212,7 +223,7 @@ Dashboard.propTypes = {
 }
 function stateToProps(state){
   return {
-    auth: state.auth.user,
+    auth: state.auth,
     dashboard: state.dashboard,
     app: state.app
   }

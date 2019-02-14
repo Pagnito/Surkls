@@ -1,5 +1,5 @@
-const Twit = require('twit')
-const keys = require('../config/keys')
+const Twit = require('twit');
+const keys = require('../config/keys');
 module.exports = (app)=> {
   var T = new Twit({
     consumer_key: keys.twitterConsumerKey ,

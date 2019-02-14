@@ -122,7 +122,9 @@ class Session extends Component {
 		}	
 	}
 	closeMenus = () =>{
-		this.props.closeMenus('close-menus');
+    if(this.props.app.menuState === 'open'){
+      this.props.closeMenus({menu:'close-menus'});
+    }	
 	}
 
 	//////////////////////////////////////////////webrtc funcs////////////////////////////////////////////
@@ -375,9 +377,6 @@ class Session extends Component {
 			.catch((err) => console.log(err));
 	};
 	componentDidUpdate(prevProps, prevState) {
-		if(this.props.app.menus ==='close-menus'){
-			this.props.closeMenus('rdy-to-open');
-		}
 		if (prevState.errors !== this.state.errors) {
 			setTimeout(() => {
 				this.setState({ errors: {} });
