@@ -11,5 +11,5 @@ export const UNPICK_VIDEO = 'UNPICK_VIDEO';
 export const SEND_TWEET = 'SEND_TWEET';
 export const NEW_ADMIN = 'NEW_ADMIN';
 export const UPDATE_DASHBOARD = 'UPDATE_DASHBOARD';
-
+export const CLOSE_ALLMENUS = 'CLOSE_ALLMENUS';
 

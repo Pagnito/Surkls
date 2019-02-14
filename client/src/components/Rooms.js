@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getSessions, joinSession } from 'actions/actions';
+import { getSessions, joinSession, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
 import 'styles/rooms.scss';
 import { connect } from 'react-redux';
@@ -7,6 +7,14 @@ import { connect } from 'react-redux';
 class Rooms extends Component {
 	componentDidMount() {
 		this.props.getSessions();
+	}
+	closeMenus = () =>{
+		this.props.closeMenus('close-menus');
+	}
+	componentDidUpdate =()=>{
+		if(this.props.app.menus ==='close-menus'){
+			this.props.closeMenus('rdy-to-open');
+		}
 	}
 	joinSession = (sessionKey, room) => {
 		let session = {
@@ -42,18 +50,21 @@ class Rooms extends Component {
 		});
 	};
 	render() {
-		return <div id="rooms">{this.renderRooms()}</div>;
+		return <div onClick={()=>this.closeMenus('close-menus')} id="rooms">{this.renderRooms()}</div>;
 	}
 }
 Rooms.propTypes = {
 	sessions: PropTypes.object,
 	getSessions: PropTypes.func,
 	joinSession: PropTypes.func,
-	history: PropTypes.object
+	history: PropTypes.object,
+	closeMenus: PropTypes.func,
+	app:PropTypes.object
 };
 function stateToProps(state) {
 	return {
-		sessions: state.sessions
+		sessions: state.sessions,
+		app: state.app
 	};
 }
-export default connect(stateToProps, { getSessions, joinSession })(Rooms);
+export default connect(stateToProps, { getSessions, joinSession, closeMenus })(Rooms);

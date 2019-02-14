@@ -10,7 +10,8 @@ import {
 	NEW_ADMIN,
 	UNPICK_VIDEO,
 	SEND_TWEET,
-	UPDATE_DASHBOARD
+	UPDATE_DASHBOARD,
+	CLOSE_ALLMENUS
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -130,41 +131,47 @@ export const joinSession = (sessionInfo, cb) => (dispatch) => {
 	});
 	cb();
 };
-export const updateSession = (payload) => (dispatch) => {
-	dispatch({
+export const updateSession = (payload) =>  {
+	return {
 		type: UPDATE_SESSION,
 		payload: payload
-	});
+	};
 };
-export const newAdmin = () => (dispatch)=>{
-	dispatch({
+export const newAdmin = () => {
+	return {
 		type: NEW_ADMIN,
 		payload: {
 			isAdmin: true
 		}
-	})
+	}
 }
-export const sendTweetAction = (tweetObj) => (dispatch)=>{
-	dispatch({
+export const sendTweetAction = (tweetObj) => {
+	return {
 		type:SEND_TWEET,
 		payload:tweetObj
-	})
+	}
 }
-export const sendThisVideoAction = (playState) => (dispatch)=>{
-	dispatch({
+export const sendThisVideoAction = (playState) => {
+	return {
 		type:SEND_VIDEO,
 		payload:playState
-	})
+	}
 }
-export const unpickThisVideoAction = (playState) => (dispatch)=>{
-	dispatch({
+export const unpickThisVideoAction = (playState) => {
+	return {
 		type:UNPICK_VIDEO,
 		payload:playState
-	})
+	}
 }
-export const updateDashboard = (payload) => (dispatch) => {
-	dispatch({
+export const updateDashboard = (payload) =>  {
+	return{
 		type: UPDATE_DASHBOARD,
 		payload: payload
-	});
+	};
 };
+export const closeMenus =(action)=>{
+	return {
+		type: CLOSE_ALLMENUS,
+		payload:action
+	}
+}

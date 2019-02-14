@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction } from 'actions/actions';
+import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
 import Dropdown from 'components/smalls/drop-menu-mutable';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
@@ -121,6 +121,10 @@ class Session extends Component {
 			})		
 		}	
 	}
+	closeMenus = () =>{
+		this.props.closeMenus('close-menus');
+	}
+
 	//////////////////////////////////////////////webrtc funcs////////////////////////////////////////////
 	handleOfferError = (err) => {
 		console.log(err);
@@ -371,6 +375,9 @@ class Session extends Component {
 			.catch((err) => console.log(err));
 	};
 	componentDidUpdate(prevProps, prevState) {
+		if(this.props.app.menus ==='close-menus'){
+			this.props.closeMenus('rdy-to-open');
+		}
 		if (prevState.errors !== this.state.errors) {
 			setTimeout(() => {
 				this.setState({ errors: {} });
@@ -742,7 +749,7 @@ class Session extends Component {
 			);
 		} else {
 			return (
-				<div id="session">
+				<div onClick={this.closeMenus} id="session">
 					<ProfileModal hideProfileModal={this.hideProfileModal} profileModal={this.state.profileModal} />
 					<div style={{ display: this.state.sessionExists ? 'none' : 'flex' }} id="sessionExpiredContainer">
 						<div id="sessionExpiredModal">This session has expired :/</div>
@@ -846,12 +853,15 @@ Session.propTypes = {
 	updateSession: PropTypes.func,
 	unpickThisVideoAction: PropTypes.func,
 	sendTweetAction: PropTypes.func,
+	app: PropTypes.object,
+	closeMenus: PropTypes.func
 };
 function stateToProps(state) {
 	return {
 		auth: state.auth.user,
 		session: state.session,
-		devices: state.devices
+		devices: state.devices,
+		app: state.app
 	};
 }
 export default connect(stateToProps, {
@@ -860,5 +870,6 @@ export default connect(stateToProps, {
 	sendThisVideoAction,
 	newAdmin,
 	unpickThisVideoAction,
-	updateSession
+	updateSession,
+	closeMenus
 })(Session);

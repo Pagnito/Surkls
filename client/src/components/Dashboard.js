@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
-import {updateDashboard} from 'actions/actions';
+import {updateDashboard, closeMenus} from 'actions/actions';
 import PropTypes from 'prop-types';
 import "styles/dashboard.scss";
 class Dashboard extends Component {
@@ -32,9 +32,15 @@ class Dashboard extends Component {
   onInputChange = (e) =>{
     this.setState({[e.target.name]: e.target.value})
   }
+  closeMenus = () =>{
+		this.props.closeMenus('close-menus');
+	}
+
   componentDidUpdate(prevProps){
     let prop = this.props.dashboard;
-  
+    if(this.props.app.menus ==='close-menus'){
+			this.props.closeMenus('rdy-to-open');
+		}
     if(prop.activeSources!==prevProps.dashboard.activeSources){
         this.fetchNews()
       }
@@ -174,7 +180,7 @@ class Dashboard extends Component {
    }
   render() {
     return (
-      <div id="dashboard">
+      <div onClick={this.closeMenus} id="dashboard">
         <section id="newsSources">
           <div id="newsSourcesHeader">Subscribe To</div>
           <div id="newsSourcesFeed">{this.renderNewsSources()}</div>      
@@ -200,12 +206,15 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   auth: PropTypes.object,
   dashboard: PropTypes. object,
-  updateDashboard: PropTypes.func
+  updateDashboard: PropTypes.func,
+  closeMenus: PropTypes.func,
+  app: PropTypes.object
 }
 function stateToProps(state){
   return {
     auth: state.auth.user,
-    dashboard: state.dashboard
+    dashboard: state.dashboard,
+    app: state.app
   }
 }
-export default connect(stateToProps, {updateDashboard})(Dashboard);
+export default connect(stateToProps, {closeMenus, updateDashboard})(Dashboard);

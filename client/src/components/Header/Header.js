@@ -25,10 +25,25 @@ class Header extends Component {
 			password: '',
 			message: ''
 		};
+		this.menusClosed = true;
 	}
 
 	componentDidMount() {
 		this.props.getDevices();
+	}
+	componentDidUpdate(){
+		console.log(this.props.app)
+		if(this.props.app.menus==='close-menus' && this.menusClosed === false){
+			this.menusClosed=true;
+			this.setState({
+				notifMenuVisible: false,
+				accMenuVisible: false,
+				sessionMenuVisible: false,
+				pulloutMenuVisible: false,
+				signInMenuVisible: false,
+				messagesMenuVisible: false
+			});
+		}
 	}
 	onInputChange = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
@@ -37,6 +52,7 @@ class Header extends Component {
 		this.setState({ [e.target.name]: this.state.disableAud == 'off' ? 'on' : 'off' });
 	};
 	renderAccMenu = () => {
+		this.menusClosed=false;
 		this.setState({
 			accMenuVisible: this.state.accMenuVisible ? false : true,
 			notifMenuVisible: false,
@@ -47,6 +63,7 @@ class Header extends Component {
 		});
 	};
 	renderNotifMenu = () => {
+		this.menusClosed=false;
 		this.setState({
 			notifMenuVisible: this.state.notifMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -57,6 +74,7 @@ class Header extends Component {
 		});
 	};
 	renderCreateSessionMenu = () => {
+		this.menusClosed=false;
 		if (window.location.pathname.indexOf('/session') < 0) {
 			this.setState(
 				{
@@ -76,6 +94,7 @@ class Header extends Component {
 		}
 	};
 	renderMessagesMenu = () => {
+		this.menusClosed=false;
 		this.setState({
 			messagesMenuVisible: this.state.messagesMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -86,12 +105,14 @@ class Header extends Component {
 		});
 	};
 	renderSignInMenu = () => {
+		this.menusClosed=false;
 		this.setState({
 			signInMenuVisible: this.state.signInMenuVisible ? false : true,
 			threeDotMenuVisible: false
 		});
 	};
 	renderThreeDotMenu = () => {
+		this.menusClosed=false;
 		this.setState({
 			threeDotMenuVisible: this.state.threeDotMenuVisible ? false : true,
 			signInMenuVisible: false
@@ -578,12 +599,14 @@ Header.propTypes = {
 	joinSession: PropTypes.func,
 	signIn: PropTypes.func,
 	devices: PropTypes.object,
-	getDevices: PropTypes.func
+	getDevices: PropTypes.func,
+	app: PropTypes.object
 };
 function stateToProps(state) {
 	return {
 		auth: state.auth,
-		devices: state.devices
+		devices: state.devices,
+		app: state.app
 	};
 }
 export default connect(stateToProps, { startSession, joinSession, signIn, getDevices })(withRouter(Header));

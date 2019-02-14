@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { GET_USER } from 'actions/types';
+import { GET_USER, CLOSE_ALLMENUS } from 'actions/types';
 import { Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setUserMedia } from '../../tools/setUserMedia';
@@ -12,6 +12,7 @@ import Rooms from 'components/Rooms';
 import Header from 'components/Header/Header';
 import Profile from 'components/Profile';
 
+
 /*const Loading = () => Loader;
 
 const Entries = Loadable({
@@ -20,9 +21,8 @@ const Entries = Loadable({
 });*/
 
 class App extends Component {
-
-	
 	componentDidMount() {
+	
 		setUserMedia();
 		fetch('/account').then((res) => res.json()).then((user) =>{
 			Store.dispatch({
