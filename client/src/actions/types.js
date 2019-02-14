@@ -10,5 +10,6 @@ export const SEND_VIDEO = 'SEND_VIDEO';
 export const UNPICK_VIDEO = 'UNPICK_VIDEO';
 export const SEND_TWEET = 'SEND_TWEET';
 export const NEW_ADMIN = 'NEW_ADMIN';
+export const UPDATE_DASHBOARD = 'UPDATE_DASHBOARD';
 
 

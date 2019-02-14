@@ -10,7 +10,7 @@ import Dashboard from 'components/Dashboard';
 import Session from 'components/Session';
 import Rooms from 'components/Rooms';
 import Header from 'components/Header/Header';
-
+import Profile from 'components/Profile';
 
 /*const Loading = () => Loader;
 
@@ -44,6 +44,7 @@ class App extends Component {
 			return (
 				<Provider store={Store}>	
 					<Header />
+					<Route exact path="/profile" component={Profile} />
 					<Route exact path="/" component={Home}  />
 					<Route exact path="/dashboard" component={Dashboard}  />
 					<Route exact path="/session/:room" component={Session}  />

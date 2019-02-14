@@ -1,0 +1,18 @@
+#profile {
+  width:100%;
+  height: calc(100vh - 55px);
+  display:flex;
+  #profileInfo {
+    width:80%;
+    height:100%;
+    /* #profileBanner {
+      background-image: url('/assets/banner.png');
+      background-size: cover;
+      background-position: center;
+      height: 250px;
+      width:100%;  
+      -webkit-clip-path: polygon(0 0, 100% 0, 100% 86%, 0% 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 86%, 0% 100%);
+    } */
+  }
+}

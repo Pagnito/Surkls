@@ -458,9 +458,9 @@ class Header extends Component {
 				<div className="menuItem">
 					<div className="rightAccIcon" id="surklsIcon" />My Surkls
 				</div>
-				<div className="menuItem">
-					<div className="rightAccIcon" id="profileIcon" />Profile
-				</div>
+				<Link to="/dashboard" className="menuItem">
+					<div className="rightAccIcon" id="profileIcon" />Dashboard
+				</Link>
 				<div className="menuItem">
 					<div className="rightAccIcon" id="settingsIcon" />Settings
 				</div>

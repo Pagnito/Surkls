@@ -9,7 +9,8 @@ import {
 	SEND_VIDEO,
 	NEW_ADMIN,
 	UNPICK_VIDEO,
-	SEND_TWEET
+	SEND_TWEET,
+	UPDATE_DASHBOARD
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -68,7 +69,7 @@ export const signUpOrLogin = (user, cb) => (dispatch) => {
 		method: 'POST',
 		mode: 'cors',
 		headers: {
-			Accept: 'application/json',
+			'Accept': 'application/json',
 			'Content-Type': 'application/json;charset=UTF-8'
 		},
 		body: user
@@ -135,4 +136,9 @@ export const unpickThisVideoAction = (playState) => (dispatch)=>{
 		payload:playState
 	})
 }
-
+export const updateDashboard = (payload) => (dispatch) => {
+	dispatch({
+		type: UPDATE_DASHBOARD,
+		payload: payload
+	});
+};

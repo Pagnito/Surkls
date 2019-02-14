@@ -8,6 +8,7 @@ import SessionContentYoutube from 'components/smalls/session-content-youtube';
 import SessionContentDailymotion from 'components/smalls/session-content-dailymotion';
 import SessionContentTwitter from 'components/smalls/session-content-twitter';
 import SessionContentTwitch from 'components/smalls/session-content-twitch';
+import ProfileModal from 'components/smalls/profile-modal';
 import 'styles/session.scss';
 import 'styles/loader.scss';
 class Session extends Component {
@@ -18,6 +19,15 @@ class Session extends Component {
 				height: 400,
 				width: 400,
 				
+			},
+			profileModal: {
+				vis: false,
+				pos: false,
+				user: {
+					avatar: '',
+					userName: '',
+					description: '',
+				}
 			},
 			shareLink: '',
 			connectedToSock: false,
@@ -374,7 +384,11 @@ class Session extends Component {
 		}
 		if (this.props.auth !== prevProps.auth) {
 			if (!this.props.session.notShareLink && !this.alreadyStarted) {
-				this.socket.on('thisSession', (sessionObj) => {
+				this.socket.on('session', (sessionObj) => {
+					if(sessionObj.clients.length===1){			
+						sessionObj.isAdmin=true;
+						console.log(sessionObj)
+					}
 					this.props.updateSession(sessionObj);
 				});
 				this.startOrJoin();
@@ -403,16 +417,19 @@ class Session extends Component {
 		};
 		if (this.props.session.notShareLink || this.props.session.creatingSession) {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
-				this.socket.on('thisSession', (sessionObj) => {
+				this.socket.on('session', (sessionObj) => {
+					console.log(sessionObj)
 					if(sessionObj.clients.length===1){
 						sessionObj.isAdmin=true
 					}
 					this.props.updateSession(sessionObj);
 				});
 				this.startOrJoin();
+				console.log('wtf')
 			} else {
 				if (!this.props.session.notShareLink && !this.alreadyStarted) {
-					this.socket.on('thisSession', (sessionObj) => {
+					this.socket.on('session', (sessionObj) => {
+						console.log(sessionObj)
 						if(sessionObj.clients.length===1){
 							sessionObj.isAdmin=true
 						}
@@ -533,7 +550,7 @@ class Session extends Component {
 		return this.state.msgs.map((msg, ind) => {
 			return (
 				<div key={ind} className="chatMsg">
-					<img className="chatMsgAvatar" src={msg.avatar} />
+					<img data-user={JSON.stringify(msg)} onMouseEnter={this.showProfileModal} className="chatMsgAvatar" src={msg.avatar} />
 					<div className="chatHeaderNmsg">
 						<div className="chatMsgUserInfo">
 							<div className="chatMsgName">{msg.userName}</div>
@@ -545,7 +562,26 @@ class Session extends Component {
 			);
 		});
 	};
-
+	hideProfileModal =()=>{
+		this.setState({
+			profileModal:{
+				pos:[0 ,0],
+				vis: false,
+				user: {}
+			}
+		})
+	}
+	showProfileModal = (e) => {
+		let user = JSON.parse(e.target.dataset.user);
+		console.log(user)
+		this.setState({
+			profileModal:{
+				pos:[e.clientX, e.clientY],
+				vis: true,
+				user: user
+			}
+		})
+	}
 	createVideo = () => {
 		return new Promise((resolve) => {
 			let constraints = {
@@ -698,6 +734,7 @@ class Session extends Component {
 		} else {
 			return (
 				<div id="session">
+					<ProfileModal hideProfileModal={this.hideProfileModal} profileModal={this.state.profileModal} />
 					<div style={{ display: this.state.sessionExists ? 'none' : 'flex' }} id="sessionExpiredContainer">
 						<div id="sessionExpiredModal">This session has expired :/</div>
 					</div>

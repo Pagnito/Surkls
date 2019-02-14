@@ -35,17 +35,18 @@ module.exports = (io, app) => {
 									socket.join(session.sessionKey);
 									client = Object.assign({ socketId: socket.id }, session.user);
 									if(sessionObj.clients.length===0){
+										console.log('UMMM')
 										client.isAdmin = true;
 										sessionObj.admin = socket.id;
 										sessionObj.isAdmin = true;
 									}
 									sessionObj.clients.push(client);
-									console.log(sessionObj.clients)
+
 									if (sessionObj.clients.length === sessionObj.maxMembers) {
 										sessionObj.maxedOut = true;
 									}
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
-										io.in(session.sessionKey).emit('thisSession', {clients:sessionObj.clients});
+										io.in(session.sessionKey).emit('session', {clients:sessionObj.clients});
 										socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		
 									});
 								}
@@ -83,7 +84,7 @@ module.exports = (io, app) => {
 									redClient.hset('chatMsgs', session.sessionKey, JSON.stringify([]));
 									redClient.hset('videoChatMsgs', session.sessionKey, JSON.stringify([]));
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
-										io.in(session.sessionKey).emit('thisSession', sessionObj);
+										io.in(session.sessionKey).emit('session', sessionObj);
 									});
 								}
 							})					

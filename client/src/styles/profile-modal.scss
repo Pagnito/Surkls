@@ -1,0 +1,54 @@
+.profileModal {
+  z-index: 200;
+  height:260px;
+  width:220px;
+  border-radius: 5px;
+  position: absolute;
+  background: #DDE4E4;
+  font-family: 'Comfortaa';
+  .profileBanner {
+    width:100%;
+    height:110px;
+    border-radius: 5px;
+    background-image: url('/assets/surkls_landing.png');
+    background-size: cover;
+    background-repeat: no-repeat; 
+    position: relative;
+    .profileImg {
+      position: absolute;
+      left:20px;
+      bottom:-20px;
+      width:50px;
+      height:50px;
+      border-radius:50px;
+      border: 3px solid white; 
+      
+    } 
+  }
+  .profileModalUsername {
+    margin:10px;
+    margin-top: 25px;
+  }
+  .profileModalDesc {
+    min-height:65px;
+  }
+  .profileModalActions {
+    color: rgba(0,0,0,.7);
+    font-size: 11px;
+    width:100%;
+    display:flex;
+    justify-content: space-around;
+    box-sizing: border-box;
+    .modalAction:hover {
+      background: #FECC44;
+      color: #282828;
+    }
+    .modalAction {
+      cursor: pointer;
+      border-radius:5px;
+      padding:5px;
+      box-sizing: border-box;
+      border: 1px solid rgba(0,0,0,.7);
+    }
+  }
+}
