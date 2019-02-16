@@ -226,7 +226,7 @@
 				background-color: #282828;
 				display: flex;
 				flex-direction: column;
-				position: relative;
+				//position: relative;
 				#noAuthLayer {
 					position: absolute;
 					bottom:0px;
@@ -273,7 +273,7 @@
 						font-family: 'Comfortaa';
 						display: flex;
 						box-sizing: border-box;
-				
+		
 						.chatMsgAvatar {
 							width: 30px;
 							height: 30px;
@@ -348,14 +348,22 @@
 			border-bottom: 1px solid #1c1c1c;
 			flex-wrap: wrap;
 			align-content: flex-start;
-			.clientSquareAv {
+			display: flex;
+			.clientImgRightWrap {
+				position: relative;
 				width:calc(33.333% - 6px);
 				height:calc(33.333% - 6px);
 				margin-top:5px;
 				margin-left: 5px;
-				border-radius:10px;
-				box-sizing: border-box;
+				.clientSquareAv {
+					width:100%;
+					height:100%;			
+					border-radius:10px;
+					box-sizing: border-box;
+				}
+
 			}
+		
 		}
 	}
 }

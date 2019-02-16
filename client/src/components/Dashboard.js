@@ -202,7 +202,7 @@ class Dashboard extends Component {
           </div>
           </section>
          <section id="dashboardSurkls">
-            <div id="dashboardSurklsHeader">Surkls</div>
+            <div id="dashboardSurklsHeader">My Surkl</div>
          </section>
         </div>
       )

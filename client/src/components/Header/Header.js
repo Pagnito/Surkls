@@ -5,7 +5,8 @@ import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import io from 'socket.io-client';
-import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus } from 'actions/actions';
+import {socketUrl} from '../../../tools/socketUrl';
+import { startSession, joinSession, signIn, getDevices, toggleMenu, sendDM, closeMenus } from 'actions/actions';
 import { subCategories } from 'components/smalls/sub-categories';
 import 'styles/header.scss';
 class Header extends Component {
@@ -19,10 +20,13 @@ class Header extends Component {
 			roomName: '',
 			email: '',
 			password: '',
-			message: ''
+			dm: ''
 		};
 		this.menusClosed = true;
-	
+		this.socket = io(socketUrl.url);	
+		this.socket.on('dm',(msg)=>{
+			console.log(msg)
+		})
 	}
 
 	componentDidMount() {
@@ -95,12 +99,7 @@ class Header extends Component {
 			sessionMenuVisible: false,
 			menuState: 'open'
 		});
-		fetch('/api/connect').then(()=>{
-			this.socket = io('http://localhost:4000');
-			this.socket.on('connect', ()=>{
-				console.log('sup homes')
-			})
-		})
+	
 	};
 	renderSignInMenu = () => {
 		this.menusClosed=false;
@@ -160,7 +159,13 @@ class Header extends Component {
 			}, 300);
 		}
 	};
-
+	sendDM = () => {
+		this.socket.emit('dm', this.state.dm, this.props.privMsgs.sendToId);
+	}
+	openDMs = (sendToId) => {
+		this.props.app.updateDMs({sendToId:sendToId});
+	}
+	/////////////////////////////////^^^^unctions^^^^/////////////////////////////////
 	pulloutMenu = () => {
 		return (
 			<Pullout pullIn={this.renderPulloutMenu}>
@@ -208,17 +213,20 @@ class Header extends Component {
 		let visibility = this.props.app.messagesMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu menuTitle="Messages" visibility={visibility} menuTypeArrow="messagesArrow">
+				<div id="dmMsgsFeed"></div>
 				<textarea
+					id="dmMsgInput"
 					onChange={this.onInputChange}
 					placeholder="Write your message"
 					className="menuTextInput"
-					name="message"
-					value={this.state.message}
+					name="dm"
+					value={this.state.dm}
 				/>
 
-				<button onClick={this.createSession} className="menuItem" id="sendMsgBtn">
-					Create
+				<button onClick={this.sendDM} className="menuItem" id="sendMsgBtn">
+					Send
 				</button>
+
 			</DropMenu>
 		);
 	};
@@ -515,17 +523,12 @@ class Header extends Component {
 					: 'default',
 				mic: document.getElementById('micSelect').value ? document.getElementById('micSelect').value : 'default'
 			};
-			this.setState(
-				{
-					sessionMenuVisible: false,
-					roomName: ''
-				},
-				() => {
-					this.props.startSession(sessionObj, () => {
-						this.props.history.push('/session/room=' + sessionKey.toString());
-					});
-				}
-			);
+			this.props.toggleMenu({
+					sessionMenuVisible: false
+				});			
+			this.props.startSession(sessionObj, () => {
+				this.props.history.push('/session/room=' + sessionKey.toString());
+				});
 		} else {
 			//@TODO show error
 		}
@@ -605,13 +608,19 @@ Header.propTypes = {
 	getDevices: PropTypes.func,
 	app: PropTypes.object,
 	toggleMenu: PropTypes.func,
-	closeMenus: PropTypes.func
+	closeMenus: PropTypes.func,
+	privMsgs: PropTypes.object
 };
 function stateToProps(state) {
 	return {
 		auth: state.auth,
 		devices: state.devices,
-		app: state.app
+		app: state.app,
+		privMsgs: state.privMsgs
 	};
 }
-export default connect(stateToProps, { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus })(withRouter(Header));
+export default connect(stateToProps, 
+	{ startSession, joinSession,
+		 signIn, getDevices, 
+		 toggleMenu, closeMenus,
+			sendDM })(withRouter(Header));

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus } from 'actions/actions';
+import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus, updateDMs } from 'actions/actions';
 import PropTypes from 'prop-types';
+import {socketUrl} from '../../tools/socketUrl';
 import Dropdown from 'components/smalls/drop-menu-mutable';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
 import SessionContentDailymotion from 'components/smalls/session-content-dailymotion';
@@ -30,7 +31,6 @@ class Session extends Component {
 				}
 			},
 			shareLink: '',
-			connectedToSock: false,
 			msgs: [],
 			msg: '',
 			errors: {},
@@ -63,10 +63,8 @@ class Session extends Component {
 			added: false,
 			videoEl: null
 		};
-		this.socket = io('http://localhost:4000');
-		this.socket.on('connect', () => {
-			this.setState({ connectedToSock: true });
-		});
+		this.socket = io(socketUrl.url);
+
 		this.socket.on('recieveMsgs', (data) => {
 			this.setState({ msgs: data });
 		});
@@ -528,12 +526,21 @@ class Session extends Component {
 				let url = client.avatarUrl ? client.avatarUrl : '/assets/whitehat.jpg'
 				if(client.isAdmin){
 					return(
-						<img key={ind} style={{
-							border:'2px solid #FECC44',
-							 boxSizing:'border-box'}} src={url} className="clientSquareAv" />
+						<div className="clientImgRightWrap" key={ind}>								
+								<img  onClick={this.showProfileModal} style={{
+									border:'2px solid #FECC44',
+							 		boxSizing:'border-box'}} src={url} className="clientSquareAv" />
+								{	<ProfileModal user={client} />}
+						</div>
+					
 					)
 				} else {
-					return <img key={ind} src={client.avatarUrl} className="clientSquareAv" />
+					return (
+					<div className="clientImgRightWrap" key={ind}>
+					 <img key={ind}  onClick={this.showProfileModal} src={url} className="clientSquareAv" />
+					 <ProfileModal user={client} />
+					</div>
+					)
 				}		
 			});
 		}
@@ -550,7 +557,8 @@ class Session extends Component {
 				avatar: this.props.auth.avatarUrl,
 				userName: this.props.auth.userName,
 				date: fullDate,
-				msgText: this.state.msg
+				msgText: this.state.msg,
+				id:this.props.auth._id
 			};
 			e.preventDefault();
 			this.socket.emit('sendMsg', msg);
@@ -563,9 +571,11 @@ class Session extends Component {
 	renderChatText = () => {
 		return this.state.msgs.map((msg, ind) => {
 			let url = msg.avatar ? msg.avatar : '/assets/whitehat.jpg'
-			return (
+			return (	
 				<div key={ind} className="chatMsg">
-					<img data-user={JSON.stringify(msg)} onMouseEnter={this.showProfileModal} className="chatMsgAvatar" src={url} />
+					
+					<img data-user={JSON.stringify(msg)} className="chatMsgAvatar" src={url} />
+
 					<div className="chatHeaderNmsg">
 						<div className="chatMsgUserInfo">
 							<div className="chatMsgName">{msg.userName}</div>
@@ -577,25 +587,31 @@ class Session extends Component {
 			);
 		});
 	};
-	hideProfileModal =()=>{
-		this.setState({
-			profileModal:{
-				pos:[0 ,0],
-				vis: false,
-				user: {}
-			}
-		})
-	}
+
 	showProfileModal = (e) => {
-		let user = JSON.parse(e.target.dataset.user);
-		console.log(user)
-		this.setState({
-			profileModal:{
-				pos:[e.clientX, e.clientY],
-				vis: true,
-				user: user
-			}
-		})
+		console.log(e.target)
+		let modal = e.target.nextSibling
+		if(modal.style.display==='block'){
+			modal.style.display = 'none'
+		} else {
+			modal.style.display = 'block'
+		}
+
+	}
+	renderProfileModal = (user) =>{
+		return (
+			<div  className="profileModal">
+      <div className="profileBanner">
+        <div style={{backgroundImage:`url(${user.avatar ? user.avatar : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
+      </div>       
+          <div className="profileModalUsername">{user.userName}</div>
+          <div className="profileModalDesc">{user.description}</div>
+          <div className="profileModalActions">
+            <div className="modalAction">Add To Surkl</div>
+            <div data-msgsid={user._id} className="modalAction">Send a Message</div>
+          </div>   
+    </div>
+		)
 	}
 	createVideo = () => {
 		return new Promise((resolve) => {
@@ -749,7 +765,6 @@ class Session extends Component {
 		} else {
 			return (
 				<div onClick={this.closeMenus} id="session">
-					<ProfileModal hideProfileModal={this.hideProfileModal} profileModal={this.state.profileModal} />
 					<div style={{ display: this.state.sessionExists ? 'none' : 'flex' }} id="sessionExpiredContainer">
 						<div id="sessionExpiredModal">This session has expired :/</div>
 					</div>
@@ -853,7 +868,8 @@ Session.propTypes = {
 	unpickThisVideoAction: PropTypes.func,
 	sendTweetAction: PropTypes.func,
 	app: PropTypes.object,
-	closeMenus: PropTypes.func
+	closeMenus: PropTypes.func,
+	socket: PropTypes.object
 };
 function stateToProps(state) {
 	return {
@@ -870,5 +886,6 @@ export default connect(stateToProps, {
 	newAdmin,
 	unpickThisVideoAction,
 	updateSession,
-	closeMenus
+	closeMenus,
+	updateDMs
 })(Session);

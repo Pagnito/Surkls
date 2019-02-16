@@ -1,12 +1,12 @@
 const Msg = require('../database/models/msg-model');
 const mongoose = require('mongoose');
-const redClient = require('../database/redis');
-module.exports = (io, app) => {
-  app.get('/api/connect', (req,res)=>{
-    console.log('bruuuuh')
-    io.on('connection', ()=>{
-      console.log('bruuuuh')
-      res.end()
-    })
-  }) 
+const Msgs = require('../database/models/msg-model');
+module.exports = (io) => {  
+  io.on('connection', (socket)=>{
+    console.log(socket.id)
+    socket.on('dm', (msgObj, sendToId )=>{
+      console.log(msgObj, sendToId)
+      io.to(sendToId).emit()
+    })   
+  })
 }

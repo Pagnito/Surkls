@@ -13,4 +13,6 @@ export const NEW_ADMIN = 'NEW_ADMIN';
 export const UPDATE_DASHBOARD = 'UPDATE_DASHBOARD';
 export const CLOSE_ALLMENUS = 'CLOSE_ALLMENUS';
 export const TOGGLE_MENU = 'TOGGLE_MENU';
+export const OPEN_DMS = 'OPEN_DMS';
+export const UPDATE_DMS = 'UPDATE_DMS';
 

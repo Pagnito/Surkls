@@ -12,7 +12,8 @@ import {
 	SEND_TWEET,
 	UPDATE_DASHBOARD,
 	CLOSE_ALLMENUS,
-	TOGGLE_MENU
+	TOGGLE_MENU,
+	UPDATE_DMS
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -181,4 +182,14 @@ export const toggleMenu = (menu) =>{
 		type: TOGGLE_MENU,
 		payload: menu
 	}
+}
+export const updateDMs = (dmObj) => {
+	return {
+		type: UPDATE_DMS,
+		payload: dmObj
+	}
+}
+export const sendDM = (msgsObj) => (dispatch) => {
+
+	
 }
