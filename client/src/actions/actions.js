@@ -13,7 +13,7 @@ import {
 	UPDATE_DASHBOARD,
 	CLOSE_ALLMENUS,
 	TOGGLE_MENU,
-	UPDATE_DMS
+	UPDATE_APP
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -119,6 +119,12 @@ export const signIn = (user, cb) => (dispatch) => {
 			});
 		});
 };
+export const updateApp = (appObj) =>{
+	return {
+		type: UPDATE_APP,
+		payload: appObj
+	}
+}
 export const startSession = (sessionInfo, cb) => (dispatch) => {
 	dispatch({
 		type: START_SESSION,
@@ -182,14 +188,4 @@ export const toggleMenu = (menu) =>{
 		type: TOGGLE_MENU,
 		payload: menu
 	}
-}
-export const updateDMs = (dmObj) => {
-	return {
-		type: UPDATE_DMS,
-		payload: dmObj
-	}
-}
-export const sendDM = (msgsObj) => (dispatch) => {
-
-	
 }

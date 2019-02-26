@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus, updateDMs } from 'actions/actions';
+import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
 import {socketUrl} from '../../tools/socketUrl';
 import Dropdown from 'components/smalls/drop-menu-mutable';
@@ -436,19 +436,7 @@ class Session extends Component {
 					this.props.updateSession(sessionObj);
 				});
 				this.startOrJoin();
-			} /* else {
-				//handles a join
-				console.log('joined')
-				if (!this.props.session.notShareLink && !this.alreadyStarted) {
-					this.socket.on('session', (sessionObj) => {
-						if(sessionObj.clients.length===1){
-							sessionObj.isAdmin=true
-						}
-						this.props.updateSession(sessionObj);
-					});
-					this.startOrJoin();
-				}
-			} */
+			} 
 		}
 	}
 
@@ -520,6 +508,39 @@ class Session extends Component {
 	updateDevices = () => {
 		this.props.getDevices();
 	};
+	createDM = (e) =>{
+		console.log(this.props.app.socket.id)
+		let users = {
+			receiver: JSON.parse(e.target.dataset.user),
+			sender: {
+				userName: this.props.auth.userName,
+				avatarUrl: this.props.auth.avatarUrl,
+				//socketId: this.socketId
+			}	
+		}
+		console.log('wtf', users)
+		this.socket.emit('open-dm', users)
+	}
+	renderProfileModal = (user) =>{
+		let socket = {
+			socketId: user.socketId,
+			avatarUrl: user.avatarUrl,
+			userName: user.userName,
+		}
+		return (
+			<div  className="profileModal">
+      <div className="profileBanner">
+        <div style={{backgroundImage:`url(${user.avatarUrl ? user.avatarUrl : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
+      </div>       
+          <div className="profileModalUsername">{user.userName}</div>
+          <div className="profileModalDesc">{user.description}</div>
+          <div className="profileModalActions">
+            <div className="modalAction">Add To Surkl</div>
+            <div onClick={this.createDM} data-user={JSON.stringify(socket)}  className="modalAction">Send a Message</div>
+          </div>   
+    </div>
+		)
+	}
 	updateClientList = () => {
 		if (this.props.session.clients !== undefined && this.props.session.clients.length > 0) {
 			return this.props.session.clients.map((client, ind) => {
@@ -530,7 +551,7 @@ class Session extends Component {
 								<img  onClick={this.showProfileModal} style={{
 									border:'2px solid #FECC44',
 							 		boxSizing:'border-box'}} src={url} className="clientSquareAv" />
-								{	<ProfileModal user={client} />}
+								{	this.renderProfileModal(client)}
 						</div>
 					
 					)
@@ -538,7 +559,7 @@ class Session extends Component {
 					return (
 					<div className="clientImgRightWrap" key={ind}>
 					 <img key={ind}  onClick={this.showProfileModal} src={url} className="clientSquareAv" />
-					 <ProfileModal user={client} />
+					 {this.renderProfileModal(client)}
 					</div>
 					)
 				}		
@@ -589,7 +610,6 @@ class Session extends Component {
 	};
 
 	showProfileModal = (e) => {
-		console.log(e.target)
 		let modal = e.target.nextSibling
 		if(modal.style.display==='block'){
 			modal.style.display = 'none'
@@ -598,21 +618,7 @@ class Session extends Component {
 		}
 
 	}
-	renderProfileModal = (user) =>{
-		return (
-			<div  className="profileModal">
-      <div className="profileBanner">
-        <div style={{backgroundImage:`url(${user.avatar ? user.avatar : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
-      </div>       
-          <div className="profileModalUsername">{user.userName}</div>
-          <div className="profileModalDesc">{user.description}</div>
-          <div className="profileModalActions">
-            <div className="modalAction">Add To Surkl</div>
-            <div data-msgsid={user._id} className="modalAction">Send a Message</div>
-          </div>   
-    </div>
-		)
-	}
+
 	createVideo = () => {
 		return new Promise((resolve) => {
 			let constraints = {
@@ -886,6 +892,5 @@ export default connect(stateToProps, {
 	newAdmin,
 	unpickThisVideoAction,
 	updateSession,
-	closeMenus,
-	updateDMs
+	closeMenus
 })(Session);

@@ -6,7 +6,7 @@ import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import io from 'socket.io-client';
 import {socketUrl} from '../../../tools/socketUrl';
-import { startSession, joinSession, signIn, getDevices, toggleMenu, sendDM, closeMenus } from 'actions/actions';
+import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp } from 'actions/actions';
 import { subCategories } from 'components/smalls/sub-categories';
 import 'styles/header.scss';
 class Header extends Component {
@@ -23,7 +23,11 @@ class Header extends Component {
 			dm: ''
 		};
 		this.menusClosed = true;
-		this.socket = io(socketUrl.url);	
+		this.socketId = ''
+		this.socket = io(socketUrl.url);
+		this.socket.on('loggedIn', ()=>{
+			this.props.updateApp({socket:this.socket})
+		})	
 		this.socket.on('dm',(msg)=>{
 			console.log(msg)
 		})
@@ -609,7 +613,8 @@ Header.propTypes = {
 	app: PropTypes.object,
 	toggleMenu: PropTypes.func,
 	closeMenus: PropTypes.func,
-	privMsgs: PropTypes.object
+	privMsgs: PropTypes.object,
+	updateApp: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -623,4 +628,5 @@ export default connect(stateToProps,
 	{ startSession, joinSession,
 		 signIn, getDevices, 
 		 toggleMenu, closeMenus,
-			sendDM })(withRouter(Header));
+		 updateApp
+	})(withRouter(Header));

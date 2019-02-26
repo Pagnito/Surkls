@@ -16,6 +16,7 @@ module.exports = (io, app) => {
 	let endOfCandidates = 0;
 
 	io.on('connection', function(socket) {
+		console.log(socket.id,'WOOOWW')
 		socket.on('createOrJoin', function(session) {
 			//console.log('SESSION', session)
 			///////////////////////////checking if client has the key//////////////////////////

@@ -1,4 +1,4 @@
-import { CLOSE_ALLMENUS, TOGGLE_MENU } from "actions/types";
+import { CLOSE_ALLMENUS, TOGGLE_MENU, UPDATE_APP } from "actions/types";
 //import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	menu: '',
@@ -13,6 +13,11 @@ const initialState = {
 
 export default function(state = initialState, action) {
 	switch (action.type) {
+		case UPDATE_APP:
+			return {
+				...state,
+				...action.payload
+			}
 		case CLOSE_ALLMENUS:
 			return {
 				...state,
