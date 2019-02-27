@@ -24,13 +24,13 @@ class Header extends Component {
 		};
 		this.menusClosed = true;
 		this.socketId = ''
-		this.socket = io(socketUrl.url);
-		this.socket.on('loggedIn', ()=>{
+		//this.socket = io(socketUrl.url);
+	/* 	this.socket.on('loggedIn', ()=>{
 			this.props.updateApp({socket:this.socket})
 		})	
 		this.socket.on('dm',(msg)=>{
 			console.log(msg)
-		})
+		}) */
 	}
 
 	componentDidMount() {
