@@ -4,6 +4,8 @@ import { GET_USER } from 'actions/types';
 import { Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setUserMedia } from '../../tools/setUserMedia';
+import io from 'socket.io-client';
+import {socketUrl} from '../../tools/socketUrl';
 import Store from '../store';
 import Home from 'components/Home';
 import Dashboard from 'components/Dashboard';
@@ -21,6 +23,10 @@ const Entries = Loadable({
 });*/
 
 class App extends Component {
+	constructor(props){
+		super(props);
+		this.socket = io(socketUrl.url);
+	}
 	componentDidMount() {
 	
 		setUserMedia();
@@ -47,7 +53,8 @@ class App extends Component {
 					<Route exact path="/profile" component={Profile} />
 					<Route exact path="/" component={Home}  />
 					<Route exact path="/dashboard" component={Dashboard}  />
-					<Route exact path="/session/:room" component={Session}  />
+					<Route 
+					exact path="/session/:room" render={(props)=><Session {...props} socket={this.socket}/>}   />
 					<Route exact path="/rooms" component={Rooms}  />
 				</Provider>
 			);

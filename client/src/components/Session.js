@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import io from 'socket.io-client';
+
 import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
-import {socketUrl} from '../../tools/socketUrl';
+
 import Dropdown from 'components/smalls/drop-menu-mutable';
 import SessionContentYoutube from 'components/smalls/session-content-youtube';
 import SessionContentDailymotion from 'components/smalls/session-content-dailymotion';
 import SessionContentTwitter from 'components/smalls/session-content-twitter';
 import SessionContentTwitch from 'components/smalls/session-content-twitch';
-import ProfileModal from 'components/smalls/profile-modal';
+//import ProfileModal from 'components/smalls/profile-modal';
 import 'styles/session.scss';
 import 'styles/loader.scss';
 class Session extends Component {
@@ -63,11 +63,12 @@ class Session extends Component {
 			added: false,
 			videoEl: null
 		};
-		this.socket = io(socketUrl.url);
+		this.socket = this.props.socket;
 
 		this.socket.on('recieveMsgs', (data) => {
 			this.setState({ msgs: data });
 		});
+		
 		this.socket.on('pickThisVideo', (videoObj) => {
 			this.props.sendThisVideoAction(videoObj);
 		});
@@ -162,7 +163,6 @@ class Session extends Component {
 			this.remoteAdded.added = true;
 			let client = this.remoteClients[this.remoteClients.length - 1];
 			this.createVideo().then((video) => {
-				console.log('HOW');
 				this.remoteAdded.videoEl = video.vid;
 				if (video.vid.srcObject == null) {
 					video.vid.srcObject = event.streams[0];
@@ -175,9 +175,8 @@ class Session extends Component {
 		if (this.remoteAdded.added === true && this.remoteAdded.id === event.streams[0].id) {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
-			if (this.imNotTheNew == false) {
-				console.log('ADDED STREAM');
-			}
+			console.log('stream')
+			//this.socket.emit('signal', {type:'streaming'})
 		}
 	};
 
@@ -246,11 +245,14 @@ class Session extends Component {
 		let streamList = document.getElementById('videoStreams');
 		for (let stream of streams) {
 			if (stream.dataset.id === remoteId) {
-				stream.srcObject.getTracks().forEach((track) => {
-					track.stop();
-					stream.srcObject = null;
-					this.remoteClients.splice(iterator, 1);
-				});
+				if(stream.srcObject!==null){
+					stream.srcObject.getTracks().forEach((track) => {
+						track.stop();
+						stream.srcObject = null;
+						this.remoteClients.splice(iterator, 1);
+					});
+				}
+			
 			}
 			iterator++;
 		}
@@ -272,6 +274,7 @@ class Session extends Component {
 		currentConnection.onicecandidate = this.handleIceCandidate;
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
+		console.log(this.track)
 		if (this.track[0].kind === 'audio') {
 			this.track.reverse();
 		}
@@ -287,6 +290,9 @@ class Session extends Component {
 
 	//////////////////////////////////////////////lifecycle hook//////////////////////////////////////////
 	componentWillUnmount() {
+		for(let rtc in this.rtcs){
+			this.rtcs[rtc].close();
+		}
 		this.rtcs = {};
 		let streamOfMe = document.getElementById('streamOfMe');
 		streamOfMe.srcObject.getTracks().forEach((track) => track.stop());
@@ -294,11 +300,13 @@ class Session extends Component {
 		let streams = document.querySelectorAll('.stream');
 		if (streams !== null && streams.length !== 0) {
 			for (let stream of streams) {
-				let tracks = stream.srcObject.getTracks();
+				if(stream.srcObject!==null){
+					let tracks = stream.srcObject.getTracks();
 				tracks.forEach(function(track) {
 					track.stop();
 				});
 				streams = null;
+				}				
 			}
 		}
 		this.socket.emit('leave');
@@ -310,6 +318,7 @@ class Session extends Component {
 			clients: [],
 			exists: false,
 			sessionKey: '',
+			isAdmin: false,
 			creatingSession: false
 		})
 	}
@@ -332,12 +341,13 @@ class Session extends Component {
 					switch (data.type) {
 						case 'newJoin':
 							this.createPeerRtc(remoteId, (rtc) => {
-								//console.log(rtc);
+								//console.log('new JOIN')
 								this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
 								this.remoteClients.push(remoteId);
 							});
 							break;
 						case 'offer':
+							console.log(data.type, remoteId)
 							this.remoteClients.push(remoteId);
 							this.createPeerRtc(remoteId, (rtc) => {
 								rtc
@@ -349,6 +359,7 @@ class Session extends Component {
 							});
 							break;
 						case 'answer':
+						console.log(data.type, remoteId)
 							this.imNotTheNew = true;
 							this.rtcs[remoteId]
 								.setRemoteDescription(new RTCSessionDescription(data))
@@ -417,11 +428,13 @@ class Session extends Component {
 	}
 
 	componentDidMount() {
+		console.log(this.track)
 		////start session button provides creatingSession = true in props
 		////notShareLink is provided if clicked via join button
 		///those props being passed to the server which will handle 
 		///those entrances accordingly
 		///never pass the whole sessionObj around to everyone
+	
 		navigator.mediaDevices.ondevicechange = () => {
 			this.updateDevices();
 		};
