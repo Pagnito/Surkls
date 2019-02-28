@@ -54,6 +54,9 @@ class Session extends Component {
 			]
 		};
 		this.alreadyStarted = false;
+		this.sessionSignalsSetup = false;
+		this.sessionActionSignalsSetup=false;
+		this.sessionObjSetup=false;
 		this.imNotTheNew = false;
 		this.stream;
 		this.track = [];
@@ -64,38 +67,40 @@ class Session extends Component {
 			videoEl: null
 		};
 		this.socket = this.props.socket;
-
-		this.socket.on('recieveMsgs', (data) => {
-			this.setState({ msgs: data });
-		});
+		if(this.sessionActionSignalsSetup===false){
+			this.sessionActionSignalsSetup=true;
+			this.socket.on('recieveMsgs', (data) => {
+				this.setState({ msgs: data });
+			});		
+			this.socket.on('pickThisVideo', (videoObj) => {
+				this.props.sendThisVideoAction(videoObj);
+			});
+			this.socket.on('unpickThisVideo', (videoObj) => {
+				this.props.unpickThisVideoAction(videoObj);
+			});
+			this.socket.on('adminLeftImAdminNow', () => {
+				this.props.newAdmin();
+			});
+			this.socket.on('youtubeList', (youtubeList) => {
+				this.props.updateSession({ youtubeList: youtubeList });
+			});
+			this.socket.on('sessionExpired', () => {
+				this.setState({ sessionExists: false });
+			});
+			this.socket.on('giveMeVideoCurrentTime', (videoObj) => {
+				this.props.updateSession(videoObj);
+			});
+			this.socket.on('hereIsVideoCurrentTime', (videoObj) => {
+				this.props.updateSession(videoObj);
+			});
+			this.socket.on('sharingTweet', (tweetObj)=>{
+				this.props.sendTweetAction(tweetObj)
+			})
+			this.socket.on('sharingLink', (link)=>{
+				window.open(link, 'mywin', 'width=860,height=620,screenX=950,right=50,screenY=50,top=50,status=yes');
+			})
+		}
 		
-		this.socket.on('pickThisVideo', (videoObj) => {
-			this.props.sendThisVideoAction(videoObj);
-		});
-		this.socket.on('unpickThisVideo', (videoObj) => {
-			this.props.unpickThisVideoAction(videoObj);
-		});
-		this.socket.on('adminLeftImAdminNow', () => {
-			this.props.newAdmin();
-		});
-		this.socket.on('youtubeList', (youtubeList) => {
-			this.props.updateSession({ youtubeList: youtubeList });
-		});
-		this.socket.on('sessionExpired', () => {
-			this.setState({ sessionExists: false });
-		});
-		this.socket.on('giveMeVideoCurrentTime', (videoObj) => {
-			this.props.updateSession(videoObj);
-		});
-		this.socket.on('hereIsVideoCurrentTime', (videoObj) => {
-			this.props.updateSession(videoObj);
-		});
-		this.socket.on('sharingTweet', (tweetObj)=>{
-			this.props.sendTweetAction(tweetObj)
-		})
-		this.socket.on('sharingLink', (link)=>{
-			window.open(link, 'mywin', 'width=860,height=620,screenX=950,right=50,screenY=50,top=50,status=yes');
-		})
 	}
 	/////////////////////////////////////////end of state//////////////////////////////////
 	sendVideoSignal = (playState) => {
@@ -201,6 +206,7 @@ class Session extends Component {
 		}
 	};
 	createOffer = (peer, cb) => {
+		console.log("CREATING OFFER")
 		peer
 			.createOffer()
 			.then(
@@ -219,6 +225,7 @@ class Session extends Component {
 			.catch(this.handleOfferError);
 	};
 	createAnswer = (peer, cb) => {
+		console.log("CREATING ANSWER")
 		peer
 			.createAnswer()
 			.then(
@@ -274,7 +281,7 @@ class Session extends Component {
 		currentConnection.onicecandidate = this.handleIceCandidate;
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-		console.log(this.track)
+
 		if (this.track[0].kind === 'audio') {
 			this.track.reverse();
 		}
@@ -290,6 +297,7 @@ class Session extends Component {
 
 	//////////////////////////////////////////////lifecycle hook//////////////////////////////////////////
 	componentWillUnmount() {
+		
 		for(let rtc in this.rtcs){
 			this.rtcs[rtc].close();
 		}
@@ -302,14 +310,16 @@ class Session extends Component {
 			for (let stream of streams) {
 				if(stream.srcObject!==null){
 					let tracks = stream.srcObject.getTracks();
-				tracks.forEach(function(track) {
-					track.stop();
+					tracks.forEach(function(track) {
+						track.stop();
 				});
 				streams = null;
 				}				
 			}
 		}
 		this.socket.emit('leave');
+		this.socket.removeAllListeners()
+		
 		this.props.updateSession({
 			inSession: false,
 			activePlatform: 'youtube',
@@ -336,52 +346,55 @@ class Session extends Component {
 				this.props.session.sessionKey = this.props.match.params.room.replace('room=', '');
 				this.props.session.creatingSession = startingOrJoining;
 				this.props.session.user = this.props.auth;
-				this.socket.emit('createOrJoin', this.props.session);
-				this.socket.on('signal', (data, remoteId) => {
-					switch (data.type) {
-						case 'newJoin':
-							this.createPeerRtc(remoteId, (rtc) => {
-								//console.log('new JOIN')
-								this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
+				if(this.sessionSignalsSetup===false){
+					this.sessionSignalsSetup=true
+					this.socket.emit('createOrJoin', this.props.session);
+					this.socket.on('signal', (data, remoteId) => {
+						switch (data.type) {
+							case 'newJoin':
+							console.log("NEW JOIN")
+								this.createPeerRtc(remoteId, (rtc) => {
+									this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
+									this.remoteClients.push(remoteId);
+								});
+								break;
+							case 'offer':
+								console.log(data.type, remoteId)
 								this.remoteClients.push(remoteId);
-							});
-							break;
-						case 'offer':
-							console.log(data.type, remoteId)
-							this.remoteClients.push(remoteId);
-							this.createPeerRtc(remoteId, (rtc) => {
-								rtc
+								this.createPeerRtc(remoteId, (rtc) => {
+									rtc
+										.setRemoteDescription(new RTCSessionDescription(data))
+										.then(() => {
+											this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer));
+										})
+										.catch(this.handleRemoteDescError);
+								});
+								break;
+							case 'answer':
+								console.log(data.type, remoteId)
+								this.imNotTheNew = true;
+								this.rtcs[remoteId]
 									.setRemoteDescription(new RTCSessionDescription(data))
-									.then(() => {
-										this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer));
-									})
 									.catch(this.handleRemoteDescError);
-							});
-							break;
-						case 'answer':
-						console.log(data.type, remoteId)
-							this.imNotTheNew = true;
-							this.rtcs[remoteId]
-								.setRemoteDescription(new RTCSessionDescription(data))
-								.catch(this.handleRemoteDescError);
-							break;
-						case 'candidate':
-							let hisCandidate = new RTCIceCandidate({
-								sdpMLineIndex: data.label,
-								candidate: data.candidate
-							});
-							if (this.rtcs[remoteId] !== undefined && this.rtcs[remoteId].remoteDescription.type) {
-								this.rtcs[remoteId].addIceCandidate(hisCandidate).catch(this.handleCandidateError);
-							}
-							break;
-						case 'clientLeft':
-						
-							this.handleLeavingClient(data.sessionObj, remoteId);
-							break;
-						case 'connected':
-							break;
-					}
-				});
+								break;
+							case 'candidate':
+								let hisCandidate = new RTCIceCandidate({
+									sdpMLineIndex: data.label,
+									candidate: data.candidate
+								});
+								if (this.rtcs[remoteId] !== undefined && this.rtcs[remoteId].remoteDescription.type) {
+									this.rtcs[remoteId].addIceCandidate(hisCandidate).catch(this.handleCandidateError);
+								}
+								break;
+							case 'clientLeft':
+							
+								this.handleLeavingClient(data.sessionObj, remoteId);
+								break;
+							case 'connected':
+								break;
+						}
+					});
+				}
 			})
 			.catch((err) => console.log(err));
 	};
@@ -401,12 +414,15 @@ class Session extends Component {
 			//if using a invite link /room=:id also handles reloads
 			//notShareLink wont exist in props because its a direct enter via share link
 			if (!this.props.session.notShareLink && !this.alreadyStarted) {
-				this.socket.on('session', (sessionObj) => {
-					if(sessionObj.clients.length===1){			
-						sessionObj.isAdmin=true;
-					}
-					this.props.updateSession(sessionObj);
-				});
+				if(this.sessionObjSetup===false){
+					this.sessionObjSetup=true
+					this.socket.on('session', (sessionObj) => {
+						if(sessionObj.clients.length===1){			
+							sessionObj.isAdmin=true;
+						}
+						this.props.updateSession(sessionObj);
+					});
+				}		
 				this.startOrJoin();
 			}
 		}
@@ -428,7 +444,7 @@ class Session extends Component {
 	}
 
 	componentDidMount() {
-		console.log(this.track)
+		this.socket.emit('WTF', 'WTF')
 		////start session button provides creatingSession = true in props
 		////notShareLink is provided if clicked via join button
 		///those props being passed to the server which will handle 
@@ -440,14 +456,17 @@ class Session extends Component {
 		};
 		if (this.props.session.notShareLink || this.props.session.creatingSession) {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
-				this.socket.on('session', (sessionObj) => {
-					if(sessionObj.clients.length===1){
-						//on join on client list is passed back
-						//on creating saved redis sessionObj is passed to creator
-						sessionObj.isAdmin=true
-					}
-					this.props.updateSession(sessionObj);
-				});
+				if(this.sessionObjSetup===false){
+					this.sessionObjSetup=true
+					this.socket.on('session', (sessionObj) => {
+						if(sessionObj.clients.length===1){
+							//on join on client list is passed back
+							//on creating saved redis sessionObj is passed to creator
+								sessionObj.isAdmin=true
+						}
+						this.props.updateSession(sessionObj);
+					});
+				}	
 				this.startOrJoin();
 			} 
 		}

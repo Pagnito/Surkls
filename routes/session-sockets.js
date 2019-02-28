@@ -6,8 +6,9 @@ let client;
 let connecting = false;
 let endOfCandidates = 0;
 let streaming = 0;
+let session= false;
 module.exports = (io, socket, initSession) => {
-	console.log('CONNECTED TO SOCKET')
+	console.log('SETTING LISTENERS')
 	/* redClient.flushdb( function (err, succeeded) {
     console.log(succeeded); // will be true if successfull
 	}); */
@@ -17,13 +18,9 @@ module.exports = (io, socket, initSession) => {
 	})
  */
 
-
-
-	
-		
-		socket.on('createOrJoin', function(session) {
+		socket.on('createOrJoin', function(sessionObj) {
 			//console.log('SESSION', session)
-			console.log(socket.id, 'SOCKET ID')
+			session = sessionObj
 			///////////////////////////checking if client has the key//////////////////////////
 			if (session.sessionKey !== undefined && session.sessionKey !== 'undefined') {
 				//////////////////////if this client joining or creating session///////////////////
@@ -96,8 +93,8 @@ module.exports = (io, socket, initSession) => {
 							})					
 					}
 				}
-
-			
+			}
+		})
 				////////////////////////////////////webrtc signaling////////////////////////////////////////
 				socket.on('signal', (data) => {
 					switch (data.type) {
@@ -114,9 +111,7 @@ module.exports = (io, socket, initSession) => {
 								sender = socket.id;
 								io.to(reciever).emit('signal', data, socket.id);
 								console.log("SENDING OFFER")
-								console.log('OFFERS', Object.keys(offers));
 								delete offers[socket.id];
-								console.log('OFFERS', Object.keys(offers));
 							}
 							break;
 						case 'answer':
@@ -135,9 +130,11 @@ module.exports = (io, socket, initSession) => {
 							streaming++
 							break;
 						case 'connected':
-							console.log('CONNECTED');
+							
 							endOfCandidates++;
 							if (endOfCandidates === 2 /* && streaming===2 */) {
+								console.log('CONNECTED');
+								console.log('OFFERS', offers)
 								connecting = true;
 								endOfCandidates = 0;
 								streaming = 0;
@@ -160,7 +157,7 @@ module.exports = (io, socket, initSession) => {
 							}
 					}
 				});
-				/////////////////////////////////^^^^^^^^signaling^^^^^^//////////////////////////////////////
+				/////////////////////////////////^^^^^^^^signaling^^^^^^^^////////////////////////////////////
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////handling discussion content//////////////////////////////////
 				socket.on('youtubeList', (videoList) => {
@@ -168,6 +165,7 @@ module.exports = (io, socket, initSession) => {
 					redClient.hset('youtubeLists', session.sessionKey, listString);
 
 				});
+				
 				/* socket.on('dailymotionList', (videoList) => {
 					let listString = JSON.stringify(videoList);
 					redClient.hset('dailymotionLists', session.sessionKey, listString);
@@ -290,7 +288,8 @@ module.exports = (io, socket, initSession) => {
 				socket.on('leave', () => {	
 				
 					socket.leave(session.sessionKey);	
-					io.of('/').in(session.sessionKey).clients((err,client)=>{
+				
+					io.clients((err,client)=>{
 						console.log(client)
 					})
 						redClient.hexists('rooms', session.sessionKey,(err,exists)=>{
@@ -332,6 +331,7 @@ module.exports = (io, socket, initSession) => {
 						})////made new admin and deleted disconnected client
 				});
 				//console.log(io.sockets.adapter.rooms);
-			}
-		});
+			
+		
+		
 };
