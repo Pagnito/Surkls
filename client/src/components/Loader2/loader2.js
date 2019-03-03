@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import 'styles/loader2.scss';
+import './loader2.scss';
 export default function Loader2(props) {
   return ( 
     <div className="loader2">

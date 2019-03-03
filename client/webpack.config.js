@@ -48,7 +48,6 @@ module.exports = {
   resolve: {
     extensions: [ 'scss', 'css', '.js', '*' ],
     alias: {
-      styles: path.resolve(__dirname, 'src/styles'),
       components: path.resolve(__dirname, 'src/components'),
       actions: path.resolve(__dirname, 'src/actions'),
       reducers: path.resolve(__dirname, 'src/reducers'),

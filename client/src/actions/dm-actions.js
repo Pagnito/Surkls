@@ -2,7 +2,8 @@ import {
 OPEN_DMS,
 UPDATE_DMS,
 UPDATE_MSGS,
-ADD_DM
+ADD_DM,
+ADD_DMS
 } from 'actions/types';
 
 export const updateDMs = (dms) => {
@@ -21,6 +22,12 @@ export const addToDMs = (user) => {
 	return {
 		type: ADD_DM,
 		payload: user
+	}
+}
+export const addMultiToDMs = (users) => {
+	return {
+		type: ADD_DMS,
+		payload: users
 	}
 }
 export const openDMs = (dm_user) => {

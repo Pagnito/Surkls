@@ -4,11 +4,21 @@ const Msgs = require('../database/models/msg-model');
 const User = require('../database/models/user-model');
 //const redClient = require('../database/redis');
 let connectedUsers = {};
+let vidSessionUsers = {};
 let msgs = {};
 module.exports = (io, socket, app) => {
   
+
+  socket.on('setup-vid-dms', (user)=>{
+    if(user!==null){
+      user.socketId = socket.id;
+      vidSessionUsers[user._id] = user;  
+      socket.emit('setup-vid-dms', vidSessionUsers)
+      console.log('hey');
+    }   
+  })
+
   socket.on('setup', (user)=>{
-    console.log(socket.id)
     user.socketId = socket.id;
     connectedUsers[user._id] = user;
     let msngrs = {};
@@ -18,6 +28,7 @@ module.exports = (io, socket, app) => {
         io.to(connectedUsers[msngr].socketId).emit('update-dms', user)  
       }        
     })
+    console.log(msngrs)
     socket.emit('setup', msngrs)
   })
   socket.on('open-dm', (user, receiver)=>{
@@ -29,7 +40,14 @@ module.exports = (io, socket, app) => {
   })
 
 socket.on('disconnect', ()=>{
-
+  console.log(Object.keys(connectedUsers))
+  for(let user in connectedUsers){
+    if(connectedUsers[user].socketId===socket.id){
+      delete connectedUsers[user]
+    }
+  }
+  console.log('/////////////////////////')
+  console.log(Object.keys(connectedUsers))
 })
 
 

@@ -19,4 +19,5 @@ export const UPDATE_DMS = 'UPDATE_DMS';
 export const SETUP_DMS = 'SETUP_DMS';
 export const UPDATE_MSGS = 'UPDATE_MSGS';
 export const ADD_DM = 'ADD_DM';
+export const ADD_DMS = 'ADD_DMS';
 

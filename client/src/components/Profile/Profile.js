@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import 'styles/profile.scss'
+import './profile.scss'
  class Profile extends Component {
    constructor(props){
      super(props)

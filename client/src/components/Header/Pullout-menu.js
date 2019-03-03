@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import 'styles/pullout-menu.scss';
+import './pullout-menu.scss';
 import PropTypes from 'prop-types';
 class PulloutMenu extends Component {
   

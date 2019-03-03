@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getSessions, joinSession, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
-import 'styles/rooms.scss';
+import './rooms.scss';
 import { connect } from 'react-redux';
 
 class Rooms extends Component {

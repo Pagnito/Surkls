@@ -7,12 +7,12 @@ import { setUserMedia } from '../../tools/setUserMedia';
 import io from 'socket.io-client';
 import {socketUrl} from '../../tools/socketUrl';
 import Store from '../store';
-import Home from 'components/Home';
-import Dashboard from 'components/Dashboard';
-import Session from 'components/Session';
-import Rooms from 'components/Rooms';
+import Home from 'components/Home/Home';
+import Dashboard from 'components/Dashboard/Dashboard';
+import Session from 'components/Session/Session';
+import Rooms from 'components/Rooms/Rooms';
 import Header from 'components/Header/Header';
-import Profile from 'components/Profile';
+import Profile from 'components/Profile/Profile';
 
 
 /*const Loading = () => Loader;

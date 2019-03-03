@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 
 import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
-
+import {openDMs, addMultiToDMs} from 'actions/dm-actions';
 import Dropdown from 'components/smalls/drop-menu-mutable';
-import SessionContentYoutube from 'components/smalls/session-content-youtube';
-import SessionContentDailymotion from 'components/smalls/session-content-dailymotion';
-import SessionContentTwitter from 'components/smalls/session-content-twitter';
-import SessionContentTwitch from 'components/smalls/session-content-twitch';
-//import ProfileModal from 'components/smalls/profile-modal';
-import 'styles/session.scss';
-import 'styles/loader.scss';
+import SessionContentYoutube from './Sub-comps/session-content-youtube';
+import SessionContentDailymotion from './Sub-comps/session-content-dailymotion';
+import SessionContentTwitter from './Sub-comps/session-content-twitter';
+import SessionContentTwitch from './Sub-comps/session-content-twitch';
+import './Sub-comps/styles/profile-modal.scss';
+import './session.scss';
+import '../Loader1/loader.scss';
 class Session extends Component {
 	constructor(props) {
 		super(props);
@@ -69,6 +69,10 @@ class Session extends Component {
 		this.socket = this.props.socket;
 		if(this.sessionActionSignalsSetup===false){
 			this.sessionActionSignalsSetup=true;
+			this.socket.on('setup-vid-dms', users=>{
+				console.log('ayo')
+				this.props.addMultiToDMs(users)
+			})
 			this.socket.on('recieveMsgs', (data) => {
 				this.setState({ msgs: data });
 			});		
@@ -422,7 +426,8 @@ class Session extends Component {
 						}
 						this.props.updateSession(sessionObj);
 					});
-				}		
+				}	
+				this.socket.emit('setup-vid-dms', this.props.auth)	
 				this.startOrJoin();
 			}
 		}
@@ -449,7 +454,7 @@ class Session extends Component {
 		///those props being passed to the server which will handle 
 		///those entrances accordingly
 		///never pass the whole sessionObj around to everyone
-	
+		this.socket.emit('setup-vid-dms', this.props.auth)
 		navigator.mediaDevices.ondevicechange = () => {
 			this.updateDevices();
 		};
@@ -539,24 +544,13 @@ class Session extends Component {
 	updateDevices = () => {
 		this.props.getDevices();
 	};
-	createDM = (e) =>{
-		console.log(this.props.app.socket.id)
-		let users = {
-			receiver: JSON.parse(e.target.dataset.user),
-			sender: {
-				userName: this.props.auth.userName,
-				avatarUrl: this.props.auth.avatarUrl,
-				//socketId: this.socketId
-			}	
-		}
-		this.socket.emit('create-dm', users)
+	openDMs = (dm_user) => {
+		let modal = document.querySelector('.profileModal');
+		modal.style.display = 'none'
+		this.props.openDMs(dm_user);
+		this.socket.emit('open-dm', this.props.auth.user, dm_user.socketId)
 	}
 	renderProfileModal = (user) =>{
-		let socket = {
-			socketId: user.socketId,
-			avatarUrl: user.avatarUrl,
-			userName: user.userName,
-		}
 		return (
 			<div  className="profileModal">
       <div className="profileBanner">
@@ -566,7 +560,7 @@ class Session extends Component {
           <div className="profileModalDesc">{user.description}</div>
           <div className="profileModalActions">
             <div className="modalAction">Add To Surkl</div>
-            <div onClick={this.createDM} data-user={JSON.stringify(socket)}  className="modalAction">Send a Message</div>
+            <div onClick={()=>this.openDMs(user)} data-user={JSON.stringify(user)}  className="modalAction">Send a Message</div>
           </div>   
     </div>
 		)
@@ -905,7 +899,9 @@ Session.propTypes = {
 	sendTweetAction: PropTypes.func,
 	app: PropTypes.object,
 	closeMenus: PropTypes.func,
-	socket: PropTypes.object
+	socket: PropTypes.object,
+	openDMs: PropTypes.func,
+	addMultiToDMs: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -922,5 +918,7 @@ export default connect(stateToProps, {
 	newAdmin,
 	unpickThisVideoAction,
 	updateSession,
-	closeMenus
+	closeMenus,
+	openDMs,
+	addMultiToDMs
 })(Session);

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import 'styles/session-content-youtube.scss';
+import './styles/session-content-youtube.scss';
 import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions'
 import YTplayer from 'yt-player';
-import Loader2 from 'components/smalls/loader2';
+import Loader2 from 'components/Loader2/loader2';
 
 class SessionContentYoutube extends Component {
 	constructor(props) {

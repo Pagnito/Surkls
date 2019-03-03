@@ -6,8 +6,8 @@ import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp } from 'actions/actions';
 import { openDMs, updateDMs, updateMsgs, addToDMs} from 'actions/dm-actions';
-import { subCategories } from 'components/smalls/sub-categories';
-import 'styles/header.scss';
+import { subCategories } from 'components/Session/Sub-comps/sub-categories';
+import './header.scss';
 class Header extends Component {
 	constructor(props) {
 		super(props);
@@ -681,7 +681,9 @@ class Header extends Component {
 						{this.createSessionMenu()}
 						{this.messagesMenu()}
 						<div onClick={this.renderCreateSessionMenu} id="startSessionIcon" />
-						<div onClick={this.renderMessagesMenu} id="messageIcon" />
+						<div onClick={this.renderMessagesMenu} id="messageIcon" >
+							<div className="red-alert-dot">3</div>
+						</div>
 						<div onClick={this.renderNotifMenu} id="notifIcon" />
 						<div
 							onClick={this.renderAccMenu}

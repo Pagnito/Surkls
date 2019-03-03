@@ -100,6 +100,21 @@
 			background-size: 23px;
 			background-repeat: no-repeat;
 			margin-right: 20px;
+			position: relative;
+			.red-alert-dot {
+				width:16px;
+				height:16px;
+				background:red;
+				position: absolute;
+				border-radius:16px;
+				color:white;
+				font-family: 'Quicksand';
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 12px;
+				right:0px;
+			}
 		}
 		#notifIcon {
 			cursor: pointer;

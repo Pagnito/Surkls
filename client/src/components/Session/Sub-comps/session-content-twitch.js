@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import 'styles/session-content-twitch.scss';
+import './styles/session-content-twitch.scss';
 import { connect } from 'react-redux';
 import { updateSession } from 'actions/actions';
-import Loader2 from 'components/smalls/loader2';
+import Loader2 from 'components/Loader2/loader2';
 
 class SessionContentTwitch extends Component {
 	constructor(props) {

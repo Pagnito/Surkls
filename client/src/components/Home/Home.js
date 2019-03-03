@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUser, signUp, closeMenus } from 'actions/actions';
-import 'styles/home.scss';
-import 'styles/loader.scss';
+import './home.scss';
+import '../Loader1/loader.scss';
 
 class Home extends Component {
 	constructor(props) {

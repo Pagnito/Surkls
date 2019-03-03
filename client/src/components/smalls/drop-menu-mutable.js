@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {PropTypes} from 'prop-types';
-import 'styles/drop-menu-mutable.scss'
+import './styles/drop-menu-mutable.scss'
 export default class DropMenu extends Component {
 	render() {
 		return (

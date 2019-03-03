@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import {updateDashboard, closeMenus} from 'actions/actions';
 import PropTypes from 'prop-types';
-import "styles/dashboard.scss";
+import "./dashboard.scss";
 class Dashboard extends Component {
   constructor(props){
     super(props)
