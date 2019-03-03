@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
-//import io from 'socket.io-client';
-//import {socketUrl} from '../../../tools/socketUrl';
 import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp } from 'actions/actions';
+import { openDMs, updateDMs, updateMsgs, addToDMs} from 'actions/dm-actions';
 import { subCategories } from 'components/smalls/sub-categories';
 import 'styles/header.scss';
 class Header extends Component {
@@ -20,17 +19,22 @@ class Header extends Component {
 			roomName: '',
 			email: '',
 			password: '',
-			dm: ''
+			dm_msg: ''
 		};
 		this.menusClosed = true;
 		this.socketId = ''
-		//this.socket = io(socketUrl.url);
-	/* 	this.socket.on('loggedIn', ()=>{
-			this.props.updateApp({socket:this.socket})
-		})	
-		this.socket.on('dm',(msg)=>{
-			console.log(msg)
-		}) */
+		this.socket = this.props.socket;
+		
+		this.socket.on('msg',(msg)=>{
+			this.props.updateMsgs(msg)
+		})
+		this.socket.on('open-dm',(user)=>{
+			this.props.addToDMs(user)
+		})
+		this.socket.on('update-dms',(user)=>{
+			console.log('wtf')
+			this.props.addToDMs(user)
+		})
 	}
 
 	componentDidMount() {
@@ -163,12 +167,7 @@ class Header extends Component {
 			}, 300);
 		}
 	};
-	sendDM = () => {
-		this.socket.emit('dm', this.state.dm, this.props.privMsgs.sendToId);
-	}
-	openDMs = (sendToId) => {
-		this.props.app.updateDMs({sendToId:sendToId});
-	}
+	
 	/////////////////////////////////^^^^unctions^^^^/////////////////////////////////
 	pulloutMenu = () => {
 		return (
@@ -212,24 +211,123 @@ class Header extends Component {
 			</DropMenu>
 		);
 	};
-
+	sendDM = (e) => {
+		if(e.key==='Enter'){
+			e.preventDefault()
+			let me = this.props.auth.user;
+		
+			let msg = {
+				receiver: this.props.dms.messanger.socketId,
+				sender: this.socket.id,
+				msg:this.state.dm_msg,
+				username: me.userName,
+				avatarUrl: me.avatarUrl,
+				user_id: me._id
+			}
+			this.socket.emit('msg', msg);
+			this.setState({dm_msg:''})		
+		}	
+	}
+	openDMs = (dm_user) => {
+		this.props.openDMs(dm_user);
+		this.socket.emit('open-dm', this.props.auth.user, dm_user.socketId)
+	}
+	closeDMs = () => {
+		this.props.openDMs(null);
+	}
+	feedDMs = () => {
+		let msngrs = this.props.dms.messangers;
+		let msArr = [];
+		if(Object.keys(msngrs).length>0){
+			 for(let msngr in msngrs){
+				msArr.push(
+					<div onClick={()=>this.openDMs(msngrs[msngr])} key={msngr} className="msngr">
+						<img className="msngr-avatar" src={msngrs[msngr].avatarUrl}></img>
+						<div className="msngr-name-n-msg">
+							<div className="msngr-name">{msngrs[msngr].userName}</div>
+							
+						</div>
+					</div>
+				)
+			}
+			return msArr;
+		}	
+	}
+	displayMsgs = () =>{
+		return this.props.dms.msgs.map((msg,ind)=>{
+			if(this.props.auth.user._id!==msg.user_id){
+				return (
+					<div style={{
+						padding:'5px',
+						paddingLeft:'10px',
+						paddingRight:'10px',
+						boxSizing:'border-box',
+						background:'white',
+						borderRadius:'20px',
+						marginTop: '5px',
+						maxWidth:'70%',	
+						alignSelf:'flex-start',					
+						wordBreak: 'break-word',
+						display:'flex',
+						flexShrink:'0',	
+						alignContent:'flex-start'}} key={ind}>
+						<img src={msg.avatarUrl} style={{
+							width:'20px',
+							height:'20px',
+							borderRadius:'20px',
+							marginRight:'8px',
+							flexShrink:'0'					
+							 }}/>
+						<div style={{flexShrink:'0',maxWidth:'calc(100% - 25px)'}}>{msg.msg}</div>
+					</div>
+				)
+			} else {
+				return (
+					<div style={{
+						padding:'5px',
+						maxWidth:'70%',
+						alignSelf:'flex-end',
+						paddingLeft:'10px',
+						paddingRight:'10px',
+						marginTop: '5px',
+						wordBreak: 'break-word',
+						boxSizing:'border-box',
+						background:'#FFCD44',
+						borderRadius:'20px',
+					}} key={ind}>{msg.msg}</div>
+				)
+			}
+			
+	})
+}
+	dmMsngr = () =>{
+		let user = this.props.dms.messanger
+		if(user){
+			let avatar = user.avatarUrl ? user.avatarUrl : '/assets/whitehat.jpg'
+			return(
+				<div id="dm-msngr">
+					<div className="dm-msngr-header">
+						<img className="dm-msngr-header-avatar" src={avatar}></img>
+						<div className="dm-msngr-header-username">{user.userName}</div>
+						<div onClick={this.closeDMs} className="dm-msngr-header-close"></div>
+					</div>
+					<div className="dm-msngr-feed">
+						{this.displayMsgs()}
+					</div>
+					<div className="dm-msngr-input-wrap">
+						<textarea id="msg-texter" onKeyDown={this.sendDM} onChange={this.onInputChange} name="dm_msg" value={this.state.dm_msg} placeholder="Write your messagge" className="dm-msngr-input"/>
+					</div>
+				</div>
+			)
+		}	
+	}
 	messagesMenu = () => {
 		let visibility = this.props.app.messagesMenuVisible ? 'flex' : 'none';
 		return (
-			<DropMenu menuTitle="Messages" visibility={visibility} menuTypeArrow="messagesArrow">
+			<DropMenu hideMenu={this.hideAllMenus} menuTitle="Messages" visibility={visibility} menuTypeArrow="messagesArrow">
 				<div id="dmMsgsFeed"></div>
-				<textarea
-					id="dmMsgInput"
-					onChange={this.onInputChange}
-					placeholder="Write your message"
-					className="menuTextInput"
-					name="dm"
-					value={this.state.dm}
-				/>
-
-				<button onClick={this.sendDM} className="menuItem" id="sendMsgBtn">
-					Send
-				</button>
+					
+				{this.feedDMs()}
 
 			</DropMenu>
 		);
@@ -597,6 +695,7 @@ class Header extends Component {
 						/>
 					</div>
 					{/* //////////////section///////////*/}
+					{this.dmMsngr()}
 				</div>
 			);
 		}
@@ -613,20 +712,29 @@ Header.propTypes = {
 	app: PropTypes.object,
 	toggleMenu: PropTypes.func,
 	closeMenus: PropTypes.func,
-	privMsgs: PropTypes.object,
-	updateApp: PropTypes.func
+	dms: PropTypes.object,
+	updateApp: PropTypes.func,
+	openDMs: PropTypes.func,
+	updateDMs: PropTypes.func,
+	updateMsgs: PropTypes.func,
+	socket: PropTypes.object,
+	addToDMs: PropTypes.func
 };
 function stateToProps(state) {
 	return {
 		auth: state.auth,
 		devices: state.devices,
 		app: state.app,
-		privMsgs: state.privMsgs
+		dms: state.dms
 	};
 }
 export default connect(stateToProps, 
 	{ startSession, joinSession,
 		 signIn, getDevices, 
 		 toggleMenu, closeMenus,
-		 updateApp
+		 updateApp,
+		 updateDMs,
+		 updateMsgs,
+		 openDMs,
+		 addToDMs
 	})(withRouter(Header));

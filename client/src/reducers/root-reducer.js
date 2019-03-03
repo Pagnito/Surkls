@@ -5,11 +5,13 @@ import AuthReducer from 'reducers/auth-reducer';
 import DeviceReducer from 'reducers/devices-reducer';
 import DashboardReducer from 'reducers/dashboard-reducer';
 import AppReducer from 'reducers/app-reducer';
+import DmsReducer from 'reducers/dms-reducer';
 export default combineReducers({
   app: AppReducer,
   auth: AuthReducer,
   session: SessionReducer,
   sessions: SessionsReducer,
   devices: DeviceReducer,
-  dashboard: DashboardReducer
+  dashboard: DashboardReducer,
+  dms: DmsReducer
 });

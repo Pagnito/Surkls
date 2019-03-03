@@ -38,7 +38,7 @@ passport.use(
 						email: email,
 						userName: userName,
 						twitterId: twitterId,
-						avatarUrl: imgUrl
+						avatarUrl: imgUrl ? imgUrl : '/assets/whitehat.jpg'
 					});
 					newUser.save().then((user) => {
 						return done(err, user);

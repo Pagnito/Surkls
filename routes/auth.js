@@ -37,7 +37,8 @@ module.exports = (app) => {
 				let newUser = new User ({
 					email: req.body.email,
 					userName: req.body.userName,
-					hashedPassword: hashedPassword
+					hashedPassword: hashedPassword,
+					avatarUrl: '/assets/whitehat.jpg'
 				})
 				newUser.save().then(()=>{
 					passport.authenticate('local')(req,res, ()=>{
@@ -97,7 +98,9 @@ module.exports = (app) => {
 				email: req.user.email,
 				userName: req.user.userName,
 				_id: req.user._id,
-				avatarUrl: req.user.avatarUrl
+				avatarUrl: req.user.avatarUrl,
+				dms: req.user.dms,
+				messangers: req.user.messangers
 			};
 			res.json(userRes);
 		} else {

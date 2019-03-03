@@ -444,7 +444,6 @@ class Session extends Component {
 	}
 
 	componentDidMount() {
-		this.socket.emit('WTF', 'WTF')
 		////start session button provides creatingSession = true in props
 		////notShareLink is provided if clicked via join button
 		///those props being passed to the server which will handle 
@@ -550,8 +549,7 @@ class Session extends Component {
 				//socketId: this.socketId
 			}	
 		}
-		console.log('wtf', users)
-		this.socket.emit('open-dm', users)
+		this.socket.emit('create-dm', users)
 	}
 	renderProfileModal = (user) =>{
 		let socket = {

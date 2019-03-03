@@ -9,9 +9,10 @@ const UserSchema = new Schema({
   twitchId: String,
   userName: String,
   avatarUrl: String,
-  theme: String,
-  surkls: [String],
+  surkl: String,
   subscriptions: [String],
+  dms: [String],
+  messangers: [String],
   followers: [Object],
   following:[String]
 });

@@ -24,7 +24,8 @@ passport.use(new LocalStrategy({
         let userRes = {
           email: user.email,
           userName: user.userName,
-          _id:user._id
+          _id:user._id,
+          avatarUrl: user.avatarUrl
         }
         done(null, userRes)
       } else {

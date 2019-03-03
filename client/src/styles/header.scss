@@ -284,32 +284,104 @@
 /*three dot menu */
 /////////////////////////////////////////////////////////////////////////////////
 /*msgs menu*/
-#sendMsgBtn {
-	color: #FCCB43;
-  outline:none;
-  cursor: pointer;
-  border:none;
-  display: flex;
-	justify-content: center;
-	width:96%;
-	border-radius: 5px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	background-color: #282828;
-}
-#sendMsgBtn:hover{
-	background-color: #FECC43;
-	color:#282828;
-}
-#dmMsgInput {
-	height:40px;
-	width:500px;
-	margin-left:10px;
-	margin-right: 10px;
-	font-family: 'Quicksand';
-}
+
 #dmMsgsFeed {
 	max-height:350px;
+	width:300px;
+}
+
+.msngr {
+	display: flex;
+	padding: 10px;
+	box-sizing: border-box;
+	width:100%;
+	.msngr-avatar {
+		width:30px;
+		height:30px;
+		border-radius: 30px;
+	}
+}
+.msngr-name-n-msg {
+	width:calc(100% - 50px);
+
+	font-family: 'Quicksand';
+	font-weight: 700px;
+	padding-left:10px;
 }
 /*msgs menu*/
-/*pullout menu*/
+/////////////////////////////////////////////////////////////////////////////////
+/*dm-messanger*/
+#dm-msngr {
+	position: fixed;
+	z-index: 110;
+	bottom:0px;
+	height: 300px;
+	width:260px;
+	right:100px;
+	background: #F4FBFB;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px ;
+	overflow:hidden;
+	font-family: 'Quicksand';
+}
+.dm-msngr-header {
+	width:100%;
+	display: flex;
+	padding:7px;
+	box-sizing: border-box;
+	background: #DDE4E4;
+
+	.dm-msngr-header-avatar {
+		width:25px;
+		height:25px;
+		border-radius: 25px;
+
+	}
+	.dm-msngr-header-username {
+		width: calc(100% - 60px);
+		
+		font-size: 14px;
+		display: flex;
+		align-items: center;
+		padding-left: 10px;
+	}
+	.dm-msngr-header-close {
+		background-image: url('/assets/UI-icons/times-solid.svg');
+		background-position: center;
+		background-size: 12px;
+		background-repeat: no-repeat; 
+		width:25px;
+		height:25px;
+		cursor: pointer;
+	}
+}
+.dm-msngr-feed {
+	width:100%;
+	height: calc(100% - 80px);
+	display:flex;
+	flex-direction: column;
+	overflow-y: scroll;
+	padding:7px;
+	box-sizing: border-box;
+	font-size: 14px;
+	align-content: flex-start;
+}
+.dm-msngr-input-wrap {
+	display:flex;
+	width:100%;
+	justify-content: center;
+	.dm-msngr-input {
+		min-height:25px;
+		font-family: 'Quicksand';
+		border-radius: 5px;
+		resize: none;
+		width:95%;
+		outline:none;
+		border:1px solid rgba(0,0,0,.2);
+		font-size: 13px;
+		padding-left: 10px;
+		box-sizing: border-box;
+	}
+}
+
+/*dm-messanger*/

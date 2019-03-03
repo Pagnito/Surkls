@@ -285,13 +285,8 @@ module.exports = (io, socket, initSession) => {
 							}
 						})////made new admin and deleted disconnected client
 				});
-				socket.on('leave', () => {	
-				
+				socket.on('leave', () => {					
 					socket.leave(session.sessionKey);	
-				
-					io.clients((err,client)=>{
-						console.log(client)
-					})
 						redClient.hexists('rooms', session.sessionKey,(err,exists)=>{
 							if(err){console.log(err)}
 							if(exists===1){
