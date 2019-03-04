@@ -23,8 +23,13 @@ module.exports = (io, socket, app) => {
 
 	socket.on('msg', (msg) => {
     let rec = connectedUsers[msg.receiver.user_id];
-    console.log(msg)
 		if (msg._id) {
+      let ms = {
+        msg: msg.msg,
+        userName: msg.userName,
+        avatarUrl: msg.avatarUrl
+      }
+      Msgs.updateOne({_id: msg._id}, {$push:{msgs:ms}}).exec()
 			if (rec) {
         io.to(rec.socketId).emit('msg', msg);
         io.to(socket.id).emit('msg', msg);
@@ -53,12 +58,12 @@ module.exports = (io, socket, app) => {
 				};
 				let dm2 = {
 					thread_id: thread._id,
-					user_id: msg.receiver._id,
+					user_id: msg.receiver.user_id,
 					avatarUrl: msg.receiver.avatarUrl,
 					userName: msg.receiver.userName
 				};
 				User.updateOne({ _id: msg.user_id }, { $push: { dms: dm2 } }).exec();
-				User.updateOne({ _id: msg.receiver._id }, { $push: { dms: dm1 } }).exec();
+				User.updateOne({ _id: msg.receiver.user_id }, { $push: { dms: dm1 } }).exec();
 			});
 		}
 	});
