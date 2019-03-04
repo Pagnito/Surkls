@@ -3,7 +3,8 @@ OPEN_DMS,
 UPDATE_DMS,
 UPDATE_MSGS,
 ADD_DM,
-ADD_DMS
+ADD_DMS,
+LOAD_MSGS
 } from 'actions/types';
 
 export const fetchMsgThreads = (id) => (dispatch) =>{
@@ -49,11 +50,26 @@ export const addMultiToDMs = (users) => {
 		payload: users
 	}
 }
-export const openDMs = (dm_user) => {
-	return {
+export const openDMs = (dm_user) =>(dispatch)=> {
+	dispatch({
 		type: OPEN_DMS,
 		payload: dm_user
-	}
+	})
+	fetch('/api/dm_thread/'+dm_user.thread_id)
+	.then(res=>res.json())
+	.then(data=>{
+		console.log(data)
+		dispatch({
+			type:LOAD_MSGS,
+			payload: data
+		})
+	})
+}
+export const closeDMs = () =>{
+	return ({
+		type: OPEN_DMS,
+		payload: null
+	})
 }
 /* export const sendDM = (msgsObj) => (dispatch) => {
 

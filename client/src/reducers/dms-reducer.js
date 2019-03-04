@@ -1,4 +1,4 @@
-import { OPEN_DMS, SETUP_DMS, UPDATE_DMS, UPDATE_MSGS, ADD_DM, ADD_SESS_DMS } from "actions/types";
+import { OPEN_DMS, SETUP_DMS, UPDATE_DMS, UPDATE_MSGS, ADD_DM, ADD_SESS_DMS, LOAD_MSGS } from "actions/types";
 //import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	sendToId: '',
@@ -18,6 +18,11 @@ export default function(state = initialState, action) {
 			...state,
 			msgs: msgsClone,
 			currThread: action.payload._id ? action.payload._id : undefined
+		};
+		case LOAD_MSGS:	
+			return {
+			...state,
+			msgs: action.payload
 		};
 		case UPDATE_DMS:
 			return {

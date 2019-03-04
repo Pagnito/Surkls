@@ -27,14 +27,15 @@ module.exports = (io, socket, app) => {
       let ms = {
         msg: msg.msg,
         userName: msg.userName,
-        avatarUrl: msg.avatarUrl
+        avatarUrl: msg.avatarUrl,
+        user_id: msg.user_id
       }
       Msgs.updateOne({_id: msg._id}, {$push:{msgs:ms}}).exec()
 			if (rec) {
         io.to(rec.socketId).emit('msg', msg);
         io.to(socket.id).emit('msg', msg);
       } else {
-        io.to(socket.id).emit('msg', msg);
+        io.to(socket.id).emit('msg', msg)
       }
 		} else {
 			console.log('NEW THREAD');

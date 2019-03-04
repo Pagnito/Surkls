@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp } from 'actions/actions';
-import { openDMs, updateDMs, updateMsgs, addToDMs, fetchMsgThreads} from 'actions/dm-actions';
+import { closeDMs, openDMs, updateDMs, updateMsgs, addToDMs, fetchMsgThreads} from 'actions/dm-actions';
 import { subCategories } from 'components/Session/Sub-comps/sub-categories';
 import './header.scss';
 class Header extends Component {
@@ -237,7 +237,7 @@ class Header extends Component {
 		this.socket.emit('open-dm', this.props.auth.user, dm_user.socketId)
 	}
 	closeDMs = () => {
-		this.props.openDMs(null);
+		this.props.closeDMs();
 	}
 	feedDMs = () => {
 		let msngrs = this.props.dms.messangers;
@@ -721,6 +721,7 @@ Header.propTypes = {
 	dms: PropTypes.object,
 	updateApp: PropTypes.func,
 	openDMs: PropTypes.func,
+	closeDMs: PropTypes.func,
 	updateDMs: PropTypes.func,
 	updateMsgs: PropTypes.func,
 	socket: PropTypes.object,
@@ -743,6 +744,7 @@ export default connect(stateToProps,
 		 updateDMs,
 		 updateMsgs,
 		 openDMs,
+		 closeDMs,
 		 addToDMs,
 		 fetchMsgThreads
 	})(withRouter(Header));
