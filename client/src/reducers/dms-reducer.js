@@ -1,10 +1,12 @@
-import { OPEN_DMS, SETUP_DMS, UPDATE_DMS, UPDATE_MSGS, ADD_DM, ADD_DMS } from "actions/types";
+import { OPEN_DMS, SETUP_DMS, UPDATE_DMS, UPDATE_MSGS, ADD_DM, ADD_DMS, ADD_SESS_DMS } from "actions/types";
 //import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	sendToId: '',
 	messangers: {},
 	messanger: null,
-	msgs: []
+	session_msngrs: {},
+	msgs: [],
+	currThread: undefined
 };
 
 export default function(state = initialState, action) {
@@ -14,14 +16,16 @@ export default function(state = initialState, action) {
 			msgsClone.push(action.payload)
 			return {
 			...state,
-			msgs: msgsClone
+			msgs: msgsClone,
+			currThread: action.payload._id ? action.payload._id : undefined
 		};
 		case UPDATE_DMS:
 			return {
 			...state,
 			...action.payload
 		};
-		case ADD_DM:		
+		case ADD_DM:	
+			console.log(action.payload)	
 			let dmsClone = JSON.parse(JSON.stringify(state.messangers));
 			dmsClone[action.payload._id] = action.payload
 			return {
@@ -35,7 +39,12 @@ export default function(state = initialState, action) {
 			return {
 			...state,
 			messangers: assigned,
-	};
+		};
+		case ADD_SESS_DMS:		
+			return {
+			...state,
+			session_msngrs: action.payload,
+		};
 		case SETUP_DMS:
 			return {
 			...state,

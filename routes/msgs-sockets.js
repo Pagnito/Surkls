@@ -14,29 +14,54 @@ module.exports = (io, socket, app) => {
       user.socketId = socket.id;
       vidSessionUsers[user._id] = user;  
       socket.emit('setup-vid-dms', vidSessionUsers)
-      console.log('hey');
     }   
   })
 
   socket.on('setup', (user)=>{
     user.socketId = socket.id;
     connectedUsers[user._id] = user;
-    let msngrs = {};
-    user.messangers.forEach(msngr=>{   
-      if(connectedUsers[msngr]){
-        msngrs[msngr] = connectedUsers[msngr]
-        io.to(connectedUsers[msngr].socketId).emit('update-dms', user)  
-      }        
-    })
-    console.log(msngrs)
-    socket.emit('setup', msngrs)
   })
-  socket.on('open-dm', (user, receiver)=>{
-    io.to(receiver).emit('open-dm', user)
-  })
+
+
+  
   socket.on('msg', msg=>{
-    io.to(msg.receiver).emit('msg', msg)
-    io.to(msg.sender).emit('msg', msg)
+    if(msg._id!==undefined){
+      Msgs.updateOne({_id:msg._id}, {$push:{msgs:msg}},{new:true}).then(up=>{
+        let rec = connectedUsers[msg.receiver._id]
+          if(rec){
+            io.to(rec.socketId).emit('msg', msg)
+            io.to(socket.id).emit('msg', msg)
+          } else {
+            io.to(socket.id).emit('msg', msg)
+          }
+      })
+    } else {
+      let msgSchema = {
+        msg: msg.msg,
+        userName: msg.userName,
+        avatarUrl:msg.avatarUrl
+      }
+      let newThread = new Msgs({
+        msgs: [msgSchema]
+      })
+        newThread.save().then(async (thread)=>{
+          let dm = {threadId: thread._id, userId: msg.receiver._id}
+          console.log(dm)
+          await User.updateOne({_id:msg.user_id},{$push:{dms:dm}})
+          await User.updateOne({_id:msg.receiver._id},{$push:{dms:dm}})
+            let rec = connectedUsers[msg.receiver._id]
+            if(rec){
+              msg._id = thread._id
+              io.to(rec.socketId).emit('msg', msg)
+              io.to(socket.id).emit('msg', msg)
+            } else {
+              io.to(socket.id).emit('msg', msg)
+            }
+          
+        })
+    }
+    
+    
   })
 
 socket.on('disconnect', ()=>{

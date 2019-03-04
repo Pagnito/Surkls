@@ -24,6 +24,12 @@ export const addToDMs = (user) => {
 		payload: user
 	}
 }
+export const addSessDMs = (users) => {
+	return {
+		type: ADD_SESS_DM,
+		payload: users
+	}
+}
 export const addMultiToDMs = (users) => {
 	return {
 		type: ADD_DMS,

@@ -32,7 +32,6 @@ class Header extends Component {
 			this.props.addToDMs(user)
 		})
 		this.socket.on('update-dms',(user)=>{
-			console.log('wtf')
 			this.props.addToDMs(user)
 		})
 	}
@@ -217,12 +216,13 @@ class Header extends Component {
 			let me = this.props.auth.user;
 		
 			let msg = {
-				receiver: this.props.dms.messanger.socketId,
+				receiver: this.props.dms.messanger,
 				sender: this.socket.id,
 				msg:this.state.dm_msg,
 				username: me.userName,
 				avatarUrl: me.avatarUrl,
-				user_id: me._id
+				user_id: me._id,
+				_id: this.props.dms.currThread ? this.props.dms.currThread : undefined
 			}
 			this.socket.emit('msg', msg);
 			this.setState({dm_msg:''})		
@@ -682,7 +682,7 @@ class Header extends Component {
 						{this.messagesMenu()}
 						<div onClick={this.renderCreateSessionMenu} id="startSessionIcon" />
 						<div onClick={this.renderMessagesMenu} id="messageIcon" >
-							<div className="red-alert-dot">3</div>
+							<div className="red-alert-dot">1</div>
 						</div>
 						<div onClick={this.renderNotifMenu} id="notifIcon" />
 						<div

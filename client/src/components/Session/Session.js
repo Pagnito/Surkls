@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
-import {openDMs, addMultiToDMs} from 'actions/dm-actions';
+import {openDMs, addMultiToDMs, addSessDMs} from 'actions/dm-actions';
 import Dropdown from 'components/smalls/drop-menu-mutable';
 import SessionContentYoutube from './Sub-comps/session-content-youtube';
 import SessionContentDailymotion from './Sub-comps/session-content-dailymotion';
@@ -70,7 +70,6 @@ class Session extends Component {
 		if(this.sessionActionSignalsSetup===false){
 			this.sessionActionSignalsSetup=true;
 			this.socket.on('setup-vid-dms', users=>{
-				console.log('ayo')
 				this.props.addMultiToDMs(users)
 			})
 			this.socket.on('recieveMsgs', (data) => {
@@ -307,8 +306,10 @@ class Session extends Component {
 		}
 		this.rtcs = {};
 		let streamOfMe = document.getElementById('streamOfMe');
-		streamOfMe.srcObject.getTracks().forEach((track) => track.stop());
-		streamOfMe.srcObject = null;
+		if(streamOfMe.srcObject!==null){
+			streamOfMe.srcObject.getTracks().forEach((track) => track.stop());
+			streamOfMe.srcObject = null;
+		}
 		let streams = document.querySelectorAll('.stream');
 		if (streams !== null && streams.length !== 0) {
 			for (let stream of streams) {
@@ -545,14 +546,16 @@ class Session extends Component {
 		this.props.getDevices();
 	};
 	openDMs = (dm_user) => {
-		let modal = document.querySelector('.profileModal');
-		modal.style.display = 'none'
+		let modals = document.querySelectorAll('.profileModal');
+		for(let mod of modals){
+			mod.style.display = 'none'
+		}
 		this.props.openDMs(dm_user);
-		this.socket.emit('open-dm', this.props.auth.user, dm_user.socketId)
+		//this.socket.emit('open-dm', this.props.auth.user, dm_user.socketId)
 	}
 	renderProfileModal = (user) =>{
 		return (
-			<div  className="profileModal">
+			<div className="profileModal">
       <div className="profileBanner">
         <div style={{backgroundImage:`url(${user.avatarUrl ? user.avatarUrl : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
       </div>       
@@ -603,7 +606,6 @@ class Session extends Component {
 				userName: this.props.auth.userName,
 				date: fullDate,
 				msgText: this.state.msg,
-				id:this.props.auth._id
 			};
 			e.preventDefault();
 			this.socket.emit('sendMsg', msg);
@@ -901,14 +903,17 @@ Session.propTypes = {
 	closeMenus: PropTypes.func,
 	socket: PropTypes.object,
 	openDMs: PropTypes.func,
-	addMultiToDMs: PropTypes.func
+	addMultiToDMs: PropTypes.func,
+	addSessDMs: PropTypes.func,
+	dms: PropTypes.object
 };
 function stateToProps(state) {
 	return {
 		auth: state.auth.user,
 		session: state.session,
 		devices: state.devices,
-		app: state.app
+		app: state.app, 
+		dms: state.dms
 	};
 }
 export default connect(stateToProps, {
@@ -920,5 +925,6 @@ export default connect(stateToProps, {
 	updateSession,
 	closeMenus,
 	openDMs,
-	addMultiToDMs
+	addMultiToDMs,
+	addSessDMs
 })(Session);
