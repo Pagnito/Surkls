@@ -45,7 +45,8 @@ export default function(state = initialState, action) {
 		case OPEN_DMS:
 			return {
 				...state,
-				messanger: action.payload
+				messanger: action.payload,
+				currThread: action.payload!==null? action.payload.thread_id : undefined
 			};
 		default:
 			return state;

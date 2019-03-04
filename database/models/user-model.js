@@ -12,10 +12,11 @@ const UserSchema = new Schema({
   surkl: String,
   subscriptions: [String],
   dms: [{
-    threadId:String,
-    userId:String,
+    user_id:String,
+    thread_id: String,
     avatarUrl: String,
-    userName:String
+    userName: String,
+    latestMsg: String
   }],
   messangers: [String],
   followers: [Object],

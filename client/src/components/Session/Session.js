@@ -561,8 +561,9 @@ class Session extends Component {
 		for(let mod of modals){
 			mod.style.display = 'none'
 		}
+		dm_user.user_id = dm_user._id;
+		delete dm_user._id
 		this.props.openDMs(dm_user);
-		//this.socket.emit('open-dm', this.props.auth.user, dm_user.socketId)
 	}
 	renderProfileModal = (user) =>{
 		return (

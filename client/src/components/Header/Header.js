@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp } from 'actions/actions';
-import { openDMs, updateDMs, updateMsgs, addToDMs} from 'actions/dm-actions';
+import { openDMs, updateDMs, updateMsgs, addToDMs, fetchMsgThreads} from 'actions/dm-actions';
 import { subCategories } from 'components/Session/Sub-comps/sub-categories';
 import './header.scss';
 class Header extends Component {
@@ -96,6 +96,9 @@ class Header extends Component {
 		}
 	};
 	renderMessagesMenu = () => {
+		if(Object.keys(this.props.dms.messangers).length==0 && this.menusClosed==true){
+			this.props.fetchMsgThreads(this.props.auth.user._id)
+		}
 		this.menusClosed=false;
 		this.props.toggleMenu({
 			messagesMenuVisible: this.props.app.messagesMenuVisible ? false : true,
@@ -214,9 +217,10 @@ class Header extends Component {
 		if(e.key==='Enter'){
 			e.preventDefault()
 			let me = this.props.auth.user;
-		
+			let rec = this.props.dms.messanger
+	
 			let msg = {
-				receiver: this.props.dms.messanger,
+				receiver: rec,
 				sender: this.socket.id,
 				msg:this.state.dm_msg,
 				userName: me.userName,
@@ -237,18 +241,20 @@ class Header extends Component {
 	}
 	feedDMs = () => {
 		let msngrs = this.props.dms.messangers;
-		if(msngrs.length>0){
-			return msngrs.map((msngr,ind)=>{
-				return (
-					<div onClick={()=>this.openDMs(msngr)} key={ind} className="msngr">
-						<img className="msngr-avatar" src={msngr.avatarUrl}></img>
+		let threads = [];
+		if(Object.keys(msngrs.length>0)){
+			for(let ms in msngrs){
+				threads.push(
+					<div onClick={()=>this.openDMs(msngrs[ms])} key={ms} className="msngr">
+						<img className="msngr-avatar" src={msngrs[ms].avatarUrl}></img>
 						<div className="msngr-name-n-msg">
-							<div className="msngr-name">{msngr.userName}</div>
+							<div className="msngr-name">{msngrs[ms].userName}</div>
 							
 						</div>
 					</div>
 				)
-			})
+			}
+			return threads;
 		}	
 	}
 	displayMsgs = () =>{
@@ -718,7 +724,8 @@ Header.propTypes = {
 	updateDMs: PropTypes.func,
 	updateMsgs: PropTypes.func,
 	socket: PropTypes.object,
-	addToDMs: PropTypes.func
+	addToDMs: PropTypes.func,
+	fetchMsgThreads: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -736,5 +743,6 @@ export default connect(stateToProps,
 		 updateDMs,
 		 updateMsgs,
 		 openDMs,
-		 addToDMs
+		 addToDMs,
+		 fetchMsgThreads
 	})(withRouter(Header));

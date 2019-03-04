@@ -27,6 +27,7 @@ class App extends Component {
 		super(props);
 		this.socket = io(socketUrl.url);
 		this.socket.on('setup',(data)=>{
+			console.log(data)
 			Store.dispatch({
 				type: SETUP_DMS,
 				payload: data

@@ -6,6 +6,19 @@ ADD_DM,
 ADD_DMS
 } from 'actions/types';
 
+export const fetchMsgThreads = (id) => (dispatch) =>{
+	fetch('/api/dms/'+id)
+	.then(res=>res.json())
+	.then(data=>{
+		let threads = {};
+		data.forEach(thread=>{threads[thread.user_id]=thread})
+		dispatch({
+			type: UPDATE_DMS,
+			payload: {messangers:threads}
+		})
+	})
+}
+
 export const updateDMs = (dms) => {
 	return {
 		type: UPDATE_DMS,

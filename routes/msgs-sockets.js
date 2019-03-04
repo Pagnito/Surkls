@@ -22,12 +22,44 @@ module.exports = (io, socket, app) => {
 	});
 
 	socket.on('msg', (msg) => {
-		let rec = connectedUsers[msg.receiver._id];
-		if (rec) {
-			io.to(rec.socketId).emit('msg', msg);
-			io.to(socket.id).emit('msg', msg);
+    let rec = connectedUsers[msg.receiver.user_id];
+    console.log(msg)
+		if (msg._id) {
+			if (rec) {
+        io.to(rec.socketId).emit('msg', msg);
+        io.to(socket.id).emit('msg', msg);
+      } else {
+        io.to(socket.id).emit('msg', msg);
+      }
 		} else {
-			io.to(socket.id).emit('msg', msg);
+			console.log('NEW THREAD');
+			let newThread = new Msgs({
+				msgs: [ msg ]
+			});
+			newThread.save().then((thread) => {
+				msg._id = thread._id;
+				if (rec) {
+					io.to(rec.socketId).emit('msg', msg);
+					io.to(socket.id).emit('msg', msg);
+				} else {
+					io.to(socket.id).emit('msg', msg);
+				}
+
+				let dm1 = {
+					thread_id: thread._id,
+					user_id: msg.user_id,
+					avatarUrl: msg.avatarUrl,
+					userName: msg.userName
+				};
+				let dm2 = {
+					thread_id: thread._id,
+					user_id: msg.receiver._id,
+					avatarUrl: msg.receiver.avatarUrl,
+					userName: msg.receiver.userName
+				};
+				User.updateOne({ _id: msg.user_id }, { $push: { dms: dm2 } }).exec();
+				User.updateOne({ _id: msg.receiver._id }, { $push: { dms: dm1 } }).exec();
+			});
 		}
 	});
 
@@ -38,7 +70,7 @@ module.exports = (io, socket, app) => {
 			}
 		}
 		console.log('/////////////////////////');
-		console.log(Object.keys(connectedUsers))
+		console.log(Object.keys(connectedUsers));
 	});
 
 	app.post('/add/:id', (req, res) => {
