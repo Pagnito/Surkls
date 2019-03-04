@@ -219,7 +219,7 @@ class Header extends Component {
 				receiver: this.props.dms.messanger,
 				sender: this.socket.id,
 				msg:this.state.dm_msg,
-				username: me.userName,
+				userName: me.userName,
 				avatarUrl: me.avatarUrl,
 				user_id: me._id,
 				_id: this.props.dms.currThread ? this.props.dms.currThread : undefined
@@ -237,20 +237,18 @@ class Header extends Component {
 	}
 	feedDMs = () => {
 		let msngrs = this.props.dms.messangers;
-		let msArr = [];
-		if(Object.keys(msngrs).length>0){
-			 for(let msngr in msngrs){
-				msArr.push(
-					<div onClick={()=>this.openDMs(msngrs[msngr])} key={msngr} className="msngr">
-						<img className="msngr-avatar" src={msngrs[msngr].avatarUrl}></img>
+		if(msngrs.length>0){
+			return msngrs.map((msngr,ind)=>{
+				return (
+					<div onClick={()=>this.openDMs(msngr)} key={ind} className="msngr">
+						<img className="msngr-avatar" src={msngr.avatarUrl}></img>
 						<div className="msngr-name-n-msg">
-							<div className="msngr-name">{msngrs[msngr].userName}</div>
+							<div className="msngr-name">{msngr.userName}</div>
 							
 						</div>
 					</div>
 				)
-			}
-			return msArr;
+			})
 		}	
 	}
 	displayMsgs = () =>{

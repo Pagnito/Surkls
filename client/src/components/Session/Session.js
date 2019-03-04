@@ -67,8 +67,7 @@ class Session extends Component {
 			videoEl: null
 		};
 		this.socket = this.props.socket;
-		if(this.sessionActionSignalsSetup===false){
-			this.sessionActionSignalsSetup=true;
+
 			this.socket.on('setup-vid-dms', users=>{
 				this.props.addMultiToDMs(users)
 			})
@@ -102,7 +101,7 @@ class Session extends Component {
 			this.socket.on('sharingLink', (link)=>{
 				window.open(link, 'mywin', 'width=860,height=620,screenX=950,right=50,screenY=50,top=50,status=yes');
 			})
-		}
+	
 		
 	}
 	/////////////////////////////////////////end of state//////////////////////////////////
@@ -323,7 +322,19 @@ class Session extends Component {
 			}
 		}
 		this.socket.emit('leave');
-		this.socket.removeAllListeners()
+		this.socket.removeListener('createOrJoin');
+		this.socket.removeListener('signal');
+		this.socket.removeListener('setup-vid-dms')
+		this.socket.removeListener('recieveMsgs');		
+		this.socket.removeListener('pickThisVideo');
+		this.socket.removeListener('unpickThisVideo');
+		this.socket.removeListener('adminLeftImAdminNow');
+		this.socket.removeListener('youtubeList');
+		this.socket.removeListener('sessiremoveListenerExpired');
+		this.socket.removeListener('giveMeVideoCurrentTime');
+		this.socket.removeListener('hereIsVideoCurrentTime');
+		this.socket.removeListener('sharingTweet')
+		this.socket.removeListener('sharingLink')
 		
 		this.props.updateSession({
 			inSession: false,
@@ -575,7 +586,7 @@ class Session extends Component {
 				if(client.isAdmin){
 					return(
 						<div className="clientImgRightWrap" key={ind}>								
-								<img  onClick={this.showProfileModal} style={{
+								<img onClick={this.showProfileModal} style={{
 									border:'2px solid #FECC44',
 							 		boxSizing:'border-box'}} src={url} className="clientSquareAv" />
 								{	this.renderProfileModal(client)}

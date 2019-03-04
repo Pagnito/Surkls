@@ -1,4 +1,4 @@
-import { OPEN_DMS, SETUP_DMS, UPDATE_DMS, UPDATE_MSGS, ADD_DM, ADD_DMS, ADD_SESS_DMS } from "actions/types";
+import { OPEN_DMS, SETUP_DMS, UPDATE_DMS, UPDATE_MSGS, ADD_DM, ADD_SESS_DMS } from "actions/types";
 //import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	sendToId: '',
@@ -25,20 +25,12 @@ export default function(state = initialState, action) {
 			...action.payload
 		};
 		case ADD_DM:	
-			console.log(action.payload)	
 			let dmsClone = JSON.parse(JSON.stringify(state.messangers));
 			dmsClone[action.payload._id] = action.payload
 			return {
 			...state,
 			messangers: dmsClone,
 			messanger: state.messanger._id ===action.payload._id ? action.payload : state.messanger
-		};
-		case ADD_DMS:		
-			let dmsClone2 = JSON.parse(JSON.stringify(state.messangers));
-			let assigned = Object.assign(action.payload, dmsClone2)
-			return {
-			...state,
-			messangers: assigned,
 		};
 		case ADD_SESS_DMS:		
 			return {

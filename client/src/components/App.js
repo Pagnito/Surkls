@@ -37,7 +37,6 @@ class App extends Component {
 	
 		setUserMedia();
 		fetch('/account').then((res) => res.json()).then((user) =>{
-			user.socketId=this.socket.id
 			Store.dispatch({
 				type: GET_USER,
 				payload: user

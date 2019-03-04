@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, {pingTimeout: 600000});
 const compression = require('compression')
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -52,12 +52,12 @@ auth(app);
 twitter(app);
 sockets(io, app);
 
-/* if (process.env.NODE_ENV == "production") { */
+ if (process.env.NODE_ENV == "production") { 
   app.use(express.static(path.resolve(__dirname, "client", "build")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
-//}
+}
 server.listen(PORT/* ,'192.168.1.4' */, ()=>{
   console.log('\x1b[35m%s\x1b[0m', "BACKEND ON PORT 4000");
   console.log('\x1b[36m%s\x1b[0m', "FRONTEND ON PORT 3000")

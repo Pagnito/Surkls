@@ -11,7 +11,12 @@ const UserSchema = new Schema({
   avatarUrl: String,
   surkl: String,
   subscriptions: [String],
-  dms: [{threadId:String,userId:String}],
+  dms: [{
+    threadId:String,
+    userId:String,
+    avatarUrl: String,
+    userName:String
+  }],
   messangers: [String],
   followers: [Object],
   following:[String]
