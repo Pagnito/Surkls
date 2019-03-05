@@ -31,6 +31,11 @@ module.exports = (io, socket, app) => {
         user_id: msg.user_id
       }
       Msgs.updateOne({_id: msg._id}, {$push:{msgs:ms}}).exec()
+      let ids = [msg.receiver.user_id, msg.user_id]
+      User.updateMany({_id:{$in:ids}, 'dms.thread_id':msg._id}, 
+         {$set:{"dms.$.latestMsg": msg.msg}})
+        .exec()
+
 			if (rec) {
         io.to(rec.socketId).emit('msg', msg);
         io.to(socket.id).emit('msg', msg);
@@ -55,13 +60,15 @@ module.exports = (io, socket, app) => {
 					thread_id: thread._id,
 					user_id: msg.user_id,
 					avatarUrl: msg.avatarUrl,
-					userName: msg.userName
+          userName: msg.userName,
+          latestMsg: msg.msg
 				};
 				let dm2 = {
 					thread_id: thread._id,
 					user_id: msg.receiver.user_id,
 					avatarUrl: msg.receiver.avatarUrl,
-					userName: msg.receiver.userName
+          userName: msg.receiver.userName,
+          latestMsg: msg.msg
 				};
 				User.updateOne({ _id: msg.user_id }, { $push: { dms: dm2 } }).exec();
 				User.updateOne({ _id: msg.receiver.user_id }, { $push: { dms: dm1 } }).exec();

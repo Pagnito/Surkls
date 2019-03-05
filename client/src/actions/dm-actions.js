@@ -58,7 +58,6 @@ export const openDMs = (dm_user) =>(dispatch)=> {
 	fetch('/api/dm_thread/'+dm_user.thread_id)
 	.then(res=>res.json())
 	.then(data=>{
-		console.log(data)
 		dispatch({
 			type:LOAD_MSGS,
 			payload: data
