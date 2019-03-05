@@ -25,7 +25,8 @@ passport.use(new LocalStrategy({
           email: user.email,
           userName: user.userName,
           _id:user._id,
-          avatarUrl: user.avatarUrl
+          avatarUrl: user.avatarUrl,
+          dms: user.dms
         }
         done(null, userRes)
       } else {

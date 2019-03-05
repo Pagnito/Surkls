@@ -84,7 +84,7 @@ export const signUp = (user, cb) => (dispatch) => {
 				type: SET_USER,
 				payload: user
 			});
-			cb();
+			cb(user);
 		})
 		.catch(() => {
 			dispatch({
@@ -110,7 +110,7 @@ export const signIn = (user, cb) => (dispatch) => {
 				type: SET_USER,
 				payload: user
 			});
-			cb();
+			cb(user);
 		})
 		.catch(() => {
 			dispatch({

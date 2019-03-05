@@ -52,7 +52,7 @@ class Header extends Component {
 		this.setState({ [e.target.name]: this.state.disableAud == 'off' ? 'on' : 'off' });
 	};
 	renderAccMenu = () => {
-		this.menusClosed=false;
+		this.menusClosed=this.menuClosed ? false : true;
 		this.props.toggleMenu({accMenuVisible: this.props.app.accMenuVisible ? false : true,
 			notifMenuVisible: false,
 			sessionMenuVisible: false,
@@ -63,7 +63,7 @@ class Header extends Component {
 		})
 	};
 	renderNotifMenu = () => {
-		this.menusClosed=false;
+		this.menusClosed=this.menuClosed ? false : true;
 		this.props.toggleMenu({
 			notifMenuVisible: this.props.app.notifMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -75,7 +75,7 @@ class Header extends Component {
 		});
 	};
 	renderCreateSessionMenu = () => {
-		this.menusClosed=false;
+		this.menusClosed=this.menuClosed ? false : true;
 		if (window.location.pathname.indexOf('/session') < 0) {
 			this.props.toggleMenu(
 				{
@@ -97,9 +97,10 @@ class Header extends Component {
 	};
 	renderMessagesMenu = () => {
 		if(Object.keys(this.props.dms.messangers).length==0 && this.menusClosed==true){
+			console.log('wtf')
 			this.props.fetchMsgThreads(this.props.auth.user._id)
 		}
-		this.menusClosed=false;
+		this.menusClosed=this.menuClosed ? false : true;
 		this.props.toggleMenu({
 			messagesMenuVisible: this.props.app.messagesMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -112,7 +113,7 @@ class Header extends Component {
 	
 	};
 	renderSignInMenu = () => {
-		this.menusClosed=false;
+		this.menusClosed=this.menuClosed ? false : true;
 		this.props.toggleMenu({
 			signInMenuVisible: this.props.app.signInMenuVisible ? false : true,
 			threeDotMenuVisible: false,
@@ -120,7 +121,7 @@ class Header extends Component {
 		});
 	};
 	renderThreeDotMenu = () => {
-		this.menusClosed=false;
+		this.menusClosed=this.menuClosed ? false : true;
 		this.props.toggleMenu({
 			threeDotMenuVisible: this.props.app.threeDotMenuVisible ? false : true,
 			signInMenuVisible: false,
@@ -142,6 +143,7 @@ class Header extends Component {
 		});
 	};
 	hideSignInMenu = () => {
+		this.menusClosed=this.menuClosed ? false : true;
 		this.props.toggleMenu({ signInMenuVisible: false });
 	};
 	renderPulloutMenu = () => {
@@ -489,9 +491,11 @@ class Header extends Component {
 			password: this.state.password
 		};
 
-		this.props.signIn(JSON.stringify(user), () => {
+		this.props.signIn(JSON.stringify(user), (userRes) => {
 			this.setState({ signInMenuVisible: false });
+			this.menusClosed = true;
 			this.props.history.push('/rooms');
+			this.socket.emit('setup', userRes)
 		});
 	};
 	signInMenu = () => {
