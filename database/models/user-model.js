@@ -16,8 +16,9 @@ const UserSchema = new Schema({
     thread_id: String,
     avatarUrl: String,
     userName: String,
-    latestMsg: String
+    latestMsg: String,  
   }],
+  new_msg_count: Number,
   messangers: [String],
   followers: [Object],
   following:[String]

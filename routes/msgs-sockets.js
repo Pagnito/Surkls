@@ -20,7 +20,9 @@ module.exports = (io, socket, app) => {
 		connectedUsers[user._id] = user;
 		console.log('CONNECTED USERS', Object.keys(connectedUsers));
 	});
-
+  socket.on('clear-notifs', (user)=>{
+    User.updateOne({_id:user._id}, {$set:{new_msg_count:0}}).exec()
+  })
 	socket.on('msg', (msg) => {
     let rec = connectedUsers[msg.receiver.user_id];
 		if (msg._id) {
@@ -28,7 +30,8 @@ module.exports = (io, socket, app) => {
         msg: msg.msg,
         userName: msg.userName,
         avatarUrl: msg.avatarUrl,
-        user_id: msg.user_id
+        user_id: msg.user_id,
+        receiver_id: msg.receiver.user_id
       }
       Msgs.updateOne({_id: msg._id}, {$push:{msgs:ms}}).exec()
       let ids = [msg.receiver.user_id, msg.user_id]
@@ -40,6 +43,7 @@ module.exports = (io, socket, app) => {
         io.to(rec.socketId).emit('msg', msg);
         io.to(socket.id).emit('msg', msg);
       } else {
+        User.updateOne({_id:msg.receiver.user_id}, {$inc:{new_msg_count:1}}).exec()
         io.to(socket.id).emit('msg', msg)
       }
 		} else {
@@ -53,6 +57,7 @@ module.exports = (io, socket, app) => {
 					io.to(rec.socketId).emit('msg', msg);
 					io.to(socket.id).emit('msg', msg);
 				} else {
+          User.updateOne({_id:msg.receiver.user_id}, {$inc:{new_msg_count:1}}).exec()
 					io.to(socket.id).emit('msg', msg);
 				}
 
@@ -84,12 +89,6 @@ module.exports = (io, socket, app) => {
 		}
 		console.log('/////////////////////////');
 		console.log(Object.keys(connectedUsers));
-	});
-
-	app.post('/add/:id', (req, res) => {
-		User.updateOne({ _id: req.params.id }, { $push: { messangers: req.body.id } }, { new: true }).then((up) => {
-			res.json(up);
-		});
 	});
 };
 /* redClient.set('users'+user._id, JSON.stringify(user))

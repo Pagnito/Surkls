@@ -100,7 +100,8 @@ module.exports = (app) => {
 				_id: req.user._id,
 				avatarUrl: req.user.avatarUrl,
 				dms: req.user.dms,
-				messangers: req.user.messangers
+				messangers: req.user.messangers,
+				new_msg_count: req.user.new_msg_count
 			};
 			res.json(userRes);
 		} else {

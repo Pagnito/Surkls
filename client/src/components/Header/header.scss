@@ -304,13 +304,18 @@
 	max-height:350px;
 	width:300px;
 }
+.msngr:hover {
+	background: #CBD2D2;
 
+}
 .msngr {
 	display: flex;
 	padding: 10px;
 	box-sizing: border-box;
 	width:100%;
 	border-top:2px solid #CBD2D2;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
 	.msngr-avatar {
 		width:30px;
 		height:30px;
@@ -323,6 +328,12 @@
 	font-family: 'Quicksand';
 	font-weight: 700px;
 	padding-left:10px;
+	.msngr-name {
+		font-weight: 700;
+	}
+	.msngr-latest-msg {
+		font-size: 12px;
+	}
 }
 /*msgs menu*/
 /////////////////////////////////////////////////////////////////////////////////
@@ -381,6 +392,16 @@
 	box-sizing: border-box;
 	font-size: 14px;
 	align-content: flex-start;
+}
+.dm-msngr-feed::-webkit-scrollbar {
+	width:7px;
+}
+.dm-msngr-feed::-webkit-scrollbar-thumb {
+	background: #D2D5D5; 
+	border-radius: 10px;
+}
+.dm-msngr-feed::-webkit-scrollbar-corner {
+	background: transparent;
 }
 .dm-msngr-input-wrap {
 	display:flex;

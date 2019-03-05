@@ -39,7 +39,13 @@ class Header extends Component {
 	componentDidMount() {
 		this.props.getDevices();
 	}
-	componentDidUpdate(){
+	componentDidUpdate(prevProps){
+		if (this.props.dms.msgs !== prevProps.dms.msgs) {
+			const chatBox = document.querySelector('.dm-msngr-feed');
+			if (chatBox !== null) {
+				chatBox.scrollTop = chatBox.scrollHeight;
+			}
+		}
 		if(this.props.app.menu==='close-menus' && this.menusClosed === false){		
 			this.hideAllMenus()
 			this.menusClosed=true;
@@ -236,7 +242,7 @@ class Header extends Component {
 	}
 	openDMs = (dm_user) => {
 		this.props.openDMs(dm_user);
-		this.socket.emit('open-dm', this.props.auth.user, dm_user.socketId)
+		this.socket.emit('clear-notifs', this.props.auth.user)
 	}
 	closeDMs = () => {
 		this.props.closeDMs();
@@ -251,7 +257,7 @@ class Header extends Component {
 						<img className="msngr-avatar" src={msngrs[ms].avatarUrl}></img>
 						<div className="msngr-name-n-msg">
 							<div className="msngr-name">{msngrs[ms].userName}</div>
-							
+							<div className="msngr-latest-msg">{msngrs[ms].latestMsg.substring(0,30)+'...'}</div>
 						</div>
 					</div>
 				)
@@ -690,7 +696,7 @@ class Header extends Component {
 						{this.messagesMenu()}
 						<div onClick={this.renderCreateSessionMenu} id="startSessionIcon" />
 						<div onClick={this.renderMessagesMenu} id="messageIcon" >
-							<div className="red-alert-dot">1</div>
+							{this.props.dms.notifCount> 0 ? <div className="red-alert-dot">{this.props.dms.notifCount}</div>: ''}
 						</div>
 						<div onClick={this.renderNotifMenu} id="notifIcon" />
 						<div

@@ -6,18 +6,25 @@ const initialState = {
 	messanger: null,
 	session_msngrs: {},
 	msgs: [],
-	currThread: undefined
+	currThread: undefined,
+	notifCount: 0
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case UPDATE_MSGS:
 			let msgsClone = state.msgs.slice(0);
+			let msngrsClone = JSON.parse(JSON.stringify(state.messangers))
 			msgsClone.push(action.payload)
+			if(state.messangers.hasOwnProperty(action.payload.user_id)){			
+				msngrsClone[action.payload.user_id].latestMsg = action.payload.msg 
+			}
 			return {
 			...state,
 			msgs: msgsClone,
-			currThread: action.payload._id ? action.payload._id : undefined
+			messangers: msngrsClone,
+			currThread: action.payload._id ? action.payload._id : undefined,
+			notifCount: state.messanger==null ? state.notifCount+=1 : 0
 		};
 		case LOAD_MSGS:	
 			return {
@@ -51,7 +58,8 @@ export default function(state = initialState, action) {
 			return {
 				...state,
 				messanger: action.payload,
-				currThread: action.payload!==null? action.payload.thread_id : undefined
+				currThread: action.payload!==null? action.payload.thread_id : undefined,
+				notifCount: 0
 			};
 		default:
 			return state;

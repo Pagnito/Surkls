@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { GET_USER, SETUP_DMS } from 'actions/types';
+import { GET_USER,UPDATE_DMS } from 'actions/types';
 import { Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setUserMedia } from '../../tools/setUserMedia';
@@ -26,13 +26,6 @@ class App extends Component {
 	constructor(props){
 		super(props);
 		this.socket = io(socketUrl.url);
-		this.socket.on('setup',(data)=>{
-			console.log(data)
-			Store.dispatch({
-				type: SETUP_DMS,
-				payload: data
-			})
-		})
 	}
 	componentDidMount() {
 	
@@ -42,7 +35,12 @@ class App extends Component {
 				type: GET_USER,
 				payload: user
 			})
-			this.socket.emit('setup', user)			
+			this.socket.emit('setup', user)	
+			console.log(user)
+			Store.dispatch({
+				type: UPDATE_DMS,
+				payload: {notifCount: user.new_msg_count}
+			})		
 			if(this.props.location.pathname === '/' ){		
 				this.props.history.push('/rooms')
 			}		

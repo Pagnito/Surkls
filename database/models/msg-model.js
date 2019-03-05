@@ -8,7 +8,8 @@ const MsgsSchema = new Schema({
       userName: String,
       msg: String,
       avatarUrl: String,
-      user_id: String
+      user_id: String,
+      receiver_id: String
     }
   ] 
 });
