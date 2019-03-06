@@ -63,7 +63,7 @@ export const openDMs = (dm_user, cb) =>(dispatch)=> {
 			payload: data
 		})
 	})
-	cb(dm_user.thread_id)
+	cb(dm_user)
 }
 export const closeDMs = () =>{
 	return ({

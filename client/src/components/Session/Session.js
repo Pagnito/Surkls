@@ -563,7 +563,9 @@ class Session extends Component {
 		}
 		dm_user.user_id = dm_user._id;
 		delete dm_user._id
-		this.props.openDMs(dm_user);
+		this.props.openDMs(dm_user, (user)=>{
+			this.socket.emit('clear-notifs', user)
+		});
 	}
 	renderProfileModal = (user) =>{
 		return (

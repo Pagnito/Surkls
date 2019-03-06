@@ -46,9 +46,9 @@ class Header extends Component {
 				chatBox.scrollTop = chatBox.scrollHeight;
 			}
 		}
-		if(this.props.app.menu==='close-menus' && this.menusClosed === false){		
+		if(this.props.app.menu==='close-menus'){		
 			this.hideAllMenus()
-			this.menusClosed=true;
+			//this.menusClosed=true;
 		}
 	}
 	onInputChange = (e) => {
@@ -58,7 +58,7 @@ class Header extends Component {
 		this.setState({ [e.target.name]: this.state.disableAud == 'off' ? 'on' : 'off' });
 	};
 	renderAccMenu = () => {
-		this.menusClosed=this.menusClosed ? false : true;
+		//this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({accMenuVisible: this.props.app.accMenuVisible ? false : true,
 			notifMenuVisible: false,
 			sessionMenuVisible: false,
@@ -69,7 +69,7 @@ class Header extends Component {
 		})
 	};
 	renderNotifMenu = () => {
-		this.menusClosed=this.menusClosed ? false : true;
+	//this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({
 			notifMenuVisible: this.props.app.notifMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -81,7 +81,7 @@ class Header extends Component {
 		});
 	};
 	renderCreateSessionMenu = () => {
-		this.menusClosed=this.menusClosed ? false : true;
+		//this.menusClosed=this.menusClosed ? false : true;
 		if (window.location.pathname.indexOf('/session') < 0) {
 			this.props.toggleMenu(
 				{
@@ -102,7 +102,7 @@ class Header extends Component {
 		}
 	};
 	renderMessagesMenu = () => {
-		if(this.menusClosed==true){
+		if(this.props.app.messagesMenuVisible==false){
 			this.props.fetchMsgThreads(this.props.auth.user._id)
 		}
 		this.menusClosed=this.menusClosed ? false : true;
@@ -118,7 +118,7 @@ class Header extends Component {
 	
 	};
 	renderSignInMenu = () => {
-		this.menusClosed=this.menusClosed ? false : true;
+		//this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({
 			signInMenuVisible: this.props.app.signInMenuVisible ? false : true,
 			threeDotMenuVisible: false,
@@ -126,7 +126,7 @@ class Header extends Component {
 		});
 	};
 	renderThreeDotMenu = () => {
-		this.menusClosed=this.menusClosed ? false : true;
+		//this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({
 			threeDotMenuVisible: this.props.app.threeDotMenuVisible ? false : true,
 			signInMenuVisible: false,
@@ -148,11 +148,11 @@ class Header extends Component {
 		});
 	};
 	hideSignInMenu = () => {
-		this.menusClosed=this.menusClosed ? false : true;
+		//this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({ signInMenuVisible: false });
 	};
 	renderPulloutMenu = () => {
-		this.menusClosed=this.menusClosed ? false : true;
+		//this.menusClosed=this.menusClosed ? false : true;
 		let bg = document.getElementById('pulloutBg');
 		let menu = document.getElementById('pullout');
 		if (this.props.app.pulloutMenuVisible === false) {
@@ -242,8 +242,8 @@ class Header extends Component {
 		}	
 	}
 	openDMs = (dm_user) => {
-		this.props.openDMs(dm_user, (thread_id)=>{
-			this.socket.emit('clear-notifs', this.props.auth.user, thread_id)
+		this.props.openDMs(dm_user, (user)=>{
+			this.socket.emit('clear-notifs', this.props.auth.user, user.thread_id)
 		});	
 	}
 	closeDMs = () => {
@@ -256,9 +256,10 @@ class Header extends Component {
 		
 		if(Object.keys(msngrs.length>0)){
 			for(let ms in msngrs){
-				let notif = msngrs[ms].notif ? {border:'2px solid red'} : {border:'2px solid #B7B9B9'}
+				let notif = msngrs[ms].notif ? {border:'2px solid #ef3e3e'} : {border:'2px solid #B7B9B9'}
+				let bg =  msngrs[ms].notif ? {background:'#F4FBFB'} : {background:'#DDE4E4'}
 				threads.push(
-					<div onClick={()=>this.openDMs(msngrs[ms])} key={ms} className="msngr">
+					<div style={bg} onClick={()=>this.openDMs(msngrs[ms])} key={ms} className="msngr">
 						<img className="msngr-avatar" src={msngrs[ms].avatarUrl}></img>
 						<div className="msngr-name-n-msg">
 							<div className="msngr-name">{msngrs[ms].userName}</div>

@@ -21,13 +21,18 @@ module.exports = (io, socket, app) => {
 		console.log('CONNECTED USERS', Object.keys(connectedUsers));
   });
   socket.on('closed-dm-widget', (user)=>{
-    delete msngr_widget[user._id]
+    delete msngr_widget[user._id];
   })
   socket.on('clear-notifs', (user, thread_id)=>{
-    msngr_widget[user._id] = 'open';
-    User.updateOne({_id:user._id,'dms.thread_id':thread_id} , {
-      $set:{new_msg_count:0,'dms.$.notif': false }
-    }).exec()
+    ////this fire after open msngr widget
+    user.socketId = socket.id;
+    msngr_widget[user._id] = user;
+    console.log(thread_id)
+    if(thread_id){
+      User.updateOne({_id:user._id,'dms.thread_id':thread_id} , {
+        $set:{new_msg_count:0,'dms.$.notif': false }
+      }).exec()
+    }  
   })
 	socket.on('msg', (msg) => {
     let rec = connectedUsers[msg.receiver.user_id];
@@ -38,11 +43,11 @@ module.exports = (io, socket, app) => {
         avatarUrl: msg.avatarUrl,
         user_id: msg.user_id,
         receiver_id: msg.receiver.user_id
-      }
+      };
       Msgs.updateOne({_id: msg._id}, {$push:{msgs:ms}}).exec()
       let ids = [msg.receiver.user_id, msg.user_id]
       User.updateMany({_id:{$in:ids}, 'dms.thread_id':msg._id}, 
-         {$set:{"dms.$.latestMsg": msg.msg}})
+         {$set:{"dms.$.latestMsg": msg.msg, 'dms.$.latest_date':new Date(Date.now())}})
         .exec()
 
 			if (rec) {
@@ -97,6 +102,11 @@ module.exports = (io, socket, app) => {
 	});
 
 	socket.on('disconnect', () => {
+    for (let user in msngr_widget) {
+			if (msngr_widget[user].socketId === socket.id) {
+				delete msngr_widget[user];
+			}
+		}
 		for (let user in connectedUsers) {
 			if (connectedUsers[user].socketId === socket.id) {
 				delete connectedUsers[user];

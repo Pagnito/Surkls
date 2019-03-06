@@ -17,7 +17,8 @@ const UserSchema = new Schema({
     avatarUrl: String,
     userName: String,
     latestMsg: String,
-    notif: Boolean  
+    notif: Boolean,
+    latest_date: { type: Date, default: Date.now }
   }],
   new_msg_count: Number,
   messangers: [String],
