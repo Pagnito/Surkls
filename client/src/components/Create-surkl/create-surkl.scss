@@ -1,0 +1,70 @@
+#create-surkl {
+  height: calc(100vh - 55px);
+  margin-top: 55px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  .name-your-surkl{
+    width:80%;
+    margin-top: -50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .name-your-surkl-input{
+      width:0%;
+      height:200px;
+      font-family: 'Quicksand';
+      font-size: 90px;
+      background: transparent;
+      border: none;
+      outline:none;
+      color:#DFE5E5;
+      text-align: center;
+      border-bottom: 3px solid #F6C641;
+      animation: width .7s ease-out forwards;
+       
+    }
+    .name-your-surkl-input::placeholder {
+      color:#F6C641;
+      font-weight: 700;
+      text-align: center;
+      opacity: .3;
+    }
+  }
+ 
+}
+.create-surkl-arrows {
+  width:40%;
+  display:flex;
+  justify-content: center;
+  margin-top: 40px;
+  .create-surkl-arrow:hover{
+    transform: scale(1.1)
+  }
+  .create-surkl-arrow:active{
+    transform: scale(1)
+  }
+  .create-surkl-arrow{
+    cursor: pointer;
+    width:100px;
+    height:85px;
+    background-position: center;
+    background-size: 40px;
+    background-repeat: no-repeat;
+  }
+  .create-surkl-left-arrow {
+    background-image: url('/assets/UI-icons/caret-left-solid.svg')
+  }
+  .create-surkl-right-arrow {
+    background-image: url('/assets/UI-icons/caret-right-solid.svg')
+  }
+}
+.opacity::placeholder{
+  opacity: .5 !important;
+}
+@keyframes width {
+  100% {
+    width:100%;
+  }
+}
+

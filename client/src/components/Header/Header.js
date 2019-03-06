@@ -186,12 +186,12 @@ class Header extends Component {
 					<div onClick={this.renderPulloutMenu} id="menuBarsIcon2" />
 					<img id="surklsTitle" src="/assets/surkls-title2.png" />
 				</div>
-				<Link to="/rooms" className="menuItem">
-					<div className="threeDotMenuIcon" id="roomsIcon" />Rooms
+				<Link to="/create_surkl" className="menuItem">
+					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
 				</Link>
-				<div className="menuItem">
-					<div className="threeDotMenuIcon" id="surklsIcon" />Surkls
-				</div>
+				<Link to="/rooms" className="menuItem">
+					<div className="threeDotMenuIcon" id="surklsIcon" />Rooms
+				</Link>
 				<div className="menuItem">
 					<div className="threeDotMenuIcon" id="helpIcon" />Streams
 				</div>
@@ -202,7 +202,7 @@ class Header extends Component {
 					<div className="threeDotMenuIcon" id="aboutIcon" />Events
 				</div>
 				<div className="menuSurkls">
-					<div className="menuSurklsHeader">Surkls</div>
+					<div className="menuSurklsHeader">My Surkl Name</div>
 				</div>
 			</Pullout>
 		);
@@ -445,7 +445,6 @@ class Header extends Component {
 					<option value="entertainment">Entertainment</option>
 					<option value="sports">Sports</option>
 					<option value="entrepreneurship">Entrepreneurship</option>
-					<option value="religion">Religion</option>
 					<option value="spirituality">Spirituality</option>
 					<option value="business">Business</option>
 					<option value="health">Health</option>
@@ -611,9 +610,6 @@ class Header extends Component {
 				<div id="themeWidget">
 					<div id="themePicker" />
 				</div>
-				{/* <div className="menuItem">
-					<div className="rightAccIcon" id="surklsIcon" />Create a Surkl
-				</div> */}
 				<Link to="/dashboard" className="menuItem">
 					<div className="rightAccIcon" id="mySurklIcon" />My Surkl
 				</Link>

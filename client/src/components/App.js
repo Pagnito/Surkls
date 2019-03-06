@@ -13,7 +13,7 @@ import Session from 'components/Session/Session';
 import Rooms from 'components/Rooms/Rooms';
 import Header from 'components/Header/Header';
 import Profile from 'components/Profile/Profile';
-
+import CreateSurkl from 'components/Create-surkl/Create-surkl';
 
 /*const Loading = () => Loader;
 
@@ -54,13 +54,15 @@ class App extends Component {
 	render() {
 			return (
 				<Provider store={Store}>	
-					<Header socket={this.socket} />
+				
 					<Route exact path="/profile" component={Profile} />
 					<Route exact path="/" component={Home}  />
 					<Route exact path="/dashboard" component={Dashboard}  />
+					<Route exact path="/create_surkl" component={CreateSurkl}  />
 					<Route 
 					exact path="/session/:room" render={(props)=><Session {...props} socket={this.socket}/>}   />
 					<Route exact path="/rooms" component={Rooms}  />
+					<Header socket={this.socket} />
 				</Provider>
 			);
 	}
