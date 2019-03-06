@@ -68,9 +68,9 @@ class Dashboard extends Component {
            </section>
           <section id="dashboardCenter">
             <div id="feedInputs">
-              <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.dashboard.search1} id="dashSearch1" className="dashSearch" name="search1" placeholder="Subscribe to a topic"/>
+              {/* <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.dashboard.search1} id="dashSearch1" className="dashSearch" name="search1" placeholder="Subscribe to a topic"/>
               <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.dashboard.search2} id="dashSearch2" className="dashSearch" name="search2" placeholder="Subscribe to a topic"/>
-              <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.dashboard.search3} id="dashSearch3" className="dashSearch" name="search3" placeholder="Subscribe to a topic"/>
+              <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.dashboard.search3} id="dashSearch3" className="dashSearch" name="search3" placeholder="Subscribe to a topic"/> */}
             </div>
           <div id="dashboardFeed">
           {}

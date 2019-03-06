@@ -611,11 +611,11 @@ class Header extends Component {
 				<div id="themeWidget">
 					<div id="themePicker" />
 				</div>
-				<div className="menuItem">
-					<div className="rightAccIcon" id="surklsIcon" />My Surkls
-				</div>
+				{/* <div className="menuItem">
+					<div className="rightAccIcon" id="surklsIcon" />Create a Surkl
+				</div> */}
 				<Link to="/dashboard" className="menuItem">
-					<div className="rightAccIcon" id="profileIcon" />Dashboard
+					<div className="rightAccIcon" id="mySurklIcon" />My Surkl
 				</Link>
 				<div className="menuItem">
 					<div className="rightAccIcon" id="settingsIcon" />Settings
