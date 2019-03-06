@@ -50,7 +50,7 @@ export const addMultiToDMs = (users) => {
 		payload: users
 	}
 }
-export const openDMs = (dm_user) =>(dispatch)=> {
+export const openDMs = (dm_user, cb) =>(dispatch)=> {
 	dispatch({
 		type: OPEN_DMS,
 		payload: dm_user
@@ -63,6 +63,7 @@ export const openDMs = (dm_user) =>(dispatch)=> {
 			payload: data
 		})
 	})
+	cb(dm_user.thread_id)
 }
 export const closeDMs = () =>{
 	return ({

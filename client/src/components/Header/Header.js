@@ -58,7 +58,7 @@ class Header extends Component {
 		this.setState({ [e.target.name]: this.state.disableAud == 'off' ? 'on' : 'off' });
 	};
 	renderAccMenu = () => {
-		this.menusClosed=this.menuClosed ? false : true;
+		this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({accMenuVisible: this.props.app.accMenuVisible ? false : true,
 			notifMenuVisible: false,
 			sessionMenuVisible: false,
@@ -69,7 +69,7 @@ class Header extends Component {
 		})
 	};
 	renderNotifMenu = () => {
-		this.menusClosed=this.menuClosed ? false : true;
+		this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({
 			notifMenuVisible: this.props.app.notifMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -81,7 +81,7 @@ class Header extends Component {
 		});
 	};
 	renderCreateSessionMenu = () => {
-		this.menusClosed=this.menuClosed ? false : true;
+		this.menusClosed=this.menusClosed ? false : true;
 		if (window.location.pathname.indexOf('/session') < 0) {
 			this.props.toggleMenu(
 				{
@@ -102,11 +102,10 @@ class Header extends Component {
 		}
 	};
 	renderMessagesMenu = () => {
-		if(Object.keys(this.props.dms.messangers).length==0 && this.menusClosed==true){
-			console.log('wtf')
+		if(this.menusClosed==true){
 			this.props.fetchMsgThreads(this.props.auth.user._id)
 		}
-		this.menusClosed=this.menuClosed ? false : true;
+		this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({
 			messagesMenuVisible: this.props.app.messagesMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -119,7 +118,7 @@ class Header extends Component {
 	
 	};
 	renderSignInMenu = () => {
-		this.menusClosed=this.menuClosed ? false : true;
+		this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({
 			signInMenuVisible: this.props.app.signInMenuVisible ? false : true,
 			threeDotMenuVisible: false,
@@ -127,7 +126,7 @@ class Header extends Component {
 		});
 	};
 	renderThreeDotMenu = () => {
-		this.menusClosed=this.menuClosed ? false : true;
+		this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({
 			threeDotMenuVisible: this.props.app.threeDotMenuVisible ? false : true,
 			signInMenuVisible: false,
@@ -149,10 +148,11 @@ class Header extends Component {
 		});
 	};
 	hideSignInMenu = () => {
-		this.menusClosed=this.menuClosed ? false : true;
+		this.menusClosed=this.menusClosed ? false : true;
 		this.props.toggleMenu({ signInMenuVisible: false });
 	};
 	renderPulloutMenu = () => {
+		this.menusClosed=this.menusClosed ? false : true;
 		let bg = document.getElementById('pulloutBg');
 		let menu = document.getElementById('pullout');
 		if (this.props.app.pulloutMenuVisible === false) {
@@ -234,24 +234,29 @@ class Header extends Component {
 				userName: me.userName,
 				avatarUrl: me.avatarUrl,
 				user_id: me._id,
-				_id: this.props.dms.currThread ? this.props.dms.currThread : undefined
+				_id: this.props.dms.currThread ? this.props.dms.currThread : undefined,
+				msngr_open: this.props.dms.messanger!== null ? true : false
 			}
 			this.socket.emit('msg', msg);
 			this.setState({dm_msg:''})		
 		}	
 	}
 	openDMs = (dm_user) => {
-		this.props.openDMs(dm_user);
-		this.socket.emit('clear-notifs', this.props.auth.user)
+		this.props.openDMs(dm_user, (thread_id)=>{
+			this.socket.emit('clear-notifs', this.props.auth.user, thread_id)
+		});	
 	}
 	closeDMs = () => {
 		this.props.closeDMs();
+		this.socket.emit('closed-dm-widget', this.props.auth.user)
 	}
 	feedDMs = () => {
 		let msngrs = this.props.dms.messangers;
 		let threads = [];
+		
 		if(Object.keys(msngrs.length>0)){
 			for(let ms in msngrs){
+				let notif = msngrs[ms].notif ? {border:'2px solid red'} : {border:'2px solid #B7B9B9'}
 				threads.push(
 					<div onClick={()=>this.openDMs(msngrs[ms])} key={ms} className="msngr">
 						<img className="msngr-avatar" src={msngrs[ms].avatarUrl}></img>
@@ -259,6 +264,7 @@ class Header extends Component {
 							<div className="msngr-name">{msngrs[ms].userName}</div>
 							<div className="msngr-latest-msg">{msngrs[ms].latestMsg.substring(0,30)+'...'}</div>
 						</div>
+						<div style={notif} className="msngr-notif-dot"></div>
 					</div>
 				)
 			}
@@ -277,7 +283,7 @@ class Header extends Component {
 						background:'white',
 						borderRadius:'20px',
 						marginTop: '5px',
-						maxWidth:'70%',	
+						maxWidth:'80%',	
 						alignSelf:'flex-start',					
 						wordBreak: 'break-word',
 						display:'flex',
@@ -297,7 +303,7 @@ class Header extends Component {
 				return (
 					<div style={{
 						padding:'5px',
-						maxWidth:'70%',
+						maxWidth:'80%',
 						alignSelf:'flex-end',
 						paddingLeft:'10px',
 						paddingRight:'10px',
@@ -502,6 +508,7 @@ class Header extends Component {
 			this.menusClosed = true;
 			this.props.history.push('/rooms');
 			this.socket.emit('setup', userRes)
+			this.props.updateDMs({notifCount: userRes.new_msg_count})	
 		});
 	};
 	signInMenu = () => {

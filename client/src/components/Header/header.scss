@@ -321,20 +321,25 @@
 		height:30px;
 		border-radius: 30px;
 	}
+	.msngr-name-n-msg {
+		width:calc(100% - 55px);
+		font-family: 'Quicksand';
+		font-weight: 700px;
+		padding-left:10px;
+		.msngr-name {
+			font-weight: 700;
+		}
+		.msngr-latest-msg {
+			font-size: 12px;
+		}
+	}
+	.msngr-notif-dot {
+		height:4px;
+		width:4px;
+		border-radius: 4px;
+	}
 }
-.msngr-name-n-msg {
-	width:calc(100% - 50px);
 
-	font-family: 'Quicksand';
-	font-weight: 700px;
-	padding-left:10px;
-	.msngr-name {
-		font-weight: 700;
-	}
-	.msngr-latest-msg {
-		font-size: 12px;
-	}
-}
 /*msgs menu*/
 /////////////////////////////////////////////////////////////////////////////////
 /*dm-messanger*/

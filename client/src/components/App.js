@@ -36,7 +36,6 @@ class App extends Component {
 				payload: user
 			})
 			this.socket.emit('setup', user)	
-			console.log(user)
 			Store.dispatch({
 				type: UPDATE_DMS,
 				payload: {notifCount: user.new_msg_count}

@@ -5,7 +5,7 @@ const User = require('../database/models/user-model');
 //const redClient = require('../database/redis');
 let connectedUsers = {};
 let vidSessionUsers = {};
-let msgs = {};
+let msngr_widget = {};
 module.exports = (io, socket, app) => {
 	socket.on('setup-vid-dms', (user) => {
 		if (user !== null) {
@@ -19,9 +19,15 @@ module.exports = (io, socket, app) => {
 		user.socketId = socket.id;
 		connectedUsers[user._id] = user;
 		console.log('CONNECTED USERS', Object.keys(connectedUsers));
-	});
-  socket.on('clear-notifs', (user)=>{
-    User.updateOne({_id:user._id}, {$set:{new_msg_count:0}}).exec()
+  });
+  socket.on('closed-dm-widget', (user)=>{
+    delete msngr_widget[user._id]
+  })
+  socket.on('clear-notifs', (user, thread_id)=>{
+    msngr_widget[user._id] = 'open';
+    User.updateOne({_id:user._id,'dms.thread_id':thread_id} , {
+      $set:{new_msg_count:0,'dms.$.notif': false }
+    }).exec()
   })
 	socket.on('msg', (msg) => {
     let rec = connectedUsers[msg.receiver.user_id];
@@ -43,8 +49,13 @@ module.exports = (io, socket, app) => {
         io.to(rec.socketId).emit('msg', msg);
         io.to(socket.id).emit('msg', msg);
       } else {
-        User.updateOne({_id:msg.receiver.user_id}, {$inc:{new_msg_count:1}}).exec()
         io.to(socket.id).emit('msg', msg)
+      }
+      if(!msngr_widget[msg.receiver.user_id]){
+        User.updateOne({_id:msg.receiver.user_id, 'dms.thread_id': msg._id}, {
+          $inc:{new_msg_count:1},
+          $set:{'dms.$.notif':true}
+        }).exec()
       }
 		} else {
 			console.log('NEW THREAD');
@@ -57,10 +68,14 @@ module.exports = (io, socket, app) => {
 					io.to(rec.socketId).emit('msg', msg);
 					io.to(socket.id).emit('msg', msg);
 				} else {
-          User.updateOne({_id:msg.receiver.user_id}, {$inc:{new_msg_count:1}}).exec()
 					io.to(socket.id).emit('msg', msg);
-				}
-
+        }
+        if(!msngr_widget[msg.receiver.user_id]){
+          User.updateOne({_id:msg.receiver.user_id, 'dms.thread_id': msg._id}, {
+            $inc:{new_msg_count:1},
+            $set:{'dms.$.notif':true}
+          }).exec()
+        }     
 				let dm1 = {
 					thread_id: thread._id,
 					user_id: msg.user_id,
