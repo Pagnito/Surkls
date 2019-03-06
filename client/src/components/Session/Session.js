@@ -568,16 +568,21 @@ class Session extends Component {
 		});
 	}
 	renderProfileModal = (user) =>{
+		console.log(user)
+		let btn = user.isAdmin ? <div className="profileModalPassAdmin">Ask for admin rights</div> :
+		<div className="profileModalPassAdmin">Give admin rights</div>
+		btn = user._id===this.props.auth._id ? '' : btn
 		return (
 			<div className="profileModal">
       <div className="profileBanner">
         <div style={{backgroundImage:`url(${user.avatarUrl ? user.avatarUrl : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
       </div>       
           <div className="profileModalUsername">{user.userName}</div>
-          <div className="profileModalDesc">{user.description}</div>
+          <div className="profileModalDesc">{user.description}</div>		
           <div className="profileModalActions">
-            <div className="modalAction">Add To Surkl</div>
-            <div onClick={()=>this.openDMs(user)} data-user={JSON.stringify(user)}  className="modalAction">Send a Message</div>
+            <div className="modalAction add-to-surkl-action">Add To Surkl</div>
+            <div onClick={()=>this.openDMs(user)} data-user={JSON.stringify(user)}  className="modalAction send-msg-action">Send a Message</div>
+						{btn}
           </div>   
     </div>
 		)

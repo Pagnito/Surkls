@@ -1,6 +1,5 @@
 .profileModal {
   z-index: 200;
-  height:260px;
   width:220px;
   border-radius: 5px;
   position: absolute;
@@ -24,7 +23,7 @@
       width:50px;
       height:50px;
       border-radius:50px;
-      border: 3px solid white; 
+      border: 3px solid #DDE4E4; 
       background-size: cover; 
     } 
   }
@@ -35,16 +34,39 @@
   .profileModalDesc {
     min-height:65px;
   }
+  
   .profileModalActions {
     color: rgba(0,0,0,.7);
     font-size: 11px;
     width:100%;
     display:flex;
-    justify-content: space-around;
+    justify-content: space-between;
     box-sizing: border-box;
+    flex-wrap: wrap;
+    padding:5px;
+    .profileModalPassAdmin{
+      cursor: pointer;
+      border-radius:5px;
+      padding:5px;
+      box-sizing: border-box;
+      border: 1px solid rgba(0,0,0,.7);
+      width:100%;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .profileModalPassAdmin:hover {
+      background: #FECC44;
+      color: #282828;
+    }
     .modalAction:hover {
       background: #FECC44;
       color: #282828;
+    }
+    .send-msg-action {
+      width:55%;
+    }
+    .add-to-surkl-action{
+      width:43%;
     }
     .modalAction {
       cursor: pointer;
