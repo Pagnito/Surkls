@@ -6,14 +6,16 @@
   align-items: center;
   .name-your-surkl{
     width:80%;
-    margin-top: -50px;
     display: flex;
+    height:350px;
+    justify-content: space-between;
     flex-direction: column;
     align-items: center;
     .name-your-surkl-input{
       width:0%;
-      height:200px;
-      font-family: 'Quicksand';
+      height:120px;
+      margin-top: 70px;
+      font-family: 'Josefin sans';
       font-size: 90px;
       background: transparent;
       border: none;
@@ -22,7 +24,7 @@
       text-align: center;
       border-bottom: 3px solid #F6C641;
       animation: width .7s ease-out forwards;
-       
+      font-weight: 700;
     }
     .name-your-surkl-input::placeholder {
       color:#F6C641;
@@ -31,13 +33,82 @@
       opacity: .3;
     }
   }
- 
+ .create-surkl-categories-wrap {
+    width:90%;
+    display:flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    height:350px;
+    .create-surkl-categories {
+      display:flex;
+      margin-top: 30px;
+      justify-content: center;
+      align-content: flex-start;
+      flex-wrap:wrap;
+    }
+    .create-surkl-category:hover{
+      color:#F6C641;
+      background: black;
+    }
+    .create-surkl-category:active{
+      color:white;
+      background: black;
+    }
+    .create-surkl-category{
+      padding:10px;
+      padding-top: 15px;
+      font-family: 'Josefin sans';
+      font-size: 40px;
+      background: #F6C641;
+      border-radius:20px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transform: scale(0);
+    
+    }
+ }
+ .create-surkl-motto{
+  width:80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height:350px;
+  justify-content: space-between;
+  .pick-motto-input{
+    width:0%;
+    height:120px;
+    margin-top: 70px;
+    font-family: 'Josefin sans';
+    font-size: 90px;
+    background: transparent;
+    border: none;
+    outline:none;
+    color:#DFE5E5;
+    text-align: center;
+    border-bottom: 3px solid #F6C641;
+    animation: width .7s ease-out forwards;
+    font-weight: 700;
+  }
+  .pick-motto-input::placeholder {
+    color:#F6C641;
+    font-weight: 700;
+    text-align: center;
+    opacity: .3;
+  }
 }
+}
+
+
+
+
+
 .create-surkl-arrows {
   width:40%;
   display:flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 10px;
   .create-surkl-arrow:hover{
     transform: scale(1.1)
   }
@@ -46,25 +117,42 @@
   }
   .create-surkl-arrow{
     cursor: pointer;
-    width:100px;
+    width:0px;
     height:85px;
     background-position: center;
     background-size: 40px;
     background-repeat: no-repeat;
+    animation: width2 .7s ease-out forwards;
   }
   .create-surkl-left-arrow {
-    background-image: url('/assets/UI-icons/caret-left-solid.svg')
+    background-image: url('/assets/UI-icons/caret-left-solid.svg');
+    
   }
   .create-surkl-right-arrow {
-    background-image: url('/assets/UI-icons/caret-right-solid.svg')
+    background-image: url('/assets/UI-icons/caret-right-solid.svg');
+   
   }
+}
+.errorColor::-webkit-input-placeholder {
+  color: #d84224;
 }
 .opacity::placeholder{
   opacity: .5 !important;
 }
+
+@keyframes scaleUp {
+  100% {
+    transform: scale(1);
+  }
+}
 @keyframes width {
   100% {
     width:100%;
+  }
+}
+@keyframes width2 {
+  100% {
+    width:140px;
   }
 }
 
