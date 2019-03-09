@@ -10,14 +10,19 @@ export default class DropMenu extends Component {
 					<div style={{display: this.props.hideHeader ? 'none' : 'flex'}} className="menuHeader">
 						<span className="menuTitle">{this.props.menuTitle}</span>
 					</div>
-						{this.props.children}
+					
+							{this.props.children}
+		
 					</div>
 			</div>
 		);
 	}
 }
 DropMenu.propTypes = {
-	children: PropTypes.array,
+	children: PropTypes.oneOfType([
+		PropTypes.array,
+		PropTypes.object
+	]),
 	visibility: PropTypes.string,
 	menuTitle: PropTypes.string,
 	menuTypeArrow: PropTypes.string,

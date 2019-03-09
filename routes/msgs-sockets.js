@@ -3,10 +3,10 @@ mongoose.set('useFindAndModify', false);
 const Msgs = require('../database/models/msg-model');
 const User = require('../database/models/user-model');
 //const redClient = require('../database/redis');
-let connectedUsers = {};
+
 let vidSessionUsers = {};
 let msngr_widget = {};
-module.exports = (io, socket, app) => {
+module.exports = (io, socket, connectedUsers) => {
 	socket.on('setup-vid-dms', (user) => {
 		if (user !== null) {
 			user.socketId = socket.id;
@@ -15,19 +15,18 @@ module.exports = (io, socket, app) => {
 		}
 	});
 
-	socket.on('setup', (user) => {
+	/* socket.on('setup', (user) => {
 		user.socketId = socket.id;
 		connectedUsers[user._id] = user;
 		console.log('CONNECTED USERS', Object.keys(connectedUsers));
-  });
+  }); */
   socket.on('closed-dm-widget', (user)=>{
     delete msngr_widget[user._id];
   })
-  socket.on('clear-notifs', (user, thread_id)=>{
+  socket.on('clear-msg-notifs', (user, thread_id)=>{
     ////this fire after open msngr widget
     user.socketId = socket.id;
     msngr_widget[user._id] = user;
-    console.log(thread_id)
     if(thread_id){
       User.updateOne({_id:user._id,'dms.thread_id':thread_id} , {
         $set:{new_msg_count:0,'dms.$.notif': false }

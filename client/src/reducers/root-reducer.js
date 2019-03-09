@@ -6,6 +6,8 @@ import DeviceReducer from 'reducers/devices-reducer';
 import DashboardReducer from 'reducers/dashboard-reducer';
 import AppReducer from 'reducers/app-reducer';
 import DmsReducer from 'reducers/dms-reducer';
+import SurklReducer from 'reducers/surkl-reducer';
+import NotifReducer from 'reducers/notif-reducer';
 export default combineReducers({
   app: AppReducer,
   auth: AuthReducer,
@@ -13,5 +15,7 @@ export default combineReducers({
   sessions: SessionsReducer,
   devices: DeviceReducer,
   dashboard: DashboardReducer,
-  dms: DmsReducer
+  dms: DmsReducer,
+  surkl: SurklReducer,
+  notifs: NotifReducer
 });

@@ -9,8 +9,22 @@ const UserSchema = new Schema({
   twitchId: String,
   userName: String,
   avatarUrl: String,
-  surkl: String,
-  subscriptions: [String],
+  mySurkl: {
+    name: String,
+    surkl_id: String,
+    bannerUrl: String
+  },
+  memberOf:String,
+  lastActive: { type: Date, default: Date.now },
+  notifs: [{
+    source: {
+      name:String,
+      source_id:String
+    },
+    notifType: String,
+    text: String,
+    date: { type: Date, default: Date.now }
+  }],
   dms: [{
     user_id:String,
     thread_id: String,
@@ -20,6 +34,7 @@ const UserSchema = new Schema({
     notif: Boolean,
     latest_date: { type: Date, default: Date.now }
   }],
+  notif_count:Number,
   new_msg_count: Number,
   messangers: [String],
   followers: [Object],

@@ -45,6 +45,7 @@
     cursor: pointer;
     background-color: #dde4e4; 
     display: flex;
+    overflow: hidden;
     flex-direction: column;
     font-family: 'Didact Gothic';
     .menuHeader {
@@ -58,6 +59,7 @@
       width:100%;
       box-sizing: border-box;
     }
+  
     .menuInput {
       padding: 10px;
       font-size: 17px;

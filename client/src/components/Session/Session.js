@@ -567,9 +567,23 @@ class Session extends Component {
 			this.socket.emit('clear-notifs', user)
 		});
 	}
+	showProfileModal = (e) => {
+		let modal = e.target.nextSibling
+		if(modal!==null){
+			if(modal.style.display==='block'){
+				modal.style.display = 'none'
+			} else {
+				modal.style.display = 'block'
+			}
+		}
+	}
+	addToSurkl = (user, surkl) =>{
+		surkl.admin = this.props.auth._id;
+		this.socket.emit('add-to-surkl', user, surkl)
+	}
 	renderProfileModal = (user) =>{
-		console.log(user)
-		let btn = user.isAdmin ? <div className="profileModalPassAdmin">Ask for admin rights</div> :
+		if(user._id!==this.props.auth._id){
+			let btn = user.isAdmin ? <div className="profileModalPassAdmin">Ask for admin rights</div> :
 		<div className="profileModalPassAdmin">Give admin rights</div>
 		btn = user._id===this.props.auth._id ? '' : btn
 		return (
@@ -580,12 +594,13 @@ class Session extends Component {
           <div className="profileModalUsername">{user.userName}</div>
           <div className="profileModalDesc">{user.description}</div>		
           <div className="profileModalActions">
-            <div className="modalAction add-to-surkl-action">Add To Surkl</div>
+            <div onClick={()=>this.addToSurkl(user, this.props.auth.mySurkl)}className="modalAction add-to-surkl-action">Add To Surkl</div>
             <div onClick={()=>this.openDMs(user)} data-user={JSON.stringify(user)}  className="modalAction send-msg-action">Send a Message</div>
 						{btn}
           </div>   
     </div>
 		)
+		}	
 	}
 	updateClientList = () => {
 		if (this.props.session.clients !== undefined && this.props.session.clients.length > 0) {
@@ -654,15 +669,7 @@ class Session extends Component {
 		});
 	};
 
-	showProfileModal = (e) => {
-		let modal = e.target.nextSibling
-		if(modal.style.display==='block'){
-			modal.style.display = 'none'
-		} else {
-			modal.style.display = 'block'
-		}
-
-	}
+	
 
 	createVideo = () => {
 		return new Promise((resolve) => {

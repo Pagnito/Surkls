@@ -127,6 +127,21 @@
 			background-size: 20px;
 			background-repeat: no-repeat;
 			margin-right: 20px;
+			position: relative;
+			.red-alert-dot {
+				width:16px;
+				height:16px;
+				background:red;
+				position: absolute;
+				border-radius:16px;
+				color:white;
+				font-family: 'Quicksand';
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 12px;
+				right:0px;
+			}
 		}
 		#avatar {
 			cursor: pointer;
@@ -303,9 +318,15 @@
 /////////////////////////////////////////////////////////////////////////////////
 /*msgs menu*/
 
-#dmMsgsFeed {
-	max-height:350px;
-	width:300px;
+.dmMsgsFeed {
+	max-height:287px;
+	width:100%;
+	min-height: 240px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.dmMsgsFeed > div:last-child {
+	border-bottom: 2px solid #CBD2D2;
 }
 .msngr:hover {
 	background: #CBD2D2 !important;
@@ -440,3 +461,44 @@
 
 
 /*pull-out menu*/
+/*notification menu*/
+.notif-feed {
+	max-height:287px;
+	width:100%;
+	max-width: 320px;
+	min-height: 240px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	
+	.notif {
+		padding:5px;
+		box-sizing: border-box;
+		border-bottom: 1px solid #CBD2D2;
+		.notif-text{
+			font-family: 'Comfortaa' !important;
+			font-weight: 700;
+			margin-top:5px;
+			margin-bottom: 5px; 
+		}
+		.notif-options {
+			display: flex;
+			justify-content: space-between;
+			
+			.notif-option {
+				margin-top: 5px;
+				border-radius: 3px;
+				width:45%;
+				padding: 5px;
+				display: flex;
+				justify-content: center;
+				background: #282828;
+				color:white;
+			}
+			.notif-option:hover {
+				background: #EFC141;
+				color:black;
+			}
+		}
+	}
+}
+/*notification menu*/

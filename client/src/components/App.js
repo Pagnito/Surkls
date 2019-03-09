@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { GET_USER,UPDATE_DMS } from 'actions/types';
+import { GET_USER,UPDATE_DMS,LOAD_NOTIFS } from 'actions/types';
 import { Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setUserMedia } from '../../tools/setUserMedia';
@@ -39,7 +39,11 @@ class App extends Component {
 			Store.dispatch({
 				type: UPDATE_DMS,
 				payload: {notifCount: user.new_msg_count}
-			})		
+			})	
+			Store.dispatch({
+				type: LOAD_NOTIFS,
+				payload: {notifCount: user.notif_count, notifs: user.notifs}
+			})	
 			if(this.props.location.pathname === '/' ){		
 				this.props.history.push('/rooms')
 			}		
@@ -57,7 +61,7 @@ class App extends Component {
 				
 					<Route exact path="/profile" component={Profile} />
 					<Route exact path="/" component={Home}  />
-					<Route exact path="/dashboard" component={Dashboard}  />
+					<Route exact path="/surkl/:id" component={Dashboard}  />
 					<Route exact path="/create_surkl" component={CreateSurkl}  />
 					<Route 
 					exact path="/session/:room" render={(props)=><Session {...props} socket={this.socket}/>}   />

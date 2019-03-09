@@ -82,9 +82,12 @@ export const signUp = (user, cb) => (dispatch) => {
 		.then((user) => {
 			dispatch({
 				type: SET_USER,
-				payload: user
+				payload: user.userName ? user : {}
 			});
-			cb(user);
+			if(user.userName){
+				cb(user);
+			}
+		
 		})
 		.catch(() => {
 			dispatch({

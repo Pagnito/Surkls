@@ -101,7 +101,13 @@ module.exports = (app) => {
 				avatarUrl: req.user.avatarUrl,
 				dms: req.user.dms,
 				messangers: req.user.messangers,
-				new_msg_count: req.user.new_msg_count
+				new_msg_count: req.user.new_msg_count,
+				mySurkl: req.user.mySurkl,
+				memberOf: req.user.memberOf,
+				followers: req.user.followers,
+				following: req.user.following,
+				notifs: req.user.notifs,
+				notif_count: req.user.notif_count
 			};
 			res.json(userRes);
 		} else {

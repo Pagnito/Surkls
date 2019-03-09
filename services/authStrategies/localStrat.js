@@ -27,7 +27,13 @@ passport.use(new LocalStrategy({
           _id:user._id,
           avatarUrl: user.avatarUrl,
           dms: user.dms,
-          new_msg_count: user.new_msg_count
+          new_msg_count: user.new_msg_count,
+          mySurkl: user.mySurkl,
+          memberOf: user.memberOf,
+          followers: user.followers,
+          following: user.following,
+          notifs: user.notifs,
+			  	notif_count: user.notif_count
         }
         done(null, userRes)
       } else {

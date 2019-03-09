@@ -1,3 +1,13 @@
+#already-created{
+  height: calc(100vh - 55px);
+  margin-top: 55px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Josefin sans';
+  color:#F6C641;
+  font-size: 30px;
+}
 #create-surkl {
   height: calc(100vh - 55px);
   margin-top: 55px;
@@ -48,12 +58,12 @@
       flex-wrap:wrap;
     }
     .create-surkl-category:hover{
-      color:#F6C641;
-      background: black;
+      color:#F6C641 !important;
+      background: black !important;
     }
     .create-surkl-category:active{
-      color:white;
-      background: black;
+      color:white !important;
+      background: black !important;
     }
     .create-surkl-category{
       padding:10px;
@@ -130,7 +140,7 @@
   }
   .create-surkl-right-arrow {
     background-image: url('/assets/UI-icons/caret-right-solid.svg');
-   
+
   }
 }
 .errorColor::-webkit-input-placeholder {

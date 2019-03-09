@@ -22,4 +22,7 @@ export const LOAD_MSGS = 'LOAD_MSGS';
 export const ADD_DM = 'ADD_DM';
 export const ADD_DMS = 'ADD_DMS';
 export const ADD_SESS_DMS = 'ADD_SESS_DMS';
+export const MY_SURKL = 'MY_SURKL';
+export const UPDATE_NOTIFS = "UPDATE_NOTIFS";
+export const LOAD_NOTIFS = "LOAD_NOTIFS";
 

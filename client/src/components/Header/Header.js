@@ -6,6 +6,7 @@ import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp } from 'actions/actions';
 import { closeDMs, openDMs, updateDMs, updateMsgs, addToDMs, fetchMsgThreads} from 'actions/dm-actions';
+import { fetchNotifs, updateNotifs } from 'actions/notif-actions';
 import { subCategories } from 'components/Session/Sub-comps/sub-categories';
 import './header.scss';
 class Header extends Component {
@@ -58,7 +59,7 @@ class Header extends Component {
 		this.setState({ [e.target.name]: this.state.disableAud == 'off' ? 'on' : 'off' });
 	};
 	renderAccMenu = () => {
-		//this.menusClosed=this.menusClosed ? false : true;
+
 		this.props.toggleMenu({accMenuVisible: this.props.app.accMenuVisible ? false : true,
 			notifMenuVisible: false,
 			sessionMenuVisible: false,
@@ -69,7 +70,9 @@ class Header extends Component {
 		})
 	};
 	renderNotifMenu = () => {
-	//this.menusClosed=this.menusClosed ? false : true;
+		if(this.props.app.notifMenuVisible==false){
+			this.openNotifs()
+		}
 		this.props.toggleMenu({
 			notifMenuVisible: this.props.app.notifMenuVisible ? false : true,
 			accMenuVisible: false,
@@ -81,7 +84,7 @@ class Header extends Component {
 		});
 	};
 	renderCreateSessionMenu = () => {
-		//this.menusClosed=this.menusClosed ? false : true;
+
 		if (window.location.pathname.indexOf('/session') < 0) {
 			this.props.toggleMenu(
 				{
@@ -118,7 +121,7 @@ class Header extends Component {
 	
 	};
 	renderSignInMenu = () => {
-		//this.menusClosed=this.menusClosed ? false : true;
+
 		this.props.toggleMenu({
 			signInMenuVisible: this.props.app.signInMenuVisible ? false : true,
 			threeDotMenuVisible: false,
@@ -126,7 +129,7 @@ class Header extends Component {
 		});
 	};
 	renderThreeDotMenu = () => {
-		//this.menusClosed=this.menusClosed ? false : true;
+
 		this.props.toggleMenu({
 			threeDotMenuVisible: this.props.app.threeDotMenuVisible ? false : true,
 			signInMenuVisible: false,
@@ -148,11 +151,11 @@ class Header extends Component {
 		});
 	};
 	hideSignInMenu = () => {
-		//this.menusClosed=this.menusClosed ? false : true;
+
 		this.props.toggleMenu({ signInMenuVisible: false });
 	};
 	renderPulloutMenu = () => {
-		//this.menusClosed=this.menusClosed ? false : true;
+
 		let bg = document.getElementById('pulloutBg');
 		let menu = document.getElementById('pullout');
 		if (this.props.app.pulloutMenuVisible === false) {
@@ -215,12 +218,57 @@ class Header extends Component {
 				visibility={visibility}
 				menuTypeArrow="notifArrow"
 				menuTitle="Notifications"
-			>
-				<div>Hello</div>
+			>	
+				<div className="notif-feed">
+				{this.feedNotifs()}</div>
+				
 				<div />
 			</DropMenu>
 		);
 	};
+	notifTypes = (notif) =>{
+		return {
+			'add-to-surkl':
+			 <div className="notif add-to-surkl-notif">
+			 <div className="notif-text">{notif.text}</div>
+			 <div>Would you like to join?</div>
+			 	<div className="notif-options">
+				  <div onClick={()=>this.acceptSurklInvite(notif,this.props.auth.user)} className="notif-option">Yes</div>
+				 	<div className="notif-option">No</div>
+				</div>
+			</div>
+		}
+	}
+	clearAllNotifs = () =>{
+		this.socket.emit('clear-all-notifs', this.props.auth.user)
+	}
+	acceptSurklInvite = (invite, user) =>{
+		console.log(user)
+		this.socket.emit('accept-surkl', invite, user)
+	}
+	declineSurklInvite = (invite) =>{
+		this.socket.emit('decline-surkl', invite)
+	}
+	openNotifs = () => {	
+		this.socket.emit('clear-notifs', this.props.auth.user)
+		this.props.updateNotifs({notifCount: 0})
+	}
+	feedNotifs = () =>{
+		let notifs = this.props.notifs.notifs
+		if(notifs.length>0){
+			return notifs.map((notif,ind)=>{
+				return (
+					<div key={ind}>
+						{this.notifTypes(notif)[notif.notifType]}
+					</div>
+				)
+			})
+		}	
+	}
+
+
+
+
 	sendDM = (e) => {
 		if(e.key==='Enter'){
 			e.preventDefault()
@@ -243,7 +291,7 @@ class Header extends Component {
 	}
 	openDMs = (dm_user) => {
 		this.props.openDMs(dm_user, (user)=>{
-			this.socket.emit('clear-notifs', this.props.auth.user, user.thread_id)
+			this.socket.emit('clear-msg-notifs', this.props.auth.user, user.thread_id)
 		});	
 	}
 	closeDMs = () => {
@@ -344,10 +392,7 @@ class Header extends Component {
 		let visibility = this.props.app.messagesMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu hideMenu={this.hideAllMenus} menuTitle="Messages" visibility={visibility} menuTypeArrow="messagesArrow">
-				<div id="dmMsgsFeed"></div>
-					
-				{this.feedDMs()}
-
+				<div className="dmMsgsFeed" >{this.feedDMs()}</div>	
 			</DropMenu>
 		);
 	};
@@ -445,6 +490,7 @@ class Header extends Component {
 					<option value="entertainment">Entertainment</option>
 					<option value="sports">Sports</option>
 					<option value="entrepreneurship">Entrepreneurship</option>
+				
 					<option value="spirituality">Spirituality</option>
 					<option value="business">Business</option>
 					<option value="health">Health</option>
@@ -580,6 +626,17 @@ class Header extends Component {
 		);
 	};
 	accountMenu = () => {
+		let mySurkl = this.props.auth.user.mySurkl
+		let toMySurkl;
+		if(mySurkl!== null && mySurkl!==undefined){
+			toMySurkl = Object.keys(mySurkl).length>0 ? 
+			<Link to={`/surkl/${mySurkl._id}`} className="menuItem">
+				<div className="rightAccIcon" id="mySurklIcon" />My Surkl
+			</Link> : ''
+		} else {
+			toMySurkl = '';
+		}
+	
 		let visibility = this.props.app.accMenuVisible ? 'flex' : 'none';
 		return (
 			<DropMenu
@@ -610,9 +667,7 @@ class Header extends Component {
 				<div id="themeWidget">
 					<div id="themePicker" />
 				</div>
-				<Link to="/dashboard" className="menuItem">
-					<div className="rightAccIcon" id="mySurklIcon" />My Surkl
-				</Link>
+				{toMySurkl}
 				<div className="menuItem">
 					<div className="rightAccIcon" id="settingsIcon" />Settings
 				</div>
@@ -629,7 +684,6 @@ class Header extends Component {
 	createSession = () => {
 		if (this.state.roomName.length >= 3 && window.location.pathname.indexOf('/session') < 0) {
 			let sessionKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-			//let clientId = Math.random().toString(16).substring(2, 15) + Math.random().toString(16).substring(2, 15);
 			let sessionObj = {
 				room: this.state.roomName,
 				sessionKey: sessionKey,
@@ -702,7 +756,9 @@ class Header extends Component {
 						<div onClick={this.renderMessagesMenu} id="messageIcon" >
 							{this.props.dms.notifCount> 0 ? <div className="red-alert-dot">{this.props.dms.notifCount}</div>: ''}
 						</div>
-						<div onClick={this.renderNotifMenu} id="notifIcon" />
+						<div onClick={this.renderNotifMenu} id="notifIcon">
+							{this.props.notifs.notifCount> 0 ? <div className="red-alert-dot">{this.props.notifs.notifCount}</div>: ''}
+						</div>
 						<div
 							onClick={this.renderAccMenu}
 							id="avatar"
@@ -740,14 +796,18 @@ Header.propTypes = {
 	updateMsgs: PropTypes.func,
 	socket: PropTypes.object,
 	addToDMs: PropTypes.func,
-	fetchMsgThreads: PropTypes.func
+	fetchMsgThreads: PropTypes.func,
+	notifs: PropTypes.object,
+	fetchNotifs: PropTypes.func,
+	updateNotifs: PropTypes.func
 };
 function stateToProps(state) {
 	return {
 		auth: state.auth,
 		devices: state.devices,
 		app: state.app,
-		dms: state.dms
+		dms: state.dms,
+		notifs: state.notifs
 	};
 }
 export default connect(stateToProps, 
@@ -760,5 +820,7 @@ export default connect(stateToProps,
 		 openDMs,
 		 closeDMs,
 		 addToDMs,
-		 fetchMsgThreads
+		 fetchMsgThreads,
+		 fetchNotifs,
+		 updateNotifs
 	})(withRouter(Header));
