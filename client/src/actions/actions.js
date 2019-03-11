@@ -10,7 +10,7 @@ import {
 	NEW_ADMIN,
 	UNPICK_VIDEO,
 	SEND_TWEET,
-	UPDATE_DASHBOARD,
+
 	CLOSE_ALLMENUS,
 	TOGGLE_MENU,
 	UPDATE_APP
@@ -174,12 +174,7 @@ export const unpickThisVideoAction = (playState) => {
 		payload:playState
 	}
 }
-export const updateDashboard = (payload) =>  {
-	return{
-		type: UPDATE_DASHBOARD,
-		payload: payload
-	};
-};
+
 export const closeMenus =(action)=>{
 	return {
 		type: CLOSE_ALLMENUS,

@@ -562,6 +562,11 @@ class Session extends Component {
 			mod.style.display = 'none'
 		}
 		dm_user.user_id = dm_user._id;
+		//console.log(dm_user)
+		if(this.props.auth.dms[dm_user.user_id]){
+			console.log(this.props.auth.dms[dm_user._id])
+			dm_user.thread_id = this.props.auth.dms[dm_user._id].thread_id
+		}
 		delete dm_user._id
 		this.props.openDMs(dm_user, (user)=>{
 			this.socket.emit('clear-notifs', user)

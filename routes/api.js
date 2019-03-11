@@ -5,6 +5,11 @@ const Msgs = require('../database/models/msg-model');
 const Surkl = require('../database/models/surkl-model');
 module.exports = (app) => {
 
+	app.get('/api/surkl/:id', (req,res)=>{
+		Surkl.findById({_id:req.params.id}).then(surkl=>{
+			res.json(surkl)
+		})
+	})
 	app.get('/api/notifs/:id', (req,res)=>{
 		if(req.params.id!==undefined && req.params.id.length>0 && req.params.id!=='undefined'){
 			User.findById({_id:req.params.id}).then(user=>{
@@ -41,14 +46,25 @@ module.exports = (app) => {
 			res.json(data)
 		})
 	})	
-
+	app.get('/api/surkls_msgs', (req,res)=>{
+		redClient.hgetall('surkls-msgs', (err, data)=>{
+		res.json(data)
+	})
+})
 /////////////////////////////////////////////////POSTS/////////////////////////////////////////////
 app.post('/api/surkl/new', (req,res)=>{
+	console.log(req.user)
+	let admin = {
+		userName: req.user.userName,
+		avatarUrl: req.user.avatarUrl,
+		user_id: req.user._id,		
+	}
 	let newSurkl = new Surkl({
 		admin:req.body.admin,
 		name: req.body.name,
 		motto: req.body.motto,
-		category: req.body.category
+		category: req.body.category,
+		members: [admin]
 	})
 	newSurkl.save().then(surkl=>{
 		res.json(surkl)

@@ -9,14 +9,6 @@ let streaming = 0;
 let session= false;
 module.exports = (io, socket, initSession) => {
 	console.log('SETTING LISTENERS')
-	/* redClient.flushdb( function (err, succeeded) {
-    console.log(succeeded); // will be true if successfull
-	}); */
-	
-	/* redClient.hgetall('rooms',(err, str)=>{
-		console.log(str)
-	})
- */
 
 		socket.on('createOrJoin', function(sessionObj) {
 			//console.log('SESSION', session)
@@ -49,6 +41,7 @@ module.exports = (io, socket, initSession) => {
 									if (sessionObj.clients.length === sessionObj.maxMembers) {
 										sessionObj.maxedOut = true;
 									}
+									
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
 										io.in(session.sessionKey).emit('session', {clients:sessionObj.clients});
 										socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		

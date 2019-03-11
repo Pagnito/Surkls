@@ -183,6 +183,18 @@ class Header extends Component {
 	
 	/////////////////////////////////^^^^unctions^^^^/////////////////////////////////
 	pulloutMenu = () => {
+		let toMemberOf;
+		if(this.props.auth.user){
+			let memberOf = this.props.auth.user.memberOf;
+			if(memberOf!== null && memberOf!==undefined){
+			  toMemberOf = Object.keys(memberOf).length>0 ? 
+				<Link to={`/surkl/${memberOf}`} className="menuItem">
+					<div className="rightAccIcon" id="mySurklIcon" />Ma boiz
+				</Link> : ''
+			} else {
+				toMemberOf = '';
+			}
+		}
 		return (
 			<Pullout pullIn={this.renderPulloutMenu}>
 				<div className="customPulloutHeader">
@@ -192,6 +204,7 @@ class Header extends Component {
 				<Link to="/create_surkl" className="menuItem">
 					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
 				</Link>
+				{toMemberOf}
 				<Link to="/rooms" className="menuItem">
 					<div className="threeDotMenuIcon" id="surklsIcon" />Rooms
 				</Link>
@@ -630,7 +643,7 @@ class Header extends Component {
 		let toMySurkl;
 		if(mySurkl!== null && mySurkl!==undefined){
 			toMySurkl = Object.keys(mySurkl).length>0 ? 
-			<Link to={`/surkl/${mySurkl._id}`} className="menuItem">
+			<Link to={`/surkl/${mySurkl.surkl_id}`} className="menuItem">
 				<div className="rightAccIcon" id="mySurklIcon" />My Surkl
 			</Link> : ''
 		} else {

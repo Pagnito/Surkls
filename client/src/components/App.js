@@ -61,10 +61,12 @@ class App extends Component {
 				
 					<Route exact path="/profile" component={Profile} />
 					<Route exact path="/" component={Home}  />
-					<Route exact path="/surkl/:id" component={Dashboard}  />
-					<Route exact path="/create_surkl" component={CreateSurkl}  />
 					<Route 
-					exact path="/session/:room" render={(props)=><Session {...props} socket={this.socket}/>}   />
+						exact path="/surkl/:id" render={(props)=><Dashboard {...props} socket={this.socket}/>}   />
+					<Route 
+						exact path="/create_surkl" render={(props)=><CreateSurkl {...props} socket={this.socket}/>}   />
+					<Route 
+						exact path="/session/:room" render={(props)=><Session {...props} socket={this.socket}/>}   />
 					<Route exact path="/rooms" component={Rooms}  />
 					<Header socket={this.socket} />
 				</Provider>

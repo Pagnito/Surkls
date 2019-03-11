@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getSessions, joinSession, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
+import room_images from './room-images';
 import './rooms.scss';
 import { connect } from 'react-redux';
 
@@ -33,15 +34,44 @@ class Rooms extends Component {
 		return this.props.sessions.sessions.map((room,ind) => {
 			if(!room.maxedOut){
 				return (
-					<div onClick={() => this.joinSession(room.sessionKey, room.room)} key={ind} className="room">
-						{room.room}
+					<div style={{backgroundImage: `url(${room_images[room.category]})`,
+						backgroundPosition:'center',
+						backgroundRepeat:'no-repeat',
+						backgroundSize:'cover'}} key={ind} className="room">
+						
+						<div className="room-header">
+							<div className="room-name"><div className="on-dot"></div>{room.room}</div>
+							<div className="room-category">{room.category}</div>
+						</div>
+						
+						<div className="joins">
+							<div className="joins-title">Join as</div>
+							<div className="join-btns">
+								<button type="button" className="join-btn"> Viewer</button>
+								<button onClick={() => this.joinSession(room.sessionKey, room.room)} type="button" className="join-btn">Participator</button>
+							</div>			
+						</div>
+						<div className="hover-overlay"></div>
 					</div>
 				);
 			}	else {
 				return (
-					<div  key={ind} className="room">
-						{room.room}
-						room is maxed out
+					<div style={{backgroundImage: `url(${room_images[room.category]})`,
+						backgroundPosition:'center',
+						backgroundRepeat:'no-repeat',
+						backgroundSize:'cover'}} key={ind} className="room">
+						<div className="room-header">
+						<div className="maxed-out-overlay"></div>
+							{room.room}
+							<div className="room-category">{room.category}</div>
+						</div>
+						<div className="joins">
+							<div className="joins-title">Join as</div>
+							<div className="join-btns">
+								<button type="button" className="join-btn"> Viewer</button>
+								<button  type="button" className="join-btn">Participator</button>
+							</div>			
+						</div>
 					</div>
 				);
 			}	

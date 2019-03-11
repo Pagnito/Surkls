@@ -22,7 +22,7 @@ module.exports = (io, socket, connectedUsers) => {
   }); */
   socket.on('closed-dm-widget', (user)=>{
     delete msngr_widget[user._id];
-  })
+  });
   socket.on('clear-msg-notifs', (user, thread_id)=>{
     ////this fire after open msngr widget
     user.socketId = socket.id;

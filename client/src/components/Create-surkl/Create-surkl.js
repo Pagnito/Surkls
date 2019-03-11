@@ -37,13 +37,14 @@ class CreateSurkl extends Component {
 			'Travel',
 			'Technology'
 		];
+		this.socket = this.props.socket;
 		this.mottoPlaceholder = [ 'P', 'i', 'c', 'k', ' ', 'a', ' ', 'm', 'o', 't', 't', 'o' ];
 		this.namePlaceholder = [ 'N', 'a', 'm', 'e', ' ', 'Y', 'o', 'u', 'r', ' ', 'S', 'u', 'r', 'k', 'l' ];
 	}
 	componentDidMount() {
 		this.animatePlaceholder(this.namePlaceholder, document.getElementById('nameYourSurkl'), 15);
 	}
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate(/* prevProps, prevState */) {
 		if (this.state.phase === 'motto') {
 			this.animatePlaceholder(this.mottoPlaceholder, document.getElementById('pickMotto'), 12);
 		}
@@ -119,6 +120,8 @@ class CreateSurkl extends Component {
         this.setState({errors: errors})
       } else {
         this.props.newSurkl(JSON.stringify(newSurkl), (surkl)=>{
+					surkl.surkl_id = surkl._id
+					this.socket.emit('created-surkl', surkl)
           this.props.history.push('/surkl/'+surkl._id)
         })
       }  
@@ -228,7 +231,8 @@ class CreateSurkl extends Component {
 CreateSurkl.propTypes = {
   auth: PropTypes.object,
   newSurkl: PropTypes.func,
-  history: PropTypes.object
+	history: PropTypes.object,
+	socket: PropTypes.object
 }
 function stateToProps(state){
   return {

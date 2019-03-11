@@ -3,6 +3,49 @@ const User = require('../database/models/user-model');
 const Surkl = require('../database/models/surkl-model');
 module.exports = (io, socket, connectedUsers) => {
 
+
+  socket.on('join-surkl-room', (surkl_id) =>{
+    socket.join(surkl_id)
+  })
+  socket.on('created-surkl', (surkl)=>{
+    let msgs = []
+    redClient.hset('surkls-msgs', surkl.surkl_id, JSON.stringify(msgs), (err, done) => {
+      if (err) {
+        io.to(socket.id).emit('videoChatError');
+      }
+    });
+  })
+  socket.on('fetch-surkl-msgs', (surkl_id)=>{
+    redClient.hget('surkls-msgs', surkl_id, (err,msgs)=>{
+      if (err) {
+        socket.emit('videoChatError');
+      } else {
+        io.to(surkl_id).emit('receive-surkl-msgs', JSON.parse(msgs));
+      }
+    })
+  })
+  socket.on('surkl-msg', (msg) => {
+    redClient.hget('surkls-msgs', msg.surkl_id, (err, msgs) => {
+      
+      if (err) {
+        socket.emit('videoChatError');
+      } else {
+        
+        let msgsArr = JSON.parse(msgs);
+        if (msgsArr.length > 200) {
+          msgsArr = msgsArr.slice(0, 200);
+        }
+        msgsArr.push(msg);
+        redClient.hset('surkls-msgs', msg.surkl_id, JSON.stringify(msgsArr), (err, done) => {
+          if (err) {
+            io.to(socket.id).emit('videoChatError');
+          }
+          io.to(msg.surkl_id).emit('receive-surkl-msgs', msgsArr);
+        });
+      }
+     
+    });
+  });
   socket.on('clear-notifs', (user)=>{
     User.updateOne({_id: user._id}, {$set:{notif_count: 0}}).exec()
   });
@@ -28,6 +71,7 @@ module.exports = (io, socket, connectedUsers) => {
     delete userToAdd.followers
     delete userToAdd.following
     delete userToAdd.mySurkl
+   
     let notif = {
       notifType: 'add-to-surkl',
       source: {

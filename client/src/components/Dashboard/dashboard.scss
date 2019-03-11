@@ -1,13 +1,16 @@
-#dashboard {
+#surkl {
   width:100%;
   height: calc(100vh - 55px);
   display:flex;
   background: #242323;
   margin-top: 55px;
+  border-top: 1px solid #3E3E3E;
+  border-bottom: 1px solid #3E3E3E;
+  box-sizing: border-box; 
   #newsSources {
     width:20%;
     height:100%;
-    border-right: 1px solid #1F1F1F;    
+    border-right: 1px solid #3E3E3E;    
     #newsSourcesHeader {
       color:#F4FBFB;
       height:50px;
@@ -17,7 +20,7 @@
       align-items: center;
       justify-content: center;
       font-size: 20px;
-      border-bottom: 1px solid #1F1F1F;
+      border-bottom: 1px solid #3E3E3E;
       box-sizing: border-box;
     }
     #newsSourcesFeed::-webkit-scrollbar {
@@ -56,105 +59,108 @@
 
     }
   }
-  #dashboardFeed::-webkit-scrollbar {
+  #surkl-feed::-webkit-scrollbar {
     width:5px;
     background:#242323
   }
-  #dashboardFeed::-webkit-scrollbar-thumb {
-    background: #B1B6B6; 
+  #surkl-feed::-webkit-scrollbar-thumb {
+    background: #545353; 
     border-radius: 10px;
   }
-  #dashboardFeed::-webkit-scrollbar-corner {
+  #surkl-feed::-webkit-scrollbar-corner {
     background: transparent;
   }
-  #dashboardCenter {
+  #surkl-center {
     width:60%;
-    border-right:1px solid #1F1F1F;
+    border-right:1px solid #3E3E3E;
     height: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
-    #feedInputs {
-      height:50px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      width:100%;
-      .dashSearch {
-        background: #282828;
-        height: 25px;
-        font-size: 17px;
-        width:30%;
-        color:white;
-        outline:none;
-        border-radius:25px;
-        border:none;
-        border:1px solid #504f4f;
-        padding-left: 10px;
-      }
-    }
     
-    #dashboardFeed {
+    #surkl-feed {
       height:calc(100% - 50px);
       width:100%;
-      display:flex;
+      box-sizing: border-box;
+      padding-bottom: 10px;
       overflow: scroll;
-      overflow-x: hidden;
-      flex-direction: column;
-      align-items: center;
-      .newsSection{
-        .sectionTitle {
-          font-size: 30px;
-          height:50px;
-          width:100%;
-          font-family:"Comfortaa";
-          display: flex;
-          background: #DEB23B;
-          justify-content: center;
-          align-items: center;
-          color:#282828;
-        }
-        .sectionFeed>div:first-child {
-          margin-top: 0px !important;
-        }
+      overflow-x: hidden;    
+      .surkl-chat-msg:hover {
+        background: #302f2f;
       }
-      
-      
-      .article {
-        margin-top: 15px;
-        width:100%;
-        padding:10px;
+      .surkl-chat-msg {
+        margin-right:5px;
+        animation: fadeOut 2s ease-out forwards;
+        width: calc(100% - 10px);
+        font-family: 'Comfortaa';
+        display: flex;
         box-sizing: border-box;
-        color: #F4FBFB;
-        font-family: Arial, Helvetica, sans-serif;
-        .articleImg {
-          background-position: center;
-          background-size: cover;
-          background-repeat: no-repeat; 
-          height:300px;
-          width:100%;
+
+        .surkl-chat-msgAvatar {
+          width: 30px;
+          height: 30px;
+          border-radius: 30px;
+          margin: 10px;
+          border: 1px solid #c2c3c4;
         }
-        .articleAuthor {
-          margin-top:5px;
-          color:rgba(244,251,251,.6);
-          font-size: 12px;
-        }
-        .articleTitle {
-          margin-top:5px;
-          font-size: 20px;
-          font-weight: 600;
-        }
-        .articleText {
-          color: rgba(255,255,255,.7);
-          margin-top: 5px;
+        .surkl-chat-HeaderNmsg {
+          .surkl-chat-MsgUserInfo {
+            width: 100%;
+            height: 30px;
+            display: flex;
+            align-items: flex-end;
+
+            box-sizing: border-box;
+            display: flex;
+            width: 100%;
+            justify-content: flex-start;
+            .surkl-chat-MsgDate {
+              font-size: 10px;
+              margin-bottom: 2px !important;
+              margin-left: 5px;
+              color:#91918D;
+            }
+            .surkl-chat-MsgName {
+              font-size: 15px;
+              color:#91918D;
+            }
+          }
+
+          .surkl-chat-MsgText {
+            overflow-wrap: break-word;
+            word-break: break-word;
+            font-size: 13px;
+            color: #c2c3c4;
+            padding: 5px;
+            width:100%;
+            box-sizing: border-box;
+          }
         }
       }
     }
+    #surkl-chat-input::placeholder {
+      font-size: 15px;
+    }
+    #surkl-chat-input {
+      width:100%;
+      height:70px;
+      outline:none;
+      resize: none;
+      background: transparent;
+      border:none;
+      border-top: 1px solid #3E3E3E;
+      padding:10px;
+      box-sizing: border-box;
+      font-family: 'Comfortaa';
+      color:#C2C3C4;
+      font-size: 13px;
+    }
   }
-  #dashboardSurkls {
+  #surkl-members {
     width: 20%;
     height: 100%;
-    #dashboardSurklsHeader {
+    overflow: hidden;
+    #surkl-members-header {
       color:#F4FBFB;
       height:50px;
       width:100%;
@@ -163,8 +169,54 @@
       align-items: center;
       justify-content: center;
       font-size: 20px;
-      border-bottom: 1px solid #1F1F1F;
+      border-bottom: 1px solid #3E3E3E;
       box-sizing: border-box;
+      
     }
+    #my-surkl-members::-webkit-scrollbar {
+      width:0px;
+      //background:rgba(40,40,40, .2);
+    }
+    #my-surkl-members::-webkit-scrollbar-thumb {
+      background: #B1B6B6; 
+      border-radius: 10px;
+    }
+    #my-surkl-members::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+    #my-surkl-members{
+      overflow-y: scroll;
+      height: calc(100% - 50px);
+      width:100%; 
+      .surkl-member:hover {
+        background: #373636;
+      }
+      .surkl-member {
+        font-family: 'Comfortaa';
+        font-size: 13px;
+        color:#F4FBFB;
+        height: 50px;
+        width:100%;
+        padding-left: 5px;
+        cursor: pointer;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        .surkl-member-avatar {
+          width:25px;
+          height:25px;
+          border-radius:25px;
+          border:1px solid #F4FBFB;
+        }
+        .surkl-member-name {
+          padding-left: 10px;
+          background-position: center;
+          background-size: cover;
+          width: calc(100% - 55px);
+        }
+      }
+    }
+  
   }
 }
