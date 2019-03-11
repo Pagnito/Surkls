@@ -201,6 +201,9 @@ class Header extends Component {
 					<div onClick={this.renderPulloutMenu} id="menuBarsIcon2" />
 					<img id="surklsTitle" src="/assets/surkls-title2.png" />
 				</div>
+				<Link to="/rooms" className="menuItem">
+					<div className="rightAccIcon" id="surferIcon" />Surfing
+				</Link>
 				<Link to="/create_surkl" className="menuItem">
 					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
 				</Link>
@@ -208,14 +211,14 @@ class Header extends Component {
 				<Link to="/rooms" className="menuItem">
 					<div className="threeDotMenuIcon" id="surklsIcon" />Rooms
 				</Link>
-				<div className="menuItem">
+				{/* <div className="menuItem">
 					<div className="threeDotMenuIcon" id="helpIcon" />Streams
+				</div> */}
+				<div className="menuItem">
+					<div className="threeDotMenuIcon" id="peopleIcon" />People
 				</div>
 				<div className="menuItem">
-					<div className="threeDotMenuIcon" id="aboutIcon" />People
-				</div>
-				<div className="menuItem">
-					<div className="threeDotMenuIcon" id="aboutIcon" />Events
+					<div className="threeDotMenuIcon" id="eventsIcon" />Events
 				</div>
 				<div className="menuSurkls">
 					<div className="menuSurklsHeader">My Surkl Name</div>
@@ -489,7 +492,7 @@ class Header extends Component {
 					id="categorySelect"
 					className="menuSelect"
 				>
-					<option value="">Category</option>
+					<option value="random">Category</option>
 					<option value="gaming">Gaming</option>
 					<option value="music">Music</option>
 					<option value="joe+rogan">Joe Rogan</option>
@@ -511,7 +514,7 @@ class Header extends Component {
 					<option value="cars">Cars</option>
 					<option value="movies">Movies</option>
 					<option value="technology">Technology</option>
-					<option value="other">I want it all</option>
+					<option value="random">Random</option>
 				</select>
 				{this.renderSubCategories()}
 				<div className="menuConfig">

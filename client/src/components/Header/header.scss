@@ -223,42 +223,7 @@
 /*session menu*/
 ///////////////////////////////////////////////////////////////////////////////
 /*sign in menu */
-.signInMenuIcon {
-	width: 25px;
-	height: 25px;
-	background-position: center;
-	background-size: 21px;
-	background-repeat: no-repeat;
-	margin-right: 21px;
-}
-.signInGoogleWrap {
-	background-color: rgba(234,67,53,.9) !important;
-}
-.signInTwitterWrap {
-	background-color: rgba(29,161,242,.9) !important; 
-}
-.signInTwitchWrap {
-	background-color: rgba(100,65,164,.9) !important; 
-}
-.signInGoogleWrap:hover {
-	background-color: rgba(234,67,53,1) !important;
-}
-.signInTwitterWrap:hover {
-	background-color: rgba(29,161,242,1) !important; 
-}
-.signInTwitchWrap:hover {
-	background-color: rgba(100,65,164,1) !important; 
-}
-#signInGoogleIcon {
-	background-image: url('/assets/google_btn.png');
-}
-#signInTwitchIcon {
-	background-size: 28px !important; 
-	background-image: url('/assets/twitch_btn.png');	
-}
-#signInTwitterIcon {
-	background-image: url('/assets/twitter_btn.png');
-}
+
 #signInForm {
 	box-sizing: border-box;
 	width:100%;
@@ -307,13 +272,8 @@
 	background-repeat: no-repeat;
 	margin-right: 21px;
 }
-#roomsIcon {
-	background-image: url('/assets/UI-icons/th-solid.svg');	
-}
-#aboutIcon {
-	background-image: url('/assets/UI-icons/book-open-solid.svg');	
-}
-	
+
+
 /*three dot menu */
 /////////////////////////////////////////////////////////////////////////////////
 /*msgs menu*/
@@ -452,10 +412,7 @@
 
 /*dm-messanger*/
 /*pull-out menu*/
-#createSurklIcon {
-	background-size: 18px !important; 
-	background-image: url('/assets/UI-icons/add-surkl.svg');
-}
+
 
 
 
@@ -502,3 +459,61 @@
 	}
 }
 /*notification menu*/
+
+/*icons*/ 
+.signInMenuIcon {
+	width: 25px;
+	height: 25px;
+	background-position: center;
+	background-size: 21px;
+	background-repeat: no-repeat;
+	margin-right: 21px;
+}
+.signInGoogleWrap {
+	background-color: rgba(234,67,53,.9) !important;
+}
+.signInTwitterWrap {
+	background-color: rgba(29,161,242,.9) !important; 
+}
+.signInTwitchWrap {
+	background-color: rgba(100,65,164,.9) !important; 
+}
+.signInGoogleWrap:hover {
+	background-color: rgba(234,67,53,1) !important;
+}
+.signInTwitterWrap:hover {
+	background-color: rgba(29,161,242,1) !important; 
+}
+.signInTwitchWrap:hover {
+	background-color: rgba(100,65,164,1) !important; 
+}
+#signInGoogleIcon {
+	background-image: url('/assets/google_btn.png');
+}
+#signInTwitchIcon {
+	background-size: 28px !important; 
+	background-image: url('/assets/twitch_btn.png');	
+}
+#signInTwitterIcon {
+	background-image: url('/assets/twitter_btn.png');
+}
+#createSurklIcon {
+	background-size: 18px !important; 
+	background-image: url('/assets/UI-icons/add-surkl.svg');
+}
+#roomsIcon {
+	background-image: url('/assets/UI-icons/th-solid.svg');	
+}
+#aboutIcon {
+	background-image: url('/assets/UI-icons/book-open-solid.svg');	
+}
+#eventsIcon {
+	background-image: url('/assets/UI-icons/calendar-alt-regular.svg');	
+}
+#peopleIcon {
+	background-image: url('/assets/UI-icons/users-solid.svg');	
+}
+#surferIcon {
+	background-image: url('/assets/UI-icons/snowboarding-solid.svg');
+}
+/*icons*/

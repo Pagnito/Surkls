@@ -45,11 +45,23 @@ class Rooms extends Component {
 						</div>
 						
 						<div className="joins">
-							<div className="joins-title">Join as</div>
-							<div className="join-btns">
-								<button type="button" className="join-btn"> Viewer</button>
-								<button onClick={() => this.joinSession(room.sessionKey, room.room)} type="button" className="join-btn">Participator</button>
-							</div>			
+							<div className="joins-left">
+								<div className="joins-title">Join as</div>
+								<div className="join-btns">
+									<button type="button" className="join-btn"> Viewer</button>
+									<button onClick={() => this.joinSession(room.sessionKey, room.room)} type="button" className="join-btn">Participator</button>
+								</div>	
+							</div>
+							<div className="joins-right">
+								<div className="room-clients">
+										{room.clients.map(client=>{{return <div className="room-client" style={{
+											backgroundImage: `url(${client.avatarUrl})`,
+											backgroundPosition:'center',
+											backgroundRepeat:'no-repeat',
+											backgroundSize:'cover'
+										}}></div>}})}
+								</div>
+							</div>						
 						</div>
 						<div className="hover-overlay"></div>
 					</div>
