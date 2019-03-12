@@ -4,7 +4,7 @@ let roomImageUrls = {
   business: '/assets/room_images/business.jpg',
   cars: '/assets/room_images/cars.jpg',
   entertainment: '/assets/room_images/entertainment.jpg',
-  entrepreneurship: '/assets/room_images/entrepreneurship.jpg',
+  entrepreneurship: '/assets/room_images/entrepreneurship.png',
   fashion: '/assets/room_images/fashion.jpg',
   food: '/assets/room_images/food.jpg',
   health: '/assets/room_images/health.jpg',

@@ -26,7 +26,7 @@ export const getUser = () => (dispatch) => {
 			});
 		})
 		.catch((err) => {
-			console.log(err, 'yoooo');
+			console.log(err)
 			dispatch({
 				type: GET_USER,
 				payload: {}

@@ -63,17 +63,7 @@
       cursor: pointer;
     }
   }
-  #overlay {
-    position: absolute;
-    top:0px;
-    left:0px;
-    height:calc(100vh - 55px);
-    width:100%;
-    background-color:#ffcd44;
-    opacity: .4;
-    z-index: 0;
-    margin-top: 55px;
-  }
+   
   .form {
     z-index: 20;
     display: flex;

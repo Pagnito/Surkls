@@ -46,7 +46,6 @@
 		.logo {
 			width: 40px;
 			height: 40px;
-			margin-left: 20px;
 			margin-top: 3px;
 		}
 	}
@@ -512,6 +511,9 @@
 }
 #peopleIcon {
 	background-image: url('/assets/UI-icons/users-solid.svg');	
+}
+#signUpIcon {
+	background-image: url('/assets/UI-icons/user-plus-solid.svg');	
 }
 #surferIcon {
 	background-image: url('/assets/UI-icons/snowboarding-solid.svg');

@@ -12,13 +12,13 @@ module.exports = (app) => {
 	app.get('/auth/twitter', passport.authenticate('twitter', { scope: [ 'profile', 'email' ] }));
   app.get('/auth/twitter/callback', 
     passport.authenticate('twitter', { failureRedirect: '/' }), function(req, res) {
-		res.redirect('/rooms');
+		res.redirect('/');
 	});
 	///////////////////////////////////////////google auth////////////////////////////////////////////
 	app.get('/auth/google', passport.authenticate('google', { scope: [ 'profile', 'email' ] }));
   app.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/' }), function(req, res) {
-		res.redirect('/rooms');
+		res.redirect('/');
 	});
 	///////////////////////////////////////////local auth/////////////////////////////////////////////
 	app.post('/auth/login', passport.authenticate('local'), (req,res)=>{
@@ -56,7 +56,7 @@ module.exports = (app) => {
 	app.get('/auth/twitch', passport.authenticate('twitch'));
   app.get('/auth/twitch/callback', 
     passport.authenticate('twitch', { failureRedirect: '/' }), function(req, res) {
-		res.redirect('/rooms');
+		res.redirect('/');
 	});
 	/////////////////////////////////////////account routes///////////////////////////////////////////
 	app.put('/account/update', requireLogin, (req, res) => {
@@ -92,7 +92,7 @@ module.exports = (app) => {
 		req.logout();
 		res.redirect("/");
 	})
-	app.get('/account', (req, res) => {
+	app.get('/account', requireLogin, (req, res) => {
 		if (req.user) {
 			let userRes = {
 				email: req.user.email,

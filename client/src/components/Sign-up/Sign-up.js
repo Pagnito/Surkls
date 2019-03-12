@@ -5,7 +5,7 @@ import { getUser, signUp, closeMenus } from 'actions/actions';
 import './home.scss';
 import '../Loader1/loader.scss';
 
-class Home extends Component {
+class SignUp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -140,7 +140,6 @@ class Home extends Component {
 		} else  {
 			return( 
 				<div onClick={this.closeMenus} id="home">
-					<div id="overlay"></div>
 					<div id="registerTitle">Start Your Surkle!</div>
 					<div id="loginStrategies">
 						<a href="/auth/twitch" className="loginStrat" id="twitchStrat"></a>
@@ -153,7 +152,7 @@ class Home extends Component {
 		}	
 	}
 }
-Home.propTypes = {
+SignUp.propTypes = {
 	auth: PropTypes.object,
 	getUser: PropTypes.func,
 	signUp: PropTypes.func,
@@ -168,4 +167,4 @@ function stateToProps(state) {
 	};
 }
 
-export default connect(stateToProps, { getUser, signUp, closeMenus })(Home);
+export default connect(stateToProps, { getUser, signUp, closeMenus })(SignUp);

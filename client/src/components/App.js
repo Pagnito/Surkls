@@ -7,7 +7,7 @@ import { setUserMedia } from '../../tools/setUserMedia';
 import io from 'socket.io-client';
 import {socketUrl} from '../../tools/socketUrl';
 import Store from '../store';
-import Home from 'components/Home/Home';
+import SignUp from 'components/Sign-up/Sign-up';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Session from 'components/Session/Session';
 import Rooms from 'components/Rooms/Rooms';
@@ -44,8 +44,8 @@ class App extends Component {
 				type: LOAD_NOTIFS,
 				payload: {notifCount: user.notif_count, notifs: user.notifs}
 			})	
-			if(this.props.location.pathname === '/' ){		
-				this.props.history.push('/rooms')
+			if(this.props.location.pathname !== '/' ){		
+				this.props.history.push('/')
 			}		
 		}).catch(()=>{
 			Store.dispatch({
@@ -60,14 +60,14 @@ class App extends Component {
 				<Provider store={Store}>	
 				
 					<Route exact path="/profile" component={Profile} />
-					<Route exact path="/" component={Home}  />
+					<Route exact path="/signup" component={SignUp}  />
 					<Route 
 						exact path="/surkl/:id" render={(props)=><Dashboard {...props} socket={this.socket}/>}   />
 					<Route 
 						exact path="/create_surkl" render={(props)=><CreateSurkl {...props} socket={this.socket}/>}   />
 					<Route 
 						exact path="/session/:room" render={(props)=><Session {...props} socket={this.socket}/>}   />
-					<Route exact path="/rooms" component={Rooms}  />
+					<Route exact path="/" component={Rooms}  />
 					<Header socket={this.socket} />
 				</Provider>
 			);

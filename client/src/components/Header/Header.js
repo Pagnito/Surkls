@@ -457,7 +457,7 @@ class Header extends Component {
 			});
 		}
 	};
-	renderSubCategories = () => {
+	/* renderSubCategories = () => {
 		let visible = (this.state.category === 'sports' || 
 										 this.state.category === 'gaming' ||
 										 this.state.category === 'music') ? 'block' : 'none'
@@ -472,7 +472,7 @@ class Header extends Component {
 				{this.populateSubCategories()}
 			</select>
 		);
-	};
+	}; */
 	createSessionMenu = () => {
 		let visibility = this.props.app.sessionMenuVisible ? 'flex' : 'none';
 		return (
@@ -516,7 +516,7 @@ class Header extends Component {
 					<option value="technology">Technology</option>
 					<option value="random">Random</option>
 				</select>
-				{this.renderSubCategories()}
+			{/* 	{this.renderSubCategories()} */}
 				<div className="menuConfig">
 					Max Members
 					<input
@@ -625,8 +625,13 @@ class Header extends Component {
 				<div id="themeWidget">
 					<div id="themePicker" />
 				</div>
-
-				<Link to="/rooms" className="menuItem">
+				<Link to="/signup" className="menuItem">
+					<div className="threeDotMenuIcon" id="signUpIcon" />Sign Up
+				</Link>
+				<Link to="/" className="menuItem">
+					<div className="threeDotMenuIcon" id="surferIcon" />Surfing
+				</Link>
+				<Link to="/" className="menuItem">
 					<div className="threeDotMenuIcon" id="roomsIcon" />Rooms
 				</Link>
 				<div className="menuItem">
@@ -730,10 +735,12 @@ class Header extends Component {
 					{this.pulloutMenu()}
 					{/* //////////////section///////////*/}
 					<div id="leftOfHeader">
-						{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />}
-						<Link to="/rooms">
-							<img className="logo" src="/assets/surkls-logo2.png" />
-						</Link>
+				{/* 		{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />} */}
+						<div style={{marginLeft:'20px'}}>
+							<Link to="/">
+								<img className="logo" src="/assets/surkls-logo2.png" />
+							</Link>
+						</div>
 					</div>
 					{/* //////////////section///////////*/}
 					<div id="centerOfHeader" />
@@ -756,9 +763,12 @@ class Header extends Component {
 					{/* //////////////section///////////*/}
 					<div id="leftOfHeader">
 						{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />}
-						<Link to="/rooms">
-							<img className="logo" src="/assets/surkls-logo2.png" />
-						</Link>
+						<div style={{marginLeft:'20px'}}>
+							<Link to="/">
+								<img className="logo" src="/assets/surkls-logo2.png" />
+							</Link>
+						</div>
+						
 					</div>
 					{/* //////////////section///////////*/}
 					<div id="centerOfHeader" />

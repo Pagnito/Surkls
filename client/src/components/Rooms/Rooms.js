@@ -54,11 +54,12 @@ class Rooms extends Component {
 							</div>
 							<div className="joins-right">
 								<div className="room-clients">
-										{room.clients.map(client=>{{return <div className="room-client" style={{
-											backgroundImage: `url(${client.avatarUrl})`,
-											backgroundPosition:'center',
-											backgroundRepeat:'no-repeat',
-											backgroundSize:'cover'
+										{room.clients.map((client,ind)=>{{
+											return <div key={ind} className="room-client" style={{
+												backgroundImage: `url(${client.avatarUrl})`,
+												backgroundPosition:'center',
+												backgroundRepeat:'no-repeat',
+												backgroundSize:'cover'
 										}}></div>}})}
 								</div>
 							</div>						
