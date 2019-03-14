@@ -7,9 +7,9 @@ let connectedUsers = {};
 let surkls = {};
 module.exports = (io, app) => {  
   io.on('connection', (socket)=>{
-	/* redClient.flushdb( function (err, succeeded) {
+	redClient.flushdb( function (err, succeeded) {
     console.log(succeeded); // will be true if successfull
-    }); */
+    });
     
     /* redClient.hgetall('rooms',(err, str)=>{
       console.log(str)
