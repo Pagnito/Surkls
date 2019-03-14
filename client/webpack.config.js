@@ -1,5 +1,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 const webpack = require('webpack');
 //const Visualizer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
@@ -58,6 +60,10 @@ module.exports = {
   plugins: [new MiniCssExtractPlugin({ filename: "bundle.css" }),
             new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i,
             disable: process.env.NODE_ENV !== 'production' }),
+            new HtmlWebpackPlugin({template:'./index.html'}),
+            new CopyWebpackPlugin([
+              { from: './assets', to: './assets' }
+            ]),
   ],
   devServer: {
     port: 3000,
