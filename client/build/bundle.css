@@ -1,0 +1,2700 @@
+@import url(https://fonts.googleapis.com/css?family=Comfortaa:700|Didact+Gothic|Josefin+Sans:700);
+.GraffitiTheme {
+  background-color: #F4FBFB;
+  background-color: #cbd2d2;
+  background-color: #ffcd44;
+  background-color: #dde4e4;
+  background-color: #282828; }
+
+#home {
+  height: calc(100vh - 55px);
+  display: flex;
+  margin-top: 55px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "comfortaa";
+  background: url("/assets/surkls_landing.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: -1; }
+  #home #registerTitle {
+    margin-top: -70px;
+    margin-bottom: 10px;
+    font-size: 30px;
+    z-index: 20; }
+  #home #loginStrategies {
+    display: flex;
+    justify-content: space-around;
+    width: 300px;
+    z-index: 20; }
+    #home #loginStrategies #twitchStrat {
+      background: url("/assets/twitch_btn.png");
+      background-position: center;
+      background-size: 35px;
+      background-repeat: no-repeat; }
+    #home #loginStrategies #twitterStrat {
+      background: url("/assets/twitter_btn.png");
+      background-position: center;
+      background-size: 50px;
+      background-repeat: no-repeat; }
+    #home #loginStrategies #googleStrat {
+      background: url("/assets/google_btn.png");
+      background-position: center;
+      background-size: 25px;
+      background-repeat: no-repeat; }
+    #home #loginStrategies .loginStrat {
+      border: 2px solid #282828;
+      height: 35px;
+      width: 35px;
+      background: white;
+      border-radius: 35px;
+      margin-bottom: 10px;
+      transition: all .2s ease-in; }
+    #home #loginStrategies .loginStrat:hover {
+      transform: scale(1.1);
+      cursor: pointer; }
+  #home .form {
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; }
+    #home .form .homeInput {
+      font-family: 'Didact Gothic';
+      background: #282828;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      padding-left: 20px;
+      width: 450px;
+      height: 30px;
+      margin-bottom: 20px;
+      border-radius: 40px;
+      border: none; }
+    #home .form #registerBtn {
+      border: 2px solid #282828;
+      border-radius: 30px;
+      background: transparent;
+      outline: none;
+      height: 30px;
+      padding-bottom: 5px;
+      padding-left: 7px;
+      padding-right: 7px;
+      font-size: 16px;
+      font-family: 'Didact Gothic'; }
+    #home .form #registerBtn:hover {
+      color: #FFEBB4;
+      border: 2px solid #FFEBB4;
+      cursor: pointer; }
+
+.errorColor::-webkit-input-placeholder {
+  color: #d84224; }
+
+#spinnerWrap {
+  width: 100%;
+  height: calc(100vh - 55px);
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin-top: -50px;
+  background-color: #333;
+  border-radius: 100%;
+  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+  animation: sk-scaleout 1.0s infinite ease-in-out; }
+
+@-webkit-keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0); }
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 0; } }
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0); }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0; } }
+
+#surkl {
+  width: 100%;
+  height: calc(100vh - 55px);
+  display: flex;
+  background: #242323;
+  margin-top: 55px;
+  border-top: 1px solid #3E3E3E;
+  border-bottom: 1px solid #3E3E3E;
+  box-sizing: border-box; }
+  #surkl #newsSources {
+    width: 20%;
+    height: 100%;
+    border-right: 1px solid #3E3E3E; }
+    #surkl #newsSources #newsSourcesHeader {
+      color: #F4FBFB;
+      height: 50px;
+      width: 100%;
+      font-family: 'Comfortaa';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border-bottom: 1px solid #3E3E3E;
+      box-sizing: border-box; }
+    #surkl #newsSources #newsSourcesFeed::-webkit-scrollbar {
+      width: 5px; }
+    #surkl #newsSources #newsSourcesFeed::-webkit-scrollbar-thumb {
+      background: #B1B6B6;
+      border-radius: 10px; }
+    #surkl #newsSources #newsSourcesFeed::-webkit-scrollbar-corner {
+      background: transparent; }
+    #surkl #newsSources #newsSourcesFeed {
+      overflow-y: scroll;
+      height: calc(100% - 50px);
+      width: 100%; }
+    #surkl #newsSources .newsSource:hover {
+      background-color: rgba(222, 178, 59, 0.5); }
+    #surkl #newsSources .newsSource {
+      height: 50px;
+      width: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      color: #F4FBFB;
+      box-sizing: border-box;
+      cursor: pointer; }
+      #surkl #newsSources .newsSource .newsSourceImg {
+        height: 40px;
+        margin-right: 10px; }
+  #surkl #surkl-feed::-webkit-scrollbar {
+    width: 5px;
+    background: #242323; }
+  #surkl #surkl-feed::-webkit-scrollbar-thumb {
+    background: #545353;
+    border-radius: 10px; }
+  #surkl #surkl-feed::-webkit-scrollbar-corner {
+    background: transparent; }
+  #surkl #surkl-center {
+    width: 60%;
+    border-right: 1px solid #3E3E3E;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column; }
+    #surkl #surkl-center #surkl-feed {
+      height: calc(100% - 50px);
+      width: 100%;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      overflow: scroll;
+      overflow-x: hidden; }
+      #surkl #surkl-center #surkl-feed .surkl-chat-msg:hover {
+        background: #302f2f; }
+      #surkl #surkl-center #surkl-feed .surkl-chat-msg {
+        margin-right: 5px;
+        animation: fadeOut 2s ease-out forwards;
+        width: calc(100% - 10px);
+        font-family: 'Comfortaa';
+        display: flex;
+        box-sizing: border-box; }
+        #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-msgAvatar {
+          width: 30px;
+          height: 30px;
+          border-radius: 30px;
+          margin: 10px;
+          border: 1px solid #c2c3c4; }
+        #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo {
+          width: 100%;
+          height: 30px;
+          display: flex;
+          align-items: flex-end;
+          box-sizing: border-box;
+          display: flex;
+          width: 100%;
+          justify-content: flex-start; }
+          #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo .surkl-chat-MsgDate {
+            font-size: 10px;
+            margin-bottom: 2px !important;
+            margin-left: 5px;
+            color: #91918D; }
+          #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo .surkl-chat-MsgName {
+            font-size: 15px;
+            color: #91918D; }
+        #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgText {
+          overflow-wrap: break-word;
+          word-break: break-word;
+          font-size: 13px;
+          color: #c2c3c4;
+          padding: 5px;
+          width: 100%;
+          box-sizing: border-box; }
+    #surkl #surkl-center #surkl-chat-input::placeholder {
+      font-size: 15px; }
+    #surkl #surkl-center #surkl-chat-input {
+      width: 100%;
+      height: 70px;
+      outline: none;
+      resize: none;
+      background: transparent;
+      border: none;
+      border-top: 1px solid #3E3E3E;
+      padding: 10px;
+      box-sizing: border-box;
+      font-family: 'Comfortaa';
+      color: #C2C3C4;
+      font-size: 13px; }
+  #surkl #surkl-members {
+    width: 20%;
+    height: 100%;
+    overflow: hidden; }
+    #surkl #surkl-members #surkl-members-header {
+      color: #F4FBFB;
+      height: 50px;
+      width: 100%;
+      font-family: 'Comfortaa';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border-bottom: 1px solid #3E3E3E;
+      box-sizing: border-box; }
+    #surkl #surkl-members #my-surkl-members::-webkit-scrollbar {
+      width: 0px; }
+    #surkl #surkl-members #my-surkl-members::-webkit-scrollbar-thumb {
+      background: #B1B6B6;
+      border-radius: 10px; }
+    #surkl #surkl-members #my-surkl-members::-webkit-scrollbar-corner {
+      background: transparent; }
+    #surkl #surkl-members #my-surkl-members {
+      overflow-y: scroll;
+      height: calc(100% - 50px);
+      width: 100%; }
+      #surkl #surkl-members #my-surkl-members .surkl-member:hover {
+        background: #373636; }
+      #surkl #surkl-members #my-surkl-members .surkl-member {
+        font-family: 'Comfortaa';
+        font-size: 13px;
+        color: #F4FBFB;
+        height: 50px;
+        width: 100%;
+        padding-left: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box; }
+        #surkl #surkl-members #my-surkl-members .surkl-member .surkl-member-avatar {
+          width: 25px;
+          height: 25px;
+          border-radius: 25px;
+          border: 1px solid #F4FBFB; }
+        #surkl #surkl-members #my-surkl-members .surkl-member .surkl-member-name {
+          padding-left: 10px;
+          background-position: center;
+          background-size: cover;
+          width: calc(100% - 55px); }
+
+.dropMenu_mutable {
+  position: absolute;
+  top: 30px;
+  right: -15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  z-index: 40; }
+  .dropMenu_mutable #platformsArrow {
+    margin-right: 18px !important; }
+  .dropMenu_mutable .lilArrow_mutable {
+    -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+    clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+    background-color: #CBD2D2;
+    width: 20px;
+    height: 20px;
+    align-self: flex-end;
+    margin-bottom: -2px;
+    border-radius: 2px; }
+  .dropMenu_mutable .menuItems_mutable {
+    border-radius: 3px;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    background-color: #dde4e4;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Didact Gothic'; }
+    .dropMenu_mutable .menuItems_mutable .menuHeader_mutable {
+      display: flex;
+      justify-content: center;
+      background-color: #cbd2d2;
+      color: black;
+      font-size: 17px;
+      border-radius: 3px;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box; }
+    .dropMenu_mutable .menuItems_mutable .menuInputWrap_mutable {
+      padding: 5px;
+      box-sizing: border-box; }
+      .dropMenu_mutable .menuItems_mutable .menuInputWrap_mutable .menuInput_mutable {
+        padding: 10px;
+        font-size: 17px;
+        display: flex;
+        outline: none;
+        border: none;
+        width: 86%;
+        border-radius: 5px; }
+    .dropMenu_mutable .menuItems_mutable .menuTextInput_mutable {
+      padding: 10px;
+      height: 50px;
+      font-size: 17px;
+      display: flex;
+      outline: none;
+      border: none;
+      width: 86%;
+      border-radius: 5px;
+      margin-top: 10px;
+      resize: none; }
+    .dropMenu_mutable .menuItems_mutable .menuItem_mutable:hover {
+      background-color: #cbd2d2; }
+    .dropMenu_mutable .menuItems_mutable .menuSelect_mutable {
+      font-size: 17px;
+      display: flex;
+      width: 94%;
+      box-sizing: border-box;
+      justify-content: space-between;
+      outline: none;
+      cursor: pointer; }
+    .dropMenu_mutable .menuItems_mutable .menuConfig_mutable {
+      cursor: default;
+      padding: 7px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 17px;
+      display: flex;
+      width: 96%;
+      box-sizing: border-box;
+      justify-content: space-between; }
+      .dropMenu_mutable .menuItems_mutable .menuConfig_mutable input[type=number]::-webkit-inner-spin-button {
+        appearance: none; }
+      .dropMenu_mutable .menuItems_mutable .menuConfig_mutable .sessionConfig_mutable {
+        width: 40px;
+        height: 20px;
+        border-radius: 3px;
+        border: none;
+        padding-left: 10px;
+        font-family: "Comfortaa";
+        box-sizing: border-box;
+        outline: none; }
+    .dropMenu_mutable .menuItems_mutable .menuItem_mutable {
+      padding: 7px;
+      font-size: 17px;
+      display: flex;
+      width: 100%;
+      box-sizing: border-box; }
+    .dropMenu_mutable .menuItems_mutable .menuItemSplit_mutable {
+      display: flex;
+      height: 30px;
+      justify-content: center;
+      margin-top: 10px;
+      width: 100%; }
+      .dropMenu_mutable .menuItems_mutable .menuItemSplit_mutable .or {
+        margin-top: 5px; }
+      .dropMenu_mutable .menuItems_mutable .menuItemSplit_mutable .splitLine1_mutable {
+        height: 50%;
+        width: 30%;
+        margin-right: 10px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.3); }
+      .dropMenu_mutable .menuItems_mutable .menuItemSplit_mutable .splitLine2_mutable {
+        height: 50%;
+        width: 30%;
+        margin-left: 10px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.3); }
+
+.discContentViewer {
+  height: calc(100% - 35px); }
+  .discContentViewer .videoFrameWrap {
+    margin-top: 5px;
+    width: 100;
+    height: 100%;
+    height: calc(100% - 35px);
+    position: relative; }
+    .discContentViewer .videoFrameWrap .playVideoOverlayBtn {
+      position: absolute;
+      height: 85%;
+      width: 100%;
+      left: 0px;
+      top: 0px;
+      z-index: 50;
+      background: rgba(0, 0, 0, 0); }
+    .discContentViewer .videoFrameWrap .videoFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      position: absolute;
+      left: 0px;
+      top: 0px; }
+
+.discContent {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: black; }
+  .discContent .discContentHeader {
+    width: calc(100% + 1px);
+    height: 35px;
+    display: flex;
+    align-items: center;
+    background: #020024;
+    background: linear-gradient(0deg, rgba(2, 0, 36, 0) 0%, rgba(255, 0, 0, 0.3) 88%);
+    box-sizing: content-box; }
+    .discContent .discContentHeader .discHeaderIcon {
+      height: 25px;
+      width: 25px;
+      cursor: pointer;
+      background-position: center;
+      background-size: 20px;
+      background-repeat: no-repeat;
+      margin-left: 30px; }
+    .discContent .discContentHeader #contentBack {
+      background-image: url("/assets/UI-icons/angle-left-solid.svg");
+      margin-top: 3px;
+      margin-left: 20px !important;
+      background-size: 15px; }
+    .discContent .discContentHeader #contentDice {
+      background-image: url("/assets/UI-icons/dice-solid.svg");
+      margin-top: 3px; }
+    .discContent .discContentHeader .discHeaderSearch {
+      display: flex;
+      width: calc(100% - 200px);
+      margin-left: 30px;
+      justify-content: flex-end;
+      position: relative; }
+      .discContent .discContentHeader .discHeaderSearch #discSearchIcon {
+        background-image: url("/assets/UI-icons/search-solid.svg");
+        background-size: 17px !important;
+        margin-top: 3px;
+        right: 7px !important;
+        position: absolute; }
+      .discContent .discContentHeader .discHeaderSearch .searchBar {
+        background: #D4DADA;
+        border: none;
+        border-radius: 20px;
+        margin-top: 5px;
+        width: 100%;
+        outline: none;
+        height: 20px;
+        color: black;
+        font-size: 13px;
+        padding-left: 10px; }
+  .discContent .discContentPreview::-webkit-scrollbar {
+    width: 5px; }
+  .discContent .discContentPreview::-webkit-scrollbar-thumb {
+    background: #282828;
+    border-radius: 10px; }
+  .discContent .discContentPreview::-webkit-scrollbar-corner {
+    background: transparent; }
+  .discContent .discContentPreview {
+    scrollbar-color: light;
+    height: calc(100% - 35px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start; }
+    .discContent .discContentPreview .vidSnippet {
+      width: calc(33.333% - 10px);
+      padding-right: 10px;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      cursor: pointer;
+      position: relative; }
+      .discContent .discContentPreview .vidSnippet .videoSignalBtn {
+        height: 200px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3); }
+      .discContent .discContentPreview .vidSnippet .snippetImg {
+        width: 100%;
+        padding-top: 10px;
+        padding-left: 10px;
+        box-sizing: border-box; }
+      .discContent .discContentPreview .vidSnippet .channelTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        color: #8f9797;
+        margin-top: 5px;
+        margin-left: 10px;
+        word-break: break-word; }
+      .discContent .discContentPreview .vidSnippet .videoDate {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        color: #8f9797;
+        margin-top: 5px;
+        margin-left: 10px; }
+      .discContent .discContentPreview .vidSnippet .videoTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 500;
+        font-size: 15px;
+        color: #D4DADA;
+        margin-left: 10px; }
+  .discContent .discContentViwer::-webkit-scrollbar {
+    width: 5px; }
+  .discContent .discContentViwer::-webkit-scrollbar-thumb {
+    background: #D4DADA;
+    border-radius: 10px; }
+  .discContent .discContentViwer::-webkit-scrollbar-corner {
+    background: transparent; }
+
+@charset "UTF-8";
+.loader2 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+h1 {
+  margin-top: -6.94em;
+  margin-left: 15px;
+  padding: 0;
+  font-family: ‘Arial Narrow’, sans-serif;
+  font-weight: 100;
+  font-size: 1.1em; }
+
+.let {
+  position: relative;
+  top: 0.63em;
+  display: inline-block;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: rotateX(-90deg); }
+
+.let1 {
+  animation: drop 1.2s ease-in-out infinite;
+  animation-delay: .2s; }
+
+.let2 {
+  animation: drop 1.2s ease-in-out infinite;
+  animation-delay: .3s; }
+
+.let3 {
+  animation: drop 1.2s ease-in-out infinite;
+  animation-delay: .4s; }
+
+.let4 {
+  animation: drop 1.2s ease-in-out infinite;
+  animation-delay: .5s; }
+
+.let5 {
+  animation: drop 1.2s ease-in-out infinite;
+  animation-delay: .6s; }
+
+.let6 {
+  animation: drop 1.2s ease-in-out infinite;
+  animation-delay: .7s; }
+
+.let7 {
+  animation: drop 1.2s ease-in-out infinite;
+  animation-delay: .8s; }
+
+@keyframes drop {
+  10% {
+    opacity: 0.5; }
+  20% {
+    opacity: 1;
+    top: 3.78em;
+    transform: rotateX(-360deg); }
+  80% {
+    opacity: 1;
+    top: 3.78em;
+    transform: rotateX(-360deg); }
+  90% {
+    opacity: 0.5; }
+  100% {
+    opacity: 0;
+    top: 6.94em; } }
+
+.DMdiscContentViewer {
+  height: calc(100% - 35px); }
+  .DMdiscContentViewer .DMvideoFrameWrap {
+    margin-top: 5px;
+    width: 100;
+    height: 100%;
+    height: calc(100% - 35px);
+    position: relative; }
+    .DMdiscContentViewer .DMvideoFrameWrap .DMplayVideoOverlayBtn {
+      position: absolute;
+      height: 85%;
+      width: 100%;
+      left: 0px;
+      top: 0px;
+      z-index: 50;
+      background: rgba(0, 0, 0, 0); }
+    .DMdiscContentViewer .DMvideoFrameWrap .DMvideoFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      position: absolute;
+      left: 0px;
+      top: 0px; }
+
+.DMdiscContent {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: black; }
+  .DMdiscContent .DMdiscContentHeader {
+    width: calc(100% + 1px);
+    height: 35px;
+    display: flex;
+    align-items: center;
+    background: #020024;
+    background: linear-gradient(0deg, rgba(2, 0, 36, 0) 0%, rgba(0, 185, 251, 0.3) 88%);
+    box-sizing: content-box; }
+    .DMdiscContent .DMdiscContentHeader .DMdiscHeaderIcon {
+      height: 25px;
+      width: 25px;
+      cursor: pointer;
+      background-position: center;
+      background-size: 20px;
+      background-repeat: no-repeat;
+      margin-left: 30px; }
+    .DMdiscContent .DMdiscContentHeader #DMcontentBack {
+      background-image: url("/assets/UI-icons/angle-left-solid.svg");
+      margin-top: 3px;
+      margin-left: 20px !important;
+      background-size: 15px; }
+    .DMdiscContent .DMdiscContentHeader #DMcontentDice {
+      background-image: url("/assets/UI-icons/dice-solid.svg");
+      margin-top: 3px; }
+    .DMdiscContent .DMdiscContentHeader .DMdiscHeaderSearch {
+      display: flex;
+      width: calc(100% - 200px);
+      margin-left: 30px;
+      justify-content: flex-start;
+      position: relative; }
+      .DMdiscContent .DMdiscContentHeader .DMdiscHeaderSearch #DMdiscSearchIcon {
+        background-image: url("/assets/UI-icons/search-solid.svg");
+        background-size: 17px !important;
+        margin-top: 3px;
+        right: 7px !important;
+        position: absolute; }
+      .DMdiscContent .DMdiscContentHeader .DMdiscHeaderSearch .DMsearchBar {
+        background: #D4DADA;
+        border: none;
+        border-radius: 20px;
+        margin-top: 5px;
+        width: 100%;
+        outline: none;
+        color: black;
+        font-size: 13px;
+        height: 20px;
+        padding-left: 10px; }
+  .DMdiscContent .DMdiscContentPreview::-webkit-scrollbar {
+    width: 5px; }
+  .DMdiscContent .DMdiscContentPreview::-webkit-scrollbar-thumb {
+    background: #282828;
+    border-radius: 5px; }
+  .DMdiscContent .DMdiscContentPreview::-webkit-scrollbar-corner {
+    background: transparent; }
+  .DMdiscContent .DMdiscContentPreview {
+    scrollbar-color: light;
+    height: calc(100% - 35px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start; }
+    .DMdiscContent .DMdiscContentPreview .DMvidSnippet {
+      width: calc(33.333% - 10px);
+      padding-right: 10px;
+      border-bottom: 1px solid #D4DADA;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      cursor: pointer;
+      position: relative; }
+      .DMdiscContent .DMdiscContentPreview .DMvidSnippet .DMvideoSignalBtn {
+        height: 200px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3); }
+      .DMdiscContent .DMdiscContentPreview .DMvidSnippet .DMsnippetImg {
+        width: 100%;
+        padding-top: 10px;
+        padding-left: 10px;
+        box-sizing: border-box; }
+      .DMdiscContent .DMdiscContentPreview .DMvidSnippet .DMchannelTitle {
+        font-family: 'Comfortaa';
+        font-size: 11px;
+        color: #8f9797;
+        margin-top: 5px;
+        margin-left: 5px;
+        word-break: break-word; }
+      .DMdiscContent .DMdiscContentPreview .DMvidSnippet .DMvideoDate {
+        font-family: 'Comfortaa';
+        font-size: 11px;
+        color: #8f9797;
+        margin-top: 5px;
+        margin-left: 5px; }
+      .DMdiscContent .DMdiscContentPreview .DMvidSnippet .DMvideoTitle {
+        font-family: 'Comfortaa';
+        font-weight: 700;
+        font-size: 15px;
+        color: #D4DADA;
+        margin-top: 5px;
+        margin-left: 5px; }
+  .DMdiscContent .DMdiscContentViwer::-webkit-scrollbar {
+    width: 5px; }
+  .DMdiscContent .DMdiscContentViwer::-webkit-scrollbar-thumb {
+    background: #D4DADA;
+    border-radius: 10px; }
+  .DMdiscContent .DMdiscContentViwer::-webkit-scrollbar-corner {
+    background: transparent; }
+
+.TWdiscContent {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: black; }
+  .TWdiscContent .TWdiscContentHeader {
+    width: 100%;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    background: #020024;
+    background: #FFFFFF;
+    box-sizing: content-box; }
+    .TWdiscContent .TWdiscContentHeader .TWdiscHeaderIcon {
+      height: 25px;
+      width: 25px;
+      cursor: pointer;
+      background-position: center;
+      background-size: 20px;
+      background-repeat: no-repeat;
+      margin-left: 30px; }
+    .TWdiscContent .TWdiscContentHeader #TWcontentBack {
+      background-image: url("/assets/UI-icons/angle-left-solid.svg");
+      margin-top: 3px;
+      margin-left: 20px !important;
+      background-size: 15px; }
+    .TWdiscContent .TWdiscContentHeader #TWcontentDice {
+      background-image: url("/assets/UI-icons/dice-solid.svg");
+      margin-top: 3px; }
+    .TWdiscContent .TWdiscContentHeader .TWdiscHeaderSearch {
+      display: flex;
+      width: calc(100% - 370px);
+      margin-left: 20px;
+      justify-content: flex-start;
+      position: relative; }
+      .TWdiscContent .TWdiscContentHeader .TWdiscHeaderSearch #TWdiscSearchIcon {
+        background-image: url("/assets/UI-icons/search-solid.svg");
+        background-size: 17px !important;
+        right: 7px !important;
+        position: absolute; }
+      .TWdiscContent .TWdiscContentHeader .TWdiscHeaderSearch .TWsearchBar {
+        background: #F5F8FA;
+        border: none;
+        border: 1px solid #E6ECF0;
+        border-radius: 20px;
+        width: 100%;
+        outline: none;
+        color: black;
+        font-size: 13px;
+        height: 20px;
+        padding-left: 10px; }
+  .TWdiscContent .TWdiscContentPreview::-webkit-scrollbar {
+    width: 5px; }
+  .TWdiscContent .TWdiscContentPreview::-webkit-scrollbar-thumb {
+    background: #282828;
+    border-radius: 10px; }
+  .TWdiscContent .TWdiscContentPreview::-webkit-scrollbar-corner {
+    background: transparent; }
+  .TWdiscContent .TWdiscContentPreview {
+    scrollbar-color: light;
+    height: calc(100% - 35px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    background-color: #E6ECF0; }
+    .TWdiscContent .TWdiscContentPreview .TWsnippet:hover {
+      background-color: #F5F8FA; }
+    .TWdiscContent .TWdiscContentPreview .TWtrendWrap:hover {
+      background-color: #F5F8FA; }
+    .TWdiscContent .TWdiscContentPreview .trendTitle {
+      font-size: 20px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      color: black;
+      font-weight: 900;
+      font-family: Arial, Helvetica, sans-serif; }
+    .TWdiscContent .TWdiscContentPreview .TWtrendWrap {
+      font-family: Arial, Helvetica , sans-serif;
+      padding: 10px;
+      box-sizing: border-box;
+      color: #1DA1F2;
+      font-weight: 700;
+      width: 90%;
+      background-color: #FFFFFF;
+      padding-right: 10px;
+      border-top: 1px solid #E6ECF0;
+      cursor: pointer;
+      position: relative; }
+      .TWdiscContent .TWdiscContentPreview .TWtrendWrap .trendTweetsNum {
+        color: black;
+        font-size: 11px;
+        margin-top: 6px; }
+    .TWdiscContent .TWdiscContentPreview .TWsnippet {
+      width: 90%;
+      background-color: #FFFFFF;
+      padding-right: 10px;
+      border-top: 1px solid #E6ECF0;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      cursor: pointer;
+      position: relative;
+      display: flex; }
+      .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetUser {
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+        margin-left: 8px;
+        margin-right: 8px;
+        margin-top: 4px; }
+      .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUserName {
+        font-family: Arial, Helvetica , sans-serif;
+        font-size: 14px;
+        color: black;
+        font-weight: 500;
+        margin-top: 5px;
+        margin-left: 5px;
+        word-break: break-word;
+        display: flex;
+        align-items: center; }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUserName .tweetBadge {
+          height: 12px;
+          width: 12px;
+          margin-top: -1px;
+          margin-left: 2px;
+          margin-right: 4px; }
+      .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetDate {
+        font-family: Arial, Helvetica , sans-serif;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.5);
+        margin-top: 2px;
+        margin-left: 5px; }
+      .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetDate:before {
+        content: "\00b7";
+        margin-right: 3px;
+        margin-left: 3px; }
+      .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetText {
+        font-family: Arial, Helvetica , sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: black;
+        font-weight: 200;
+        margin-top: 5px;
+        margin-left: 5px; }
+      .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons {
+        display: flex;
+        margin-top: 10px; }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons .TWicon {
+          margin-left: 20px;
+          background-position: center;
+          background-size: 15px;
+          width: 20px;
+          height: 20px;
+          background-repeat: no-repeat; }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons .TWreplyIcon {
+          background-image: url("/assets/UI-icons/comment-regular-black.svg"); }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons .TWretweetIcon {
+          background-image: url("/assets/UI-icons/retweet-solid.svg"); }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons .TWlikeIcon {
+          background-image: url("/assets/UI-icons/heart-regular.svg"); }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons .TWdirectMsgIcon {
+          background-image: url("/assets/UI-icons/envelope-regular.svg"); }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons .shareTweet {
+          font-family: Arial, Helvetica , sans-serif;
+          font-weight: 600;
+          font-size: 15px;
+          margin-left: 50px; }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons .TWicon:hover {
+          color: #4AB3F4; }
+        .TWdiscContent .TWdiscContentPreview .TWsnippet .tweetData .tweetUI-icons .shareTweet:hover {
+          color: #4AB3F4; }
+    .TWdiscContent .TWdiscContentPreview .twitterSnippet {
+      background-color: white;
+      width: 45%;
+      min-height: 220px;
+      margin-top: 5px;
+      border: 1px solid #E6ECF0;
+      box-sizing: border-box;
+      cursor: pointer; }
+      .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterBanner {
+        height: 100px;
+        background-size: cover;
+        background-position: top;
+        background-repeat: no-repeat; }
+      .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterInfo .twitterBio {
+        position: relative; }
+        .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterInfo .twitterBio .twitterAvatar {
+          position: absolute;
+          border: 3px solid white;
+          height: 45px;
+          width: 45px;
+          border-radius: 35px;
+          top: -30px;
+          left: 10px;
+          background-position: center; }
+        .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterInfo .twitterBio .twitterName {
+          font-family: Arial, Helvetica , sans-serif;
+          font-size: 14px;
+          color: black;
+          font-weight: 800;
+          margin-top: 5px;
+          margin-left: 5px;
+          word-break: break-word;
+          margin-left: 65px; }
+        .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterInfo .twitterBio .twitterScreen_name {
+          font-family: Arial, Helvetica , sans-serif;
+          font-size: 13px;
+          color: rgba(0, 0, 0, 0.6);
+          font-weight: 500;
+          margin-top: 5px;
+          margin-left: 5px;
+          word-break: break-word;
+          margin-left: 65px; }
+      .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterInfo .twitterDescript {
+        padding: 10px;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica , sans-serif;
+        font-weight: 200;
+        font-size: 13px;
+        color: black; }
+      .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterInfo .twitterStats {
+        display: flex;
+        justify-content: space-around;
+        width: 90%;
+        margin-bottom: 15px; }
+        .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterInfo .twitterStats .twitterStatTitle {
+          font-family: Arial, Helvetica, sans-serif;
+          font-weight: 600;
+          font-size: 11px;
+          color: rgba(0, 0, 0, 0.6); }
+        .TWdiscContent .TWdiscContentPreview .twitterSnippet .twitterInfo .twitterStats .twitterStat {
+          font-family: Arial, Helvetica, sans-serif;
+          font-weight: 900;
+          color: #4AB3F4;
+          font-size: 15px; }
+  .TWdiscContent .TWdiscContentViwer::-webkit-scrollbar {
+    width: 5px; }
+  .TWdiscContent .TWdiscContentViwer::-webkit-scrollbar-thumb {
+    background: #D4DADA;
+    border-radius: 10px; }
+  .TWdiscContent .TWdiscContentViwer::-webkit-scrollbar-corner {
+    background: transparent; }
+
+.twitchDiscContentViewer {
+  height: calc(100% - 35px); }
+  .twitchDiscContentViewer .twitchVideoFrameWrap {
+    margin-top: 5px;
+    width: 100;
+    height: 100%;
+    height: calc(100% - 35px);
+    position: relative; }
+    .twitchDiscContentViewer .twitchVideoFrameWrap .twitchVideoFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      position: absolute;
+      left: 0px;
+      top: 0px; }
+
+.twitchDiscContent {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: black; }
+  .twitchDiscContent .twitchDiscContentHeader {
+    width: calc(100% + 1px);
+    height: 35px;
+    display: flex;
+    align-items: center;
+    background: #4B367C;
+    box-sizing: content-box; }
+    .twitchDiscContent .twitchDiscContentHeader .twitchDiscHeaderIcon {
+      height: 25px;
+      width: 25px;
+      cursor: pointer;
+      background-position: center;
+      background-size: 20px;
+      background-repeat: no-repeat;
+      margin-left: 30px; }
+    .twitchDiscContent .twitchDiscContentHeader #twitchContentBack {
+      background-image: url("/assets/UI-icons/angle-left-solid.svg");
+      margin-left: 20px !important;
+      background-size: 15px; }
+    .twitchDiscContent .twitchDiscContentHeader #twitchContentDice {
+      background-image: url("/assets/UI-icons/dice-solid.svg"); }
+    .twitchDiscContent .twitchDiscContentHeader .twitchDiscHeaderSearch {
+      display: flex;
+      width: calc(100% - 200px);
+      margin-left: 30px;
+      justify-content: flex-start;
+      position: relative; }
+      .twitchDiscContent .twitchDiscContentHeader .twitchDiscHeaderSearch #twitchDiscSearchIcon {
+        background-image: url("/assets/UI-icons/search-solid.svg");
+        background-size: 17px !important;
+        right: 6px !important;
+        position: absolute;
+        margin-top: -1px; }
+      .twitchDiscContent .twitchDiscContentHeader .twitchDiscHeaderSearch .twitchSearchBar {
+        background: #D4DADA;
+        border: none;
+        border-radius: 20px;
+        width: 100%;
+        outline: none;
+        color: black;
+        font-size: 13px;
+        height: 20px;
+        padding-left: 10px; }
+  .twitchDiscContent .twitchDiscContentPreview::-webkit-scrollbar {
+    width: 5px; }
+  .twitchDiscContent .twitchDiscContentPreview::-webkit-scrollbar-thumb {
+    background: #282828;
+    border-radius: 10px; }
+  .twitchDiscContent .twitchDiscContentPreview::-webkit-scrollbar-corner {
+    background: transparent; }
+  .twitchDiscContent .twitchDiscContentPreview {
+    scrollbar-color: light;
+    background: #D4DADA;
+    height: calc(100% - 35px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start; }
+    .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet {
+      width: calc(33.333% - 10px);
+      border-bottom: 1px solid #D4DADA;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center; }
+      .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .streamIsLive {
+        display: flex;
+        position: absolute;
+        left: 10px;
+        top: 18px;
+        color: white;
+        font-size: 8px;
+        font-family: Arial, Helvetica, sans-serif; }
+        .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .streamIsLive .redLiveDot {
+          width: 7px;
+          margin-right: 5px;
+          height: 7px;
+          background: red;
+          border-radius: 7px; }
+      .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .twitchVideoSignalBtn {
+        height: 200px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0); }
+      .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .twitchSnippetImg {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 4px; }
+      .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .twitchStreamInfoWrap {
+        display: flex;
+        width: 100%; }
+        .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .twitchStreamInfoWrap .twitchAvatar {
+          height: 40px;
+          width: 40px;
+          border-radius: 40px;
+          margin: 5px;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover; }
+        .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .twitchStreamInfoWrap .twitchStreamInfo .twitchChannelTitle {
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 15px;
+          color: black;
+          margin-top: 5px;
+          margin-left: 15px;
+          word-break: break-word;
+          font-weight: 700; }
+        .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .twitchStreamInfoWrap .twitchStreamInfo .twitchSnippetViewers {
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11px;
+          margin-left: 15px;
+          color: rgba(0, 0, 0, 0.7); }
+        .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .twitchStreamInfoWrap .twitchStreamInfo .twitchVideoDate {
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11px;
+          color: rgba(0, 0, 0, 0.7);
+          margin-top: 5px;
+          margin-left: 5px; }
+        .twitchDiscContent .twitchDiscContentPreview .twitchVidSnippet .twitchStreamInfoWrap .twitchStreamInfo .twitchVideoTitle {
+          font-family: Arial, Helvetica, sans-serif;
+          font-weight: 700;
+          font-size: 15px;
+          color: black;
+          margin-top: 5px;
+          margin-left: 5px; }
+  .twitchDiscContent .twitchDiscContentViwer::-webkit-scrollbar {
+    width: 5px; }
+  .twitchDiscContent .twitchDiscContentViwer::-webkit-scrollbar-thumb {
+    background: #D4DADA;
+    border-radius: 10px; }
+  .twitchDiscContent .twitchDiscContentViwer::-webkit-scrollbar-corner {
+    background: transparent; }
+
+.profileModal {
+  z-index: 200;
+  width: 220px;
+  border-radius: 5px;
+  position: absolute;
+  background: #DDE4E4;
+  font-family: 'Comfortaa';
+  display: none;
+  top: 75px;
+  left: -160px; }
+  .profileModal .profileBanner {
+    width: 100%;
+    height: 110px;
+    border-radius: 5px;
+    background-image: url("/assets/surkls_landing.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative; }
+    .profileModal .profileBanner .profileImg {
+      position: absolute;
+      left: 20px;
+      bottom: -20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
+      border: 3px solid #DDE4E4;
+      background-size: cover; }
+  .profileModal .profileModalUsername {
+    margin: 10px;
+    margin-top: 25px; }
+  .profileModal .profileModalDesc {
+    min-height: 65px; }
+  .profileModal .profileModalActions {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 11px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    padding: 5px; }
+    .profileModal .profileModalActions .profileModalPassAdmin {
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 5px;
+      box-sizing: border-box;
+      border: 1px solid rgba(0, 0, 0, 0.7);
+      width: 100%;
+      margin-top: 5px;
+      text-align: center; }
+    .profileModal .profileModalActions .profileModalPassAdmin:hover {
+      background: #FECC44;
+      color: #282828; }
+    .profileModal .profileModalActions .modalAction:hover {
+      background: #FECC44;
+      color: #282828; }
+    .profileModal .profileModalActions .send-msg-action {
+      width: 55%; }
+    .profileModal .profileModalActions .add-to-surkl-action {
+      width: 43%; }
+    .profileModal .profileModalActions .modalAction {
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 5px;
+      box-sizing: border-box;
+      border: 1px solid rgba(0, 0, 0, 0.7); }
+
+#session {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 55px);
+  margin-top: 55px;
+  background-color: #282828;
+  /* #sessionCenterAside::-webkit-scrollbar {
+			width:10px;
+		}
+		#sessionCenterAside::-webkit-scrollbar-thumb {
+			background: #282828; 
+			border-radius: 10px;
+		}
+		#sessionCenterAside::-webkit-scrollbar-corner {
+			background: transparent;
+		} */ }
+  #session #sessionExpiredContainer {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    z-index: 60;
+    font-size: 40px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    background: rgba(0, 0, 0, 0.6); }
+    #session #sessionExpiredContainer #sessionExpiredModal {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Comfortaa';
+      width: 60%;
+      height: 200px;
+      border-radius: 10px;
+      background-color: #DEB23B; }
+  #session #sessionLeftAside {
+    scrollbar-color: light;
+    display: flex;
+    width: 500px;
+    flex-direction: column;
+    box-sizing: border-box;
+    background-color: black;
+    overflow-y: scroll; }
+    #session #sessionLeftAside #videoStreams::-webkit-scrollbar {
+      width: 10px; }
+    #session #sessionLeftAside #videoStreams::-webkit-scrollbar-thumb {
+      background: #282828;
+      border-radius: 10px; }
+    #session #sessionLeftAside #videoStreams::-webkit-scrollbar-corner {
+      background: transparent; }
+    #session #sessionLeftAside #videoStreams {
+      height: 505px;
+      width: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column; }
+      #session #sessionLeftAside #videoStreams #streamsErrorModal {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        display: none;
+        justify-content: center;
+        width: 100%;
+        height: 120px;
+        align-items: center;
+        font-family: 'Comfortaa';
+        font-size: 18px;
+        background-color: rgba(253, 66, 57, 0.4);
+        z-index: 20; }
+      #session #sessionLeftAside #videoStreams .streamWrap {
+        /* 		border-radius: 5px; */
+        display: flex;
+        padding-right: 5px;
+        padding-left: 5px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5px;
+        box-sizing: border-box;
+        overflow: hidden; }
+        #session #sessionLeftAside #videoStreams .streamWrap .stream {
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          margin: 0px !important; }
+    #session #sessionLeftAside #sessionLeftAsideSettings {
+      height: 100px;
+      width: 500px;
+      border-top: 1px solid #1a1a1a;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      align-content: flex-start;
+      overflow: hidden;
+      position: fixed;
+      bottom: 5px;
+      left: 0px; }
+      #session #sessionLeftAside #sessionLeftAsideSettings #streamOfMe {
+        margin-top: 5px;
+        margin-left: 5px;
+        border-radius: 3px;
+        height: 90px;
+        width: 90px; }
+      #session #sessionLeftAside #sessionLeftAsideSettings #toggleDevices {
+        display: flex;
+        margin-left: 10px;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 200px;
+        height: 100%; }
+        #session #sessionLeftAside #sessionLeftAsideSettings #toggleDevices #toggleAudio {
+          margin-top: 20px;
+          cursor: pointer;
+          width: 25px;
+          height: 25px; }
+        #session #sessionLeftAside #sessionLeftAsideSettings #toggleDevices #toggleVideo {
+          margin-top: 20px;
+          cursor: pointer;
+          width: 25px;
+          height: 25px; }
+      #session #sessionLeftAside #sessionLeftAsideSettings #restOfSettings {
+        display: flex;
+        width: calc(100% - 280px);
+        height: 100%;
+        flex-direction: column; }
+        #session #sessionLeftAside #sessionLeftAsideSettings #restOfSettings #sessVidDevices {
+          font-size: 17px;
+          display: flex;
+          width: 94%;
+          box-sizing: border-box;
+          justify-content: space-between;
+          outline: none;
+          cursor: pointer;
+          margin-top: 3px; }
+        #session #sessionLeftAside #sessionLeftAsideSettings #restOfSettings #sessAudDevices {
+          font-size: 17px;
+          margin-top: 3px;
+          display: flex;
+          width: 94%;
+          box-sizing: border-box;
+          justify-content: space-between;
+          outline: none;
+          cursor: pointer; }
+        #session #sessionLeftAside #sessionLeftAsideSettings #restOfSettings #shareLink {
+          font-family: 'Comfortaa';
+          font-size: 17px;
+          width: 94%;
+          box-sizing: border-box;
+          cursor: pointer;
+          padding: 5px;
+          border: 2px solid #F4FBFB;
+          border-radius: 5px;
+          margin-top: 5px;
+          text-align: center;
+          color: #F4FBFB; }
+        #session #sessionLeftAside #sessionLeftAsideSettings #restOfSettings #shareLink:hover {
+          background-color: rgba(240, 194, 65, 0.9); }
+  #session #sessionCenterAside {
+    scrollbar-color: light;
+    width: calc(100% - 700px);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #1c1c1c;
+    box-sizing: border-box;
+    /* overflow-y:scroll; */ }
+    #session #sessionCenterAside #discussContent {
+      height: 320px;
+      width: 100%;
+      background-color: black;
+      border-bottom: 1px solid #1c1c1c;
+      position: relative;
+      box-sizing: border-box; }
+      #session #sessionCenterAside #discussContent #platformMenuAligner {
+        position: absolute;
+        right: 25px; }
+        #session #sessionCenterAside #discussContent #platformMenuAligner #contentDropdownIcon {
+          background-image: url("/assets/UI-icons/sort-down-solid.svg");
+          margin-top: -2px;
+          background-size: 23px;
+          height: 28px;
+          width: 28px;
+          position: relative;
+          background-position: center !important;
+          background-repeat: no-repeat;
+          cursor: pointer; }
+    #session #sessionCenterAside #chatSection {
+      box-sizing: border-box;
+      width: 100%;
+      height: calc(100% - 320px);
+      display: flex;
+      flex-direction: column; }
+      #session #sessionCenterAside #chatSection #chatBox {
+        height: 100%;
+        background-color: #282828;
+        display: flex;
+        flex-direction: column; }
+        #session #sessionCenterAside #chatSection #chatBox #noAuthLayer {
+          position: absolute;
+          bottom: 0px;
+          left: 0px;
+          display: flex;
+          width: 100%;
+          height: 65px;
+          outline: none;
+          justify-content: center;
+          align-items: center;
+          font-family: 'Comfortaa';
+          background: rgba(0, 0, 0, 0.6);
+          color: #c2c3c4;
+          z-index: 10;
+          font-size: 20px; }
+        #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow::-webkit-scrollbar {
+          width: 10px; }
+        #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow::-webkit-scrollbar-thumb {
+          background: #282828;
+          border-radius: 10px; }
+        #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow::-webkit-scrollbar-corner {
+          background: transparent; }
+        #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow {
+          scrollbar-color: light;
+          align-self: flex-start;
+          width: 100%;
+          height: calc(100% - 65px);
+          background-color: #323131;
+          overflow: scroll;
+          padding: 10px;
+          box-sizing: border-box;
+          overflow-x: hidden; }
+          #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg:hover {
+            background: #302f2f; }
+          #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg {
+            margin-right: 5px;
+            animation: fadeOut 2s ease-out forwards;
+            width: 100%;
+            font-family: 'Comfortaa';
+            display: flex;
+            box-sizing: border-box; }
+            #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatMsgAvatar {
+              width: 30px;
+              height: 30px;
+              border-radius: 30px;
+              margin: 10px;
+              border: 1px solid #c2c3c4; }
+            #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatHeaderNmsg .chatMsgUserInfo {
+              width: 100%;
+              height: 30px;
+              display: flex;
+              align-items: flex-end;
+              box-sizing: border-box;
+              display: flex;
+              width: 100%;
+              justify-content: flex-start; }
+              #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatHeaderNmsg .chatMsgUserInfo .chatMsgDate {
+                font-size: 10px;
+                margin-bottom: 2px !important;
+                margin-left: 5px;
+                color: rgba(0, 0, 0, 0.4); }
+              #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatHeaderNmsg .chatMsgUserInfo .chatMsgName {
+                font-size: 15px; }
+            #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow .chatMsg .chatHeaderNmsg .chatMsgText {
+              overflow-wrap: break-word;
+              word-break: break-word;
+              font-size: 13px;
+              color: #c2c3c4;
+              padding: 5px;
+              width: 100%;
+              box-sizing: border-box; }
+        #session #sessionCenterAside #chatSection #chatBox #chatInputBox {
+          -webkit-appearance: none;
+          resize: none;
+          appearance: none;
+          background: transparent;
+          border: none;
+          border-top: 1px solid #1c1c1c;
+          width: 100%;
+          height: 65px;
+          outline: none;
+          font-size: 13px;
+          color: #c2c3c4;
+          font-family: 'Comfortaa';
+          padding: 10px;
+          box-sizing: border-box; }
+        #session #sessionCenterAside #chatSection #chatBox #chatBtns {
+          height: 50px; }
+  #session #sessionRightAside {
+    background-color: #242323;
+    border-left: 1px solid #1c1c1c;
+    height: calc(100vh - 55px);
+    width: 200px; }
+    #session #sessionRightAside #whosInRoom {
+      width: 100%;
+      box-sizing: border-box;
+      border-bottom: 1px solid #1c1c1c;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      display: flex; }
+      #session #sessionRightAside #whosInRoom .clientImgRightWrap {
+        cursor: pointer;
+        position: relative;
+        width: calc(33.333% - 6px);
+        height: calc(33.333% - 6px);
+        margin-top: 5px;
+        margin-left: 5px; }
+        #session #sessionRightAside #whosInRoom .clientImgRightWrap .clientSquareAv {
+          width: 100%;
+          height: 100%;
+          border-radius: 100px;
+          border: 2px solid white;
+          box-sizing: border-box; }
+
+#mic-icon {
+  fill: #F4FBFB; }
+
+#cam-icon {
+  fill: #F4FBFB; }
+
+@keyframes fadeOut {
+  0% {
+    border-right: 2px solid #FECC43; }
+  100% {
+    border-right: 2px solid rgba(0, 0, 0, 0); } }
+
+#rooms {
+  height: calc( 100vh - 55px);
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  margin-top: 55px;
+  box-sizing: border-box;
+  padding: 20px;
+  padding-right: 30px; }
+  #rooms .room:hover > .hover-overlay {
+    background: rgba(0, 0, 0, 0); }
+  #rooms .room {
+    width: calc(33.333% - 10px);
+    margin-left: 10px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 8px;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.4);
+    position: relative;
+    margin-bottom: 10px;
+    z-index: 0;
+    overflow: hidden; }
+    #rooms .room .hover-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      color: #FBCA43;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 25px;
+      font-family: 'Comfortaa';
+      z-index: 1; }
+    #rooms .room .maxed-out-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+      color: #FBCA43;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 25px;
+      font-family: 'Comfortaa'; }
+    #rooms .room .room-header {
+      z-index: 2;
+      height: 50px;
+      padding: 5px;
+      padding-left: 10px;
+      padding-right: 10px;
+      box-sizing: border-box;
+      font-family: 'Comfortaa';
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      background: linear-gradient(0deg, rgba(2, 0, 36, 0) 0%, rgba(0, 0, 0, 0.8) 100%); }
+      #rooms .room .room-header .room-name {
+        display: flex;
+        align-self: flex-start;
+        align-items: center; }
+        #rooms .room .room-header .room-name .on-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 10px;
+          background: #62f442;
+          margin-right: 10px; }
+      #rooms .room .room-header .room-category {
+        color: #FBCA43;
+        font-family: "comfortaa";
+        font-size: 20px;
+        user-select: none; }
+  #rooms .joins {
+    z-index: 2;
+    display: flex;
+    padding: 10px;
+    box-sizing: border-box;
+    color: #FBCA43;
+    font-family: 'Comfortaa';
+    font-size: 15px; }
+    #rooms .joins .joins-left {
+      width: 170px; }
+      #rooms .joins .joins-left .joins-title {
+        margin-bottom: 5px;
+        user-select: none; }
+      #rooms .joins .joins-left .join-btns .join-btn:hover {
+        border: 2px solid white;
+        color: white; }
+      #rooms .joins .joins-left .join-btns .join-btn {
+        outline: none;
+        margin-left: 5px;
+        background: black;
+        font-family: 'Comfortaa';
+        cursor: pointer;
+        border: 2px solid #FBCA43;
+        border-radius: 3px;
+        color: #FBCA43; }
+    #rooms .joins .joins-right {
+      width: calc(100% - 170px);
+      display: flex;
+      align-items: flex-end; }
+      #rooms .joins .joins-right .room-clients {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end; }
+        #rooms .joins .joins-right .room-clients .room-client {
+          border: 1px solid #FBCA43;
+          width: 30px;
+          height: 30px;
+          border-radius: 30px;
+          margin-right: 5px; }
+
+.dropMenu {
+  position: absolute;
+  top: 42px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  z-index: 130; }
+  .dropMenu #notifArrow {
+    margin-right: 77px !important; }
+  .dropMenu #accountArrow {
+    margin-right: 20px !important; }
+  .dropMenu #sessionArrow {
+    margin-right: 176px !important; }
+  .dropMenu #signInArrow {
+    margin-right: 85px !important; }
+  .dropMenu #threeDotArrow {
+    margin-right: 20px !important; }
+  .dropMenu #messagesArrow {
+    margin-right: 126px !important; }
+  .dropMenu .lilArrow {
+    -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+    clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+    background-color: #CBD2D2;
+    width: 20px;
+    height: 20px;
+    align-self: flex-end;
+    margin-bottom: -2px;
+    border-radius: 2px; }
+  .dropMenu .menuItems {
+    border-radius: 3px;
+    min-width: 270px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    background-color: #dde4e4;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    font-family: 'Didact Gothic'; }
+    .dropMenu .menuItems .menuHeader {
+      display: flex;
+      justify-content: center;
+      background-color: #cbd2d2;
+      color: black;
+      font-size: 17px;
+      border-radius: 3px;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box; }
+    .dropMenu .menuItems .menuInput {
+      padding: 10px;
+      font-size: 17px;
+      display: flex;
+      outline: none;
+      border: none;
+      width: 86%;
+      border-radius: 5px;
+      margin-top: 10px;
+      resize: none; }
+    .dropMenu .menuItems .menuTextInput {
+      padding: 10px;
+      height: 50px;
+      font-size: 17px;
+      display: flex;
+      outline: none;
+      border: none;
+      width: 86%;
+      border-radius: 5px;
+      margin-top: 10px;
+      resize: none; }
+    .dropMenu .menuItems .menuItem:hover {
+      background-color: #cbd2d2; }
+    .dropMenu .menuItems .menuSelect {
+      font-size: 17px;
+      display: flex;
+      height: 35px;
+      width: 92%;
+      box-sizing: border-box;
+      justify-content: space-between;
+      outline: none;
+      cursor: pointer; }
+    .dropMenu .menuItems .menuConfig {
+      cursor: default;
+      padding: 7px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 17px;
+      display: flex;
+      width: 96%;
+      box-sizing: border-box;
+      justify-content: space-between; }
+      .dropMenu .menuItems .menuConfig input[type=number]::-webkit-inner-spin-button {
+        appearance: none; }
+      .dropMenu .menuItems .menuConfig .sessionConfig {
+        width: 40px;
+        height: 20px;
+        border-radius: 3px;
+        border: none;
+        padding-left: 10px;
+        font-family: "Comfortaa";
+        box-sizing: border-box;
+        outline: none; }
+    .dropMenu .menuItems .menuItem {
+      padding: 7px;
+      font-size: 17px;
+      display: flex;
+      width: 100%;
+      box-sizing: border-box; }
+    .dropMenu .menuItems .menuItemSplit {
+      display: flex;
+      height: 30px;
+      justify-content: center;
+      margin-top: 10px;
+      width: 100%; }
+      .dropMenu .menuItems .menuItemSplit .or {
+        margin-top: 5px; }
+      .dropMenu .menuItems .menuItemSplit .splitLine1 {
+        height: 50%;
+        width: 30%;
+        margin-right: 10px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.3); }
+      .dropMenu .menuItems .menuItemSplit .splitLine2 {
+        height: 50%;
+        width: 30%;
+        margin-left: 10px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.3); }
+
+#pulloutBg {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 200;
+  overflow: hidden;
+  animation: removeOverlay .3s ease-out forwards;
+  display: none; }
+
+.pulloutAction {
+  animation: pullout .3s ease-out forwards !important; }
+
+.overlayAction {
+  animation: overlay .3s ease-out forwards !important; }
+
+#pullout {
+  animation: pullin .3s ease-out forwards;
+  transform: translateX(-100%);
+  height: 100vh;
+  width: 260px;
+  background-color: #DDE4E4; }
+
+.menuItem:hover {
+  background-color: #cbd2d2; }
+
+.menuItem {
+  padding: 10px;
+  font-size: 17px;
+  display: flex;
+  font-family: 'Didact Gothic';
+  cursor: pointer; }
+
+.menuSurkls {
+  width: 100%;
+  border-top: 1px solid #303030;
+  height: 100px;
+  margin-top: 10px;
+  overflow-y: scroll; }
+  .menuSurkls .menuSurklsHeader {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    font-family: 'Comfortaa'; }
+
+@keyframes overlay {
+  100% {
+    background-color: rgba(0, 0, 0, 0.4); } }
+
+@keyframes pullout {
+  100% {
+    transform: translate(0%, 0px); } }
+
+@keyframes removeOverlay {
+  0% {
+    background-color: rgba(0, 0, 0, 0.4); }
+  100% {
+    background-color: rgba(0, 0, 0, 0); } }
+
+@keyframes pullin {
+  0% {
+    transform: translate(0%, 0px); }
+  100% {
+    transform: translate(-100%, 0px); } }
+
+.header {
+  height: 55px;
+  width: 100%;
+  background-color: #282828;
+  display: flex;
+  position: fixed;
+  top: 0px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1C1C1C;
+  box-sizing: border-box; }
+  .header .customPulloutHeader {
+    display: flex;
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #303030;
+    align-items: center; }
+    .header .customPulloutHeader #menuBarsIcon2 {
+      cursor: pointer;
+      margin-left: 15px;
+      width: 30px;
+      height: 30px;
+      background-image: url("/assets/UI-icons/menu_icon.1.svg");
+      background-position: center;
+      background-size: 25px;
+      background-repeat: no-repeat; }
+    .header .customPulloutHeader #surklsTitle {
+      max-width: 70px;
+      margin-left: 50px; }
+  .header #leftOfHeader {
+    display: flex;
+    align-items: center; }
+    .header #leftOfHeader #menuBarsIcon {
+      cursor: pointer;
+      margin-left: 15px;
+      width: 30px;
+      height: 30px;
+      background-image: url("/assets/UI-icons/menu_icon.svg");
+      background-position: center;
+      background-size: 25px;
+      background-repeat: no-repeat; }
+    .header #leftOfHeader .logo {
+      width: 40px;
+      height: 40px;
+      margin-top: 3px; }
+  .header #rightOfHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .header #rightOfHeader #threeDotsMenu {
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      background-image: url("/assets/UI-icons/ellipsis-v-solid.svg");
+      background-position: center;
+      background-size: 7px;
+      background-repeat: no-repeat;
+      margin-right: 20px; }
+    .header #rightOfHeader #signInText {
+      font-family: 'Comfortaa';
+      font-size: 17px;
+      font-weight: 700;
+      color: #FCCB43;
+      margin-right: 20px;
+      cursor: pointer; }
+    .header #rightOfHeader #startSessionIcon {
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      background-image: url("/assets/UI-icons/start_surkl.svg");
+      background-position: center;
+      background-size: 25px;
+      background-repeat: no-repeat;
+      margin-right: 20px; }
+    .header #rightOfHeader #toRoomsIcon {
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      background-image: url("/assets/UI-icons/th-solid.1.svg");
+      background-position: center;
+      background-size: 20px;
+      background-repeat: no-repeat;
+      margin-right: 20px; }
+    .header #rightOfHeader #messageIcon {
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      background-image: url("/assets/UI-icons/comment-regular.svg");
+      background-position: center;
+      background-size: 23px;
+      background-repeat: no-repeat;
+      margin-right: 20px;
+      position: relative; }
+      .header #rightOfHeader #messageIcon .red-alert-dot {
+        width: 16px;
+        height: 16px;
+        background: red;
+        position: absolute;
+        border-radius: 16px;
+        color: white;
+        font-family: 'Quicksand';
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        right: 0px; }
+    .header #rightOfHeader #notifIcon {
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      background-image: url("/assets/UI-icons/bell-regular.svg");
+      background-position: center;
+      background-size: 20px;
+      background-repeat: no-repeat;
+      margin-right: 20px;
+      position: relative; }
+      .header #rightOfHeader #notifIcon .red-alert-dot {
+        width: 16px;
+        height: 16px;
+        background: red;
+        position: absolute;
+        border-radius: 16px;
+        color: white;
+        font-family: 'Quicksand';
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        right: 0px; }
+    .header #rightOfHeader #avatar {
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+      border-radius: 40px;
+      border: 1px solid #dde4e4;
+      position: relative; }
+    .header #rightOfHeader .customMenuHeader {
+      display: flex;
+      background-color: #cbd2d2;
+      color: black;
+      font-size: 17px;
+      padding: 7px;
+      padding-top: 9px;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 3px; }
+      .header #rightOfHeader .customMenuHeader #userNameNEmail {
+        font-family: 'Didact Gothic';
+        color: black;
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column; }
+
+/*acc menu*/
+.rightAccIcon {
+  width: 22px;
+  height: 22px;
+  background-position: center;
+  background-size: 21px;
+  background-repeat: no-repeat;
+  margin-right: 21px; }
+
+#surklsIcon {
+  background-image: url("/assets/UI-icons/surkls_icon.svg"); }
+
+#mySurklIcon {
+  background-image: url("/assets/UI-icons/circle-notch-solid.svg"); }
+
+#settingsIcon {
+  background-image: url("/assets/UI-icons/cogs-solid.svg"); }
+
+#helpIcon {
+  background-image: url("/assets/UI-icons/question-circle-regular.svg"); }
+
+#logoutIcon {
+  background-image: url("/assets/UI-icons/sign-out-alt-solid.svg"); }
+
+/*acc menu*/
+/*session menu*/
+#createSessBtn:hover {
+  background-color: #FCCB43;
+  color: #282828; }
+
+#createSessBtn {
+  color: #FCCB43;
+  outline: none;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  justify-content: center;
+  width: 90%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  background-color: #282828; }
+
+/*session menu*/
+/*sign in menu */
+#signInForm {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
+.loginBtn {
+  cursor: pointer;
+  background-color: #282828;
+  color: #FECC43;
+  margin-bottom: 10px;
+  height: 30px;
+  font-size: 13px;
+  font-family: 'Comfortaa';
+  border: none;
+  margin-top: 10px;
+  width: 90%;
+  border-radius: 3px; }
+
+.loginBtn:hover {
+  background-color: #FECC43;
+  color: #282828; }
+
+.signInInput {
+  height: 25px;
+  font-size: 13px;
+  font-family: 'Comfortaa';
+  border: none;
+  border-radius: 3px;
+  padding: 10px;
+  box-sizing: border-box;
+  outline: none;
+  margin-top: 10px;
+  width: 90%; }
+
+/*sign in menu */
+/*three dot menu */
+.threeDotMenuIcon {
+  width: 25px;
+  height: 25px;
+  background-position: center;
+  background-size: 21px;
+  background-repeat: no-repeat;
+  margin-right: 21px; }
+
+/*three dot menu */
+/*msgs menu*/
+.dmMsgsFeed {
+  max-height: 287px;
+  width: 100%;
+  min-height: 240px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-image: url("/assets/msgs_bg.png");
+  background-position: center;
+  background-size: 120px;
+  background-repeat: no-repeat; }
+
+.dmMsgsFeed > div:last-child {
+  border-bottom: 2px solid #CBD2D2; }
+
+.msngr:hover {
+  background: #CBD2D2 !important; }
+
+.msngr {
+  display: flex;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  border-top: 2px solid #CBD2D2;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px; }
+  .msngr .msngr-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 30px; }
+  .msngr .msngr-name-n-msg {
+    width: calc(100% - 55px);
+    font-family: 'Quicksand';
+    font-weight: 700px;
+    padding-left: 10px; }
+    .msngr .msngr-name-n-msg .msngr-name {
+      font-weight: 700; }
+    .msngr .msngr-name-n-msg .msngr-latest-msg {
+      font-size: 12px; }
+  .msngr .msngr-notif-dot {
+    height: 4px;
+    width: 4px;
+    border-radius: 4px; }
+
+/*msgs menu*/
+/*dm-messanger*/
+#dm-msngr {
+  position: fixed;
+  z-index: 110;
+  bottom: 0px;
+  height: 300px;
+  width: 260px;
+  right: 100px;
+  background: #F4FBFB;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  overflow: hidden;
+  font-family: 'Quicksand'; }
+
+.dm-msngr-header {
+  width: 100%;
+  display: flex;
+  padding: 7px;
+  box-sizing: border-box;
+  background: #DDE4E4; }
+  .dm-msngr-header .dm-msngr-header-avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: 25px; }
+  .dm-msngr-header .dm-msngr-header-username {
+    width: calc(100% - 60px);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px; }
+  .dm-msngr-header .dm-msngr-header-close {
+    background-image: url("/assets/UI-icons/times-solid.svg");
+    background-position: center;
+    background-size: 12px;
+    background-repeat: no-repeat;
+    width: 25px;
+    height: 25px;
+    cursor: pointer; }
+
+.dm-msngr-feed {
+  width: 100%;
+  height: calc(100% - 85px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 7px;
+  box-sizing: border-box;
+  font-size: 14px;
+  align-content: flex-start; }
+
+.dm-msngr-feed::-webkit-scrollbar {
+  width: 7px; }
+
+.dm-msngr-feed::-webkit-scrollbar-thumb {
+  background: #D2D5D5;
+  border-radius: 10px; }
+
+.dm-msngr-feed::-webkit-scrollbar-corner {
+  background: transparent; }
+
+.dm-msngr-input-wrap {
+  display: flex;
+  width: 100%;
+  justify-content: center; }
+  .dm-msngr-input-wrap .dm-msngr-input {
+    min-height: 25px;
+    font-family: 'Quicksand';
+    border-radius: 5px;
+    resize: none;
+    width: 95%;
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    padding-left: 10px;
+    box-sizing: border-box; }
+
+/*dm-messanger*/
+/*pull-out menu*/
+/*pull-out menu*/
+/*notification menu*/
+.notif-feed {
+  max-height: 287px;
+  width: 100%;
+  max-width: 320px;
+  min-height: 240px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-image: url("/assets/notif_bg.png");
+  background-position: center;
+  background-size: 120px;
+  background-repeat: no-repeat; }
+  .notif-feed .notif {
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #CBD2D2; }
+    .notif-feed .notif .notif-top-part {
+      display: flex;
+      justify-content: space-around; }
+      .notif-feed .notif .notif-top-part .notif-banner-avatar {
+        width: 30px;
+        height: 30px;
+        margin-top: 5px;
+        border-radius: 30px;
+        border: 1px solid white; }
+      .notif-feed .notif .notif-top-part .notif-text {
+        width: calc(100% - 45px);
+        font-family: 'Comfortaa' !important;
+        font-weight: 700;
+        margin-top: 5px;
+        margin-left: 5px;
+        margin-bottom: 5px; }
+    .notif-feed .notif .notif-options {
+      display: flex;
+      justify-content: space-between; }
+      .notif-feed .notif .notif-options .notif-option {
+        margin-top: 5px;
+        border-radius: 3px;
+        width: 45%;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        background: #282828;
+        color: white; }
+      .notif-feed .notif .notif-options .notif-option:hover {
+        background: #EFC141;
+        color: black; }
+
+/*notification menu*/
+/*icons*/
+.signInMenuIcon {
+  width: 25px;
+  height: 25px;
+  background-position: center;
+  background-size: 21px;
+  background-repeat: no-repeat;
+  margin-right: 21px; }
+
+.signInGoogleWrap {
+  background-color: rgba(234, 67, 53, 0.9) !important; }
+
+.signInTwitterWrap {
+  background-color: rgba(29, 161, 242, 0.9) !important; }
+
+.signInTwitchWrap {
+  background-color: rgba(100, 65, 164, 0.9) !important; }
+
+.signInGoogleWrap:hover {
+  background-color: #ea4335 !important; }
+
+.signInTwitterWrap:hover {
+  background-color: #1da1f2 !important; }
+
+.signInTwitchWrap:hover {
+  background-color: #6441a4 !important; }
+
+#signInGoogleIcon {
+  background-image: url("/assets/google_btn.png"); }
+
+#signInTwitchIcon {
+  background-size: 28px !important;
+  background-image: url("/assets/twitch_btn.png"); }
+
+#signInTwitterIcon {
+  background-image: url("/assets/twitter_btn.png"); }
+
+#createSurklIcon {
+  background-size: 18px !important;
+  background-image: url("/assets/UI-icons/add-surkl.svg"); }
+
+#roomsIcon {
+  background-image: url("/assets/UI-icons/th-solid.svg"); }
+
+#aboutIcon {
+  background-image: url("/assets/UI-icons/book-open-solid.svg"); }
+
+#eventsIcon {
+  background-image: url("/assets/UI-icons/calendar-alt-regular.svg"); }
+
+#peopleIcon {
+  background-image: url("/assets/UI-icons/users-solid.svg"); }
+
+#signUpIcon {
+  background-image: url("/assets/UI-icons/user-plus-solid.svg"); }
+
+#surferIcon {
+  background-image: url("/assets/UI-icons/snowboarding-solid.svg"); }
+
+/*icons*/
+
+#profile {
+  width: 100%;
+  height: calc(100vh - 55px);
+  display: flex; }
+  #profile #profileInfo {
+    width: 80%;
+    height: 100%;
+    /* #profileBanner {
+      background-image: url('/assets/banner.png');
+      background-size: cover;
+      background-position: center;
+      height: 250px;
+      width:100%;  
+      -webkit-clip-path: polygon(0 0, 100% 0, 100% 86%, 0% 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 86%, 0% 100%);
+    } */ }
+
+#already-created {
+  height: calc(100vh - 55px);
+  margin-top: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Josefin sans';
+  color: #F6C641;
+  font-size: 30px; }
+
+#create-surkl {
+  height: calc(100vh - 55px);
+  margin-top: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  #create-surkl .name-your-surkl {
+    width: 80%;
+    display: flex;
+    height: 350px;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center; }
+    #create-surkl .name-your-surkl .name-your-surkl-input {
+      width: 0%;
+      height: 120px;
+      margin-top: 70px;
+      font-family: 'Josefin sans';
+      font-size: 90px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #DFE5E5;
+      text-align: center;
+      border-bottom: 3px solid #F6C641;
+      animation: width .7s ease-out forwards;
+      font-weight: 700; }
+    #create-surkl .name-your-surkl .name-your-surkl-input::placeholder {
+      color: #F6C641;
+      font-weight: 700;
+      text-align: center;
+      opacity: .3; }
+  #create-surkl .create-surkl-categories-wrap {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    height: 350px; }
+    #create-surkl .create-surkl-categories-wrap .create-surkl-categories {
+      display: flex;
+      margin-top: 30px;
+      justify-content: center;
+      align-content: flex-start;
+      flex-wrap: wrap; }
+    #create-surkl .create-surkl-categories-wrap .create-surkl-category:hover {
+      color: #F6C641 !important;
+      background: black !important; }
+    #create-surkl .create-surkl-categories-wrap .create-surkl-category:active {
+      color: white !important;
+      background: black !important; }
+    #create-surkl .create-surkl-categories-wrap .create-surkl-category {
+      padding: 10px;
+      padding-top: 15px;
+      font-family: 'Josefin sans';
+      font-size: 40px;
+      background: #F6C641;
+      border-radius: 20px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transform: scale(0); }
+  #create-surkl .create-surkl-motto {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 350px;
+    justify-content: space-between; }
+    #create-surkl .create-surkl-motto .pick-motto-input {
+      width: 0%;
+      height: 120px;
+      margin-top: 70px;
+      font-family: 'Josefin sans';
+      font-size: 90px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #DFE5E5;
+      text-align: center;
+      border-bottom: 3px solid #F6C641;
+      animation: width .7s ease-out forwards;
+      font-weight: 700; }
+    #create-surkl .create-surkl-motto .pick-motto-input::placeholder {
+      color: #F6C641;
+      font-weight: 700;
+      text-align: center;
+      opacity: .3; }
+
+.create-surkl-arrows {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; }
+  .create-surkl-arrows .create-surkl-arrow:hover {
+    transform: scale(1.1); }
+  .create-surkl-arrows .create-surkl-arrow:active {
+    transform: scale(1); }
+  .create-surkl-arrows .create-surkl-arrow {
+    cursor: pointer;
+    width: 0px;
+    height: 85px;
+    background-position: center;
+    background-size: 40px;
+    background-repeat: no-repeat;
+    animation: width2 .7s ease-out forwards; }
+  .create-surkl-arrows .create-surkl-left-arrow {
+    background-image: url("/assets/UI-icons/caret-left-solid.svg"); }
+  .create-surkl-arrows .create-surkl-right-arrow {
+    background-image: url("/assets/UI-icons/caret-right-solid.svg"); }
+
+.errorColor::-webkit-input-placeholder {
+  color: #d84224; }
+
+.opacity::placeholder {
+  opacity: .5 !important; }
+
+@keyframes scaleUp {
+  100% {
+    transform: scale(1); } }
+
+@keyframes width {
+  100% {
+    width: 100%; } }
+
+@keyframes width2 {
+  100% {
+    width: 140px; } }
+
+#account-settings {
+  width: 100%;
+  height: 100%; }
+  #account-settings #tabs {
+    height: 30px;
+    display: flex; }
+    #account-settings #tabs .tab {
+      width: 120px;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      height: 30px;
+      margin-left: 5px;
+      display: flex;
+      background: #242323;
+      justify-content: center;
+      align-items: center;
+      color: #F4FBFB;
+      font-family: 'Comfortaa';
+      cursor: pointer; }
+    #account-settings #tabs #account-tab {
+      border-bottom: 1px solid #242323; }
+  #account-settings #tabs > div:first-child {
+    margin-left: 0px; }
+  #account-settings .tab-win {
+    height: calc(100% - 30px);
+    margin-top: 1px;
+    border-radius: 5px;
+    border-top-left-radius: 0px; }
+    #account-settings .tab-win #tab-banner-n-avatar {
+      max-width: 400px;
+      height: 200px;
+      box-sizing: border-box;
+      position: relative; }
+      #account-settings .tab-win #tab-banner-n-avatar #tab-banner {
+        width: 100%;
+        height: 200px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        margin-left: 5px; }
+      #account-settings .tab-win #tab-banner-n-avatar #tab-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+        position: absolute;
+        bottom: -45px;
+        left: 30px;
+        border: 2px solid #C7A035; }
+    #account-settings .tab-win .account-tab-form {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      margin-top: 45px;
+      max-width: 400px;
+      box-sizing: border-box; }
+      #account-settings .tab-win .account-tab-form label {
+        color: #F4FBFB;
+        font-family: 'Comfortaa';
+        font-size: 12;
+        margin-bottom: 3px;
+        margin-top: 10px; }
+      #account-settings .tab-win .account-tab-form .tab-input {
+        color: #F4FBFB;
+        background: #3F3E3E;
+        width: 100%;
+        border: none;
+        border-radius: 3px;
+        height: 28px;
+        font-family: 'Comfortaa';
+        font-size: 14px;
+        padding-left: 10px;
+        outline: none; }
+
+#account-settings {
+  width: 100%;
+  height: 100%; }
+  #account-settings #tabs {
+    height: 30px;
+    display: flex; }
+    #account-settings #tabs .tab {
+      width: 120px;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      height: 30px;
+      margin-left: 5px;
+      display: flex;
+      background: #242323;
+      justify-content: center;
+      align-items: center;
+      color: #F4FBFB;
+      font-family: 'Comfortaa';
+      cursor: pointer; }
+    #account-settings #tabs .profile-tab {
+      border-bottom: 1px solid #242323; }
+  #account-settings #tabs > div:first-child {
+    margin-left: 0px; }
+  #account-settings .tab-win {
+    height: calc(100% - 30px);
+    margin-top: 1px;
+    border-radius: 5px;
+    border-top-left-radius: 0px; }
+
+#account-settings {
+  width: 100%;
+  height: 100%; }
+  #account-settings #tabs {
+    height: 30px;
+    display: flex; }
+    #account-settings #tabs .tab {
+      width: 120px;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      height: 30px;
+      margin-left: 5px;
+      display: flex;
+      background: #242323;
+      justify-content: center;
+      align-items: center;
+      color: #F4FBFB;
+      font-family: 'Comfortaa';
+      cursor: pointer; }
+    #account-settings #tabs .profile-tab {
+      border-bottom: 1px solid #242323; }
+  #account-settings #tabs > div:first-child {
+    margin-left: 0px; }
+  #account-settings .tab-win {
+    height: calc(100% - 30px);
+    margin-top: 1px;
+    border-radius: 5px;
+    border-top-left-radius: 0px; }
+
+#settings {
+  margin-top: 55px;
+  min-height: calc(100vh - 55px);
+  display: flex;
+  overflow: hidden; }
+  #settings #settings-nav {
+    width: 250px;
+    border-right: 1px solid #3E3E3E;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 55px); }
+    #settings #settings-nav #account-tab {
+      color: #F6C641;
+      background: #3F3E3E; }
+    #settings #settings-nav .setting-type:hover {
+      background: #353434; }
+    #settings #settings-nav .setting-type {
+      height: 50px;
+      font-family: 'Comfortaa';
+      font-size: 16px;
+      color: #F4FBFB;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      padding-left: 15px;
+      cursor: pointer; }
+  #settings #settings-actions {
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding: 20px;
+    height: calc(100vh - 55px);
+    width: calc(100% - 250px); }
+
+a {
+  color: inherit;
+  /* blue colors for links too */
+  text-decoration: inherit;
+  /* no underline */ }
+
+body {
+  background-color: #242323;
+  margin: 0px;
+  padding: 0px; }
+

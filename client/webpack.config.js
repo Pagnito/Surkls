@@ -10,7 +10,7 @@ module.exports = {
     filename: "bundle.js",
     publicPath: '/build'
   },
-  devtool: 'source-map',
+  //devtool: 'source-map',
   module: {
     rules: [
       {
