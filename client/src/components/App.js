@@ -14,7 +14,7 @@ import Rooms from 'components/Rooms/Rooms';
 import Header from 'components/Header/Header';
 import Profile from 'components/Profile/Profile';
 import CreateSurkl from 'components/Create-surkl/Create-surkl';
-
+import Settings from 'components/Settings/Settings'
 /*const Loading = () => Loader;
 
 const Entries = Loadable({
@@ -31,20 +31,36 @@ class App extends Component {
 	
 		setUserMedia();
 		fetch('/account').then((res) => res.json()).then((user) =>{
-			Store.dispatch({
-				type: GET_USER,
-				payload: user
-			})
-			this.socket.emit('setup', user)	
-			Store.dispatch({
-				type: UPDATE_DMS,
-				payload: {notifCount: user.new_msg_count}
-			})	
-			Store.dispatch({
-				type: LOAD_NOTIFS,
-				payload: {notifCount: user.notif_count, notifs: user.notifs}
-			})	
-			if(this.props.location.pathname !== '/' ){		
+			if(user.userName){
+				Store.dispatch({
+					type: GET_USER,
+					payload: user
+				})
+				this.socket.emit('setup', user)	
+				Store.dispatch({
+					type: UPDATE_DMS,
+					payload: {notifCount: user.new_msg_count}
+				})	
+				Store.dispatch({
+					type: LOAD_NOTIFS,
+					payload: {notifCount: user.notif_count, notifs: user.notifs}
+				})
+			}	else {
+				Store.dispatch({
+					type: GET_USER,
+					payload: {}
+				})
+				this.socket.emit('setup', user)	
+				Store.dispatch({
+					type: UPDATE_DMS,
+					payload: {notifCount: 0}
+				})	
+				Store.dispatch({
+					type: LOAD_NOTIFS,
+					payload: {notifCount: 0, notifs: []}
+				})
+			}		
+			if(this.props.location.pathname == '/signup' ){		
 				this.props.history.push('/')
 			}		
 		}).catch(()=>{
@@ -58,7 +74,7 @@ class App extends Component {
 	render() {
 			return (
 				<Provider store={Store}>	
-				
+					<Route exact path="/settings" component={Settings} />
 					<Route exact path="/profile" component={Profile} />
 					<Route exact path="/signup" component={SignUp}  />
 					<Route 

@@ -5,7 +5,7 @@ import {
   export const updateMsgs = (msgs) =>{
     return {
       type: UPDATE_SURKL_MSGS,
-      payload:msgs
+      payload:msgs === null ? [] : msgs
     }
   }
   export const fetchMySurkl = (id) => (dispatch)=>{

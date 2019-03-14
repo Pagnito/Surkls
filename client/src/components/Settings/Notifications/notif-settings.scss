@@ -1,0 +1,35 @@
+#account-settings {
+  width:100%;
+  height:100%;
+  #tabs {
+    height:30px;
+    display:flex; 
+    
+    .tab {
+      width:120px;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;     
+      height: 30px;
+      margin-left: 5px;
+      display: flex;
+      background: #242323;
+      justify-content: center;
+      align-items: center;
+      color: #F4FBFB;
+      font-family: 'Comfortaa';
+      cursor: pointer;
+    }
+    .profile-tab {
+      border-bottom: 1px solid #242323;
+    }
+  }
+  #tabs > div:first-child{
+    margin-left: 0px;
+  }
+  .tab-win {
+    height: calc(100% - 30px);
+    margin-top: 1px;
+    border-radius: 5px;
+    border-top-left-radius: 0px;
+  }
+}

@@ -1,0 +1,38 @@
+#settings {
+  margin-top: 55px;
+  min-height: calc(100vh - 55px);
+  display:flex;
+  overflow: hidden;
+  #settings-nav{
+    width:250px;
+    border-right: 1px solid #3E3E3E;
+    display:flex;
+    flex-direction: column;
+    height: calc(100vh - 55px);
+    #account-tab {
+      color:#F6C641;
+      background: #3F3E3E;
+    }
+    .setting-type:hover {
+      background: #353434;
+    }
+    .setting-type {
+      height: 50px;
+      font-family: 'Comfortaa';
+      font-size: 16px;
+      color: #F4FBFB;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      padding-left: 15px;
+      cursor: pointer;
+    }
+  }
+  #settings-actions {
+    overflow-y: scroll; 
+    box-sizing: border-box;
+    padding:20px;
+    height: calc(100vh - 55px);
+    width: calc(100% - 250px)
+  }
+}

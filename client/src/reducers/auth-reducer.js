@@ -8,7 +8,7 @@ let dms = {};
 export default function(state = initialState, action) {
 	switch (action.type) {	
 		case USER_SURKL:
-		//console.log(action.payload)
+		console.log(action.payload)
 		let clone = JSON.parse(JSON.stringify(state.user))
 		clone.mySurkl = action.payload
 		clone.mySurkl.surkl_id = action.payload._id

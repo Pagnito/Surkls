@@ -2,6 +2,7 @@ const sessions = require('./session-sockets');
 const dms = require('./msgs-sockets');
 const surkl = require('./surkl-sockets');
 const notifs = require('./notif-sockets');
+const redClient = require('../database/redis');
 let connectedUsers = {};
 let surkls = {};
 module.exports = (io, app) => {  

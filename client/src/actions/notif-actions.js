@@ -1,11 +1,18 @@
 import {
   LOAD_NOTIFS,
-  UPDATE_NOTIFS
+  UPDATE_NOTIFS,
+  ADD_NOTIF
   } from 'actions/types';
   
   export const updateNotifs = (payload) =>{
     return {
       type: UPDATE_NOTIFS,
+      payload:payload
+    }
+  }
+  export const addNotif = (payload) =>{
+    return {
+      type: ADD_NOTIF,
       payload:payload
     }
   }

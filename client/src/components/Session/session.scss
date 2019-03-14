@@ -108,7 +108,8 @@
 			}
 			#toggleDevices{
 				display:flex;
-				align-items: center; 
+				margin-left: 10px;
+				flex-direction: column;
 				justify-content: space-around;
 				width: 200px;
 				height:100%;
@@ -116,15 +117,15 @@
 					margin-top: 20px;
 					cursor: pointer;
 					//background-image: url('/assets/UI-icon/microphone-slash-solid.svg');
-					width:40px;
-					height:40px;					
+					width:25px;
+					height:25px;					
 				}
 				#toggleVideo {
 					margin-top: 20px;
 					cursor: pointer;
 					//background-image: url('/assets/UI-icon/microphone-slash-solid.svg');
-					width:40px;
-					height:40px;
+					width:25px;
+					height:25px;
 					
 				}
 			}

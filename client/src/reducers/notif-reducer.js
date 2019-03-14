@@ -1,4 +1,4 @@
-import { UPDATE_NOTIFS, LOAD_NOTIFS } from "actions/types";
+import { UPDATE_NOTIFS, LOAD_NOTIFS, ADD_NOTIF } from "actions/types";
 //import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
   notifs: [],
@@ -7,16 +7,23 @@ const initialState = {
 
 export default function(state = initialState, action) {
 	switch (action.type) {
+		case ADD_NOTIF:
+			let notifClone = state.notifs.slice(0);	
+			notifClone.unshift(action.payload);
+			return {
+				...state,
+				notifs:notifClone,
+				notifCount: state.notifCount+=1
+		};
     case LOAD_NOTIFS:
-    return {
-    ...state,
-    ...action.payload
-  };
-		case UPDATE_NOTIFS:
-			//let notifClone = state.msgs.slice(0);	
 			return {
 			...state,
 			...action.payload
+		};
+			case UPDATE_NOTIFS:
+			return {
+				...state,
+				...action.payload
 		};	
 		default:
 			return state;

@@ -6,7 +6,7 @@ import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp } from 'actions/actions';
 import { closeDMs, openDMs, updateDMs, updateMsgs, addToDMs, fetchMsgThreads} from 'actions/dm-actions';
-import { fetchNotifs, updateNotifs } from 'actions/notif-actions';
+import { fetchNotifs, updateNotifs, addNotif } from 'actions/notif-actions';
 import { subCategories } from 'components/Session/Sub-comps/sub-categories';
 import './header.scss';
 class Header extends Component {
@@ -28,6 +28,9 @@ class Header extends Component {
 		
 		this.socket.on('msg',(msg)=>{
 			this.props.updateMsgs(msg)
+		})
+		this.socket.on('notif',(notif)=>{
+			this.props.addNotif(notif)
 		})
 		this.socket.on('open-dm',(user)=>{
 			this.props.addToDMs(user)
@@ -188,8 +191,8 @@ class Header extends Component {
 			let memberOf = this.props.auth.user.memberOf;
 			if(memberOf!== null && memberOf!==undefined){
 			  toMemberOf = Object.keys(memberOf).length>0 ? 
-				<Link to={`/surkl/${memberOf}`} className="menuItem">
-					<div className="rightAccIcon" id="mySurklIcon" />Ma boiz
+				<Link to={`/surkl/${memberOf.surkl_id}`} className="menuItem">
+					<div className="rightAccIcon" id="mySurklIcon" />{memberOf.surkl_name}
 				</Link> : ''
 			} else {
 				toMemberOf = '';
@@ -201,14 +204,14 @@ class Header extends Component {
 					<div onClick={this.renderPulloutMenu} id="menuBarsIcon2" />
 					<img id="surklsTitle" src="/assets/surkls-title2.png" />
 				</div>
-				<Link to="/rooms" className="menuItem">
+				<Link to="/" className="menuItem">
 					<div className="rightAccIcon" id="surferIcon" />Surfing
 				</Link>
 				<Link to="/create_surkl" className="menuItem">
 					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
 				</Link>
 				{toMemberOf}
-				<Link to="/rooms" className="menuItem">
+				<Link to="/" className="menuItem">
 					<div className="threeDotMenuIcon" id="surklsIcon" />Rooms
 				</Link>
 				{/* <div className="menuItem">
@@ -243,14 +246,24 @@ class Header extends Component {
 		);
 	};
 	notifTypes = (notif) =>{
+		let img = notif.source.bannerUrl ? notif.source.bannerUrl : notif.source.avatarUrl
+		let imgStyle = {
+			backgroundImage:`url(${img})`,
+			backgroundPosition:'center',
+			backgroundSize:'cover',
+			backgroundRepeat:'no-repeat'
+		}
 		return {
 			'add-to-surkl':
 			 <div className="notif add-to-surkl-notif">
-			 <div className="notif-text">{notif.text}</div>
+			 <div className="notif-top-part">
+				<div style={imgStyle} className="notif-banner-avatar"></div>
+				<div className="notif-text">{notif.text}</div>
+			 </div>			 
 			 <div>Would you like to join?</div>
 			 	<div className="notif-options">
 				  <div onClick={()=>this.acceptSurklInvite(notif,this.props.auth.user)} className="notif-option">Yes</div>
-				 	<div className="notif-option">No</div>
+				 	<div onClick={()=> this.declineSurklInvite(notif._id, this.props.auth.user._id)}className="notif-option">No</div>
 				</div>
 			</div>
 		}
@@ -259,20 +272,20 @@ class Header extends Component {
 		this.socket.emit('clear-all-notifs', this.props.auth.user)
 	}
 	acceptSurklInvite = (invite, user) =>{
-		console.log(user)
 		this.socket.emit('accept-surkl', invite, user)
 	}
-	declineSurklInvite = (invite) =>{
-		this.socket.emit('decline-surkl', invite)
+	declineSurklInvite = (invite_id, user_id) =>{
+		console.log(invite_id)
+		this.socket.emit('decline-surkl', invite_id, user_id)
 	}
 	openNotifs = () => {	
 		this.socket.emit('clear-notifs', this.props.auth.user)
 		this.props.updateNotifs({notifCount: 0})
 	}
 	feedNotifs = () =>{
-		let notifs = this.props.notifs.notifs
-		if(notifs.length>0){
-			return notifs.map((notif,ind)=>{
+		let notifs = this.props.notifs
+		if(notifs){
+			return notifs.notifs.map((notif,ind)=>{
 				return (
 					<div key={ind}>
 						{this.notifTypes(notif)[notif.notifType]}
@@ -505,8 +518,7 @@ class Header extends Component {
 					<option value="politics">Politics</option>
 					<option value="entertainment">Entertainment</option>
 					<option value="sports">Sports</option>
-					<option value="entrepreneurship">Entrepreneurship</option>
-				
+					<option value="entrepreneurship">Entrepreneurship</option>				
 					<option value="spirituality">Spirituality</option>
 					<option value="business">Business</option>
 					<option value="health">Health</option>
@@ -568,7 +580,7 @@ class Header extends Component {
 		this.props.signIn(JSON.stringify(user), (userRes) => {
 			this.setState({ signInMenuVisible: false });
 			this.menusClosed = true;
-			this.props.history.push('/rooms');
+			this.props.history.push('/');
 			this.socket.emit('setup', userRes)
 			this.props.updateDMs({notifCount: userRes.new_msg_count})	
 		});
@@ -689,9 +701,9 @@ class Header extends Component {
 					<div id="themePicker" />
 				</div>
 				{toMySurkl}
-				<div className="menuItem">
+				<Link to='/settings' className="menuItem">
 					<div className="rightAccIcon" id="settingsIcon" />Settings
-				</div>
+				</Link>
 				<div className="menuItem">
 					<div className="rightAccIcon" id="helpIcon" />Help
 				</div>
@@ -729,7 +741,11 @@ class Header extends Component {
 		}
 	};
 	render() {
-		if (!this.props.auth.isAuthenticated) {
+		if(this.props.auth.user===null){
+			return (
+				<div></div>
+			)
+		}	else if (!this.props.auth.isAuthenticated) {
 			return (
 				<div className="header">
 					{this.pulloutMenu()}
@@ -825,7 +841,8 @@ Header.propTypes = {
 	fetchMsgThreads: PropTypes.func,
 	notifs: PropTypes.object,
 	fetchNotifs: PropTypes.func,
-	updateNotifs: PropTypes.func
+	updateNotifs: PropTypes.func,
+	addNotif: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -848,5 +865,6 @@ export default connect(stateToProps,
 		 addToDMs,
 		 fetchMsgThreads,
 		 fetchNotifs,
-		 updateNotifs
+		 updateNotifs,
+		 addNotif
 	})(withRouter(Header));

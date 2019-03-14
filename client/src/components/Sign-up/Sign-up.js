@@ -32,7 +32,6 @@ class SignUp extends Component {
     }	
 	}
 	handleSubmit = (e) =>{
-		console.log(this.props)
 		let errors = {};
 		e.preventDefault();
 		if(this.state.password!==this.state.confirmPassword && this.state.password.length<6){
@@ -63,7 +62,7 @@ class SignUp extends Component {
 				password: this.state.password,
 			}
 			this.props.signUp(JSON.stringify(user),()=>{
-				this.props.history.push('/dashboard')
+				this.props.history.push('/')
 			});
 		}	
 	}

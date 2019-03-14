@@ -1,0 +1,84 @@
+#account-settings {
+  width:100%;
+  height:100%;
+  #tabs {
+    height:30px;
+    display:flex; 
+    
+    .tab {
+      width:120px;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;     
+      height: 30px;
+      margin-left: 5px;
+      display: flex;
+      background: #242323;
+      justify-content: center;
+      align-items: center;
+      color: #F4FBFB;
+      font-family: 'Comfortaa';
+      cursor: pointer;
+    }
+    #account-tab {
+      border-bottom: 1px solid #242323;
+    }
+  }
+  #tabs > div:first-child{
+    margin-left: 0px;
+  }
+  .tab-win {
+    height: calc(100% - 30px);
+    margin-top: 1px;
+    border-radius: 5px;
+    border-top-left-radius: 0px;
+    #tab-banner-n-avatar {
+      max-width:400px;
+      height:200px;
+      box-sizing: border-box;
+      position: relative;
+      #tab-banner {
+        width:100%;
+        height:200px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        margin-left: 5px;
+      }
+      #tab-avatar {
+        width: 100px;;
+        height:100px;
+        border-radius: 50px;
+        position: absolute;
+        bottom: -45px;
+        left: 30px;
+        border: 2px solid #C7A035;
+      }
+    }
+    .account-tab-form {
+      display: flex;
+      flex-direction: column;
+      padding:20px;
+      margin-top: 45px;
+      max-width:400px;
+      box-sizing: border-box;
+      label {
+        color: #F4FBFB;
+        font-family: 'Comfortaa';
+        font-size: 12;
+        margin-bottom: 3px;
+        margin-top: 10px;
+      }
+      .tab-input {
+        color: #F4FBFB;
+        background: #3F3E3E;
+        width: 100%;
+        border: none;
+        border-radius: 3px;
+        height: 28px;
+        font-family: 'Comfortaa';
+        font-size: 14px;
+        padding-left: 10px;
+        outline: none;
+      }
+    }
+  }
+}

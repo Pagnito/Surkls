@@ -6,6 +6,7 @@
   margin-top: 55px;
   box-sizing: border-box;
   padding:20px;
+  padding-right: 30px;
   .room:hover>.hover-overlay {
     background: rgba(0,0,0,0);
   }
@@ -81,6 +82,7 @@
         color: #FBCA43;
         font-family: "comfortaa";
         font-size: 20px;
+        user-select: none;
       }
     }
   }
@@ -96,6 +98,7 @@
       width:170px;
       .joins-title {
         margin-bottom:5px;
+        user-select: none;
       }
       .join-btns {
         .join-btn:hover {

@@ -60,7 +60,7 @@ app.post('/api/surkl/new',requireLogin, (req,res)=>{
 		user_id: req.user._id,		
 	}
 	let newSurkl = new Surkl({
-		admin:req.body.admin,
+		admin: req.body.admin,
 		name: req.body.name,
 		motto: req.body.motto,
 		category: req.body.category,
@@ -77,10 +77,10 @@ app.post('/api/surkl/new',requireLogin, (req,res)=>{
 	})	
 })
 ////////////////////////////////////////////////DELETES////////////////////////////////////////////
-app.delete('/api/surkl/delete/:id', requireLogin, (req,res)=>{
+app.delete('/api/surkl/delete/:id', /* requireLogin, */ (req,res)=>{
 	Surkl.findById({_id: req.params.id}).then(surkl=>{
 		User.updateOne({_id:surkl.admin}, {$set:{mySurkl:{}}}).exec()
-		User.updateMany({_id: {$in:surkl.memberIds}}, {$set:{memberOf:''}}).exec()
+		User.updateMany({_id: {$in:surkl.memberIds}}, {$set:{memberOf:{}}}).exec()
 	})
 	Surkl.deleteOne({_id:req.params.id}).then(()=>{
 		res.json({msg:'Deleted Surkl'})

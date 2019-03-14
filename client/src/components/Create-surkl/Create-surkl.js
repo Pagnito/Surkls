@@ -113,7 +113,8 @@ class CreateSurkl extends Component {
         name:this.state.name,
         motto:this.state.motto,
         category: this.state.category,
-        admin: me._id
+				admin: me._id,
+				admin_name: me._userName
       }
       if(Object.keys(mySurkl).length!==0){
         errors.alreadyCreated = 'You can only create one Surkl. Get to know your Surkl'

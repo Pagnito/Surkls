@@ -283,6 +283,10 @@
 	min-height: 240px;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	background-image: url('/assets/msgs_bg.png');
+	background-position: center;
+	background-size: 120px;
+	background-repeat: no-repeat;
 }
 .dmMsgsFeed > div:last-child {
 	border-bottom: 2px solid #CBD2D2;
@@ -372,7 +376,7 @@
 }
 .dm-msngr-feed {
 	width:100%;
-	height: calc(100% - 80px);
+	height: calc(100% - 85px);
 	display:flex;
 	flex-direction: column;
 	overflow-y: scroll;
@@ -425,17 +429,34 @@
 	min-height: 240px;
 	overflow-y: scroll;
 	overflow-x: hidden;
-	
+	background-image: url('/assets/notif_bg.png');
+	background-position: center;
+	background-size: 120px;
+	background-repeat: no-repeat;
 	.notif {
 		padding:5px;
 		box-sizing: border-box;
 		border-bottom: 1px solid #CBD2D2;
-		.notif-text{
-			font-family: 'Comfortaa' !important;
-			font-weight: 700;
-			margin-top:5px;
-			margin-bottom: 5px; 
+		.notif-top-part{
+			display:flex;
+			justify-content: space-around;
+			.notif-banner-avatar {
+				width:30px;
+				height: 30px;
+				margin-top:5px;
+				border-radius: 30px;
+				border: 1px solid white;
+			}	
+			.notif-text{
+				width: calc(100% - 45px);
+				font-family: 'Comfortaa' !important;
+				font-weight: 700;
+				margin-top:5px;
+				margin-left:5px;
+				margin-bottom: 5px; 
+			}
 		}
+		
 		.notif-options {
 			display: flex;
 			justify-content: space-between;

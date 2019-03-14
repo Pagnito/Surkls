@@ -34,14 +34,14 @@ class Rooms extends Component {
 		return this.props.sessions.sessions.map((room,ind) => {
 			if(!room.maxedOut){
 				return (
-					<div style={{backgroundImage: `url(${room_images[room.category]})`,
+					<div style={{backgroundImage: `url(${room_images[room.category.replace('+','_')]})`,
 						backgroundPosition:'center',
 						backgroundRepeat:'no-repeat',
 						backgroundSize:'cover'}} key={ind} className="room">
 						
 						<div className="room-header">
 							<div className="room-name"><div className="on-dot"></div>{room.room}</div>
-							<div className="room-category">{room.category}</div>
+							<div className="room-category">{room.category.replace('+',' ')}</div>
 						</div>
 						
 						<div className="joins">
@@ -69,14 +69,14 @@ class Rooms extends Component {
 				);
 			}	else {
 				return (
-					<div style={{backgroundImage: `url(${room_images[room.category]})`,
+					<div style={{backgroundImage: `url(${room_images[room.category.replace('+','_')]})`,
 						backgroundPosition:'center',
 						backgroundRepeat:'no-repeat',
 						backgroundSize:'cover'}} key={ind} className="room">
 						<div className="room-header">
 						<div className="maxed-out-overlay"></div>
 							{room.room}
-							<div className="room-category">{room.category}</div>
+							<div className="room-category">{room.category.replace('+',' ')}</div>
 						</div>
 						<div className="joins">
 							<div className="joins-title">Join as</div>

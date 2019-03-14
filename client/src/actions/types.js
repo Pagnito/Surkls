@@ -26,5 +26,6 @@ export const ADD_SESS_DMS = 'ADD_SESS_DMS';
 export const USER_SURKL = 'MY_SURKL';
 export const MY_SURKL = 'MY_SURKL';
 export const UPDATE_NOTIFS = "UPDATE_NOTIFS";
+export const ADD_NOTIF = "ADD_NOTIF";
 export const LOAD_NOTIFS = "LOAD_NOTIFS";
 

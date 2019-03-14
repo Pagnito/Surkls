@@ -52,15 +52,24 @@ module.exports = (io, socket, connectedUsers) => {
   socket.on('clear-all-notifs', (user)=>{
     User.updateOne({_id:user._id},{$set:{notifs:[]}}).exec()
   })
+  socket.on('decline-surkl', (notif_id, user_id)=>{
+    User.updateOne({_id:user_id}, {
+      $pull:{notifs: {_id:notif_id}}
+    }).exec()
+  })
   socket.on('accept-surkl', (surkl, user)=>{
-    console.log(surkl)
+    let memOf = {
+      surkl_id: surkl.source.source_id,
+      surkl_name: surkl.source.name
+    }
     let userObj = {
       userName:user.userName,
       avatarUrl:user.avatarUrl,
       user_id: user._id
     }
+    
     User.updateOne({_id:user._id}, {
-      $set:{memberOf:surkl.source.source_id},
+      $set:{memberOf:memOf},
       $pull:{notifs: {_id:surkl._id}}
     }).exec()
     Surkl.updateOne({_id:surkl.source.source_id}, 
@@ -71,21 +80,21 @@ module.exports = (io, socket, connectedUsers) => {
     delete userToAdd.followers
     delete userToAdd.following
     delete userToAdd.mySurkl
-   
     let notif = {
       notifType: 'add-to-surkl',
       source: {
         name: surkl.name,
+        adminName: surkl.adminName,
+        avatarUrl: surkl.adminAvatar,
         source_id: surkl.surkl_id
       },
-      text: surkl.admin + ' has invited you to join '+surkl.name
+      text: surkl.adminName + ' has invited you to join '+surkl.name
     }
-    console.log(userToAdd)
     User.updateOne({_id:userToAdd._id}, {
       $push:{notifs: notif},
       $inc: {notif_count:1}
     }).exec()
-      io.to(connectedUsers[userToAdd.user_id]).emit('notif',  notif)
+      io.to(connectedUsers[userToAdd._id].socketId).emit('notif',  notif)
     
     //Surkl.updateOne({_id: surkl._id}, {$push:userToAdd}).exec()
   })

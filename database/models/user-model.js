@@ -14,12 +14,18 @@ const UserSchema = new Schema({
     surkl_id: String,
     bannerUrl: String
   },
-  memberOf:String,
+  memberOf:{
+    surkl_id: String,
+    surkl_name: String
+  },
   lastActive: { type: Date, default: Date.now },
   notifs: [{
     source: {
       name:String,
-      source_id:String
+      source_id:String,
+      bannerUrl: String,
+      adminName: String,
+      avatarUrl:String
     },
     notifType: String,
     text: String,
