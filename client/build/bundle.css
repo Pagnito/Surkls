@@ -1289,8 +1289,7 @@ h1 {
     width: 500px;
     flex-direction: column;
     box-sizing: border-box;
-    background-color: black;
-    overflow-y: scroll; }
+    background-color: black; }
     #session #sessionLeftAside #videoStreams::-webkit-scrollbar {
       width: 10px; }
     #session #sessionLeftAside #videoStreams::-webkit-scrollbar-thumb {
@@ -1933,6 +1932,14 @@ h1 {
       width: 40px;
       height: 40px;
       margin-top: 3px; }
+    .header #leftOfHeader .in-dev {
+      margin-left: 20px;
+      font-size: 15px;
+      padding: 5px;
+      padding-top: 7px;
+      font-family: "Josefin Sans";
+      background: #EFC141;
+      border-radius: 3px; }
   .header #rightOfHeader {
     display: flex;
     justify-content: center;
@@ -2698,3 +2705,5 @@ body {
   margin: 0px;
   padding: 0px; }
 
+
+/*# sourceMappingURL=bundle.css.map*/
