@@ -76,7 +76,8 @@ class App extends Component {
 				<Provider store={Store}>	
 					<Route exact path="/settings" component={Settings} />
 					<Route exact path="/profile" component={Profile} />
-					<Route exact path="/signup" component={SignUp}  />
+					<Route 
+						exact path="/signup" render={(props)=><SignUp {...props} socket={this.socket}/>}   />
 					<Route 
 						exact path="/surkl/:id" render={(props)=><Dashboard {...props} socket={this.socket}/>}   />
 					<Route 

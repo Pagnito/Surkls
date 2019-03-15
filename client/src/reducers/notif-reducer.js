@@ -8,6 +8,7 @@ const initialState = {
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case ADD_NOTIF:
+			console.log(action.payload)
 			let notifClone = state.notifs.slice(0);	
 			notifClone.unshift(action.payload);
 			return {

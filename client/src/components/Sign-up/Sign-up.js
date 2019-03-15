@@ -21,6 +21,7 @@ class SignUp extends Component {
         confirmPassword: 'Confirm password'
       }
 		};
+		this.socket = this.props.socket;
 	}
 
 	handleInputs = (e) => {
@@ -61,7 +62,8 @@ class SignUp extends Component {
 				email: this.state.email,
 				password: this.state.password,
 			}
-			this.props.signUp(JSON.stringify(user),()=>{
+			this.props.signUp(JSON.stringify(user),(savedUser)=>{
+				this.socket.emit('setup', savedUser)
 				this.props.history.push('/')
 			});
 		}	
@@ -157,7 +159,8 @@ SignUp.propTypes = {
 	signUp: PropTypes.func,
 	history: PropTypes.object,
 	closeMenus: PropTypes.func,
-	app: PropTypes.object
+	app: PropTypes.object,
+	socket: PropTypes.object
 };
 function stateToProps(state) {
 	return {

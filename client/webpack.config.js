@@ -4,15 +4,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 const webpack = require('webpack');
+let env = process.env.NODE_ENV ==='production' ? 'prod' : 'dev';
 //const Visualizer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 module.exports = {
+  mode: env==='prod' ? 'production' : 'development',
   entry: "./src/index.js",
   output: {
     path: __dirname + "/build",
     filename: "bundle.js",
     publicPath: '/'
   },
-  devtool: 'source-map',
+  devtool: env==='dev' ? 'source-map' : 'none',
   module: {
     rules: [
       {

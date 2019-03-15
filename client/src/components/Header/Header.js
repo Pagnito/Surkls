@@ -30,6 +30,7 @@ class Header extends Component {
 			this.props.updateMsgs(msg)
 		})
 		this.socket.on('notif',(notif)=>{
+			console.log(notif)
 			this.props.addNotif(notif)
 		})
 		this.socket.on('open-dm',(user)=>{
@@ -757,6 +758,7 @@ class Header extends Component {
 								<img className="logo" src="/assets/surkls-logo2.png" />
 							</Link>
 						</div>
+						<div className="in-dev">In Development</div>
 					</div>
 					{/* //////////////section///////////*/}
 					<div id="centerOfHeader" />
@@ -782,9 +784,9 @@ class Header extends Component {
 						<div style={{marginLeft:'20px'}}>
 							<Link to="/">
 								<img className="logo" src="/assets/surkls-logo2.png" />
-							</Link>
+							</Link>			
 						</div>
-						
+						<div className="in-dev">In Development</div>
 					</div>
 					{/* //////////////section///////////*/}
 					<div id="centerOfHeader" />

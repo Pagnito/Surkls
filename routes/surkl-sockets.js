@@ -29,8 +29,7 @@ module.exports = (io, socket, connectedUsers) => {
       
       if (err) {
         socket.emit('videoChatError');
-      } else {
-        
+      } else if(msgs!==null){       
         let msgsArr = JSON.parse(msgs);
         if (msgsArr.length > 200) {
           msgsArr = msgsArr.slice(0, 200);
@@ -53,6 +52,9 @@ module.exports = (io, socket, connectedUsers) => {
     User.updateOne({_id:user._id},{$set:{notifs:[]}}).exec()
   })
   socket.on('decline-surkl', (notif_id, user_id)=>{
+    console.log(notif_id)
+    console.log('//////////////////////////')
+    console.log(user_id)
     User.updateOne({_id:user_id}, {
       $pull:{notifs: {_id:notif_id}}
     }).exec()
@@ -90,11 +92,18 @@ module.exports = (io, socket, connectedUsers) => {
       },
       text: surkl.adminName + ' has invited you to join '+surkl.name
     }
-    User.updateOne({_id:userToAdd._id}, {
-      $push:{notifs: notif},
+    User.findOneAndUpdate({_id:userToAdd._id}, {
+      $push:{notifs: {
+          $each:[notif], 
+          $position:0
+        }
+      },
       $inc: {notif_count:1}
-    }).exec()
-      io.to(connectedUsers[userToAdd._id].socketId).emit('notif',  notif)
+    }, {new:true},(err,upNotif)=>{
+      if(err)console.log(err)
+      io.to(connectedUsers[userToAdd._id].socketId).emit('notif',  upNotif.notifs[0])
+    })
+     
     
     //Surkl.updateOne({_id: surkl._id}, {$push:userToAdd}).exec()
   })

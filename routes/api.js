@@ -83,7 +83,7 @@ app.delete('/api/surkl/delete/:id', /* requireLogin, */ (req,res)=>{
 		User.updateMany({_id: {$in:surkl.memberIds}}, {$set:{memberOf:{}}}).exec()
 	})
 	Surkl.deleteOne({_id:req.params.id}).then(()=>{
-		res.json({msg:'Deleted Surkl'})
+		res.json({msg:'Deleted Surkl'});
 	})		
 })
 
