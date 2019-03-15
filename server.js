@@ -20,6 +20,7 @@ const cors = require('cors');
 ////load schema models/////
 //@TODO set up security policy header
 console.log('\x1b[35m', 'IP is ', ip.address(), '\x1b[0m')
+console.log("MODE", process.env.NODE_ENV)
 //////connect to database//////
 mongoose.set('useFindAndModify', false);
 mongoose
