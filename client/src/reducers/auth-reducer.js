@@ -1,4 +1,4 @@
-import { SET_USER, GET_USER, USER_SURKL } from "actions/types";
+import { SET_USER, GET_USER, USER_SURKL, SET_GUEST } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	isAuthenticated: false,
@@ -34,6 +34,11 @@ export default function(state = initialState, action) {
 				...state,
 				isAuthenticated: !isEmpty(action.payload),
 				user: action.payload
+			}
+		case SET_GUEST:
+			return {
+				...state,
+				...action.payload
 			}
 		default:
 			return state;

@@ -1,5 +1,6 @@
 export const SET_USER = 'SET_USER';
 export const GET_USER = 'GET_USER';
+export const SET_GUEST = 'SET_GUEST';
 export const START_SESSION = 'START_SESSION';
 export const JOIN_SESSION = 'JOIN_SESSION';
 export const GET_SESSIONS = 'GET_SESSIONS';

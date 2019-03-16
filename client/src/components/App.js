@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { GET_USER,UPDATE_DMS,LOAD_NOTIFS } from 'actions/types';
+import { GET_USER,UPDATE_DMS,LOAD_NOTIFS, SET_GUEST } from 'actions/types';
 import { Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setUserMedia } from '../../tools/setUserMedia';
@@ -46,19 +46,23 @@ class App extends Component {
 					payload: {notifCount: user.notif_count, notifs: user.notifs}
 				})
 			}	else {
+				let temp = {
+					_id: Math.random().toString(36).substring(2, 15),
+					avatarUrl: '/assets/whitehat.jpg',
+					userName: 'Guest'+Math.random().toString(36).substring(2, 15),
+					isAdmin:false,
+					guest: true
+				}
+				console.log("WTF")
+				Store.dispatch({
+					type: SET_GUEST,
+					payload: {guest:temp}
+				});
 				Store.dispatch({
 					type: GET_USER,
 					payload: {}
 				})
-				this.socket.emit('setup', user)	
-				Store.dispatch({
-					type: UPDATE_DMS,
-					payload: {notifCount: 0}
-				})	
-				Store.dispatch({
-					type: LOAD_NOTIFS,
-					payload: {notifCount: 0, notifs: []}
-				})
+				this.socket.emit('setup', temp)	
 			}		
 			if(this.props.location.pathname == '/signup' ){		
 				this.props.history.push('/')
@@ -68,6 +72,18 @@ class App extends Component {
 				type: GET_USER,
 				payload: {}
 			})
+			let temp = {
+				_id: Math.random().toString(36).substring(2, 15),
+				avatarUrl: '/assets/whitehat.jpg',
+				userName: 'Guest'+Math.random().toString(36).substring(2, 15),
+				isAdmin:false,
+				guest: true
+			}
+			Store.dispatch({
+				type: SET_GUEST,
+				payload: {guest:temp}
+			});
+			this.socket.emit('setup', temp)	
 		})
 	}
 

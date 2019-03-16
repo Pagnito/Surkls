@@ -33,6 +33,7 @@ export const getUser = () => (dispatch) => {
 			});
 		});
 };
+
 export const getSessions = () => (dispatch) => {
 	fetch('/api/sessions').then((data) => data.json()).then((sessions) => {
 		let rooms = [];
@@ -187,3 +188,4 @@ export const toggleMenu = (menu) =>{
 		payload: menu
 	}
 }
+

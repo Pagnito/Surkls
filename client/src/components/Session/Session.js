@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { getDevices, sendThisVideoAction, newAdmin, sendTweetAction, updateSession, unpickThisVideoAction, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
 import {openDMs, addMultiToDMs, addSessDMs} from 'actions/dm-actions';
@@ -9,6 +8,7 @@ import SessionContentYoutube from './Sub-comps/session-content-youtube';
 import SessionContentDailymotion from './Sub-comps/session-content-dailymotion';
 import SessionContentTwitter from './Sub-comps/session-content-twitter';
 import SessionContentTwitch from './Sub-comps/session-content-twitch';
+import ChatInput from './Sub-comps/chat-input';
 import './Sub-comps/styles/profile-modal.scss';
 import './session.scss';
 import '../Loader1/loader.scss';
@@ -32,7 +32,6 @@ class Session extends Component {
 			},
 			shareLink: '',
 			msgs: [],
-			msg: '',
 			errors: {},
 			talk: true,
 			showMyStream: true,
@@ -68,11 +67,20 @@ class Session extends Component {
 		};
 		this.socket = this.props.socket;
 
+		if(this.sessionObjSetup===false){
+			this.sessionObjSetup=true
+			this.socket.on('session', (sessionObj) => {
+				if(sessionObj.clients.length===1){
+					sessionObj.isAdmin=true;
+				} 
+				this.props.updateSession(sessionObj);
+			});
+		}	
 			this.socket.on('setup-vid-dms', users=>{
 				this.props.addMultiToDMs(users)
 			})
 			this.socket.on('recieveMsgs', (data) => {
-				this.setState({ msgs: data });
+				this.props.updateSession({ msgs: data });
 			});		
 			this.socket.on('pickThisVideo', (videoObj) => {
 				this.props.sendThisVideoAction(videoObj);
@@ -83,8 +91,8 @@ class Session extends Component {
 			this.socket.on('adminLeftImAdminNow', () => {
 				this.props.newAdmin();
 			});
-			this.socket.on('youtubeList', (youtubeList) => {
-				this.props.updateSession({ youtubeList: youtubeList });
+			this.socket.on('session-data', (sessionData) => {
+				this.props.updateSession({youtubeList:sessionData});
 			});
 			this.socket.on('sessionExpired', () => {
 				this.setState({ sessionExists: false });
@@ -332,7 +340,7 @@ class Session extends Component {
 				}				
 			}
 		}
-		this.socket.emit('leave');
+		this.socket.emit('leave', this.props.session.sessionKey);
 		this.socket.removeListener('createOrJoin');
 		this.socket.removeListener('signal');
 		this.socket.removeListener('setup-vid-dms')
@@ -365,18 +373,23 @@ class Session extends Component {
 			.then(() => {
 				this.alreadyStarted = true;
 				let startingOrJoining;
-				if (this.props.session.creatingSession) {
-					startingOrJoining = this.props.session.creatingSession ? true : false;
+				let session = JSON.parse(JSON.stringify(this.props.session))
+				if (session.creatingSession) {
+					startingOrJoining = session.creatingSession ? true : false;
 				} else {
 					startingOrJoining = false;
 				}
-				this.props.session.inSession = true;
-				this.props.session.sessionKey = this.props.match.params.room.replace('room=', '');
-				this.props.session.creatingSession = startingOrJoining;
-				this.props.session.user = this.props.auth;
-				if(this.sessionSignalsSetup===false){
-					this.sessionSignalsSetup=true
-					this.socket.emit('createOrJoin', this.props.session);
+				session.inSession = true;
+				session.sessionKey = this.props.match.params.room.replace('room=', '');
+				session.creatingSession = startingOrJoining;
+				if(this.props.auth.user.userName){
+					session.user = this.props.auth.user;
+				} else {				
+					session.user = this.props.auth.guest;
+				}
+				/* if(this.sessionSignalsSetup===false){
+					this.sessionSignalsSetup=true */
+					this.socket.emit('createOrJoin', session);
 					this.socket.on('signal', (data, remoteId) => {
 						switch (data.type) {
 							case 'newJoin':
@@ -422,7 +435,7 @@ class Session extends Component {
 								break;
 						}
 					});
-				}
+				//}
 			})
 			.catch((err) => console.log(err));
 	};
@@ -432,26 +445,17 @@ class Session extends Component {
 				this.setState({ errors: {} });
 			}, 2000);
 		}
-		if (this.state.msgs !== prevState.msgs) {
+		if (this.props.session.msgs !== prevProps.session.msgs) {
 			const chatBox = document.getElementById('chatMsgsShow');
 			if (chatBox !== null) {
 				chatBox.scrollTop = chatBox.scrollHeight;
 			}
 		}
-		if (this.props.auth !== prevProps.auth) {///waiting for props to load
+		if (this.props.auth.user !== prevProps.auth.user) {///waiting for props to load
 			//if using a invite link /room=:id also handles reloads
 			//notShareLink wont exist in props because its a direct enter via share link
 			if (!this.props.session.notShareLink && !this.alreadyStarted) {
-				if(this.sessionObjSetup===false){
-					this.sessionObjSetup=true
-					this.socket.on('session', (sessionObj) => {
-						if(sessionObj.clients.length===1){			
-							sessionObj.isAdmin=true;
-						}
-						this.props.updateSession(sessionObj);
-					});
-				}	
-				this.socket.emit('setup-vid-dms', this.props.auth)	
+				this.socket.emit('setup-vid-dms', this.props.auth.user)	
 				this.startOrJoin();
 			}
 		}
@@ -478,23 +482,12 @@ class Session extends Component {
 		///those props being passed to the server which will handle 
 		///those entrances accordingly
 		///never pass the whole sessionObj around to everyone
-		this.socket.emit('setup-vid-dms', this.props.auth)
+		this.socket.emit('setup-vid-dms', this.props.auth.user)
 		navigator.mediaDevices.ondevicechange = () => {
 			this.updateDevices();
 		};
 		if (this.props.session.notShareLink || this.props.session.creatingSession) {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
-				if(this.sessionObjSetup===false){
-					this.sessionObjSetup=true
-					this.socket.on('session', (sessionObj) => {
-						if(sessionObj.clients.length===1){
-							//on join on client list is passed back
-							//on creating saved redis sessionObj is passed to creator
-								sessionObj.isAdmin=true
-						}
-						this.props.updateSession(sessionObj);
-					});
-				}	
 				this.startOrJoin();
 			} 
 		}
@@ -575,9 +568,8 @@ class Session extends Component {
 		}
 		dm_user.user_id = dm_user._id;
 		//console.log(dm_user)
-		if(this.props.auth.dms[dm_user.user_id]){
-			console.log(this.props.auth.dms[dm_user._id])
-			dm_user.thread_id = this.props.auth.dms[dm_user._id].thread_id
+		if(this.props.auth.user.dms[dm_user.user_id]){
+			dm_user.thread_id = this.props.auth.user.dms[dm_user._id].thread_id
 		}
 		delete dm_user._id
 		this.props.openDMs(dm_user, (user)=>{
@@ -595,33 +587,35 @@ class Session extends Component {
 		}
 	}
 	addToSurkl = (user, surkl) =>{
-		surkl.admin = this.props.auth._id;
-		surkl.adminName = this.props.auth.userName
-		surkl.adminAvatar = this.props.auth.avatarUrl
+		surkl.admin = this.props.auth.user._id;
+		surkl.adminName = this.props.auth.user.userName
+		surkl.adminAvatar = this.props.auth.user.avatarUrl
 		this.socket.emit('add-to-surkl', user, surkl)
 	}
 	renderProfileModal = (user) =>{
-		let addToSurklBtn = !user.memberOf.surkl_id ?<div onClick={()=>this.addToSurkl(user, this.props.auth.mySurkl)}className="modalAction add-to-surkl-action">Add To Surkl</div> :
-		'';
-		if(user._id!==this.props.auth._id){
-			let askAdminBtn = user.isAdmin ? <div className="profileModalPassAdmin">Ask for admin rights</div> :
-			<div className="profileModalPassAdmin">Give admin rights</div>
-			askAdminBtn = user._id===this.props.auth._id ? '' : askAdminBtn
-			return (
-				<div className="profileModal">
-				<div className="profileBanner">
-					<div style={{backgroundImage:`url(${user.avatarUrl ? user.avatarUrl : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
-				</div>       
-						<div className="profileModalUsername">{user.userName}</div>
-						<div className="profileModalDesc">{user.description}</div>		
-						<div className="profileModalActions">
-							{addToSurklBtn}
-							<div onClick={()=>this.openDMs(user)} data-user={JSON.stringify(user)}  className="modalAction send-msg-action">Send a Message</div>
-							{askAdminBtn}
-						</div>   
-			</div>
-			)
-		}	
+		if(!user.guest){
+			let addToSurklBtn = !user.memberOf.surkl_id ?<div onClick={()=>this.addToSurkl(user, this.props.auth.user.mySurkl)}className="modalAction add-to-surkl-action">Add To Surkl</div> :
+			'';
+			if(user._id!==this.props.auth.user._id){
+				let askAdminBtn = user.isAdmin ? <div className="profileModalPassAdmin">Ask for admin rights</div> :
+				<div className="profileModalPassAdmin">Give admin rights</div>
+				askAdminBtn = user._id===this.props.auth.user._id ? '' : askAdminBtn
+				return (
+					<div className="profileModal">
+					<div className="profileBanner">
+						<div style={{backgroundImage:`url(${user.avatarUrl ? user.avatarUrl : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
+					</div>       
+							<div className="profileModalUsername">{user.userName}</div>
+							<div className="profileModalDesc">{user.description}</div>		
+							<div className="profileModalActions">
+								{addToSurklBtn}
+								<div onClick={()=>this.openDMs(user)} data-user={JSON.stringify(user)}  className="modalAction send-msg-action">Send a Message</div>
+								{askAdminBtn}
+							</div>   
+				</div>
+				)
+			}	
+		} 
 	}
 	updateClientList = () => {
 		if (this.props.session.clients !== undefined && this.props.session.clients.length > 0) {
@@ -649,30 +643,26 @@ class Session extends Component {
 		}
 	};
 
-	sendMsg = (e) => {
-		if (e.key == 'Enter') {
+	sendMsg = (msgText) => {
 			let date = new Date(Date.now());
 			let locale = date.toLocaleDateString();
 			let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
 			let time = date.getHours() + ':' + minutes;
 			let fullDate = locale + ' ' + time;
 			let msg = {
-				avatar: this.props.auth.avatarUrl,
-				userName: this.props.auth.userName,
+				avatar: this.props.auth.user.avatarUrl ? this.props.auth.user.avatarUrl : this.props.auth.guest.avatar,
+				userName: this.props.auth.user.userName ? this.props.auth.user.userName : this.props.auth.guest.userName,
 				date: fullDate,
-				msgText: this.state.msg,
+				msgText: msgText,
 				sessionKey: this.props.session.sessionKey
 			};
-			e.preventDefault();
 			this.socket.emit('sendMsg', msg);
-			this.setState({ msg: '' });
-		}
 	};
 	onInputChange = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
 	renderChatText = () => {
-		return this.state.msgs.map((msg, ind) => {
+		return this.props.session.msgs.map((msg, ind) => {
 			let url = msg.avatar ? msg.avatar : '/assets/whitehat.jpg'
 			return (	
 				<div key={ind} className="chatMsg">
@@ -836,7 +826,7 @@ class Session extends Component {
 	};
 	//////////////////////////////////////////////RENDER//////////////////////////////////////////////////
 	render() {
-		if (this.props.auth == null || this.props.session === null) {
+		if (this.props.auth.user == null || this.props.session === null) {
 			return (
 				<div id="spinnerWrap">
 					<div className="spinner" />
@@ -911,17 +901,7 @@ class Session extends Component {
 						<div id="chatSection">
 							<div id="chatBox">
 								<div id="chatMsgsShow">{this.renderChatText()}</div>
-								<textarea
-									value={this.state.msg}
-									onChange={this.onInputChange}
-									onKeyDown={this.sendMsg}
-									name="msg"
-									placeholder="Type here to chat"
-									id="chatInputBox"
-								/>
-								<div style={{ display: this.props.auth.userName ? 'none' : 'flex' }} id="noAuthLayer">
-									You need to log in to chat.
-								</div>
+								<ChatInput sendMsg={this.sendMsg}/>
 							</div>
 						</div>
 					</div>
@@ -955,7 +935,7 @@ Session.propTypes = {
 };
 function stateToProps(state) {
 	return {
-		auth: state.auth.user,
+		auth: state.auth,
 		session: state.session,
 		devices: state.devices,
 		app: state.app, 

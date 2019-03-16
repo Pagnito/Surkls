@@ -23,6 +23,7 @@ const initialState = {
 	trends: [],
 	playing: false,
 	videoId:'',
+	msgs: [],
 /* 	twitchVidId: '',
 	youtubeVidId: '',
 	dailymotionVidId: '', */
