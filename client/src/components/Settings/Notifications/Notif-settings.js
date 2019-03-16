@@ -7,16 +7,11 @@ class NotifSettings extends Component {
       tab: ''
     }
   }
-  renderTab = () =>{
   
-  }
   render() {
     return (
       <div id="Notif-settings">
-        <div id="tabs">
          
-        </div>
-       
       </div>
     )
   }

@@ -107,23 +107,34 @@ class Session extends Component {
 	/////////////////////////////////////////end of state//////////////////////////////////
 	sendVideoSignal = (playState) => {
 		///will go into props
+		playState.sessionKey = this.props.session.sessionKey
 		this.socket.emit('pickThisVideo', playState);
 	};
 	unpickThisVideo = (playState) => {
+		playState.sessionKey = this.props.session.sessionKey
 		this.socket.emit('unpickThisVideo', playState);
 	};
 	saveYoutubeListRedis = (youtubeList) => {
 		if (this.props.session.isAdmin) {
-			this.socket.emit('youtubeList', youtubeList);
+			let listObj = {
+				sessionKey:this.props.session.sessionKey,
+				list:youtubeList
+			}
+			this.socket.emit('youtubeList', listObj);
 		}
 	};
 	sendTweetToOthers = (tweetObj) =>{
+		tweetObj.sessionKey = this.props.session.sessionKey
 		this.socket.emit('sharingTweet', tweetObj)
 	}
 	shareLink = (e) => {
 		if(e.key ==='Enter'){
 			this.setState({shareLink:''},()=>{
-				this.socket.emit('sharingLink', this.state.shareLink)
+				let linkObj = {
+					sessionKey: this.props.session.sessionKey,
+					link: this.state.shareLink
+				}
+				this.socket.emit('sharingLink', linkObj)
 			})		
 		}	
 	}
@@ -345,7 +356,8 @@ class Session extends Component {
 			exists: false,
 			sessionKey: '',
 			isAdmin: false,
-			creatingSession: false
+			creatingSession: false,
+			videoId: ''
 		})
 	}
 	startOrJoin = () => {
@@ -649,6 +661,7 @@ class Session extends Component {
 				userName: this.props.auth.userName,
 				date: fullDate,
 				msgText: this.state.msg,
+				sessionKey: this.props.session.sessionKey
 			};
 			e.preventDefault();
 			this.socket.emit('sendMsg', msg);

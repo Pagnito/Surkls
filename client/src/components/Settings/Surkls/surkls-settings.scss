@@ -1,17 +1,18 @@
-#account-settings {
+#surkls-settings {
   width:100%;
   height:100%;
-  #tabs {
+  #s-tabs {
     height:30px;
     display:flex; 
     
-    .tab {
-      width:120px;
+    .s-tab {
+      min-width:120px;
       border-top-left-radius: 3px;
       border-top-right-radius: 3px;     
       height: 30px;
       margin-left: 5px;
       display: flex;
+      border: 1px #F4FBFB solid;
       background: #242323;
       justify-content: center;
       align-items: center;
@@ -19,17 +20,45 @@
       font-family: 'Comfortaa';
       cursor: pointer;
     }
-    .profile-tab {
-      border-bottom: 1px solid #242323;
+    #my-surkl {
+      border-bottom: 1px #242323 solid;
     }
   }
-  #tabs > div:first-child{
+  #s-tabs > div:first-child{
     margin-left: 0px;
   }
-  .tab-win {
+  .s-tab-win {
     height: calc(100% - 30px);
     margin-top: 1px;
     border-radius: 5px;
     border-top-left-radius: 0px;
+    border:1px #F4FBFB solid;
+    .surkl-tab-primary {
+      margin-left: 20px;
+      margin-top: 25px; 
+      width:50%;
+      display: flex;
+      flex-direction: column;
+      align-content: flex-start;
+      .surkl-set-btn:hover {
+        color:#EFC141;
+      }     
+      .surkl-set-btn {
+        margin-top:30px;
+        align-self: flex-start;
+        margin-left: 10px;
+        font-family: 'Comfortaa';
+        font-size: 15px;
+        min-width:120px;
+        color: #F4FBFB;
+        cursor: pointer;
+      }
+      .leave-surkl {
+        color: #f48f42;
+      }
+      .destroy-surkl {
+        color:#D35529;
+      }
+    }  
   }
 }

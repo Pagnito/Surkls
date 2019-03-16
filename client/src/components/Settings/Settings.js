@@ -41,7 +41,7 @@ class Settings extends Component {
         <div id="settings-nav">
           <div onClick={()=>this.swtichSetting('account', 'account-tab')} id="account-tab" className="setting-type">Account</div>
           <div onClick={()=>this.swtichSetting('surkls', 'surkls-tab')} id="surkls-tab" className="setting-type">Surkls</div>
-          <div onClick={()=>this.swtichSetting('notif', 'notif-tab')} id="notif-tab" className="setting-type">Notifications</div>
+         {/* <div onClick={()=>this.swtichSetting('notif', 'notif-tab')} id="notif-tab" className="setting-type">Notifications</div>*/}
         </div>
         <div id="settings-actions">
           {this.renderSettingsType()}

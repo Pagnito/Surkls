@@ -63,9 +63,12 @@ class AccountSettings extends Component {
             <input name="email" onChange={this.onInput}  value={this.state.email} id="tab-email" type="email" className="tab-email-input tab-input"/>
             <label htmlFor="tab-quote">Favorite Quote</label>
             <input name="quote" onChange={this.onInput}  value={this.state.quote} id="tab-quote" className="tab-quote-input tab-input"/>
-            
+            <label htmlFor="tab-quote">Change Password</label>
+            <input name="quote" onChange={this.onInput}  value={this.state.quote} id="tab-quote" className="tab-quote-input tab-input"/>
+            <button className="tab-save-btn">Save</button>
+            <button className="tab-save-btn" type="button">Delete Account</button>
           </form> 
-
+         
         </div>
       )
     }
