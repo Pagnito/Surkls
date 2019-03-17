@@ -1,11 +1,17 @@
 import {
-  MY_SURKL, USER_SURKL, UPDATE_SURKL_MSGS
+  MY_SURKL, USER_SURKL, UPDATE_SURKL_MSGS, UPDATE_ON_MEMBERS
   } from 'actions/types';
   
   export const updateMsgs = (msgs) =>{
     return {
       type: UPDATE_SURKL_MSGS,
       payload:msgs === null ? [] : msgs
+    }
+  }
+  export const updateOnMembers = (users) =>{
+    return {
+      type: UPDATE_ON_MEMBERS,
+      payload:users
     }
   }
   export const fetchMySurkl = (id) => (dispatch)=>{

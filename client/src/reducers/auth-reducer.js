@@ -9,6 +9,7 @@ export default function(state = initialState, action) {
 	switch (action.type) {	
 		case USER_SURKL:
 		let clone = JSON.parse(JSON.stringify(state.user))
+		clone = clone!==null ? clone : {}
 		clone.mySurkl = action.payload
 		clone.mySurkl.surkl_id = action.payload._id
 			return {

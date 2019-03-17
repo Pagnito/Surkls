@@ -11,7 +11,7 @@ import SessionContentTwitch from './Sub-comps/session-content-twitch';
 import ChatInput from './Sub-comps/chat-input';
 import './Sub-comps/styles/profile-modal.scss';
 import './session.scss';
-import '../Loader1/loader.scss';
+import '../Loader1/loader1.scss';
 class Session extends Component {
 	constructor(props) {
 		super(props);
@@ -365,7 +365,8 @@ class Session extends Component {
 			sessionKey: '',
 			isAdmin: false,
 			creatingSession: false,
-			videoId: ''
+			videoId: '',
+			msgs: []
 		})
 	}
 	startOrJoin = () => {
@@ -518,6 +519,7 @@ class Session extends Component {
 					unpickThisVideo={this.unpickThisVideo}
 					sendVideoCurrentTime={this.sendVideoCurrentTime}
 					askForVideoCurrentTime={this.askForVideoCurrentTime}
+					socket={this.socket}
 				/>
 			);
 		} else if (this.props.session.activePlatform === 'dailymotion') {
@@ -528,6 +530,7 @@ class Session extends Component {
 					unpickThisVideo={this.unpickThisVideo}
 					sendVideoCurrentTime={this.sendVideoCurrentTime}
 					askForVideoCurrentTime={this.askForVideoCurrentTime}
+					socket={this.socket}
 				/>
 			);
 		} else if (this.props.session.activePlatform === 'twitch') {
@@ -537,6 +540,7 @@ class Session extends Component {
 					unpickThisVideo={this.unpickThisVideo}
 					sendVideoCurrentTime={this.sendVideoCurrentTime}
 					askForVideoCurrentTime={this.askForVideoCurrentTime}
+					socket={this.socket}
 				/>
 			);
 		} else if (this.props.session.activePlatform === 'twitter') {

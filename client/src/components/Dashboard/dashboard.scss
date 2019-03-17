@@ -82,6 +82,7 @@
       height:calc(100% - 50px);
       width:100%;
       box-sizing: border-box;
+      padding-top: 10px;
       padding-bottom: 10px;
       overflow: scroll;
       overflow-x: hidden;    
@@ -95,7 +96,7 @@
         font-family: 'Comfortaa';
         display: flex;
         box-sizing: border-box;
-
+        margin-top: 2px;
         .surkl-chat-msgAvatar {
           width: 30px;
           height: 30px;
@@ -162,16 +163,40 @@
     overflow: hidden;
     #surkl-members-header {
       color:#F4FBFB;
-      height:50px;
+      height:65px;
       width:100%;
       font-family: 'Comfortaa';
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       font-size: 20px;
       border-bottom: 1px solid #3E3E3E;
       box-sizing: border-box;
-      
+      padding-top: 10px;
+      #member-tab-btns{
+        color:#F4FBFB;
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        width:100%;
+        font-size:12px;
+        height:20px;
+        font-family: 'Comfortaa';
+        justify-content: space-around;       
+        .members-tab-btn {
+          background-color: #3E3E3E;
+          width:50%;
+          display:flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .surkl-on-tab {
+          background: #FFCD44;
+          color:black;
+          border-right:1px solid black;
+        }
+      }
     }
     #my-surkl-members::-webkit-scrollbar {
       width:0px;
@@ -186,7 +211,7 @@
     }
     #my-surkl-members{
       overflow-y: scroll;
-      height: calc(100% - 50px);
+      height: calc(100% - 115px);
       width:100%; 
       .surkl-member:hover {
         background: #373636;
@@ -217,6 +242,76 @@
         }
       }
     }
-  
+    #my-surkl-on-members::-webkit-scrollbar {
+      width:0px;
+      //background:rgba(40,40,40, .2);
+    }
+    #my-surkl-on-members::-webkit-scrollbar-thumb {
+      background: #B1B6B6; 
+      border-radius: 10px;
+    }
+    #my-surkl-on-members::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+    #my-surkl-on-members{
+      overflow-y: scroll;
+      height: calc(100% - 135px);
+      width:100%; 
+      .surkl-on-member:hover {
+        background: #373636;
+      }
+      .surkl-on-member {
+
+        font-family: 'Comfortaa';
+        font-size: 13px;
+        color:#F4FBFB;
+        height: 50px;
+        width:100%;
+        padding-left: 4px;
+        cursor: pointer;
+        display:flex;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        .surkl-name-n-avatar {
+          display:flex;
+          align-items: center;
+          width:calc(100% - 30px);
+          margin-left: 10px;
+          .surkl-on-member-avatar {
+            width:25px;
+            height:25px;
+            border-radius:25px;
+            border:1px solid #F4FBFB;
+          }
+          .surkl-on-member-name {
+            padding-left: 10px;
+            background-position: center;
+            background-size: cover;
+            width: calc(100% - 55px);
+          }
+        }
+       .surkl-member-on-dot {
+         height:8px;
+         width:8px;
+         border-radius: 10px;
+         background-color: #34d449;
+         margin-right: 20px;
+       }
+      }
+    }
+    #audio-player {
+      height:70px;
+    }
   }
+}
+#notLoggedIn {
+  height: calc(100vh - 55px);
+  width:100%;
+  display:flex;
+  color: #FFCD44;
+  font-family: 'Josefin Sans';
+  font-size: 20px;
+  justify-content: center;
+  align-items:center;
 }

@@ -118,7 +118,7 @@ class SessionContentYoutube extends Component {
 						videoId:'', 
 						playing:false
 					})
-				}		
+				}	
 				this.setState({
 					videoPicked: false
 				})
@@ -254,7 +254,7 @@ SessionContentYoutube.propTypes = {
 	unpickThisVideo: PropTypes.func,
 	saveYoutubeListRedis: PropTypes.func,
 	askForVideoCurrentTime: PropTypes.func,
-	sendVideoCurrentTime: PropTypes.func,
+	sendVideoCurrentTime: PropTypes.func
 };
 function stateToProps(state) {
 	return {

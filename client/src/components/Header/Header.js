@@ -188,8 +188,10 @@ class Header extends Component {
 	/////////////////////////////////^^^^unctions^^^^/////////////////////////////////
 	pulloutMenu = () => {
 		let toMemberOf;
+		let mySurklBtn;
 		if(this.props.auth.user){
 			let memberOf = this.props.auth.user.memberOf;
+			let mySurkl = this.props.auth.user.mySurkl
 			if(memberOf!== null && memberOf!==undefined){
 			  toMemberOf = Object.keys(memberOf).length>0 ? 
 				<Link to={`/surkl/${memberOf.surkl_id}`} className="menuItem">
@@ -197,6 +199,16 @@ class Header extends Component {
 				</Link> : ''
 			} else {
 				toMemberOf = '';
+			}
+			if(mySurkl!== null && mySurkl!==undefined && mySurkl.name){
+			  mySurklBtn = Object.keys(mySurkl).length>0 ? 
+				<Link to={`/surkl/${mySurkl.surkl_id}`} className="menuItem">
+					<div className="rightAccIcon" id="mySurklIcon" />{mySurkl.name}
+				</Link> : ''
+			} else {
+				<Link to="/create_surkl" className="menuItem">
+					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
+				</Link>
 			}
 		}
 		return (
@@ -208,9 +220,7 @@ class Header extends Component {
 				<Link to="/" className="menuItem">
 					<div className="rightAccIcon" id="surferIcon" />Surfing
 				</Link>
-				<Link to="/create_surkl" className="menuItem">
-					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
-				</Link>
+				{mySurklBtn}
 				{toMemberOf}
 				<Link to="/" className="menuItem">
 					<div className="threeDotMenuIcon" id="surklsIcon" />Rooms
@@ -311,7 +321,7 @@ class Header extends Component {
 				msg:this.state.dm_msg,
 				userName: me.userName,
 				avatarUrl: me.avatarUrl,
-				user_id: me._id,
+				user_id: me._id || user_id,
 				_id: this.props.dms.currThread ? this.props.dms.currThread : undefined,
 				msngr_open: this.props.dms.messanger!== null ? true : false
 			}
@@ -755,7 +765,7 @@ class Header extends Component {
 				{/* 		{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />} */}
 						<div style={{marginLeft:'20px'}}>
 							<Link to="/">
-								<img className="logo" src="/assets/surkls-logo2.png" />
+								<img className="logo" src="/assets/surkls-logo.png" />
 							</Link>
 						</div>
 						<div className="in-dev">In Development</div>
@@ -783,7 +793,7 @@ class Header extends Component {
 						{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />}
 						<div style={{marginLeft:'20px'}}>
 							<Link to="/">
-								<img className="logo" src="/assets/surkls-logo2.png" />
+								<img className="logo" src="/assets/surkls-logo.png" />
 							</Link>			
 						</div>
 						<div className="in-dev">In Development</div>

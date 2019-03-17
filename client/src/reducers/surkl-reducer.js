@@ -1,18 +1,28 @@
-import { MY_SURKL, UPDATE_SURKL_MSGS } from "actions/types";
+import { MY_SURKL, UPDATE_SURKL_MSGS, UPDATE_MY_SURKL, UPDATE_ON_MEMBERS } from "actions/types";
 
 const initialState = {
 	mySurkl: {},
-	msgs: []
+	msgs: [],
+	online: []
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
-		case UPDATE_SURKL_MSGS:
+		case UPDATE_MY_SURKL:
 		return {
 			...state,
-			msgs: action.payload
+			mySurkl: action.payload
 		};
-	
+		case UPDATE_SURKL_MSGS:
+			return {
+				...state,
+				msgs: action.payload
+			};
+		case UPDATE_ON_MEMBERS:
+			return {
+				...state,
+				online: action.payload
+			};
 		case MY_SURKL:
 			return {
 				...state,

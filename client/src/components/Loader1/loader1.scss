@@ -2,6 +2,7 @@
   width:100%;
   height:calc(100vh - 55px);
   display: flex;
+  margin-top: 55px; 
   justify-content: center;
   align-items: center;
 }
@@ -9,7 +10,7 @@
   width: 40px;
   height: 40px;
   margin-top: -50px;
-  background-color: #333;
+  background-color: #EFC141;
 
   border-radius: 100%;  
   -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;

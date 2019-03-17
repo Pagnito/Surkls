@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUser, signUp, closeMenus } from 'actions/actions';
 import './home.scss';
-import '../Loader1/loader.scss';
+import '../Loader1/loader1.scss';
 
 class SignUp extends Component {
 	constructor(props) {

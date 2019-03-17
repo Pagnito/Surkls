@@ -45,13 +45,13 @@ module.exports = (io, socket, initSession) => {
 									if(sessionObj.clients.length===0){
 										client.isAdmin = true;
 										sessionObj.admin = socket.id;
-										sessionObj.isAdmin = true;
 									}
 									sessionObj.clients.push(spliceObj(client,
 									 ['socketId', 'userName', 'email', 'isAdmin','avatarUrl', 'memberOf', '_id', 'guest']));
 									if (sessionObj.clients.length === sessionObj.maxMembers) {
 										sessionObj.maxedOut = true;
 									}
+									delete sessionObj.isAdmin
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
 										redClient.hget('videoChatMsgs', session.sessionKey,(err,msgs)=>{
 											if(err)console.log(err)
@@ -98,7 +98,7 @@ module.exports = (io, socket, initSession) => {
 										maxMembers: session.maxMembers,
 										maxedOut: false
 									};
-								
+									
 									socket.join(session.sessionKey);		
 									redClient.hset('chatMsgs', session.sessionKey, JSON.stringify([]));
 									redClient.hset('videoChatMsgs', session.sessionKey, JSON.stringify([]));
@@ -209,12 +209,10 @@ module.exports = (io, socket, initSession) => {
 						if (err) {
 							console.log(err);
 						}
-						let sessionObj = JSON.parse(sessionStr);
-						io.to(videoObj.sessionKey).emit('unpickThisVideo', videoObj);
-						let updatedSession = Object.assign(videoObj, sessionObj);
-						updatedSession.activePlatform = videoObj.activePlatform;		
-						redClient.hset('rooms', videoObj.sessionKey, JSON.stringify(updatedSession));
-				
+						let sessionObj = JSON.parse(sessionStr)
+						//io.to(videoObj.sessionKey).emit('unpickThisVideo', videoObj);
+						let updatedSession = Object.assign(sessionObj, videoObj);
+						redClient.hset('rooms', videoObj.sessionKey, JSON.stringify(updatedSession));		
 					});
 				})
 		/* 		socket.on('giveMeVideoCurrentTime', (wtf)=>{
@@ -272,7 +270,7 @@ module.exports = (io, socket, initSession) => {
 									let sessionObj = JSON.parse(sessionStr);
 									sessionObj.clients.forEach((loopClient, ind) => {
 										if (loopClient.socketId === socket.id) {
-											sessionObj.clients.splice(ind, 1);
+											sessionObj.clients.splice(ind, 1)
 											//////////make new admin/////////
 											if (loopClient.isAdmin && sessionObj.clients.length > 0) {
 												sessionObj.clients[0].isAdmin = true;

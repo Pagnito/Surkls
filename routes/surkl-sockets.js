@@ -1,29 +1,43 @@
 const redClient = require('../database/redis')
 const User = require('../database/models/user-model');
 const Surkl = require('../database/models/surkl-model');
+
+const spliceObj = (obj, keys) =>{
+	let spliced = {};
+	keys.forEach(k => {
+		if(obj[k]){
+			spliced[k] = obj[k] 
+		}				
+	})
+		return spliced;
+}
 module.exports = (io, socket, connectedUsers) => {
 
-
-  socket.on('join-surkl-room', (surkl_id) =>{
+  socket.on('join-surkl-room', (surkl_id, user) =>{
     socket.join(surkl_id)
+    redClient.hget('surkls-msgs', surkl_id, (err,msgs)=>{
+      if (err) {
+        socket.emit('videoChatError');
+      } else {
+        io.to(socket.id).emit('receive-surkl-msgs', JSON.parse(msgs));
+      }
+    })
+    let online = user.mySurkl.members.filter(mem=>{
+        return connectedUsers.hasOwnProperty(mem.user_id)
+    })
+    console.log(online)
+    io.to(surkl_id).emit('online-users', online)
   })
-  socket.on('created-surkl', (surkl)=>{
+  socket.on('created-surkl', (surkl, user)=>{
     let msgs = []
     redClient.hset('surkls-msgs', surkl.surkl_id, JSON.stringify(msgs), (err, done) => {
       if (err) {
         io.to(socket.id).emit('videoChatError');
       }
     });
+   
   })
-  socket.on('fetch-surkl-msgs', (surkl_id)=>{
-    redClient.hget('surkls-msgs', surkl_id, (err,msgs)=>{
-      if (err) {
-        socket.emit('videoChatError');
-      } else {
-        io.to(surkl_id).emit('receive-surkl-msgs', JSON.parse(msgs));
-      }
-    })
-  })
+  
   socket.on('surkl-msg', (msg) => {
     redClient.hget('surkls-msgs', msg.surkl_id, (err, msgs) => {
       

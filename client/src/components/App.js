@@ -53,7 +53,6 @@ class App extends Component {
 					isAdmin:false,
 					guest: true
 				}
-				console.log("WTF")
 				Store.dispatch({
 					type: SET_GUEST,
 					payload: {guest:temp}
