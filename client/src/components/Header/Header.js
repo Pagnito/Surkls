@@ -204,11 +204,14 @@ class Header extends Component {
 			  mySurklBtn = Object.keys(mySurkl).length>0 ? 
 				<Link to={`/surkl/${mySurkl.surkl_id}`} className="menuItem">
 					<div className="rightAccIcon" id="mySurklIcon" />{mySurkl.name}
-				</Link> : ''
-			} else {
+				</Link> : 
 				<Link to="/create_surkl" className="menuItem">
 					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
-				</Link>
+			 </Link>
+			} else {
+				mySurklBtn= <Link to="/create_surkl" className="menuItem">
+					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
+			 </Link>
 			}
 		}
 		return (

@@ -34,7 +34,6 @@ module.exports = (io, socket, connectedUsers) => {
     }  
   })
 	socket.on('msg', (msg) => {
-		console.log(msg)
     let rec = connectedUsers[msg.receiver.user_id];
 		if (msg._id) {
       let ms = {

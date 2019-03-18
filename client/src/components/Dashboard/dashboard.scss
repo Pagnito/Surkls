@@ -211,7 +211,7 @@
     }
     #my-surkl-members{
       overflow-y: scroll;
-      height: calc(100% - 115px);
+      height: calc(100% - 135px);
       width:100%; 
       .surkl-member:hover {
         background: #373636;
@@ -302,6 +302,38 @@
     }
     #audio-player {
       height:70px;
+      margin-top: 2px;
+      border-top: 1px solid #3E3E3E;
+      box-sizing: border-box;
+      display: flex;
+      font-family: 'Josefin sans';
+      font-size: 12px;
+      color: #F4FBFB;
+      align-items: center;
+      padding:3px;   
+      #track-info {
+        width: calc(100% - 55px);     
+        .track-info-item {
+          margin:5px;
+        }      
+      }
+      #track-info>div:last-child{
+        margin-top: 10px;
+      }
+      .audio-btn {
+        background-position: center;
+        background-size: 45px;
+        background-repeat: no-repeat;
+        height:55px;
+        width:55px;
+        cursor: pointer;
+      }
+      #play-button {
+        background-image: url('/assets/UI-icons/play-circle-regular.svg'); 
+      }
+      #pause-button {      
+        background-image: url('/assets/UI-icons/pause-circle-regular.svg'); 
+      }
     }
   }
 }

@@ -25,7 +25,6 @@ module.exports = (io, socket, connectedUsers) => {
     let online = user.mySurkl.members.filter(mem=>{
         return connectedUsers.hasOwnProperty(mem.user_id)
     })
-    console.log(online)
     io.to(surkl_id).emit('online-users', online)
   })
   socket.on('created-surkl', (surkl, user)=>{
@@ -66,9 +65,6 @@ module.exports = (io, socket, connectedUsers) => {
     User.updateOne({_id:user._id},{$set:{notifs:[]}}).exec()
   })
   socket.on('decline-surkl', (notif_id, user_id)=>{
-    console.log(notif_id)
-    console.log('//////////////////////////')
-    console.log(user_id)
     User.updateOne({_id:user_id}, {
       $pull:{notifs: {_id:notif_id}}
     }).exec()

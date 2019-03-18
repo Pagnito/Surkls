@@ -14,7 +14,8 @@ class Dashboard extends Component {
 		this.state = {
 			msg: '',
 			membersTab: 'online',
-			currTab: 'online'
+			currTab: 'online',
+			audioState: false
 		};
 		this.surklFetched = false;
 		this.joinedRoom = false;
@@ -182,7 +183,35 @@ class Dashboard extends Component {
 			);
 		});
 	};
-
+renderYTPlayer = () =>{
+	if(this.YTPlayer===null){
+		this.YTPlayer = new YTplayer('#yt-player',{
+			height: '0',
+			width: '0',
+			host: 'https://www.youtube.com',
+			autoplay:true,
+			related: false
+		})
+		this.YTPlayer.on('time-update',()=>console.log('playing'))
+	} else {
+		this.YTPlayer.load('PyHxTHN-kvU',{autoplay:true})		
+		this.YTPlayer.on('error', (err) => {console.log("YT error", err)})
+	}		
+}
+playButton =()=>{
+	if(!this.state.audioState){
+		return <div onClick={this.playOrPause} className="audio-btn" id="play-button"></div>
+	} else {
+		return <div onClick={this.playOrPause} className="audio-btn" id="pause-button"></div>
+	}
+}
+playOrPause = () =>{
+	this.setState({audioState: this.state.audioState ? false : true},()=>{
+		if(this.state.audioState===true){
+			this.renderYTPlayer()
+		}
+	})
+}
 	render() {
 		if (this.props.auth.user === null) {
 			return <Loader1 />;
@@ -229,7 +258,14 @@ class Dashboard extends Component {
 							</div>
 						</div>
 						{this.renderMembersTab()}
-						<div id="audio-player" />
+						<div id="audio-player" >
+							<div id="yt-player"></div>
+							{this.playButton()}
+							<div id="track-info">
+								<div className="track-info-item">Title</div>
+								<div className="track-info-item">Artist</div>
+							</div>						
+						</div>
 					</section>
 				</div>
 			);
