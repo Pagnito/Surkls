@@ -24,6 +24,9 @@ class SurklsSettings extends Component {
     return (
       <div className="mysurkl-tab-win s-tab-win">
         <div className="surkl-tab-primary">
+          <div className="surkl-set-banner">
+            <div className="surkl-set-logo"></div>
+          </div>
           <div className="surkl-set-btn">Rename Surkl</div>
           <div className="surkl-set-btn">Change Motto</div>
           <div className="surkl-set-btn">Create an event</div>

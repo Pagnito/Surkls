@@ -31,4 +31,4 @@ export const MY_SURKL = 'MY_SURKL';
 export const UPDATE_NOTIFS = "UPDATE_NOTIFS";
 export const ADD_NOTIF = "ADD_NOTIF";
 export const LOAD_NOTIFS = "LOAD_NOTIFS";
-
+export const UPDATE_YTPLAYER = 'UPDATE_YTPLAYER';

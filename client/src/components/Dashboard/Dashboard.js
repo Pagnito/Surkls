@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { closeMenus } from 'actions/actions';
 import { openDMs } from 'actions/dm-actions';
-import { fetchMySurkl, updateMsgs, updateOnMembers } from 'actions/surkl-actions';
+import { fetchMySurkl, updateMsgs, updateOnMembers, updateYTPlayer } from 'actions/surkl-actions';
 import PropTypes from 'prop-types';
 import Loader1 from 'components/Loader1/Loader1';
 import YTplayer from 'yt-player';
@@ -15,28 +15,24 @@ class Dashboard extends Component {
 			msg: '',
 			membersTab: 'online',
 			currTab: 'online',
-			audioState: false
+			time: 0,
+			audioState: false,
+			linker: false,
+			audio_id: '',
+			audio_dur:0,
+			audio_time: 0,
+			volume: 60
 		};
 		this.surklFetched = false;
 		this.joinedRoom = false;
+		this.resumed = false;
+		this.audioStarted = false;
+		this.timeInterval;
 		this.socket = this.props.socket;
 		this.dataReceived = false;
-		this.apiKeys = [
-			'AIzaSyDws9NT1IvkAYPH98VYsIKFXffKNVmU-Jc',
-			'AIzaSyC-NVEgdByg61B92oFIbXkWBm-mqrW6FwU',
-			'AIzaSyBYjnyqxqjLo5B5cJjlo-KkEzQYLp6dqPE',
-			'AIzaSyAPW2QscyTsEPKUzDgEpR321HEouBt7A2o',
-			'AIzaSyAGfR5YzyHv7_nXDqy3djJfYEs-NIVXiik',
-			'AIzaSyCRwoKB-wr5Sc0OhN4sD7yY_oZuV5UN_es',
-			'AIzaSyAh_DJv3EwDi7ROzvzY35zqEFFh433sHMs',
-			'AIzaSyDE03mlW16M0wP6KzjX7jTJbl4mevEDoNo'
-		];
-		this.YTapi =
-			'https://www.googleapis.com/youtube/v3/search?&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=30';
-		this.onMountYTapi =
-			'https://www.googleapis.com/youtube/v3/videos?&relevanceLanguage=en&regionCode=US&publishedAfter=2017-01-01T00:00:00Z&part=snippet&order=date&maxResults=50&chart=mostPopular&key=AIzaSyDE03mlW16M0wP6KzjX7jTJbl4mevEDoNo';
-		this.YTurl = 'https://www.youtube.com/embed/';
+		this.audioDataFetcher = 'https://noembed.com/embed?url=https://www.youtube.com/watch?v='
 		this.YTPlayer = null;
+		this.ytRendered = false;
 		this.keyInd = 0;
 		this.socket.on('receive-surkl-msgs', (msgs) => {
 			this.props.updateMsgs(msgs);
@@ -46,21 +42,24 @@ class Dashboard extends Component {
 		});
 	}
 
-	componentDidMount() {
+	componentDidMount() {	
 		this.props.fetchMySurkl(this.props.match.params.id);
 	}
-	openDMs = (dm_user) => {
-		if (dm_user.user_id !== this.props.auth.user._id) {
-			if (this.props.auth.user.dms[dm_user.user_id]) {
-				dm_user.thread_id = this.props.auth.user.dms[dm_user.user_id].thread_id;
-			}
-			delete dm_user._id;
-			this.props.openDMs(dm_user, (user) => {
-				this.socket.emit('clear-msg-notifs', user);
-			});
-		}
-	};
+	componentWillUnmount(){
+		clearInterval(this.timeInterval);
+		this.socket.removeListener('online-users');
+		this.socket.removeListener('receive-surkl-msgs');
+		this.YTPlayer.pause()
+		this.props.updateYTPlayer({currTime:this.YTPlayer.getCurrentTime()});
+	}
+	
 	componentDidUpdate(prevProps) {
+		if(this.ytRendered===false){
+			let div = document.getElementById('yt-player');
+				if(div!==null && div !== undefined){
+					this.renderYTPlayer()
+				}		
+		}
 		if (prevProps.auth !== this.props.auth && this.props.auth.user.mySurkl) {
 			if (this.props.auth.user.mySurkl.motto && !this.dataReceived) {
 				this.dataReceived = true;
@@ -74,6 +73,17 @@ class Dashboard extends Component {
 			}
 		}
 	}
+	openDMs = (dm_user) => {
+		if (dm_user.user_id !== this.props.auth.user._id) {
+			if (this.props.auth.user.dms[dm_user.user_id]) {
+				dm_user.thread_id = this.props.auth.user.dms[dm_user.user_id].thread_id;
+			}
+			delete dm_user._id;
+			this.props.openDMs(dm_user, (user) => {
+				this.socket.emit('clear-msg-notifs', user);
+			});
+		}
+	};
 	closeMenus = () => {
 		if (this.props.app.menuState === 'open') {
 			this.props.closeMenus({ menu: 'close-menus' });
@@ -165,7 +175,20 @@ class Dashboard extends Component {
 	onInput = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
-
+	changeVolume = (e) => {
+		this.setState({volume: e.target.value},()=>{
+			this.YTPlayer.setVolume(this.state.volume)
+		});		
+	}
+	changeTime = (e) => {
+		let changed = e.target.value;
+		let time  = changed  < 60 ? 
+		'0:'+Math.floor(changed) :
+		Math.floor(changed /60)+':'+Math.floor(changed %60)
+		this.setState({time: time, audio_time: changed}, ()=>{
+			this.YTPlayer.seek(changed);
+		})
+	}
 	displayMsgs = () => {
 		return this.props.surkl.msgs.map((msg, ind) => {
 			let url = msg.avatarUrl ? msg.avatarUrl : '/assets/whitehat.jpg';
@@ -189,14 +212,46 @@ renderYTPlayer = () =>{
 			height: '0',
 			width: '0',
 			host: 'https://www.youtube.com',
-			autoplay:true,
 			related: false
 		})
-		this.YTPlayer.on('time-update',()=>console.log('playing'))
+	
+		this.ytRendered=true;
+		if(this.props.surkl.audio_id.length>0){
+			this.YTPlayer.load(this.props.surkl.audio_id);
+		
+		}
 	} else {
-		this.YTPlayer.load('PyHxTHN-kvU',{autoplay:true})		
 		this.YTPlayer.on('error', (err) => {console.log("YT error", err)})
 	}		
+}
+pluginAudio = () =>{
+	fetch(this.audioDataFetcher+this.state.audio_id).then(res=>res.json())
+		.then(data=>{
+			this.setState({linker:false, audioState:true},()=>{
+				this.props.updateYTPlayer({audio_id:this.state.audio_id, artist: data.author_name, title:data.title});
+				this.YTPlayer.load(this.state.audio_id,{autoplay:true})			
+				this.YTPlayer.on('playing', ()=>{
+					this.YTPlayer.setVolume(this.state.volume);	
+					this.setState({audio_dur:this.YTPlayer.getDuration()})
+					this.timeInterval = setInterval(()=>{
+						let currTime = this.YTPlayer.getCurrentTime();
+
+						let time  = currTime  < 60 ? 
+						'0:'+Math.floor(currTime) :
+						Math.floor(currTime /60)+':'
+						+ (Math.floor(currTime %60)>9 ? Math.floor(currTime %60) : '0'+ Math.floor(currTime %60))
+						this.setState({time:time, audio_time: currTime}) 
+					},1000)
+	
+							
+				})
+			})		
+		})
+}
+pluginAudioOnEnter = (e) => {
+	if(e.key==='Enter'){
+		this.pluginAudio()
+	}
 }
 playButton =()=>{
 	if(!this.state.audioState){
@@ -207,10 +262,56 @@ playButton =()=>{
 }
 playOrPause = () =>{
 	this.setState({audioState: this.state.audioState ? false : true},()=>{
-		if(this.state.audioState===true){
-			this.renderYTPlayer()
+		if(this.state.audioState===false){
+			this.YTPlayer.pause()
+		} else {
+			if(this.props.surkl.currTime!==null){	
+				this.YTPlayer.setVolume(0);	
+				this.YTPlayer.play()
+				this.YTPlayer.on('playing', ()=>{
+					if(this.resumed===false){
+
+						this.resumed=true
+						this.YTPlayer.setVolume(this.state.volume);	
+						this.YTPlayer.seek(this.props.surkl.currTime);
+						this.props.updateYTPlayer({currTime:null})
+						this.setState({audio_dur:this.YTPlayer.getDuration()})
+						this.timeInterval = setInterval(()=>{
+							let currTime = this.YTPlayer.getCurrentTime();
+							let time  = currTime  < 60 ? 
+							'0:'+Math.floor(currTime) :
+							Math.floor(currTime /60)+':'
+							+ (Math.floor(currTime %60)>9 ? Math.floor(currTime %60) : '0'+ Math.floor(currTime %60))
+							this.setState({time:time, audio_time: currTime}) 
+						},1000)
+					}			
+				})					
+				
+			} else {
+				this.YTPlayer.play()
+			}
+			
 		}
 	})
+}
+toggleLinkerModal = () => {
+	this.setState({linker: this.state.linker ? false : true})
+}
+linkerModal = () =>{
+	if(this.state.linker){
+		return (
+			<div id="linker-modal">
+					<img id="link-guide" src="/assets/link-guide.png" />
+					<div id="input-n-btn">
+						<input onKeyDown={this.pluginAudioOnEnter} value={this.state.audio_id} onChange={this.onInput} placeholder="Copy video id here" id="audio-link-id" name="audio_id"  />
+						  <div onClick={this.toggleLinkerModal} id="linker-cancel-btn"></div>
+							<div onClick={this.pluginAudio} id="linker-play-btn"></div>
+			    </div>							
+			</div>
+		)
+	} else {
+		return ''
+	}
 }
 	render() {
 		if (this.props.auth.user === null) {
@@ -260,11 +361,25 @@ playOrPause = () =>{
 						{this.renderMembersTab()}
 						<div id="audio-player" >
 							<div id="yt-player"></div>
-							{this.playButton()}
-							<div id="track-info">
-								<div className="track-info-item">Title</div>
-								<div className="track-info-item">Artist</div>
-							</div>						
+							<div id="player-navs">
+								{this.playButton()}
+								<div className="track-info-item track-time">{this.state.time===0 ? '0:00' : this.state.time}</div>
+								<input min="0" onChange={this.changeTime} max={this.state.audio_dur} value={this.state.audio_time} id="audio-time-range" type="range" />
+								<div id="volume-icon">
+									<div id="rotator">
+										<input onChange={this.changeVolume} value={this.state.volume} type="range" orient="vertical" id="audio-volume-range" min="0" max="100" /> 
+									</div>
+								</div>
+							</div>
+							<div id="restof-player">
+								<div id="track-info">
+									<div className="track-info-item">{this.props.surkl.title}</div>
+									<div className="track-info-item">{this.props.surkl.artist}</div>
+								</div>
+								<div onClick={this.toggleLinkerModal} id="audio-player-linker"/>
+								{this.linkerModal()}
+							</div>
+										
 						</div>
 					</section>
 				</div>
@@ -285,7 +400,8 @@ Dashboard.propTypes = {
 	match: PropTypes.object,
 	updateMsgs: PropTypes.func,
 	updateOnMembers: PropTypes.func,
-	openDMs: PropTypes.func
+	openDMs: PropTypes.func,
+	updateYTPlayer: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -294,4 +410,5 @@ function stateToProps(state) {
 		surkl: state.surkl
 	};
 }
-export default connect(stateToProps, { closeMenus, fetchMySurkl, updateMsgs, updateOnMembers, openDMs })(Dashboard);
+export default connect(stateToProps, { closeMenus, fetchMySurkl, 
+	updateMsgs, updateOnMembers, openDMs, updateYTPlayer })(Dashboard);
