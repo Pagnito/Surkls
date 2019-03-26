@@ -195,7 +195,7 @@ class Header extends Component {
 			if(memberOf!== null && memberOf!==undefined){
 			  toMemberOf = Object.keys(memberOf).length>0 ? 
 				<Link to={`/surkl/${memberOf.surkl_id}`} className="menuItem">
-					<div className="rightAccIcon" id="mySurklIcon" />{memberOf.surkl_name}
+					<div className="pulloutMenuIcon" id="mySurklIcon" />{memberOf.surkl_name}
 				</Link> : ''
 			} else {
 				toMemberOf = '';
@@ -203,14 +203,14 @@ class Header extends Component {
 			if(mySurkl!== null && mySurkl!==undefined && mySurkl.name){
 			  mySurklBtn = Object.keys(mySurkl).length>0 ? 
 				<Link to={`/surkl/${mySurkl.surkl_id}`} className="menuItem">
-					<div className="rightAccIcon" id="mySurklIcon" />{mySurkl.name}
+					<div className="pulloutMenuIcon" id="mySurklIcon" />{mySurkl.name}
 				</Link> : 
 				<Link to="/create_surkl" className="menuItem">
-					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
+					<div className="pulloutMenuIcon" id="createSurklIcon" />Create a Surkl
 			 </Link>
 			} else {
 				mySurklBtn= <Link to="/create_surkl" className="menuItem">
-					<div className="rightAccIcon" id="createSurklIcon" />Create a Surkl
+					<div className="pulloutMenuIcon" id="createSurklIcon" />Create a Surkl
 			 </Link>
 			}
 		}
@@ -221,21 +221,21 @@ class Header extends Component {
 					<img id="surklsTitle" src="/assets/surkls-title2.png" />
 				</div>
 				<Link to="/" className="menuItem">
-					<div className="rightAccIcon" id="surferIcon" />Surfing
+					<div className="pulloutMenuIcon" id="surferIcon" />Surfing
 				</Link>
 				{mySurklBtn}
 				{toMemberOf}
 				<Link to="/" className="menuItem">
-					<div className="threeDotMenuIcon" id="surklsIcon" />Rooms
+					<div className="pulloutMenuIcon" id="roomsIcon" />Rooms
 				</Link>
 				{/* <div className="menuItem">
-					<div className="threeDotMenuIcon" id="helpIcon" />Streams
+					<div className="pulloutMenuIcon" id="helpIcon" />Streams
 				</div> */}
+	{			<div className="menuItem">
+					<div className="pulloutMenuIcon" id="surklsIcon" />Surkls
+				</div>}
 				<div className="menuItem">
-					<div className="threeDotMenuIcon" id="peopleIcon" />People
-				</div>
-				<div className="menuItem">
-					<div className="threeDotMenuIcon" id="eventsIcon" />Events
+					<div className="pulloutMenuIcon" id="eventsIcon" />Events
 				</div>
 				<div className="menuSurkls">
 					<div className="menuSurklsHeader">My Surkl Name</div>

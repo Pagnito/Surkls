@@ -7,6 +7,7 @@ const SurklSchema = new Schema({
   description: String,
   bannderUrl: String,
   motto: String,
+  currentTrack: String,
   admin: {
     admin_id: String,
     nameUrl: String,

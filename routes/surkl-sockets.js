@@ -13,8 +13,22 @@ const spliceObj = (obj, keys) =>{
 }
 module.exports = (io, socket, connectedUsers) => {
 
-  socket.on('join-surkl-room', (surkl_id, user) =>{
+/////////////////////////////////////////////////////////////
+  socket.on('share-track', (track_id, surkl_id)=>{
+    redClient.set('track'+surkl_id, track_id);
+    socket.broadcast.to(surkl_id).emit('track', track_id);
+    console.log('SHARED', surkl_id, track_id)
+  })
+  /////////////////////////////////////////////////////////////
+  socket.on('get-track', (surkl_id)=>{
+    redClient.get('track'+surkl_id,(err,track)=>{
+      io.to(socket.id).emit('mounted-track', track)
+    });
+  })
+/////////////////////////////////////////////////////////////
+  socket.on('join-surkl-room', (surkl_id) =>{
     socket.join(surkl_id)
+    
     redClient.hget('surkls-msgs', surkl_id, (err,msgs)=>{
       if (err) {
         socket.emit('videoChatError');
@@ -22,11 +36,19 @@ module.exports = (io, socket, connectedUsers) => {
         io.to(socket.id).emit('receive-surkl-msgs', JSON.parse(msgs));
       }
     })
-    let online = user.mySurkl.members.filter(mem=>{
+  
+    Surkl.findById({_id: surkl_id}).then(surkl=>{
+      let online = surkl.members.filter(mem=>{
         return connectedUsers.hasOwnProperty(mem.user_id)
+      })
+     /*  console.log(online) */
+      console.log('//////////')
+      console.log(connectedUsers)
+      io.to(surkl_id).emit('online-users', online)
     })
-    io.to(surkl_id).emit('online-users', online)
+   
   })
+  /////////////////////////////////////////////////////////////
   socket.on('created-surkl', (surkl, user)=>{
     let msgs = []
     redClient.hset('surkls-msgs', surkl.surkl_id, JSON.stringify(msgs), (err, done) => {
@@ -36,7 +58,7 @@ module.exports = (io, socket, connectedUsers) => {
     });
    
   })
-  
+  /////////////////////////////////////////////////////////////
   socket.on('surkl-msg', (msg) => {
     redClient.hget('surkls-msgs', msg.surkl_id, (err, msgs) => {
       
@@ -58,6 +80,7 @@ module.exports = (io, socket, connectedUsers) => {
      
     });
   });
+  /////////////////////////////////////////////////////////////
   socket.on('clear-notifs', (user)=>{
     User.updateOne({_id: user._id}, {$set:{notif_count: 0}}).exec()
   });
@@ -69,6 +92,7 @@ module.exports = (io, socket, connectedUsers) => {
       $pull:{notifs: {_id:notif_id}}
     }).exec()
   })
+  /////////////////////////////////////////////////////////////
   socket.on('accept-surkl', (surkl, user)=>{
     let memOf = {
       surkl_id: surkl.source.source_id,
@@ -87,6 +111,7 @@ module.exports = (io, socket, connectedUsers) => {
     Surkl.updateOne({_id:surkl.source.source_id}, 
       {$push:{members:userObj,memberIds: userObj.user_id}}).exec()
   })
+  /////////////////////////////////////////////////////////////
   socket.on('add-to-surkl', (userToAdd, surkl)=>{
     delete userToAdd.dms
     delete userToAdd.followers

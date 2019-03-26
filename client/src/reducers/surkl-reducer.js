@@ -1,15 +1,17 @@
-import { MY_SURKL, UPDATE_SURKL_MSGS, UPDATE_MY_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER } from "actions/types";
+import { MY_SURKL, UPDATE_SURKL_MSGS, UPDATE_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER } from "actions/types";
 
 const initialState = {
 	mySurkl: {},
+	activeSurkl: {},
 	msgs: [],
 	online: [],
+	justMounted: true,
 	audio_id:'',
 	artist: 'Artist',
 	title: 'Title',
 	audio_dur:0,
 	audio_time: 0,
-	volume: null,
+	volume: 0,
 	currTime: null
 };
 
@@ -20,10 +22,10 @@ export default function(state = initialState, action) {
 				...state,
 				...action.payload
 			}
-		case UPDATE_MY_SURKL:
+		case UPDATE_SURKL:
 			return {
 				...state,
-				mySurkl: action.payload
+				activeSurkl: action.payload
 			};
 		case UPDATE_SURKL_MSGS:
 			return {
@@ -38,7 +40,7 @@ export default function(state = initialState, action) {
 		case MY_SURKL:
 			return {
 				...state,
-				mySurkl: action.payload
+				activeSurkl: action.payload
 			};
 		
 		default:

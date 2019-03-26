@@ -25,7 +25,7 @@ module.exports = (io, app) => {
     socket.on('setup', (user) => {
       user.socketId = socket.id;
       connectedUsers[user._id] = user;
-      delete connectedUsers['undefined']
+      delete connectedUsers['undefined'];
       console.log('CONNECTED USERS', Object.keys(connectedUsers));
     });
      notifs(io, socket, connectedUsers)

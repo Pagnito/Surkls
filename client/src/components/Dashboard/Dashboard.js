@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { closeMenus } from 'actions/actions';
 import { openDMs } from 'actions/dm-actions';
-import { fetchMySurkl, updateMsgs, updateOnMembers, updateYTPlayer } from 'actions/surkl-actions';
+import { fetchSurkl, updateMsgs, updateOnMembers, updateYTPlayer } from 'actions/surkl-actions';
 import PropTypes from 'prop-types';
 import Loader1 from 'components/Loader1/Loader1';
 import YTplayer from 'yt-player';
 import './dashboard.scss';
+import ChatInput from './chat-input';
 
 class Dashboard extends Component {
 	constructor(props) {
@@ -21,7 +22,7 @@ class Dashboard extends Component {
 			audio_id: '',
 			audio_dur:0,
 			audio_time: 0,
-			volume: 60
+			volume: 40
 		};
 		this.surklFetched = false;
 		this.joinedRoom = false;
@@ -40,31 +41,63 @@ class Dashboard extends Component {
 		this.socket.on('online-users', (users) => {
 			this.props.updateOnMembers(users);
 		});
+		this.socket.on('track', (track_id) => {
+			this.setState({audio_id:track_id})
+			this.pluginAudio(track_id,()=>{
+				console.log('started')
+			})
+		})
+		this.socket.on('mounted-track', (audio_id)=>{
+			fetch(this.audioDataFetcher+audio_id).then(res=>res.json())
+		.then(data=>{
+			this.setState({audioState:false},()=>{
+				this.props.updateYTPlayer({audio_id:audio_id, artist: data.author_name, title:data.title});
+				//this.YTPlayer.load(audio_id,{autoplay:false})				
+				})		
+			})
+		})
 	}
 
 	componentDidMount() {	
-		this.props.fetchMySurkl(this.props.match.params.id);
+		console.log("mounted")
+		//this.socket.emit('join-surkl-room', this.props.match.params.id);
+		if(this.props.surkl.artist !=='Artist'){
+			let currTime = this.props.surkl.currTime;
+			let vol = localStorage.getItem('volume')
+			let time  = currTime  < 60 ? 
+				'0:'+Math.floor(currTime) :
+				Math.floor(currTime /60)+':'
+				+ (Math.floor(currTime %60)>9 ? Math.floor(currTime %60) : '0'+ Math.floor(currTime %60))
+			this.setState({volume: vol, time:time, audio_time: currTime, audio_dur: this.props.surkl.audio_dur })
+		} else {
+			let vol = localStorage.getItem('volume')
+			this.setState({volume: vol})
+		}
+		
+		this.props.fetchSurkl(this.props.match.params.id);
+		this.socket.emit('get-track', this.props.match.params.id)
 	}
 	componentWillUnmount(){
 		clearInterval(this.timeInterval);
 		this.socket.removeListener('online-users');
 		this.socket.removeListener('receive-surkl-msgs');
+		this.socket.removeListener('track');
+		this.socket.removeListener('mounted-track');
 		this.YTPlayer.pause()
-		this.props.updateYTPlayer({currTime:this.YTPlayer.getCurrentTime()});
+		if(this.props.surkl.currTime===null){
+			this.props.updateYTPlayer({currTime:this.YTPlayer.getCurrentTime(), audio_dur:this.state.audio_dur});
+		}
+		
 	}
 	
 	componentDidUpdate(prevProps) {
-		if(this.ytRendered===false){
-			let div = document.getElementById('yt-player');
-				if(div!==null && div !== undefined){
-					this.renderYTPlayer()
-				}		
+		if(prevProps.match.params.id!==this.props.match.params.id){
+			this.socket.emit('join-surkl-room', this.props.match.params.id);
 		}
-		if (prevProps.auth !== this.props.auth && this.props.auth.user.mySurkl) {
-			if (this.props.auth.user.mySurkl.motto && !this.dataReceived) {
-				this.dataReceived = true;
-				this.joinSurklRoom();
-			}
+		if(this.props.auth.user!==prevProps.auth.user || this.props.auth.user!==null && !this.joinedRoom){
+			console.log('joined')
+			this.joinedRoom = true;
+			this.socket.emit('join-surkl-room', this.props.match.params.id);
 		}
 		if (this.props.surkl.msgs !== prevProps.surkl.msgs) {
 			const chatBox = document.getElementById('surkl-feed');
@@ -72,6 +105,12 @@ class Dashboard extends Component {
 				chatBox.scrollTop = chatBox.scrollHeight;
 			}
 		}
+		if(this.ytRendered===false){
+			let div = document.getElementById('yt-player');
+				if(div!==null && div !== undefined){
+					this.renderYTPlayer()
+				}		
+			}			
 	}
 	openDMs = (dm_user) => {
 		if (dm_user.user_id !== this.props.auth.user._id) {
@@ -90,7 +129,7 @@ class Dashboard extends Component {
 		}
 	};
 	displayMembers = () => {
-		let members = this.props.surkl.mySurkl.members;
+		let members = this.props.surkl.activeSurkl.members;
 		if (members) {
 			return (
 				<div id="my-surkl-members">
@@ -154,22 +193,16 @@ class Dashboard extends Component {
 			return this.displayMembers();
 		}
 	};
-	joinSurklRoom = () => {
-		this.socket.emit('join-surkl-room', this.props.match.params.id, this.props.auth.user);
-	};
-	sendSurklMsg = (e) => {
-		if (e.key == 'Enter') {
-			e.preventDefault();
-			let msg = {
-				msg: this.state.msg,
+	
+	sendSurklMsg = (msg) => {
+			let msgObj = {
+				msg: msg,
 				userName: this.props.auth.user.userName,
 				avatarUrl: this.props.auth.user.avatarUrl,
 				surkl_id: this.props.match.params.id,
 				date: Date.now()
 			};
-			this.setState({ msg: '' });
-			this.socket.emit('surkl-msg', msg);
-		}
+			this.socket.emit('surkl-msg', msgObj);
 	};
 
 	onInput = (e) => {
@@ -178,6 +211,7 @@ class Dashboard extends Component {
 	changeVolume = (e) => {
 		this.setState({volume: e.target.value},()=>{
 			this.YTPlayer.setVolume(this.state.volume)
+			localStorage.setItem('volume', this.state.volume)
 		});		
 	}
 	changeTime = (e) => {
@@ -213,23 +247,21 @@ renderYTPlayer = () =>{
 			width: '0',
 			host: 'https://www.youtube.com',
 			related: false
-		})
-	
+		})	
 		this.ytRendered=true;
 		if(this.props.surkl.audio_id.length>0){
-			this.YTPlayer.load(this.props.surkl.audio_id);
-		
+			this.YTPlayer.load(this.props.surkl.audio_id);		
 		}
 	} else {
 		this.YTPlayer.on('error', (err) => {console.log("YT error", err)})
 	}		
 }
-pluginAudio = () =>{
-	fetch(this.audioDataFetcher+this.state.audio_id).then(res=>res.json())
+pluginAudio = (audio_id, cb) =>{
+	fetch(this.audioDataFetcher+audio_id).then(res=>res.json())
 		.then(data=>{
 			this.setState({linker:false, audioState:true},()=>{
-				this.props.updateYTPlayer({audio_id:this.state.audio_id, artist: data.author_name, title:data.title});
-				this.YTPlayer.load(this.state.audio_id,{autoplay:true})			
+				this.props.updateYTPlayer({audio_id:audio_id, artist: data.author_name, title:data.title});
+				this.YTPlayer.load(audio_id,{autoplay:true})			
 				this.YTPlayer.on('playing', ()=>{
 					this.YTPlayer.setVolume(this.state.volume);	
 					this.setState({audio_dur:this.YTPlayer.getDuration()})
@@ -241,16 +273,17 @@ pluginAudio = () =>{
 						Math.floor(currTime /60)+':'
 						+ (Math.floor(currTime %60)>9 ? Math.floor(currTime %60) : '0'+ Math.floor(currTime %60))
 						this.setState({time:time, audio_time: currTime}) 
-					},1000)
-	
-							
+					},1000)							
 				})
-			})		
+			})	
+			cb(audio_id)	
 		})
 }
 pluginAudioOnEnter = (e) => {
 	if(e.key==='Enter'){
-		this.pluginAudio()
+		this.pluginAudio(this.state.audio_id, (audio_id)=>{
+			this.socket.emit('share-track', audio_id, this.props.surkl.activeSurkl._id)
+		})
 	}
 }
 playButton =()=>{
@@ -264,13 +297,17 @@ playOrPause = () =>{
 	this.setState({audioState: this.state.audioState ? false : true},()=>{
 		if(this.state.audioState===false){
 			this.YTPlayer.pause()
+			clearInterval(this.timeInterval);
 		} else {
-			if(this.props.surkl.currTime!==null){	
+			if(this.props.surkl.justMounted){
+				this.pluginAudio(this.props.surkl.audio_id,()=>{});
+				this.props.updateYTPlayer({justMounted: false})		
+			}
+			else if(this.props.surkl.currTime!==null){	
 				this.YTPlayer.setVolume(0);	
 				this.YTPlayer.play()
 				this.YTPlayer.on('playing', ()=>{
 					if(this.resumed===false){
-
 						this.resumed=true
 						this.YTPlayer.setVolume(this.state.volume);	
 						this.YTPlayer.seek(this.props.surkl.currTime);
@@ -285,12 +322,10 @@ playOrPause = () =>{
 							this.setState({time:time, audio_time: currTime}) 
 						},1000)
 					}			
-				})					
-				
+				})									
 			} else {
 				this.YTPlayer.play()
-			}
-			
+			}			
 		}
 	})
 }
@@ -329,14 +364,15 @@ linkerModal = () =>{
 							{/* <input onChange={this.onInputChange} onKeyDown={this.onEnter} value={this.props.surkl.search1} id="dashSearch1" className="dashSearch" name="search1" placeholder="Subscribe to a topic"/>*/}
 						</div>
 						<div id="surkl-feed">{this.displayMsgs()}</div>
-						<textarea
+						<ChatInput sendMsg={this.sendSurklMsg}/>
+					{/* 	<textarea
 							value={this.state.msg}
 							onChange={this.onInput}
 							onKeyDown={this.sendSurklMsg}
 							name="msg"
 							placeholder="Type here to chat"
 							id="surkl-chat-input"
-						/>
+						/> */}
 					</section>
 					<section id="surkl-members">
 						<div id="surkl-members-header">
@@ -394,7 +430,7 @@ Dashboard.propTypes = {
 	updateDashboard: PropTypes.func,
 	closeMenus: PropTypes.func,
 	app: PropTypes.object,
-	fetchMySurkl: PropTypes.func,
+	fetchSurkl: PropTypes.func,
 	surkl: PropTypes.object,
 	socket: PropTypes.object,
 	match: PropTypes.object,
@@ -410,5 +446,5 @@ function stateToProps(state) {
 		surkl: state.surkl
 	};
 }
-export default connect(stateToProps, { closeMenus, fetchMySurkl, 
+export default connect(stateToProps, { closeMenus, fetchSurkl, 
 	updateMsgs, updateOnMembers, openDMs, updateYTPlayer })(Dashboard);
