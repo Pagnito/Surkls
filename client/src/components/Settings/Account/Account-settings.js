@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
+import {updateUser, updateUsername, deleteAccount} from 'actions/settings-actions';
 import './account-settings.scss';
 class AccountSettings extends Component {
   constructor(props){
@@ -11,6 +14,9 @@ class AccountSettings extends Component {
       email: '',
       description: '',
       quote: '',
+      saveName: 'Save',
+      saveQuote: 'Save',
+      saveEmail: 'Save'
     }
     this.defaultBanner = "url('/assets/surkls-banner.png')"
   }
@@ -28,7 +34,7 @@ class AccountSettings extends Component {
     this.setState({
       userName:user.userName,
       email: user.email,
-      
+      quote: user.quote
     })
     } 
   }
@@ -38,9 +44,47 @@ class AccountSettings extends Component {
     this.setState({
       userName:user.userName,
       email: user.email,
-      
-    })
+      quote:user.quote  
+      })
     } 
+  }
+  updateUsername = () =>{
+    let obj = {
+      userName:this.state.userName
+    }
+    this.props.updateUsername(JSON.stringify(obj), ()=>{
+      this.setState({saveName: 'Done'})
+      setTimeout(()=>{
+        this.setState({saveName: 'Save'})
+      },1000)
+    })
+  }
+  updateQuote = () =>{
+    let obj = {
+      quote:this.state.quote
+    }
+    this.props.updateUser(JSON.stringify(obj), ()=>{
+      this.setState({saveQuote: 'Done'})
+      setTimeout(()=>{
+        this.setState({saveQuote: 'Save'})
+      },1000)
+    })
+  }
+  updateEmail = () =>{
+    let obj = {
+      email:this.state.email
+    }
+    this.props.updateUser(JSON.stringify(obj), ()=>{
+      this.setState({saveEmail: 'Done'})
+      setTimeout(()=>{
+        this.setState({saveEmail: 'Save'})
+      },1000)
+    })
+  }
+  deleteAccount = () =>{
+    this.props.deleteAccount(()=>{
+      this.props.history.push('/')
+    })
   }
   profileTab = () =>{
     if(this.props.auth.isAuthenticated){
@@ -58,15 +102,24 @@ class AccountSettings extends Component {
            </div> 
           <form className="account-tab-form">
             <label htmlFor="tab-username">Username</label>
-            <input name="userName" onChange={this.onInput} value={this.state.userName} id="tab-username" className="tab-username-input tab-input"/>
+            <div className="edit-setting-input-wrap">
+              <input name="userName" onChange={this.onInput} value={this.state.userName} id="tab-username" className="tab-username-input tab-input"/>
+              <button type="button" onClick={this.updateUsername} className="tab-save-btn">{this.state.saveName}</button>
+            </div>
             <label htmlFor="tab-email">Email</label>
-            <input name="email" onChange={this.onInput}  value={this.state.email} id="tab-email" type="email" className="tab-email-input tab-input"/>
+            <div className="edit-setting-input-wrap">
+              <input name="email" onChange={this.onInput}  value={this.state.email} id="tab-email" type="email" className="tab-email-input tab-input"/>
+              <button onClick={this.updateEmail} type="button" className="tab-save-btn">{this.state.saveEmail}</button>
+            </div>            
             <label htmlFor="tab-quote">Favorite Quote</label>
-            <input name="quote" onChange={this.onInput}  value={this.state.quote} id="tab-quote" className="tab-quote-input tab-input"/>
-            <label htmlFor="tab-quote">Change Password</label>
-            <input name="quote" onChange={this.onInput}  value={this.state.quote} id="tab-quote" className="tab-quote-input tab-input"/>
-            <button className="tab-save-btn">Save</button>
-            <button className="tab-save-btn" type="button">Delete Account</button>
+            <div className="edit-setting-input-wrap">
+              <input name="quote" onChange={this.onInput}  value={this.state.quote} id="tab-quote" className="tab-quote-input tab-input"/>
+              <button onClick={this.updateQuote} type="button" className="tab-save-btn">{this.state.saveQuote}</button>
+            </div>
+            
+            {/* <label htmlFor="tab-quote">Change Password</label>
+            <input name="quote" onChange={this.onInput}  value={this.state.quote} id="tab-quote" className="tab-quote-input tab-input"/> */}
+            <button onClick={this.deleteAccount} className="tab-del-btn" type="button">Delete Account</button>
           </form> 
          
         </div>
@@ -111,6 +164,10 @@ class AccountSettings extends Component {
   }
 }
 AccountSettings.propTypes = {
-  auth: PropTypes.object
+  auth: PropTypes.object,
+  updateUser: PropTypes.func,
+  updateUsername: PropTypes.func,
+  deleteAccount: PropTypes.func,
+  history: PropTypes.object
 }
-export default AccountSettings
+export default connect(null, {updateUser, updateUsername, deleteAccount})(withRouter(AccountSettings));

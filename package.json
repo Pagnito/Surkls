@@ -11,7 +11,7 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm run start --prefix client",
-    "bclient": "npm run build --prefix client",
+    "b": "npm run build --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "nodemon --exec 'mocha -R min"
   },

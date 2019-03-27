@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   twitchId: String,
   userName: String,
   avatarUrl: String,
+  quote: String,
   mySurkl: {
     name: String,
     surkl_id: String,
@@ -43,7 +44,6 @@ const UserSchema = new Schema({
   notif_count:Number,
   new_msg_count: Number,
   messangers: [String],
-  followers: [Object],
   following:[String]
 });
 const User = mongoose.model('users', UserSchema);

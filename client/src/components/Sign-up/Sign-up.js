@@ -84,7 +84,8 @@ class SignUp extends Component {
 						id="regEmail"
             className="homeInput" 
             onChange={this.handleInputs} 
-            name="email" 
+						name="email" 
+						type="email"
             value={this.state.email}
 						placeholder={this.state.errors.email} 
             />

@@ -51,7 +51,9 @@ class Dashboard extends Component {
 			fetch(this.audioDataFetcher+audio_id).then(res=>res.json())
 		.then(data=>{
 			this.setState({audioState:false},()=>{
-				this.props.updateYTPlayer({audio_id:audio_id, artist: data.author_name, title:data.title});
+				if(audio_id!==null){
+					this.props.updateYTPlayer({audio_id:audio_id, artist: data.author_name, title:data.title});
+				}	
 				//this.YTPlayer.load(audio_id,{autoplay:false})				
 				})		
 			})

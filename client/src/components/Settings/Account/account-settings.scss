@@ -67,29 +67,48 @@
         margin-bottom: 3px;
         margin-top: 10px;
       }
-      .tab-input {
-        color: #F4FBFB;
-        background: #3F3E3E;
-        width: 100%;
-        border: none;
-        border-radius: 3px;
-        height: 28px;
-        font-family: 'Comfortaa';
-        font-size: 14px;
-        padding-left: 10px;
-        box-sizing: border-box;
-        outline: none;
+      .edit-setting-input-wrap {
+        display: flex;
+        justify-content: space-between;
+        .tab-input {
+          color: #F4FBFB;
+          background: #3F3E3E;
+          border: none;
+          border-radius: 3px;
+          height: 28px;
+          width:calc(100% - 60px);
+          font-family: 'Comfortaa';
+          font-size: 14px;
+          padding-left: 10px;
+          box-sizing: border-box;
+          outline: none;
+        }
+        .tab-save-btn {
+          background: #C7A035;
+          color: black;
+          font-family: 'Comfortaa';
+          font-size: 17px;
+          height: 28px;
+          border:none;
+          border-radius:3px;
+          padding-top:5px;
+          padding-bottom: 5px;
+          cursor: pointer;
+          outline:none;
+        }
+        .tab-save-btn:hover {
+          background: black;
+          color: #C7A035;
+        }
       }
-      .tab-save-btn:hover {
-        background: black;
-        color: #C7A035;
-      }
-      .tab-save-btn {
+      
+      .tab-del-btn {
         margin-top:20px;
         background: #C7A035;
         color: black;
         font-family: 'Comfortaa';
         font-size: 17px;
+        height: 28px;
         border:none;
         border-radius:3px;
         padding-top:5px;
@@ -97,6 +116,11 @@
         cursor: pointer;
 
       }
+      .tab-del-btn:hover {
+        background: black;
+        color: #C7A035;
+      }
+      
     }
   }
 }

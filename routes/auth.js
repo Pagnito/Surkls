@@ -1,5 +1,6 @@
 const passport = require('passport');
 const User = require('../database/models/user-model');
+const Surkl = require('../database/models/surkl-model');
 const requireLogin = require('../middlewares/requireLogin');
 const crypto = require('crypto');
 const keys = require('../config/keys');
@@ -79,10 +80,22 @@ module.exports = (app) => {
 			});
 	});
 
-	app.delete('/account/delete/:id', requireLogin, (req, res) => {
-		User.findOneAndDelete({ _id: req.params.id })
-			.then(() => {
-				res.json({ msg: 'Account deleted' });
+	app.delete('/account/delete', requireLogin, (req, res) => {
+		User.findById({ _id: req.user._id })
+			.then((user) => {
+				if(user.mySurkl.name){
+					Surkl.findOneAndDelete({_id:user.mySurkl.surkl_id}).exec()
+				}
+				if(user.memberOf.surkl_name){
+					Surkl.findById({_id: user.memberOf.surkl_id}).then(surkl=>{
+						let filtered = surkl.members.filter(mem=>{
+							return mem.user_id!==user._id
+						})
+						surkl.members = filtered;	
+						surkl.save()					
+					})
+				}			
+					user.delete().then(res.json({msg:"Deleted"}))
 			})
 			.catch((err) => {
 				res.status(500).json({ err: 'Could not delete your account' });
@@ -94,21 +107,7 @@ module.exports = (app) => {
 	})
 	app.get('/account', requireLogin, (req, res) => {
 		if (req.user) {
-			let userRes = {
-				email: req.user.email,
-				userName: req.user.userName,
-				_id: req.user._id,
-				avatarUrl: req.user.avatarUrl,
-				dms: req.user.dms,
-				messangers: req.user.messangers,
-				new_msg_count: req.user.new_msg_count,
-				mySurkl: req.user.mySurkl,
-				memberOf: req.user.memberOf,
-				followers: req.user.followers,
-				following: req.user.following,
-				notifs: req.user.notifs,
-				notif_count: req.user.notif_count
-			};
+			let userRes = req.user
 			res.json(userRes);
 		} else {
 			res.status(401).end();

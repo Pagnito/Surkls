@@ -39,6 +39,8 @@ export default function(state = initialState, action) {
 		case SET_GUEST:
 			return {
 				...state,
+				isAuthenticated: false,
+				user: {},
 				...action.payload
 			}
 		default:

@@ -1,12 +1,36 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import './Surkls-settings.scss';
 class SurklsSettings extends Component {
   constructor(props){
     super(props);
     this.state = {
       tab: 'my-surkl',
-      currTab: 'my-surkl'
+      currTab: 'my-surkl',
+      mySurkl: '',
+      otherSurkl: ''
     }
+  }
+
+  componentDidMount(){
+    if(this.props.auth.user.mySurkl && this.props.auth.user.memberOf){
+      this.setState({
+        mySurkl:this.props.auth.user.mySurkl.name, 
+        otherSurkl:this.props.auth.user.memberOf.surkl_name 
+      })
+    } else if(this.props.auth.user.mySurkl && !this.props.auth.user.memberOf ) {
+      this.setState({
+        mySurkl:this.props.auth.user.mySurkl.name, 
+      })
+    } else {
+      this.setState({
+        otherSurkl:this.props.auth.user.memberOf.surkl_name, 
+        tab: 'other-surkl',
+        currTab: 'other-surkl'
+      })
+    }
+
   }
   renderTabWindows = () =>{
     if(this.state.tab==='my-surkl'){
@@ -15,10 +39,8 @@ class SurklsSettings extends Component {
       return this.otherSurklTabWin()
     }
   }
-  switchTab=(tab, currTab)=>{
-    document.getElementById(currTab).style.borderBottom = '1px solid #F4FBFB';
-    document.getElementById(tab).style.borderBottom = '1px solid #242323';
-    this.setState({tab:tab, currTab:tab})
+  switchTab=(tab)=>{
+    this.setState({tab:tab})
   }
   mySurklTabWin = () =>{
     return (
@@ -55,16 +77,39 @@ class SurklsSettings extends Component {
        return this.otherSurklTab()
      }
    }
+   renderTabBtns = () =>{
+     let mySurkl = this.state.mySurkl.length>0 ?
+      <div onClick={()=>this.switchTab('my-surkl',this.state.currTab)} 
+      style={{borderBottom:this.state.currTab==='my-surkl' ? '1px #242323 solid' : '1px #3E3E3E solid'}} id="my-surkl" className="s-tab">{this.state.mySurkl}</div>
+      : ''
+     let other = this.state.otherSurkl.length>0 ? 
+      <div onClick={()=>this.switchTab('other-surkl',this.state.currTab)} 
+      style={{borderBottom:this.state.currTab==='other-surkl' ? '1px #242323 solid' : '1px #3E3E3E solid'}}
+      id="other-surkl" className="s-tab">{this.state.otherSurkl}</div>
+      : ''
+    return (
+      <div id="s-tabs">
+        {mySurkl}
+        {other} 
+      </div>
+    )
+   }
   render() {
     return (
       <div id="surkls-settings">
-        <div id="s-tabs">
-          <div onClick={()=>this.switchTab('my-surkl',this.state.currTab)} id="my-surkl" className="s-tab">My Surkl</div>
-          <div onClick={()=>this.switchTab('other-surkl',this.state.currTab)} id="other-surkl" className="s-tab">Other Surkl</div>     
-        </div>
+        {this.renderTabBtns()}
         {this.renderTabWindows()}
       </div>
     )
   }
 }
-export default SurklsSettings
+function stateToProps(state){
+  return {
+    surkl: state.surkl
+  }
+}
+SurklsSettings.propTypes = {
+  surkl: PropTypes.object,
+  auth: PropTypes.object
+}
+export default connect(stateToProps)(SurklsSettings)

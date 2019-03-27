@@ -21,20 +21,8 @@ passport.use(new LocalStrategy({
   User.findOne({email: email}).then(user=>{
     if(user){
       if(hashedPassword===user.hashedPassword){
-        let userRes = {
-          email: user.email,
-          userName: user.userName,
-          _id:user._id,
-          avatarUrl: user.avatarUrl,
-          dms: user.dms,
-          new_msg_count: user.new_msg_count,
-          mySurkl: user.mySurkl,
-          memberOf: user.memberOf,
-          followers: user.followers,
-          following: user.following,
-          notifs: user.notifs,
-			  	notif_count: user.notif_count
-        }
+        let userRes = user;
+        delete user.hashedPassword;
         done(null, userRes)
       } else {
         done(null, false)
