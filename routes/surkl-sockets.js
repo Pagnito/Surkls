@@ -17,7 +17,7 @@ module.exports = (io, socket, connectedUsers) => {
   socket.on('share-track', (track_id, surkl_id)=>{
     redClient.set('track'+surkl_id, track_id);
     socket.broadcast.to(surkl_id).emit('track', track_id);
-    console.log('SHARED', surkl_id, track_id)
+   // console.log('SHARED', surkl_id, track_id)
   })
   /////////////////////////////////////////////////////////////
   socket.on('get-track', (surkl_id)=>{
@@ -42,8 +42,8 @@ module.exports = (io, socket, connectedUsers) => {
         return connectedUsers.hasOwnProperty(mem.user_id)
       })
      /*  console.log(online) */
-      console.log('//////////')
-      console.log(connectedUsers)
+      //console.log('//////////')
+      //console.log(connectedUsers)
       io.to(surkl_id).emit('online-users', online)
     })
    

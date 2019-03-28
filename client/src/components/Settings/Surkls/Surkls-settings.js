@@ -37,7 +37,7 @@ class SurklsSettings extends Component {
           surkl_id: surkl._id,
           surkl_admin: surkl.admin.user_id,
           mySurkl:surkl.name, 
-          otherSurkl:this.props.auth.user.memberOf.surkl_name,
+          otherSurkl:this.props.auth.user.memberOf.name,
           motto: surkl.motto,
           name:surkl.name,
           members:surkl.members

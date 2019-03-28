@@ -120,7 +120,8 @@ class Dashboard extends Component {
 				dm_user.thread_id = this.props.auth.user.dms[dm_user.user_id].thread_id;
 			}
 			delete dm_user._id;
-			this.props.openDMs(dm_user, (user) => {
+			let userTo = this.props.dms.messangers[dm_user.user_id] ? this.props.dms.messangers[dm_user.user_id] : dm_user
+			this.props.openDMs(userTo, (user) => {
 				this.socket.emit('clear-msg-notifs', user);
 			});
 		}
@@ -411,7 +412,7 @@ linkerModal = () =>{
 							</div>
 							<div id="restof-player">
 								<div id="track-info">
-									<div className="track-info-item">{this.props.surkl.title}</div>
+									<div className="track-info-item">{this.props.surkl.title.length>60 ? this.props.surkl.title.slice(0,60)+'...' : this.props.surkl.title}</div>
 									<div className="track-info-item">{this.props.surkl.artist}</div>
 								</div>
 								<div onClick={this.toggleLinkerModal} id="audio-player-linker"/>
@@ -439,13 +440,15 @@ Dashboard.propTypes = {
 	updateMsgs: PropTypes.func,
 	updateOnMembers: PropTypes.func,
 	openDMs: PropTypes.func,
-	updateYTPlayer: PropTypes.func
+	updateYTPlayer: PropTypes.func,
+	dms: PropTypes.object
 };
 function stateToProps(state) {
 	return {
 		auth: state.auth,
 		app: state.app,
-		surkl: state.surkl
+		surkl: state.surkl,
+		dms: state.dms
 	};
 }
 export default connect(stateToProps, { closeMenus, fetchSurkl, 

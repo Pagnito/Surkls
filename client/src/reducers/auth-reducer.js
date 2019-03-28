@@ -1,4 +1,4 @@
-import { DESTROYED_SURKL, SET_USER, GET_USER, UPDATE_USER_MEMBERSHIP, SET_GUEST, NEW_SURKL_ADMIN, LEFT_SURKL  } from "actions/types";
+import { CREATED_SURKL, DESTROYED_SURKL, SET_USER, GET_USER, UPDATE_USER_MEMBERSHIP, SET_GUEST, NEW_SURKL_ADMIN, LEFT_SURKL  } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	isAuthenticated: false,
@@ -6,13 +6,20 @@ const initialState = {
 };
 let dms = {};
 export default function(state = initialState, action) {
-	switch (action.type) {	
-		case UPDATE_USER_MEMBERSHIP:
-			let clone = JSON.parse(JSON.stringify(state))
-			clone.user.memberOf = action.payload
+	switch (action.type) {
+		case CREATED_SURKL:
+			let clone0 = JSON.parse(JSON.stringify(state))
+			clone0.user.mySurkl = action.payload
 			return {
 				...state,
-				...clone
+				...clone0
+			}		
+		case UPDATE_USER_MEMBERSHIP:
+			let clone1 = JSON.parse(JSON.stringify(state))
+			clone1.user.memberOf = action.payload
+			return {
+				...state,
+				...clone1
 			}	
 		case GET_USER:
 			if(action.payload.dms){

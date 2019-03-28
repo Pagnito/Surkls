@@ -1,5 +1,5 @@
 import {
-  MY_SURKL, USER_SURKL, UPDATE_SURKL_MSGS, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER, UPDATE_SURKL
+  CREATED_SURKL, USER_SURKL, UPDATE_SURKL_MSGS, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER, UPDATE_SURKL
   } from 'actions/types';
   
   export const updateYTPlayer = (data) => {
@@ -43,7 +43,7 @@ import {
     .then(res=>res.json())
     .then(data=>{
       dispatch({
-        type: MY_SURKL,
+        type: CREATED_SURKL,
         payload: data
       })
       dispatch({
