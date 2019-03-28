@@ -116,7 +116,7 @@ class CreateSurkl extends Component {
 				admin: me._id,
 				admin_name: me._userName
       }
-      if(Object.keys(mySurkl).length!==0){
+      if(mySurkl){
         errors.alreadyCreated = 'You can only create one Surkl. Get to know your Surkl'
         this.setState({errors: errors})
       } else {
@@ -217,7 +217,7 @@ class CreateSurkl extends Component {
 
 	render() {
     if(this.props.auth.user){
-      if(Object.keys(this.props.auth.user.mySurkl).length>0){
+      if(this.props.auth.user.mySurkl){
         return <div id="already-created">You can create only one Surkl. Get to know Your Surkl.</div>
       } else {
         return <div id="create-surkl">{this.phase()}</div>;

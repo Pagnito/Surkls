@@ -10,7 +10,7 @@ import {
 	NEW_ADMIN,
 	UNPICK_VIDEO,
 	SEND_TWEET,
-
+	UPDATE_USER_MEMBERSHIP,
 	CLOSE_ALLMENUS,
 	TOGGLE_MENU,
 	UPDATE_APP
@@ -97,6 +97,12 @@ export const signUp = (user, cb) => (dispatch) => {
 			});
 		});
 };
+export const updateUserMem = (surkl) => {
+	return {
+		type: UPDATE_USER_MEMBERSHIP,
+		payload:surkl
+	}
+}
 export const signIn = (user, cb) => (dispatch) => {
 	let options = {
 		method: 'POST',

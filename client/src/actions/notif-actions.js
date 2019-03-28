@@ -1,7 +1,8 @@
 import {
   LOAD_NOTIFS,
   UPDATE_NOTIFS,
-  ADD_NOTIF
+  ADD_NOTIF,
+  REMOVE_NOTIF
   } from 'actions/types';
   
   export const updateNotifs = (payload) =>{
@@ -13,6 +14,12 @@ import {
   export const addNotif = (payload) =>{
     return {
       type: ADD_NOTIF,
+      payload:payload
+    }
+  }
+  export const removeNotif = (payload) =>{
+    return {
+      type: REMOVE_NOTIF,
       payload:payload
     }
   }

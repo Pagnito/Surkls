@@ -1,4 +1,4 @@
-import { MY_SURKL, UPDATE_SURKL_MSGS, UPDATE_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER } from "actions/types";
+import {  MY_SURKL, UPDATE_SURKL_MSGS, UPDATE_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER} from "actions/types";
 
 const initialState = {
 	mySurkl: {},
@@ -37,12 +37,13 @@ export default function(state = initialState, action) {
 				...state,
 				online: action.payload
 			};
+		
 		case MY_SURKL:
 			return {
 				...state,
-				activeSurkl: action.payload
+				mySurkl: action.payload
 			};
-		
+	
 		default:
 			return state;
 	}

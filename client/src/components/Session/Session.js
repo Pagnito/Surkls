@@ -598,7 +598,7 @@ class Session extends Component {
 	}
 	renderProfileModal = (user) =>{
 		if(!user.guest){
-			let addToSurklBtn = !user.memberOf.surkl_id ?<div onClick={()=>this.addToSurkl(user, this.props.auth.user.mySurkl)}className="modalAction add-to-surkl-action">Add To Surkl</div> :
+			let addToSurklBtn = !user.memberOf ?<div onClick={()=>this.addToSurkl(user, this.props.auth.user.mySurkl)}className="modalAction add-to-surkl-action">Add To Surkl</div> :
 			'';
 			if(user._id!==this.props.auth.user._id){
 				let askAdminBtn = user.isAdmin ? <div className="profileModalPassAdmin">Ask for admin rights</div> :

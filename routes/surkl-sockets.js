@@ -50,7 +50,7 @@ module.exports = (io, socket, connectedUsers) => {
   })
   /////////////////////////////////////////////////////////////
   socket.on('created-surkl', (surkl, user)=>{
-    let msgs = []
+    let msgs = [];
     redClient.hset('surkls-msgs', surkl.surkl_id, JSON.stringify(msgs), (err, done) => {
       if (err) {
         io.to(socket.id).emit('videoChatError');
@@ -93,10 +93,10 @@ module.exports = (io, socket, connectedUsers) => {
     }).exec()
   })
   /////////////////////////////////////////////////////////////
-  socket.on('accept-surkl', (surkl, user)=>{
+  socket.on('accept-surkl', (notif, user)=>{
     let memOf = {
-      surkl_id: surkl.source.source_id,
-      surkl_name: surkl.source.name
+      surkl_id: notif.source.source_id,
+      name: notif.source.name
     }
     let userObj = {
       userName:user.userName,
@@ -106,13 +106,17 @@ module.exports = (io, socket, connectedUsers) => {
     
     User.updateOne({_id:user._id}, {
       $set:{memberOf:memOf},
-      $pull:{notifs: {_id:surkl._id}}
+      $pull:{notifs: {_id:notif._id}}
     }).exec()
-    Surkl.updateOne({_id:surkl.source.source_id}, 
-      {$push:{members:userObj,memberIds: userObj.user_id}}).exec()
+    Surkl.findByIdAndUpdate({_id:notif.source.source_id}, 
+      {$push:{members:userObj,memberIds: userObj.user_id}},{new:true},(err,up)=>{
+        io.to(socket.id).emit('accepted-surkl', up, notif._id)
+      })
+   
   })
   /////////////////////////////////////////////////////////////
   socket.on('add-to-surkl', (userToAdd, surkl)=>{
+    console.log(userToAdd, surkl)
     delete userToAdd.dms
     delete userToAdd.followers
     delete userToAdd.following

@@ -1,4 +1,4 @@
-import { SET_USER, GET_USER, USER_SURKL, SET_GUEST } from "actions/types";
+import { DESTROYED_SURKL, SET_USER, GET_USER, UPDATE_USER_MEMBERSHIP, SET_GUEST, NEW_SURKL_ADMIN, LEFT_SURKL  } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	isAuthenticated: false,
@@ -7,15 +7,13 @@ const initialState = {
 let dms = {};
 export default function(state = initialState, action) {
 	switch (action.type) {	
-		case USER_SURKL:
-		let clone = JSON.parse(JSON.stringify(state.user))
-		clone = clone!==null ? clone : {}
-		clone.mySurkl = action.payload
-		clone.mySurkl.surkl_id = action.payload._id
+		case UPDATE_USER_MEMBERSHIP:
+			let clone = JSON.parse(JSON.stringify(state))
+			clone.user.memberOf = action.payload
 			return {
 				...state,
-				user: clone
-			};
+				...clone
+			}	
 		case GET_USER:
 			if(action.payload.dms){
 				action.payload.dms.forEach(dm=>dms[dm.user_id] = dm)
@@ -36,6 +34,7 @@ export default function(state = initialState, action) {
 				isAuthenticated: !isEmpty(action.payload),
 				user: action.payload
 			}
+			
 		case SET_GUEST:
 			return {
 				...state,
@@ -43,6 +42,29 @@ export default function(state = initialState, action) {
 				user: {},
 				...action.payload
 			}
+		case DESTROYED_SURKL:
+			let clone2 = JSON.parse(JSON.stringify(state))
+			delete clone2.user.mySurkl
+			return {
+				...clone2,	
+			};
+		case LEFT_SURKL:
+			let clone3 = JSON.parse(JSON.stringify(state))
+			delete clone3.user.memberOf
+			return {
+				...clone3,	
+			};
+		case NEW_SURKL_ADMIN:
+			let clone4 = JSON.parse(JSON.stringify(state));
+			clone4.user.memberOf = {
+				bannerUrl: action.payload.bannerUrl,
+				name: action.payload.name,
+				surkl_id: action.payload._id
+			}
+			delete clone4.user.mySurkl
+			return {
+				...clone4
+			};
 		default:
 			return state;
 	}

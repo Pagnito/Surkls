@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
-import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp } from 'actions/actions';
+import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp, updateUserMem } from 'actions/actions';
 import { closeDMs, openDMs, updateDMs, updateMsgs, addToDMs, fetchMsgThreads} from 'actions/dm-actions';
-import { fetchNotifs, updateNotifs, addNotif } from 'actions/notif-actions';
+import { fetchNotifs, updateNotifs, addNotif, removeNotif } from 'actions/notif-actions';
 import { subCategories } from 'components/Session/Sub-comps/sub-categories';
 import './header.scss';
 class Header extends Component {
@@ -38,6 +38,15 @@ class Header extends Component {
 		})
 		this.socket.on('update-dms',(user)=>{
 			this.props.addToDMs(user)
+		})
+		this.socket.on('accepted-surkl',(surkl, notif_id)=>{
+			let mem = {
+				name: surkl.name,
+				surkl_id: surkl._id,
+				bannerUrl: surkl.bannerUrl
+			}
+			this.props.removeNotif(notif_id)
+			this.props.updateUserMem(mem)
 		})
 	}
 
@@ -195,7 +204,7 @@ class Header extends Component {
 			if(memberOf!== null && memberOf!==undefined){
 			  toMemberOf = Object.keys(memberOf).length>0 ? 
 				<Link to={`/surkl/${memberOf.surkl_id}`} className="menuItem">
-					<div className="pulloutMenuIcon" id="mySurklIcon" />{memberOf.surkl_name}
+					<div className="pulloutMenuIcon" id="mySurklIcon" />{memberOf.name}
 				</Link> : ''
 			} else {
 				toMemberOf = '';
@@ -857,7 +866,9 @@ Header.propTypes = {
 	notifs: PropTypes.object,
 	fetchNotifs: PropTypes.func,
 	updateNotifs: PropTypes.func,
-	addNotif: PropTypes.func
+	addNotif: PropTypes.func,
+	 removeNotif: PropTypes.func,
+	 updateUserMem: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -881,5 +892,7 @@ export default connect(stateToProps,
 		 fetchMsgThreads,
 		 fetchNotifs,
 		 updateNotifs,
-		 addNotif
+		 addNotif,
+		 removeNotif,
+		 updateUserMem
 	})(withRouter(Header));

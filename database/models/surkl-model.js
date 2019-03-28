@@ -9,8 +9,8 @@ const SurklSchema = new Schema({
   motto: String,
   currentTrack: String,
   admin: {
-    admin_id: String,
-    nameUrl: String,
+    user_id: String,
+    userName: String,
     avatarUrl: String
   },
   memberIds: [String],
