@@ -27,6 +27,11 @@ module.exports = (io, socket, initSession) => {
 				//////////////////////if this client joining or creating session///////////////////
 				if (session.creatingSession === false) {///////////joining session
 					//////////////////////if the room exists and isnt maxed out//////////////////////////
+					if(session.noCam){
+
+					} else {
+						
+					}
 					reciever = socket.id;	
 					socketInSession[socket.id] = session.sessionKey;
 					//console.log(reciever)
