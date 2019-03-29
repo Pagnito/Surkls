@@ -30,6 +30,22 @@ class Rooms extends Component {
 			//@TODO show error
 		}
 	};
+	joinSessionNoCam = (sessionKey, room) => {
+		let session = {
+			sessionKey: sessionKey,
+			room: room,
+			isAdmin: false,
+			notShareLink: true,
+			noCam: true
+		}
+		if (sessionKey.length >= 3) {
+			this.props.joinSession(session, () => {
+				this.props.history.push('/session/room='+sessionKey.toString());
+			});
+		} else {
+			//@TODO show error
+		}
+	};
 	renderRooms = () => {
 		return this.props.sessions.sessions.map((room,ind) => {
 			if(!room.maxedOut){
@@ -46,10 +62,10 @@ class Rooms extends Component {
 						
 						<div className="joins">
 							<div className="joins-left">
-								<div className="joins-title">Join as</div>
+								<div className="joins-title">Join</div>
 								<div className="join-btns">
-									<button type="button" className="join-btn"> Viewer</button>
-									<button onClick={() => this.joinSession(room.sessionKey, room.room)} type="button" className="join-btn">Participator</button>
+									<button onClick={() => this.joinSessionNoCam(room.sessionKey, room.room)} type="button" className="join-btn"> No Cam</button>
+									<button onClick={() => this.joinSession(room.sessionKey, room.room)} type="button" className="join-btn">With Cam</button>
 								</div>	
 							</div>
 							<div className="joins-right">
@@ -74,17 +90,31 @@ class Rooms extends Component {
 						backgroundRepeat:'no-repeat',
 						backgroundSize:'cover'}} key={ind} className="room">
 						<div className="room-header">
-						<div className="maxed-out-overlay"></div>
-							{room.room}
+							<div className="room-name"><div className="on-dot"></div>{room.room}</div>
 							<div className="room-category">{room.category.replace('+',' ')}</div>
 						</div>
 						<div className="joins">
-							<div className="joins-title">Join as</div>
-							<div className="join-btns">
-								<button type="button" className="join-btn"> Viewer</button>
-								<button  type="button" className="join-btn">Participator</button>
-							</div>			
+							
+						<div className="joins-left">
+								<div className="joins-title">Join</div>
+								<div className="join-btns">
+									<button type="button" className="join-btn">No Cam</button>
+									<button  type="button" className="join-btn">Maxed out</button>
+								</div>	
+							</div>
+							<div className="joins-right">
+								<div className="room-clients">
+										{room.clients.map((client,ind)=>{{
+											return <div key={ind} className="room-client" style={{
+												backgroundImage: `url(${client.avatarUrl})`,
+												backgroundPosition:'center',
+												backgroundRepeat:'no-repeat',
+												backgroundSize:'cover'
+										}}></div>}})}
+								</div>
+							</div>		
 						</div>
+						<div className="hover-overlay"></div>
 					</div>
 				);
 			}	

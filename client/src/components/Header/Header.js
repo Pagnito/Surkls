@@ -20,7 +20,8 @@ class Header extends Component {
 			roomName: '',
 			email: '',
 			password: '',
-			dm_msg: ''
+			dm_msg: '',
+			onlinePpl: 0,
 		};
 		this.menusClosed = true;
 		this.socketId = ''
@@ -47,6 +48,13 @@ class Header extends Component {
 			}
 			this.props.removeNotif(notif_id)
 			this.props.updateUserMem(mem)
+		})
+		this.socket.on('declined-surkl',(notif_id)=>{
+			this.props.removeNotif(notif_id)
+		
+		})
+		this.socket.on('ppl-online', (ppl)=>{
+			this.setState({onlinePpl: ppl})
 		})
 	}
 
@@ -182,7 +190,8 @@ class Header extends Component {
 				pulloutMenuVisible: true,
 				accMenuVisible: false,
 				notifMenuVisible: false,
-				sessionMenuVisible: false
+				sessionMenuVisible: false,
+				messagesMenuVisible:false
 			});
 		} else {
 			bg.classList.remove('overlayAction');
@@ -608,6 +617,9 @@ class Header extends Component {
 			this.props.updateDMs({notifCount: userRes.new_msg_count})	
 		});
 	};
+	rollTheBall = () =>{
+		 document.getElementById('jump-into-surf-btn').classList.add('moveOver');
+	}
 	signInMenu = () => {
 		let visibility = this.props.app.signInMenuVisible ? 'flex' : 'none';
 		return (
@@ -818,7 +830,9 @@ class Header extends Component {
 						{this.notifMenu()}
 						{this.createSessionMenu()}
 						{this.messagesMenu()}
-						<div onClick={this.renderCreateSessionMenu} id="startSessionIcon" />
+						{/* <div id="online-number">{this.state.onlinePpl+' People online'}</div> */}
+						<div onClick={this.rollTheBall} id="jump-into-surf-btn"></div>
+						<div onClick={this.renderCreateSessionMenu} id="startSessionIcon" />				
 						<div onClick={this.renderMessagesMenu} id="messageIcon" >
 							{this.props.dms.notifCount> 0 ? <div className="red-alert-dot">{this.props.dms.notifCount}</div>: ''}
 						</div>

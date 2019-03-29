@@ -120,8 +120,7 @@ class Dashboard extends Component {
 				dm_user.thread_id = this.props.auth.user.dms[dm_user.user_id].thread_id;
 			}
 			delete dm_user._id;
-			let userTo = this.props.dms.messangers[dm_user.user_id] ? this.props.dms.messangers[dm_user.user_id] : dm_user
-			this.props.openDMs(userTo, (user) => {
+			this.props.openDMs(dm_user, (user) => {
 				this.socket.emit('clear-msg-notifs', user);
 			});
 		}
@@ -228,18 +227,26 @@ class Dashboard extends Component {
 	}
 	displayMsgs = () => {
 		return this.props.surkl.msgs.map((msg, ind) => {
+			let date = new Date(msg.date);
+			let locale = date.toLocaleDateString();
+			let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+			let time = date.getHours() + ':' + minutes;
+			let fullDate = locale + ' ' + time;
 			let url = msg.avatarUrl ? msg.avatarUrl : '/assets/whitehat.jpg';
 			return (
-				<div key={ind} className="surkl-chat-msg">
-					<img data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
-					<div className="surkl-chat-HeaderNmsg">
-						<div className="surkl-chat-MsgUserInfo">
-							<div className="surkl-chat-MsgName">{msg.userName}</div>
-							<div className="surkl-chat-MsgDate">{msg.date}</div>
+				<div key={ind} className="surkl-chat-msg-wrap">
+					<div className="surkl-chat-msg">
+						<img data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
+						<div className="surkl-chat-HeaderNmsg">
+							<div className="surkl-chat-MsgUserInfo">
+								<div className="surkl-chat-MsgName">{msg.userName}</div>
+								<div className="surkl-chat-MsgDate">{fullDate}</div>
+							</div>
+							<div className="surkl-chat-MsgText">{msg.msg}</div>
 						</div>
-						<div className="surkl-chat-MsgText">{msg.msg}</div>
 					</div>
 				</div>
+				
 			);
 		});
 	};

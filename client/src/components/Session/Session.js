@@ -302,7 +302,7 @@ class Session extends Component {
 		currentConnection.onicecandidate = this.handleIceCandidate;
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-
+		
 		if (this.track[0].kind === 'audio') {
 			this.track.reverse();
 		}
@@ -580,37 +580,41 @@ class Session extends Component {
 			this.socket.emit('clear-notifs', user)
 		});
 	}
-	showProfileModal = (e) => {
-		let modal = e.target.nextSibling
-		if(modal!==null){
-			if(modal.style.display==='block'){
-				modal.style.display = 'none'
-			} else {
-				modal.style.display = 'block'
-			}
-		}
-	}
+	
 	addToSurkl = (user, surkl) =>{
 		surkl.admin = this.props.auth.user._id;
 		surkl.adminName = this.props.auth.user.userName
 		surkl.adminAvatar = this.props.auth.user.avatarUrl
 		this.socket.emit('add-to-surkl', user, surkl)
+		document.getElementById('feedback-ani-1').style.display = 'block';
+		setTimeout(()=>{
+			document.getElementById('feedback-ani-1').style.display = 'none';
+		},1500)
 	}
 	renderProfileModal = (user) =>{
 		if(!user.guest){
-			let addToSurklBtn = !user.memberOf ?<div onClick={()=>this.addToSurkl(user, this.props.auth.user.mySurkl)}className="modalAction add-to-surkl-action">Add To Surkl</div> :
+			let addToSurklBtn = !user.memberOf ?
+				<div onClick={()=>this.addToSurkl(user, this.props.auth.user.mySurkl)}className="modalAction add-to-surkl-action">
+					<div id="feedback-ani-1">Sent</div>
+					Add To Surkl
+				</div> :
 			'';
 			if(user._id!==this.props.auth.user._id){
 				let askAdminBtn = user.isAdmin ? <div className="profileModalPassAdmin">Ask for admin rights</div> :
 				<div className="profileModalPassAdmin">Give admin rights</div>
 				askAdminBtn = user._id===this.props.auth.user._id ? '' : askAdminBtn
 				return (
-					<div className="profileModal">
+					<div  className="profileModal">
 					<div className="profileBanner">
+					<div className="prof-modal-top-arrow-wrap">
+						<div className="prof-modal-top-arrow"></div>
+					</div>
 						<div style={{backgroundImage:`url(${user.avatarUrl ? user.avatarUrl : '/assets/whitehat.jpg'})`}} className="profileImg"></div>
 					</div>       
 							<div className="profileModalUsername">{user.userName}</div>
-							<div className="profileModalDesc">{user.description}</div>		
+							<div className="profileModalQuote">{'"'+user.quote+'"'}</div>	
+							<div className="profileModalOwnerOf">{user.mySurkl ? 'Owner of '+user.mySurkl.name : ''}</div>	
+							<div className="profileModalMemberOf">{user.memberOf ? 'Member of '+user.memberOf.name : ''}</div>	
 							<div className="profileModalActions">
 								{addToSurklBtn}
 								<div onClick={()=>this.openDMs(user)} data-user={JSON.stringify(user)}  className="modalAction send-msg-action">Send a Message</div>
@@ -628,7 +632,7 @@ class Session extends Component {
 				if(client.isAdmin){
 					return(
 						<div className="clientImgRightWrap" key={ind}>								
-								<img onClick={this.showProfileModal} style={{
+								<img style={{
 									border:'2px solid #FECC44',
 							 		boxSizing:'border-box'}} src={url} className="clientSquareAv" />
 								{	this.renderProfileModal(client)}
@@ -638,7 +642,7 @@ class Session extends Component {
 				} else {
 					return (
 					<div className="clientImgRightWrap" key={ind}>
-					 <img key={ind}  onClick={this.showProfileModal} src={url} className="clientSquareAv" />
+					 <img key={ind}  src={url} className="clientSquareAv" />
 					 {this.renderProfileModal(client)}
 					</div>
 					)
@@ -745,34 +749,41 @@ class Session extends Component {
 		}
 	};
 	startStream = (videoEl) => {
-		return new Promise((resolve, reject) => {
-			if (videoEl.srcObject === null) {
-				navigator.mediaDevices
-					.getUserMedia({
-						audio: {
-							deviceId: this.props.session.mic ? this.props.session.mic : 'default'
-						},
-						video: {
-							width: 250,
-							height: 250,
-							deviceId: this.props.session.cam ? this.props.session.cam : 'default'
-						}
-					})
-					.then((stream) => {
-						videoEl.srcObject = stream;
-						//console.log(videoEl.srcObject)
-						this.stream = stream;
-						stream.getTracks().forEach((track) => {
-							this.track.push(track);
-							//console.log('TRACK', track);
-						});
-						resolve();
-					});
-			} else {
-				reject('Nop');
-			}
-		});
-	};
+		
+			return new Promise((resolve, reject) => {
+				if(!this.props.session.noCam){
+					if (videoEl.srcObject === null) {
+						navigator.mediaDevices
+							.getUserMedia({
+								audio: {
+									deviceId: this.props.session.mic ? this.props.session.mic : 'default'
+								},
+								video: {
+									width: 250,
+									height: 250,
+									deviceId: this.props.session.cam ? this.props.session.cam : 'default'
+								}
+							})
+							.then((stream) => {
+								videoEl.srcObject = stream;
+								//console.log(videoEl.srcObject)
+								this.stream = stream;
+								stream.getTracks().forEach((track) => {
+									this.track.push(track);
+									//console.log('TRACK', track);
+								});
+								resolve();
+							});
+					} else {
+						reject('Nop');
+					}
+				} else {
+					resolve()
+				}
+			
+			});
+		}	
+	
 	openGoogleWindow = () =>{
 		window.open('https://google.com/', 'mywin', 'width=860,height=620,screenX=950,right=50,screenY=50,top=50,status=yes');
 	}

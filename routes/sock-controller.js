@@ -27,6 +27,7 @@ module.exports = (io, app) => {
       connectedUsers[user._id] = user;
       delete connectedUsers['undefined'];
       console.log('CONNECTED USERS', Object.keys(connectedUsers));
+      socket.emit('ppl-online', Object.keys(connectedUsers).length)
     });
      notifs(io, socket, connectedUsers)
      dms(io, socket, connectedUsers)

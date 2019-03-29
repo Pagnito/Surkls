@@ -47,7 +47,7 @@ module.exports = (io, socket, initSession) => {
 										sessionObj.admin = socket.id;
 									}
 									sessionObj.clients.push(spliceObj(client,
-									 ['socketId', 'userName', 'email', 'isAdmin','avatarUrl', 'memberOf', '_id', 'guest']));
+									 ['quote','socketId', 'userName', 'email', 'isAdmin','avatarUrl', 'memberOf', 'mySurkl', '_id', 'guest']));
 									if (sessionObj.clients.length === sessionObj.maxMembers) {
 										sessionObj.maxedOut = true;
 									}

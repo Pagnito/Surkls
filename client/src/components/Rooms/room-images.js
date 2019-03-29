@@ -11,6 +11,7 @@ let roomImageUrls = {
   hodgetwins: '/assets/room_images/hodgetwins.jpg',
   joe_rogan: '/assets/room_images/joe_rogan.jpg',
   music: '/assets/room_images/music.jpg',
+  movies: '/assets/room_images/entertainment.jpg',
   politics: '/assets/room_images/politics.png',
   random: '/assets/room_images/random.jpg',
   spirituality: '/assets/room_images/spirituality.jpg',

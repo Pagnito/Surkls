@@ -91,6 +91,7 @@ module.exports = (io, socket, connectedUsers) => {
     User.updateOne({_id:user_id}, {
       $pull:{notifs: {_id:notif_id}}
     }).exec()
+    io.to(socket.id).emit('declined-surkl', notif_id)
   })
   /////////////////////////////////////////////////////////////
   socket.on('accept-surkl', (notif, user)=>{

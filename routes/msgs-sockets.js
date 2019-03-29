@@ -15,18 +15,15 @@ module.exports = (io, socket, connectedUsers) => {
 		}
 	});
 
-	/* socket.on('setup', (user) => {
-		user.socketId = socket.id;
-		connectedUsers[user._id] = user;
-		console.log('CONNECTED USERS', Object.keys(connectedUsers));
-  }); */
   socket.on('closed-dm-widget', (user)=>{
     delete msngr_widget[user._id];
   });
   socket.on('clear-msg-notifs', (user, thread_id)=>{
-    ////this fire after open msngr widget
+		////this fire after open msngr widget
+		//console.log('OPEN WIDGET')
+		console.log(user)
     user.socketId = socket.id;
-    msngr_widget[user._id] = user;
+    msngr_widget[user.user_id || user._id] = socket.id;
     if(thread_id){
       User.updateOne({_id:user._id,'dms.thread_id':thread_id} , {
         $set:{new_msg_count:0,'dms.$.notif': false }
@@ -54,7 +51,8 @@ module.exports = (io, socket, connectedUsers) => {
         io.to(socket.id).emit('msg', msg);
       } else {
         io.to(socket.id).emit('msg', msg)
-      }
+			}
+			console.log(msngr_widget, msg.receiver)
       if(!msngr_widget[msg.receiver.user_id]){
         User.updateOne({_id:msg.receiver.user_id, 'dms.thread_id': msg._id}, {
           $inc:{new_msg_count:1},
