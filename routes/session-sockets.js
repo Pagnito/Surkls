@@ -27,17 +27,65 @@ module.exports = (io, socket, initSession) => {
 				//////////////////////if this client joining or creating session///////////////////
 				if (session.creatingSession === false) {///////////joining session
 					//////////////////////if the room exists and isnt maxed out//////////////////////////
-					if(session.noCam){
-
-					} else {
-						
-					}
 					reciever = socket.id;	
 					socketInSession[socket.id] = session.sessionKey;
-					//console.log(reciever)
 					connecting = true;
+					if(session.noCam){
+						redClient.hexists('rooms', session.sessionKey, (err, done) => {
+							if (err) {console.log(err)}
+							if (done === 1) {
+								redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
+									if (err){console.log(err)}							
+									let sessionObj = JSON.parse(sessionStr);
+									if (sessionObj.viewers.length < sessionObj.maxViewers) {
+										
+										socket.join(session.sessionKey);
+										client = Object.assign({ socketId: socket.id }, session.user);
+										if(sessionObj.clients.length===0 && sessionObj.viewers.length===0){
+											client.isAdmin = true;
+											sessionObj.admin = socket.id;
+										}
+										sessionObj.viewers.push(spliceObj(client,
+										 ['quote','socketId', 'userName', 'email', 'isAdmin','avatarUrl', 'memberOf', 'mySurkl', '_id', 'guest']));
+										if (sessionObj.clients.length === sessionObj.maxMembers) {
+											sessionObj.maxedOut = true;
+										}
+										//console.log(sessionObj)
+										if (sessionObj.viewers.length === sessionObj.maxViewers) {
+											sessionObj.maxedOutViewers = true;
+										}
+										delete sessionObj.isAdmin
+										redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
+											redClient.hget('videoChatMsgs', session.sessionKey,(err,msgs)=>{
+												if(err)console.log(err)
+												io.in(session.sessionKey).emit('session',
+												{clients:sessionObj.clients,
+													viewers: sessionObj.viewers,
+													activePlatform: sessionObj.activePlatform,
+													videoId: sessionObj.videoId,
+													playing: sessionObj.playing,
+													requestingTime: sessionObj.requestingTime,
+													maxMembers: sessionObj.maxMembers,
+													maxViewers: sessionObj.maxViewers,
+													maxedOut: sessionObj.maxedOut,
+													maxedOutViewers: sessionObj.maxedOutViewers,
+													category: sessionObj.category,
+													msgs: JSON.parse(msgs)
+												});
+											})									
+											socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		
+										});
+									}
+								});
+							}
+						})
+					} else {
+					//reciever = socket.id;	
+					//socketInSession[socket.id] = session.sessionKey;
+					//console.log(reciever)
+					//connecting = true;
 					redClient.hexists('rooms', session.sessionKey, (err, done) => {
-						if (err) {io.to(socket.id).emit('roomEntranceError', err)}
+						if (err) {console.log(err)}
 
 						if (done === 1) {
 							redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
@@ -62,17 +110,19 @@ module.exports = (io, socket, initSession) => {
 											if(err)console.log(err)
 											io.in(session.sessionKey).emit('session',
 											{clients:sessionObj.clients,
+												viewers: sessionObj.viewers,
 												activePlatform: sessionObj.activePlatform,
 												videoId: sessionObj.videoId,
 												playing: sessionObj.playing,
 												requestingTime: sessionObj.requestingTime,
 												maxMembers: sessionObj.maxMembers,
 												maxedOut: sessionObj.maxedOut,
+												maxViewers: sessionObj.maxViewers,
+												maxedOutViewers: sessionObj.maxedOutViewers,
 												category: sessionObj.category,
 												msgs: JSON.parse(msgs)
 											});
-										})
-										
+										})									
 										socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		
 									});
 								}
@@ -81,7 +131,7 @@ module.exports = (io, socket, initSession) => {
 							io.to(socket.id).emit('sessionExpired');
 						}
 					});
-				
+					}					
 				} else {//////////creating session//////////
 					if (session.sessionKey !== undefined && session.sessionKey !== 'undefined') {
 							socketInSession[socket.id] = session.sessionKey;
@@ -97,10 +147,12 @@ module.exports = (io, socket, initSession) => {
 										activePlatform: session.activePlatform,
 										playState: session.playState,
 										clients: [ client ],
+										viewers: [],
 										category: session.category,
 										subCategory: session.subCategory,
 										room: session.room,
 										maxMembers: session.maxMembers,
+										maxViewers: session.maxViewers,
 										maxedOut: false
 									};
 									
@@ -273,6 +325,22 @@ module.exports = (io, socket, initSession) => {
 								redClient.hget('rooms', socketInSession[socket.id], (err, sessionStr)=>{
 									if(err){console.log(err)}
 									let sessionObj = JSON.parse(sessionStr);
+									sessionObj.viewers.forEach((loopViewer, ind) => {
+										console.log(loopViewer)
+										if (loopViewer.socketId === socket.id) {
+											sessionObj.viewers.splice(ind, 1)
+											//////////make new admin/////////
+											if (loopViewer.isAdmin && sessionObj.clients.length > 0) {
+												sessionObj.clients[0].isAdmin = true;
+												sessionObj.admin = sessionObj.clients[0].socketId;
+												io.to(sessionObj.clients[0].socketId).emit('adminLeftImAdminNow');									
+											} else if(loopViewer.isAdmin && sessionObj.viewers.length > 0) {
+												sessionObj.viewers[0].isAdmin = true;
+												sessionObj.admin = sessionObj.viewers[0].socketId;
+												io.to(sessionObj.viewers[0].socketId).emit('adminLeftImAdminNow');
+											}
+										}
+									});
 									sessionObj.clients.forEach((loopClient, ind) => {
 										if (loopClient.socketId === socket.id) {
 											sessionObj.clients.splice(ind, 1)
@@ -286,7 +354,7 @@ module.exports = (io, socket, initSession) => {
 									});
 									socket.in(socketInSession[socket.id]).emit('signal', { type: 'clientLeft', sessionObj: sessionObj }, socket.id);
 									console.log(sessionObj.clients.length,' clients left in the room',sessionObj.room);
-									
+									console.log(sessionObj.viewers.length,' viewers left in the room',sessionObj.room);
 									if (sessionObj.clients.length < sessionObj.maxMembers) {
 											sessionObj.maxedOut = false;
 											redClient.hset('rooms', socketInSession[socket.id], JSON.stringify(sessionObj));
@@ -313,6 +381,22 @@ module.exports = (io, socket, initSession) => {
 								redClient.hget('rooms', session.sessionKey, (err, sessionStr)=>{
 									if(err){console.log(err)}
 									let sessionObj = JSON.parse(sessionStr);
+									sessionObj.viewers.forEach((loopViewer, ind) => {
+										console.log(loopViewer)
+										if (loopViewer.socketId === socket.id) {
+											sessionObj.viewers.splice(ind, 1)
+											//////////make new admin/////////
+											if (loopViewer.isAdmin && sessionObj.clients.length > 0) {
+												sessionObj.clients[0].isAdmin = true;
+												sessionObj.admin = sessionObj.clients[0].socketId;
+												io.to(sessionObj.clients[0].socketId).emit('adminLeftImAdminNow');									
+											} else if(loopViewer.isAdmin && sessionObj.viewers.length > 0) {
+												sessionObj.viewers[0].isAdmin = true;
+												sessionObj.admin = sessionObj.viewers[0].socketId;
+												io.to(sessionObj.viewers[0].socketId).emit('adminLeftImAdminNow');
+											}
+										}
+									});
 									sessionObj.clients.forEach((loopClient, ind) => {
 										if (loopClient.socketId === socket.id) {
 											sessionObj.clients.splice(ind, 1);
@@ -326,7 +410,7 @@ module.exports = (io, socket, initSession) => {
 									});
 									socket.in(session.sessionKey).emit('signal', { type: 'clientLeft', sessionObj: sessionObj }, socket.id);
 									console.log(sessionObj.clients.length,' clients left in the room',sessionObj.room);
-									
+									console.log(sessionObj.viewers.length,' viewers left in the room',sessionObj.room);
 									if (sessionObj.clients.length < sessionObj.maxMembers) {
 											sessionObj.maxedOut = false;
 											redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj));

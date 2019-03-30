@@ -1,0 +1,112 @@
+.simpleProfileModal-simple:hover {
+  display: block;
+}
+.simpleProfileModal {
+  margin-bottom: 20px;
+  z-index: 1;
+  width:220px;
+  border-radius: 5px;
+  color:black;
+  position: absolute;
+  background: #DDE4E4;
+  font-family: 'Comfortaa';
+  display:none;
+  .simpleProfileBanner {
+    width:100%;
+    height:110px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-image: url('/assets/surkls_landing.png');
+    background-size: cover;
+    background-repeat: no-repeat; 
+    position: relative;
+    .simple-prof-modal-top-arrow-wrap {
+      height:30px;
+      width:100%;
+      margin-top: -30px;
+      position: absolute;
+      display: flex;
+      align-items: flex-end;
+      .simple-prof-modal-top-arrow {
+        -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+        clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+        background-color:#C7A035; 
+        width:20px;
+        height:20px;
+        margin-left: 181px;
+        align-self: flex-end;
+        margin-bottom: -2px;
+        border-radius: 2px;
+      }
+    }
+    .simpleProfileImg {
+      position: absolute;
+      left:20px;
+      bottom:-20px;
+      width:50px;
+      height:50px;
+      border-radius:50px;
+      border: 3px solid #DDE4E4; 
+      background-size: cover; 
+    } 
+  }
+  .simpleProfileModalUsername {
+    margin:10px;
+    margin-top: 25px;
+  }
+  .simpleProfileModalQuote {
+    font-family: 'Josefin sans';
+    font-size: 15px;
+    margin-left: 15px;
+  }
+  .simpleProfileModalOwnerOf {
+    font-family: 'Comfortaa';
+    font-size:13px;
+    margin-left: 10px;
+    margin-top:10px;
+  }
+  .simpleProfileModalMemberOf {
+    margin-top:10px;
+    font-family: 'Comfortaa';
+    font-size:13px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+  }
+  .simpleProfileModalActions {
+    color: rgba(0,0,0,.7);
+    font-size: 11px;
+    width:100%;
+    display:flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    padding:5px;
+ 
+    .simpleModalAction:hover {
+      background: #FECC44;
+      color: #282828;
+    }
+    .simple-send-msg-action {
+      width:100%;
+      display: flex;
+      justify-content: center;
+    }
+    
+    .simpleModalAction {
+      cursor: pointer;
+      border-radius:5px;
+      padding:5px;
+      box-sizing: border-box;
+      border: 1px solid rgba(0,0,0,.7);
+    }
+  }
+}
+@keyframes ani1 {
+  95% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+}

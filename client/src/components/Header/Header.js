@@ -14,7 +14,7 @@ class Header extends Component {
 		super(props);
 		this.state = {
 			maxMembers: 3,
-			maxViewers: 10,
+			maxViewers: 5,
 			category: '',
 			subCategory: '',
 			roomName: '',
@@ -238,9 +238,6 @@ class Header extends Component {
 					<div onClick={this.renderPulloutMenu} id="menuBarsIcon2" />
 					<img id="surklsTitle" src="/assets/surkls-title2.png" />
 				</div>
-				<Link to="/" className="menuItem">
-					<div className="pulloutMenuIcon" id="surferIcon" />Surfing
-				</Link>
 				{mySurklBtn}
 				{toMemberOf}
 				<Link to="/" className="menuItem">
@@ -574,7 +571,7 @@ class Header extends Component {
 						max="3"
 					/>
 				</div>
-			{/* 	<div className="menuConfig">
+				<div className="menuConfig">
 					Max Viewers
 					<input
 						id="maxViewers"
@@ -583,10 +580,10 @@ class Header extends Component {
 						className="sessionConfig"
 						type="number"
 						name="maxViewers"
-						min="1"
-						max="10"
+						min="0"
+						max="5"
 					/>
-				</div> */}
+				</div>
 
 				<div className="audioInputs menuConfig">Audio inputs</div>
 				<select id="micSelect" className="menuSelect">
@@ -756,6 +753,7 @@ class Header extends Component {
 				room: this.state.roomName,
 				sessionKey: sessionKey,
 				maxMembers: this.state.maxMembers,
+				maxViewers: this.state.maxViewers,
 				category: this.state.category,
 				subCategory: this.state.subCategory,
 				isAdmin: true,

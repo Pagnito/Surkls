@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { getSessions, joinSession, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
 import room_images from './room-images';
+import ProfileModal from '../smalls/profile-modal-simple';
 import './rooms.scss';
 import { connect } from 'react-redux';
 
@@ -54,7 +55,7 @@ class Rooms extends Component {
 						backgroundPosition:'center',
 						backgroundRepeat:'no-repeat',
 						backgroundSize:'cover'}} key={ind} className="room">
-						
+						<div className="hover-overlay"></div>
 						<div className="room-header">
 							<div className="room-name"><div className="on-dot"></div>{room.room}</div>
 							<div className="room-category">{room.category.replace('+',' ')}</div>
@@ -69,18 +70,29 @@ class Rooms extends Component {
 								</div>	
 							</div>
 							<div className="joins-right">
-								<div className="room-clients">
+							<div className="room-clients">
 										{room.clients.map((client,ind)=>{{
 											return <div key={ind} className="room-client" style={{
 												backgroundImage: `url(${client.avatarUrl})`,
 												backgroundPosition:'center',
 												backgroundRepeat:'no-repeat',
 												backgroundSize:'cover'
-										}}></div>}})}
+										}}><ProfileModal id={'c-modal'+ind} position={{right:'-15px', top:'45px'}} user={client} /></div>}})}
 								</div>
+							<div className="room-viewers">
+										{room.viewers.map((viewer,ind)=>{{
+											return <div key={ind} className="room-viewer" style={{
+												backgroundImage: `url(${viewer.avatarUrl})`,
+												backgroundPosition:'center',
+												backgroundRepeat:'no-repeat',
+												backgroundSize:'cover',
+												marginTop:'7px'
+										}}><ProfileModal id={'v-modal'+ind} position={{right:'-20px', top:'40px'}} user={viewer} /></div>}})}
+								</div>
+							
 							</div>						
 						</div>
-						<div className="hover-overlay"></div>
+						
 					</div>
 				);
 			}	else {

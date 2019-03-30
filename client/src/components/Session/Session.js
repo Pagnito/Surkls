@@ -56,7 +56,8 @@ class Session extends Component {
 		this.sessionSignalsSetup = false;
 		this.sessionActionSignalsSetup=false;
 		this.sessionObjSetup=false;
-		this.imNotTheNew = false;
+		this.imViewer;
+		this.forViewerStreams = [];
 		this.stream;
 		this.track = [];
 		this.remoteClients = [];
@@ -92,6 +93,7 @@ class Session extends Component {
 				this.props.newAdmin();
 			});
 			this.socket.on('session-data', (sessionData) => {
+				console.log('UPDATED SESS', sessionData)
 				this.props.updateSession({youtubeList:sessionData});
 			});
 			this.socket.on('sessionExpired', () => {
@@ -184,7 +186,6 @@ class Session extends Component {
 		this.setState({ errors: errors });
 	};
 	handleRemoteStreamAdded = (event) => {
-		console.log('REMOTE', event.streams);
 		if (this.remoteAdded.added === false) {
 			this.remoteAdded.added = true;
 			let client = this.remoteClients[this.remoteClients.length - 1];
@@ -201,7 +202,7 @@ class Session extends Component {
 		if (this.remoteAdded.added === true && this.remoteAdded.id === event.streams[0].id) {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
-			console.log('stream')
+			console.log('REMOTE', event.streams);
 			//this.socket.emit('signal', {type:'streaming'})
 		}
 	};
@@ -220,16 +221,14 @@ class Session extends Component {
 			};
 			this.socket.emit('signal', candidate);
 		} else {
-			console.log('End of candidates.');
-			//if (this.imNotTheNew == false) {
+			console.log('End of candidates.');			
 			this.socket.emit('signal', { type: 'connected' });
-			//}
 		}
 	};
 	createOffer = (peer, cb) => {
 		console.log("CREATING OFFER")
 		peer
-			.createOffer()
+			.createOffer({offerToReceiveVideo: true, offerToReceiveAudio: true,})
 			.then(
 				(offer) => {
 					return peer
@@ -364,14 +363,32 @@ class Session extends Component {
 			room: '',
 			admin: '',
 			clients: [],
+			viewers: [],
 			exists: false,
 			sessionKey: '',
 			isAdmin: false,
 			creatingSession: false,
 			videoId: '',
-			msgs: []
+			msgs: [],
+			noCam: false,
 		})
 	}
+/* 	joinAsViewer = () =>{
+		this.alreadyStarted = true;
+		let session = JSON.parse(JSON.stringify(this.props.session))
+		session.inSession = true;
+		session.sessionKey = this.props.match.params.room.replace('room=', '');
+		session.creatingSession = false;
+		if(this.props.auth.user.userName){
+			session.user = this.props.auth.user;
+		} else {				
+			session.user = this.props.auth.guest;
+		}
+		this.socket.emit('viewer-joining', session);
+		this.socket.on('viewer-signal', (data, remoteId)=>{
+
+		})
+	} */
 	startOrJoin = () => {
 		this.startStream(document.getElementById('streamOfMe'))
 			.then(() => {
@@ -391,13 +408,12 @@ class Session extends Component {
 				} else {				
 					session.user = this.props.auth.guest;
 				}
-				/* if(this.sessionSignalsSetup===false){
-					this.sessionSignalsSetup=true */
-					this.socket.emit('createOrJoin', session);
+				
+					this.socket.emit('createOrJoin', session);		
 					this.socket.on('signal', (data, remoteId) => {
 						switch (data.type) {
 							case 'newJoin':
-							console.log("NEW JOIN")
+								console.log("NEW JOIN")
 								this.createPeerRtc(remoteId, (rtc) => {
 									this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
 									this.remoteClients.push(remoteId);
@@ -417,7 +433,7 @@ class Session extends Component {
 								break;
 							case 'answer':
 								console.log(data.type, remoteId)
-								this.imNotTheNew = true;
+								console.log(data)
 								this.rtcs[remoteId]
 									.setRemoteDescription(new RTCSessionDescription(data))
 									.catch(this.handleRemoteDescError);
@@ -439,7 +455,6 @@ class Session extends Component {
 								break;
 						}
 					});
-				//}
 			})
 			.catch((err) => console.log(err));
 	};
@@ -653,7 +668,31 @@ class Session extends Component {
 			});
 		}
 	};
-
+	updateViewerList = () => {
+		if (this.props.session.viewers !== undefined && this.props.session.viewers.length > 0) {
+			return this.props.session.viewers.map((viewer, ind) => {
+				let url = viewer.avatarUrl ? viewer.avatarUrl : '/assets/whitehat.jpg'
+				if(viewer.isAdmin){
+					return(
+						<div className="viewerImgRightWrap" key={ind}>								
+								<img style={{
+									border:'2px solid #FECC44',
+							 		boxSizing:'border-box'}} src={url} className="viewerSquareAv" />
+								{	this.renderProfileModal(viewer)}
+						</div>
+					
+					)
+				} else {
+					return (
+					<div className="viewerImgRightWrap" key={ind}>
+					 <img key={ind}  src={url} className="viewerSquareAv" />
+					 {this.renderProfileModal(viewer)}
+					</div>
+					)
+				}		
+			});
+		}
+	};
 	sendMsg = (msgText) => {
 			let date = new Date(Date.now());
 			let locale = date.toLocaleDateString();
@@ -932,6 +971,7 @@ class Session extends Component {
 					</div>
 					<div id="sessionRightAside">
 						<div id="whosInRoom">{this.updateClientList()}</div>
+						<div id="viewersInRoom">{this.updateViewerList()}</div>
 					</div>
 				</div>
 			);
