@@ -36,7 +36,7 @@
 		flex-direction: column;
 		box-sizing: border-box;
 		background-color:black;
-		#videoStreams::-webkit-scrollbar {
+	/* 	#videoStreams::-webkit-scrollbar {
 			width:10px;
 		}
 		#videoStreams::-webkit-scrollbar-thumb {
@@ -45,7 +45,7 @@
 		}
 		#videoStreams::-webkit-scrollbar-corner {
 			background: transparent;
-		}
+		} */
 		#videoStreams {
 			height: 505px;
 			width: 100%;
@@ -56,6 +56,7 @@
 			flex-direction: column;
 			#streamsErrorModal {
 				position: absolute;
+				align-self: flex-start;
 				left:0px;
 				right: 0px;
 				display: none;

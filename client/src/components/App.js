@@ -12,7 +12,6 @@ import Dashboard from 'components/Dashboard/Dashboard';
 import Session from 'components/Session/Session';
 import Rooms from 'components/Rooms/Rooms';
 import Header from 'components/Header/Header';
-import Profile from 'components/Profile/Profile';
 import CreateSurkl from 'components/Create-surkl/Create-surkl';
 import Settings from 'components/Settings/Settings'
 /*const Loading = () => Loader;
@@ -90,7 +89,6 @@ class App extends Component {
 			return (
 				<Provider store={Store}>	
 					<Route exact path="/settings" component={Settings} />
-					<Route exact path="/profile" component={Profile} />
 					<Route 
 						exact path="/signup" render={(props)=><SignUp {...props} socket={this.socket}/>}   />
 					<Route 

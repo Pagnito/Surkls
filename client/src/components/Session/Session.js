@@ -52,6 +52,13 @@ class Session extends Component {
 				}
 			]
 		};
+		this.dcOptions = {//dataChannelOptions
+			ordered: false, //no guaranteed delivery, unreliable but faster
+			maxPacketLifeTime: 1000, //milliseconds
+		};
+		this.recordedStream=[];	
+		this.mediaRecorder
+		this.dataChannel;
 		this.alreadyStarted = false;
 		this.sessionSignalsSetup = false;
 		this.sessionActionSignalsSetup=false;
@@ -93,7 +100,6 @@ class Session extends Component {
 				this.props.newAdmin();
 			});
 			this.socket.on('session-data', (sessionData) => {
-				console.log('UPDATED SESS', sessionData)
 				this.props.updateSession({youtubeList:sessionData});
 			});
 			this.socket.on('sessionExpired', () => {
@@ -186,6 +192,7 @@ class Session extends Component {
 		this.setState({ errors: errors });
 	};
 	handleRemoteStreamAdded = (event) => {
+		console.log(typeof event.streams[0], event.streams[0])
 		if (this.remoteAdded.added === false) {
 			this.remoteAdded.added = true;
 			let client = this.remoteClients[this.remoteClients.length - 1];
@@ -203,14 +210,16 @@ class Session extends Component {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
 			console.log('REMOTE', event.streams);
-			//this.socket.emit('signal', {type:'streaming'})
+			if(this.props.session.noCam && this.props.session.viewers.length===1){
+				this.record(event.streams[0])
+			}
 		}
 	};
-
+	
 	handleRemoteStreamRemoved = (event) => {
 		console.log('removed', event);
 	};
-	handleIceCandidate = (event) => {
+	handleIceCandidate = (event, remoteId) => {
 		if (event.candidate) {
 			//console.log(event.candidate)
 			let candidate = {
@@ -219,9 +228,9 @@ class Session extends Component {
 				id: event.candidate.sdpMid,
 				candidate: event.candidate.candidate
 			};
-			this.socket.emit('signal', candidate);
+			this.socket.emit('signal', candidate, remoteId);
 		} else {
-			console.log('End of candidates.');			
+			console.log('End of candidates.');		
 			this.socket.emit('signal', { type: 'connected' });
 		}
 	};
@@ -291,14 +300,14 @@ class Session extends Component {
 				streamList.removeChild(streamWrap);
 			}
 		}
-		this.props.updateSession({ clients: sessionObj.clients });
+		this.props.updateSession({ clients: sessionObj.clients, viewers: sessionObj.viewers });
 
 		delete this.rtcs[remoteId];
 	};
 	createPeerRtc = (remoteId, cb) => {
 		this.rtcs[remoteId] = new RTCPeerConnection(this.stunConfig);
 		let currentConnection = this.rtcs[remoteId];
-		currentConnection.onicecandidate = this.handleIceCandidate;
+		currentConnection.onicecandidate = (e)=>this.handleIceCandidate(e,remoteId);
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
 		if(!this.props.session.noCam){
@@ -313,7 +322,66 @@ class Session extends Component {
 			cb(currentConnection);
 		}
 	};
+	createViewerPeerRtc = (remoteId, cb) => {
+		console.log('WE IN HERE')
+		this.rtcs[remoteId] = new RTCPeerConnection(this.stunConfig);
+		let currentConnection = this.rtcs[remoteId];
+		currentConnection.onicecandidate = this.handleIceCandidate;
+		currentConnection.ontrack = this.handleRemoteStreamAdded;
+		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
+		
+	/* 	this.dataChannel = this.rtcs[remoteId].createDataChannel('viewer-stream', this.dcOptions);
+		console.log(this.dataChannel) */
+		/* this.dataChannel.onopen = (ev) =>{
+			this.dataChannel.send('yo son');
+		}
+		this.dataChannel.onmessage(ev=>{
+			console.log(ev.data)
+		})
+		this.dataChannel.ondatachannel = function(event) {
+			var channel = event.channel;
+		  channel.onopen = function(event) {
+				channel.send('Hi back!');
+			}
+			channel.onmessage = function(event) {
+				console.log(event.data);
+			}
+		} */
+		if (currentConnection.setRemoteDescription) {
+			cb(currentConnection);
+		}
+	};
+record(sourceStream) {	
+		this.mediaRecorder = new MediaRecorder(sourceStream);
+		console.log(this.mediaRecorder)	
+		this.mediaRecorder.ondataavailable = e => this.recordedStream.push(e.data);
+		this.mediaRecorder.start();
+		this.mediaRecorder.onstop = () => this.process(this.recordedStream);
+}
+process(data) {	
+	console.log(data)
+	const blob = new Blob(data);		
+	this.convertToArrayBuffer(blob)
+		
+}
+convertToArrayBuffer(blob) {
+	let reader = new FileReader();
+		const url = URL.createObjectURL(blob);
+		this.recordedStream = url
+		/* reader.onload  = function(event) {
+			console.log(event.target.result)
 
+		}
+		reader.readAsArrayBuffer(blob); */
+	  this.createVideo().then(({vid})=>{
+		vid.src = url;
+	})
+}
+requestStream = () =>{
+	console.log(this.recordedStream)
+	this.mediaRecorder.requestData();
+	//this.process(this.recordedStream[0]);
+}
 	///////////////////////////////////////////webrtc^^^ funcs////////////////////////////////////////////
 
 	//////////////////////////////////////////////lifecycle hook//////////////////////////////////////////
@@ -373,22 +441,7 @@ class Session extends Component {
 			noCam: false,
 		})
 	}
-/* 	joinAsViewer = () =>{
-		this.alreadyStarted = true;
-		let session = JSON.parse(JSON.stringify(this.props.session))
-		session.inSession = true;
-		session.sessionKey = this.props.match.params.room.replace('room=', '');
-		session.creatingSession = false;
-		if(this.props.auth.user.userName){
-			session.user = this.props.auth.user;
-		} else {				
-			session.user = this.props.auth.guest;
-		}
-		this.socket.emit('viewer-joining', session);
-		this.socket.on('viewer-signal', (data, remoteId)=>{
 
-		})
-	} */
 	startOrJoin = () => {
 		this.startStream(document.getElementById('streamOfMe'))
 			.then(() => {
@@ -411,29 +464,38 @@ class Session extends Component {
 				
 					this.socket.emit('createOrJoin', session);		
 					this.socket.on('signal', (data, remoteId) => {
-						switch (data.type) {
+						switch (data.type) {							
+							case 'another-viewer':
+								console.log("VIEWER")
+								this.createViewerPeerRtc(remoteId, (rtc)=>{
+									this.createOffer(rtc, (offer) => this.socket.emit('signal', offer, remoteId));
+								})
 							case 'newJoin':
 								console.log("NEW JOIN")
 								this.createPeerRtc(remoteId, (rtc) => {
-									this.createOffer(rtc, (offer) => this.socket.emit('signal', offer));
-									this.remoteClients.push(remoteId);
+									this.createOffer(rtc, (offer) => this.socket.emit('signal', offer, remoteId));
+									if(this.remoteClients.length<2){
+										this.remoteClients.push(remoteId);
+									}
+									
 								});
 								break;
 							case 'offer':
 								console.log(data.type, remoteId)
-								this.remoteClients.push(remoteId);
+								if(this.remoteClients.length<2){
+									this.remoteClients.push(remoteId);
+								}
 								this.createPeerRtc(remoteId, (rtc) => {
 									rtc
 										.setRemoteDescription(new RTCSessionDescription(data))
 										.then(() => {
-											this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer));
+											this.createAnswer(rtc, (answer) => this.socket.emit('signal', answer, remoteId));
 										})
 										.catch(this.handleRemoteDescError);
 								});
 								break;
 							case 'answer':
-								console.log(data.type, remoteId)
-								console.log(data)
+								//console.log(data.type, remoteId)
 								this.rtcs[remoteId]
 									.setRemoteDescription(new RTCSessionDescription(data))
 									.catch(this.handleRemoteDescError);
@@ -808,7 +870,7 @@ class Session extends Component {
 							})
 							.then((stream) => {
 								videoEl.srcObject = stream;
-								//console.log(videoEl.srcObject)
+								this.record(stream)
 								this.stream = stream;
 								stream.getTracks().forEach((track) => {
 									this.track.push(track);
@@ -882,7 +944,7 @@ class Session extends Component {
 		);
 	};
 	videoSettings = () =>{
-		if(!this.props.session.noCam) {
+		if(this.props.session.noCam || this.props.session) {
 			return (
 				<div id="sessionLeftAsideSettings">
 				<video id="streamOfMe" muted="muted" autoPlay />
@@ -918,6 +980,8 @@ class Session extends Component {
 				</div>
 				<div id="restOfSettings">
 					<div id="shareLink">Invite Link</div>
+					<button onClick={()=>this.mediaRecorder.stop()}type="button">Stop</button>
+					<button onClick={()=>this.requestStream()}type="button">Get Stream</button>
 					{/* <select id="sessVidDevices" />
 					<select id="sessAudDevices" /> */}
 				</div>

@@ -1,6 +1,6 @@
 const redClient = require('../database/redis');
-let reciever;
-let sender;
+
+
 let offers = {};
 let client;
 let connecting = false;
@@ -20,14 +20,13 @@ const spliceObj = (obj, keys) =>{
 module.exports = (io, socket, initSession) => {
 	console.log('SETTING LISTENERS')
 		socket.on('createOrJoin', function(sessionObj) {
-			//console.log('SESSION', session)
-			session = sessionObj
+			console.log('coming in', offers)
+			session = sessionObj;
 			///////////////////////////checking if client has the key//////////////////////////
 			if (session.sessionKey !== undefined && session.sessionKey !== 'undefined') {
 				//////////////////////if this client joining or creating session///////////////////
 				if (session.creatingSession === false) {///////////joining session
 					//////////////////////if the room exists and isnt maxed out//////////////////////////
-					reciever = socket.id;	
 					socketInSession[socket.id] = session.sessionKey;
 					connecting = true;
 					if(session.noCam){
@@ -40,12 +39,13 @@ module.exports = (io, socket, initSession) => {
 									if (sessionObj.viewers.length < sessionObj.maxViewers) {
 										
 										socket.join(session.sessionKey);
-										client = Object.assign({ socketId: socket.id }, session.user);
+										viewer = Object.assign({ socketId: socket.id }, session.user);
 										if(sessionObj.clients.length===0 && sessionObj.viewers.length===0){
-											client.isAdmin = true;
+											viewer.isAdmin = true;
 											sessionObj.admin = socket.id;
 										}
-										sessionObj.viewers.push(spliceObj(client,
+										
+										sessionObj.viewers.push(spliceObj(viewer,
 										 ['quote','socketId', 'userName', 'email', 'isAdmin','avatarUrl', 'memberOf', 'mySurkl', '_id', 'guest']));
 										if (sessionObj.clients.length === sessionObj.maxMembers) {
 											sessionObj.maxedOut = true;
@@ -72,18 +72,20 @@ module.exports = (io, socket, initSession) => {
 													category: sessionObj.category,
 													msgs: JSON.parse(msgs)
 												});
-											})									
-											socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		
+											})
+											if(sessionObj.viewers.length>1){
+												console.log(sessionObj.viewers[sessionObj.viewers.length-2])							
+												io.to(sessionObj.viewers[sessionObj.viewers.length-2].socketId).emit('signal', { type: 'another-viewer' }, socket.id);	
+											} else {						
+												socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);											
+											}																					
 										});
-									}
+									} 
 								});
 							}
 						})
 					} else {
-					//reciever = socket.id;	
-					//socketInSession[socket.id] = session.sessionKey;
-					//console.log(reciever)
-					//connecting = true;
+				
 					redClient.hexists('rooms', session.sessionKey, (err, done) => {
 						if (err) {console.log(err)}
 
@@ -95,7 +97,7 @@ module.exports = (io, socket, initSession) => {
 									
 									socket.join(session.sessionKey);
 									client = Object.assign({ socketId: socket.id }, session.user);
-									if(sessionObj.clients.length===0){
+									if(sessionObj.clients.length===0 && sessionObj.viewers.length===0){
 										client.isAdmin = true;
 										sessionObj.admin = socket.id;
 									}
@@ -122,8 +124,8 @@ module.exports = (io, socket, initSession) => {
 												category: sessionObj.category,
 												msgs: JSON.parse(msgs)
 											});
-										})									
-										socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);		
+										})		
+											socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);	
 									});
 								}
 							});
@@ -169,65 +171,63 @@ module.exports = (io, socket, initSession) => {
 			}
 		})
 				////////////////////////////////////webrtc signaling////////////////////////////////////////
-				socket.on('signal', (data) => {
+				socket.on('signal', (data, idTo) => {
 					switch (data.type) {
 						case 'offer':
 							console.log('initiator  recieved');
 							console.log("SENDER", socket.id)
-							console.log('REC',reciever);
+							console.log('RECEIVER', idTo)
 							offers[socket.id] = {
 								offer: data,
-								id: socket.id
-							};
+								id: socket.id,
+								receiver: idTo
+							};						
 							if (connecting == true) {
 								connecting = false;
 								sender = socket.id;
-								io.to(reciever).emit('signal', data, socket.id);
-								console.log("SENDING OFFER")
+								io.to(idTo).emit('signal', data, socket.id);
 								delete offers[socket.id];
+								console.log('OFFERS', Object.keys(offers))
 							}
 							break;
 						case 'answer':
 							console.log('answer recieved');
-							io.to(sender).emit('signal', data, socket.id);
+							io.to(idTo).emit('signal', data, socket.id);
 							break;
 						case 'candidate':
 							console.log('Recieved candidate');
-							if (socket.id == reciever) {
-								io.to(sender).emit('signal', data, socket.id);
-							} else {
-								io.to(reciever).emit('signal', data, socket.id);
-							}
+							//console.log('IDTO2',idTo)
+							io.to(idTo).emit('signal', data, socket.id);			
 							break;
 						case 'streaming':
 							streaming++
 							break;
 						case 'connected':
-							
 							endOfCandidates++;
 							if (endOfCandidates === 2 /* && streaming===2 */) {
 								console.log('CONNECTED');
-								console.log('OFFERS', offers)
+								//console.log('OFFERS', Object.keys(offers))
 								connecting = true;
 								endOfCandidates = 0;
 								streaming = 0;
 								if (Object.keys(offers).length > 0) {
 									let offerObj = offers[Object.keys(offers)[0]];
 									sender = offerObj.id;
+									receiver = offerObj.receiver
 									console.log('OFFER OBJ', offerObj.id);
-									io.to(reciever).emit('signal', offerObj.offer, offerObj.id);
+									io.to(receiver).emit('signal', offerObj.offer, offerObj.id);
 									delete offers[offerObj.id];
-								} else {
+								}/*  else {
 									redClient.hexists('youtubeLists', session.sessionKey,(err,exists)=>{
 										if(exists===1){
 											redClient.hget('youtubeLists', session.sessionKey, (err, list) => {
 												if (err) {console.log(err)}										
-													io.to(reciever).emit('session-data', JSON.parse(list));
+													io.to(receiver).emit('session-data', JSON.parse(list));
 																							
 											});
 										}
 									})				
-								}
+								} */
 							}
 					}
 				});
@@ -314,6 +314,7 @@ module.exports = (io, socket, initSession) => {
 						});
 					});
 				});
+				socket.on('koo',(data)=>console.log(data))
 				///////////////////////////^^^^^^handling discussion content^^^^//////////////////////////////
 
 				/////////////////////////////////////////////////////////////////////////////
