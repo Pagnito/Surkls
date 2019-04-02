@@ -2,7 +2,7 @@ let roomImageUrls = {
   trending: '/assets/room_images/trending.jpg',
   gaming: '/assets/room_images/gaming.jpg',
   animals: '/assets/room_images/animals.jpg',
-  business: '/assets/room_images/business.jpg',
+  business: '/assets/room_images/business.png',
   cars: '/assets/room_images/cars.jpg',
   entertainment: '/assets/room_images/entertainment.jpg',
   entrepreneurship: '/assets/room_images/entrepreneurship.png',

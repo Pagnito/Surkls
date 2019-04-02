@@ -56,9 +56,20 @@ class Session extends Component {
 			ordered: false, //no guaranteed delivery, unreliable but faster
 			maxPacketLifeTime: 1000, //milliseconds
 		};
-		this.recordedStream=[];	
-		this.mediaRecorder
-		this.dataChannel;
+		this.buffer1 = [];
+		this.toBeRecorded1; //variable to put remote stream into for the first viewer
+		this.toBeRecorded2; //variable to put remote stream into for the first viewer
+		this.toBeRecorded3; //variable to put remote stream into for the first viewer
+		this.recordedStream=[];//video recorded from remote stream
+		this.mediaSource;	//genereated media source for 2nd+ viewer to append buffer to
+		this.streamInterval = null;//interval sending buffers from 1st viewer 
+		this.mediaRecorder;
+		this.dataChannel1 = null;
+		this.dataChannel2 = null;
+		this.dataChannel3 = null;
+		this.stream1 = false;
+		this.stream2 = false;
+		this.stream3 = false;
 		this.alreadyStarted = false;
 		this.sessionSignalsSetup = false;
 		this.sessionActionSignalsSetup=false;
@@ -192,7 +203,7 @@ class Session extends Component {
 		this.setState({ errors: errors });
 	};
 	handleRemoteStreamAdded = (event) => {
-		console.log(typeof event.streams[0], event.streams[0])
+		//console.log(typeof event.streams[0], event.streams[0])
 		if (this.remoteAdded.added === false) {
 			this.remoteAdded.added = true;
 			let client = this.remoteClients[this.remoteClients.length - 1];
@@ -209,9 +220,9 @@ class Session extends Component {
 		if (this.remoteAdded.added === true && this.remoteAdded.id === event.streams[0].id) {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
-			console.log('REMOTE', event.streams);
+			console.log('STREAMS ARE IN');
 			if(this.props.session.noCam && this.props.session.viewers.length===1){
-				this.record(event.streams[0])
+				this.toBeRecorded1 = event.streams[0];
 			}
 		}
 	};
@@ -329,56 +340,115 @@ class Session extends Component {
 		currentConnection.onicecandidate = this.handleIceCandidate;
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-		
-	/* 	this.dataChannel = this.rtcs[remoteId].createDataChannel('viewer-stream', this.dcOptions);
-		console.log(this.dataChannel) */
-		/* this.dataChannel.onopen = (ev) =>{
-			this.dataChannel.send('yo son');
+
+		if(this.dataChannel3==null && this.dataChannel1!==null&&this.dataChannel2!==null){
+			this.dataChannel1 = this.rtcs[remoteId].createDataChannel('viewer-strea3', this.dcOptions);
+			this.record(this.toBeRecorded3)
 		}
-		this.dataChannel.onmessage(ev=>{
-			console.log(ev.data)
-		})
-		this.dataChannel.ondatachannel = function(event) {
-			var channel = event.channel;
-		  channel.onopen = function(event) {
-				channel.send('Hi back!');
-			}
-			channel.onmessage = function(event) {
-				console.log(event.data);
-			}
-		} */
+		if(this.dataChannel2==null && this.dataChannel1!==null){
+			this.dataChannel1 = this.rtcs[remoteId].createDataChannel('viewer-strea2', this.dcOptions);
+			this.record(this.toBeRecorded2)
+		}
+		this.dataChannel1 = this.rtcs[remoteId].createDataChannel('viewer-stream1', this.dcOptions);
+		this.record(this.toBeRecorded1)
+
+		
+		
+		
+	
 		if (currentConnection.setRemoteDescription) {
-			cb(currentConnection);
+			cb(currentConnection, 'with-dc');
 		}
 	};
+	dcOffererEvents = () =>{
+		/* this.dataChannel.onopen = (ev) =>{
+			this.dataChannel.send('yo son');
+		} */
+		this.dataChannel1.onmessage = (e)=>{
+			console.log(e.data)
+		}
+	
+	}
+	dcAnswererEvents = (pc) => {
+		let mimeCodec = 'video/webm;codecs=vp8,opus';
+
+		this.sourceBuffer1 = null;
+		if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
+			
+			
+		} else {
+			console.error('Unsupported MIME type or codec: ', mimeCodec);
+		}
+		pc.ondatachannel = (e) => {
+			var channel = e.channel;
+
+			channel.onmessage = (e) => {			
+					this.viewersStream1(video=>{	
+							
+						this.mediaSource = new MediaSource();
+						video.vid.src = URL.createObjectURL(this.mediaSource);	
+						console.log(video.vid)	
+						this.mediaSource.addEventListener('sourceopen', ()=>{					
+							if(this.stream1===false){
+								this.sourceBuffer1 = this.mediaSource.addSourceBuffer(mimeCodec);
+								
+								console.log(this.sourceBuffer1)
+							}		
+							this.sourceBuffer1.addEventListener('updateend', (_) => {
+								if (!this.sourceBuffer1.updating && this.mediaSource.readyState === 'open') {
+									this.mediaSource.endOfStream();
+									video.vid.play()
+								}
+							});
+							if(this.sourceBuffer1!==null && this.stream1===false){
+								this.stream1 = true;
+								console.log(e.data)
+								this.sourceBuffer1.appendBuffer(e.data);
+							}	
+						})
+						
+					});	
+					if(this.sourceBuffer1!==null){
+						console.log(e.data)
+						this.sourceBuffer1.appendBuffer(e.data);
+					}
+				}
+		}
+	}
 record(sourceStream) {	
-		this.mediaRecorder = new MediaRecorder(sourceStream);
+		this.mediaRecorder = new MediaRecorder(sourceStream, {mimeType: 'video/webm;codecs=vp8,opus'});
+
 		console.log(this.mediaRecorder)	
-		this.mediaRecorder.ondataavailable = e => this.recordedStream.push(e.data);
+		this.mediaRecorder.ondataavailable = e => this.recordedStream = [e.data];
 		this.mediaRecorder.start();
-		this.mediaRecorder.onstop = () => this.process(this.recordedStream);
+		this.streamInterval = setInterval(()=>{
+			this.requestStream()
+			this.process(this.recordedStream);
+		},2000)
+		/* this.mediaRecorder.onstop = () => this.process(this.recordedStream); */
 }
 process(data) {	
-	console.log(data)
 	const blob = new Blob(data);		
-	this.convertToArrayBuffer(blob)
-		
+	this.convertToArrayBuffer(blob)	
 }
-convertToArrayBuffer(blob) {
-	let reader = new FileReader();
-		const url = URL.createObjectURL(blob);
-		this.recordedStream = url
-		/* reader.onload  = function(event) {
-			console.log(event.target.result)
 
+convertToArrayBuffer(blob) {
+	console.log(blob)
+		let reader = new FileReader();
+		this.prevChunkSize;
+		reader.onload = (e) => {
+
+			let chunk = e.target.result.slice(this.prevChunkSize,e.target.result.byteLength)
+			this.prevChunkSize = e.target.result.byteLength	
+	
+			this.sendStream(e.target.result)
 		}
-		reader.readAsArrayBuffer(blob); */
-	  this.createVideo().then(({vid})=>{
-		vid.src = url;
-	})
+		reader.readAsArrayBuffer(blob);
+}
+sendStream = (stream) =>{
+	this.dataChannel1.send(stream)
 }
 requestStream = () =>{
-	console.log(this.recordedStream)
 	this.mediaRecorder.requestData();
 	//this.process(this.recordedStream[0]);
 }
@@ -386,6 +456,9 @@ requestStream = () =>{
 
 	//////////////////////////////////////////////lifecycle hook//////////////////////////////////////////
 	componentWillUnmount() {
+		if(this.streamInterval!==null){
+			clearInterval(this.streamInterval)
+		}
 		
 		for(let rtc in this.rtcs){
 			this.rtcs[rtc].close();
@@ -419,7 +492,7 @@ requestStream = () =>{
 		this.socket.removeListener('unpickThisVideo');
 		this.socket.removeListener('adminLeftImAdminNow');
 		this.socket.removeListener('youtubeList');
-		this.socket.removeListener('sessiremoveListenerExpired');
+		this.socket.removeListener('sessionExpired');
 		this.socket.removeListener('giveMeVideoCurrentTime');
 		this.socket.removeListener('hereIsVideoCurrentTime');
 		this.socket.removeListener('sharingTweet')
@@ -467,11 +540,14 @@ requestStream = () =>{
 						switch (data.type) {							
 							case 'another-viewer':
 								console.log("VIEWER")
-								this.createViewerPeerRtc(remoteId, (rtc)=>{
+								this.createViewerPeerRtc(remoteId, (rtc,withDc)=>{
+									if(withDc === 'with-dc'){
+										this.dcOffererEvents()
+									}
 									this.createOffer(rtc, (offer) => this.socket.emit('signal', offer, remoteId));
 								})
+								break;
 							case 'newJoin':
-								console.log("NEW JOIN")
 								this.createPeerRtc(remoteId, (rtc) => {
 									this.createOffer(rtc, (offer) => this.socket.emit('signal', offer, remoteId));
 									if(this.remoteClients.length<2){
@@ -481,11 +557,12 @@ requestStream = () =>{
 								});
 								break;
 							case 'offer':
-								console.log(data.type, remoteId)
+								//console.log(data.type, remoteId)
 								if(this.remoteClients.length<2){
 									this.remoteClients.push(remoteId);
 								}
-								this.createPeerRtc(remoteId, (rtc) => {
+								this.createPeerRtc(remoteId, (rtc) => {						
+										this.dcAnswererEvents(rtc)
 									rtc
 										.setRemoteDescription(new RTCSessionDescription(data))
 										.then(() => {
@@ -794,7 +871,13 @@ requestStream = () =>{
 	};
 
 	
-
+	viewersStream1 = (cb) =>{
+		if(this.stream1===false){
+			this.createVideo().then(video=>{
+				cb(video)
+			})
+		}
+	}
 	createVideo = () => {
 		return new Promise((resolve) => {
 			let constraints = {
@@ -852,8 +935,7 @@ requestStream = () =>{
 			});
 		}
 	};
-	startStream = (videoEl) => {
-		
+	startStream = (videoEl) => {	
 			return new Promise((resolve, reject) => {
 				if(!this.props.session.noCam){
 					if (videoEl.srcObject === null) {
@@ -870,7 +952,6 @@ requestStream = () =>{
 							})
 							.then((stream) => {
 								videoEl.srcObject = stream;
-								this.record(stream)
 								this.stream = stream;
 								stream.getTracks().forEach((track) => {
 									this.track.push(track);
