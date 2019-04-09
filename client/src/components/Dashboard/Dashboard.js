@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { closeMenus } from 'actions/actions';
 import { openDMs } from 'actions/dm-actions';
 
-import { fetchSurkl, updateMsgs, updateOnMembers, updateYTPlayer } from 'actions/surkl-actions';
+import { fetchSurkl, updateSurkl, updateMsgs, updateOnMembers, updateYTPlayer } from 'actions/surkl-actions';
 import PropTypes from 'prop-types';
 import Loader1 from 'components/Loader1/Loader1';
 import YTplayer from 'yt-player';
@@ -83,16 +83,11 @@ class Dashboard extends Component {
 		this.socket.on('receive-surkl-msgs', (msgs) => {
 			this.props.updateMsgs(msgs);
 		});
-		this.socket.on('online-users', (users) => {
+		this.socket.on('online-users-n-surkl', (users, surkl, audio_id) => {
 			this.props.updateOnMembers(users);
-		});
-		this.socket.on('track', (track_id) => {
-			this.setState({ audio_id: track_id });
-			this.pluginAudio(track_id, () => {
-				console.log('started');
-			});
-		});
-		this.socket.on('mounted-track', (audio_id) => {
+			if(surkl._id!==this.props.surkl.activeSurkl._id){
+				this.props.updateSurkl(surkl);
+			}		
 			fetch(this.audioDataFetcher + audio_id).then((res) => res.json()).then((data) => {
 				this.setState({ audioState: false }, () => {
 					if (audio_id !== null) {
@@ -102,6 +97,22 @@ class Dashboard extends Component {
 				});
 			});
 		});
+		this.socket.on('track', (track_id) => {
+			this.setState({ audio_id: track_id });
+			this.pluginAudio(track_id, () => {
+				console.log('started');
+			});
+		});
+		/* this.socket.on('mounted-track', (audio_id) => {
+			fetch(this.audioDataFetcher + audio_id).then((res) => res.json()).then((data) => {
+				this.setState({ audioState: false }, () => {
+					if (audio_id !== null) {
+						this.props.updateYTPlayer({ audio_id: audio_id, artist: data.author_name, title: data.title });
+					}
+					//this.YTPlayer.load(audio_id,{autoplay:false})
+				});
+			});
+		}); */
 	}
 
 	componentDidMount() {
@@ -418,7 +429,7 @@ class Dashboard extends Component {
 			reader.onload =  (readerEvent) =>{
 				let image = new Image();
 				image.onload = () => {
-								let max_size = 550,// TODO : pull max size from a site config
+								let max_size = 550,
 								width = image.width,
 								height = image.height;
 						if (width > height) {
@@ -475,6 +486,18 @@ class Dashboard extends Component {
 		};
 		reader.readAsArrayBuffer(file.slice(this.chunksSent, this.chunksSent + this.chunkSize));
 	};
+displayAudioLinker = () =>{
+		let surkl = this.props.surkl.activeSurkl
+		if(surkl){
+			if(surkl.admin){
+				return (
+					<div style={{
+					display: this.props.surkl.activeSurkl.admin.user_id===this.props.auth.user._id ? 'block' : 'none'}} 
+					onClick={this.toggleLinkerModal} id="audio-player-linker" />
+				)
+			}	
+		}
+	}
 
 	render() {
 		if (this.props.auth.user === null) {
@@ -553,7 +576,7 @@ class Dashboard extends Component {
 									</div>
 									<div className="track-info-item">{this.props.surkl.artist}</div>
 								</div>
-								<div onClick={this.toggleLinkerModal} id="audio-player-linker" />
+								{this.displayAudioLinker()}
 								{this.linkerModal()}
 							</div>
 						</div>
@@ -578,7 +601,8 @@ Dashboard.propTypes = {
 	updateOnMembers: PropTypes.func,
 	openDMs: PropTypes.func,
 	updateYTPlayer: PropTypes.func,
-	dms: PropTypes.object
+	dms: PropTypes.object,
+	updateSurkl: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -594,5 +618,6 @@ export default connect(stateToProps, {
 	updateMsgs,
 	updateOnMembers,
 	openDMs,
-	updateYTPlayer
+	updateYTPlayer,
+	updateSurkl
 })(Dashboard);

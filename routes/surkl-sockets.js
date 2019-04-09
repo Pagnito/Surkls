@@ -44,7 +44,10 @@ module.exports = (io, socket, connectedUsers) => {
      /*  console.log(online) */
       //console.log('//////////')
       //console.log(connectedUsers)
-      io.to(surkl_id).emit('online-users', online)
+      redClient.get('track'+surkl_id,(err,track)=>{
+        io.to(surkl_id).emit('online-users-n-surkl', online, surkl, track)
+      });
+     
     })
    
   })

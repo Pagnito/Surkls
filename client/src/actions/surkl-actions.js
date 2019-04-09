@@ -29,6 +29,12 @@ import {
         })
       })
   }
+  export const updateSurkl = (surkl)=>{
+    return {
+      type:UPDATE_SURKL,
+      payload:surkl
+    }
+  }
   export const newSurkl = (surkl,cb) => (dispatch) =>{
     let options = {
       method: 'POST',

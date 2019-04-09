@@ -1,7 +1,7 @@
 import {  MY_SURKL, UPDATE_SURKL_MSGS, UPDATE_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER} from "actions/types";
 
 const initialState = {
-	mySurkl: {},
+	//mySurkl: {},
 	activeSurkl: {},
 	msgs: [],
 	online: [],
