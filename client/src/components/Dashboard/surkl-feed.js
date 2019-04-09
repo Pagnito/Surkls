@@ -131,15 +131,7 @@ class SurklFeed extends Component {
 					possibleUrlImg = (
 						<img style={{display:'none'}} onLoad={this.resizeImg} src={msg.msg} />
 					);
-				} /* else if(emojiRegex.test(msg.msg)){
-					possibleUrlImg = msg.msg.split('<>').map((piece, ind)=>{
-						if(emojiRegex.test(piece)){
-							return <span style={{fontSize:'17px'}} key={ind}>{piece}</span>
-						} else {
-							return <span style={{fontSize:'13px'}} key={ind}>{piece}</span>
-						}
-					})
-				}  */else {
+				} else {
 					possibleUrlImg = msg.msg;
 				}
 				return (
@@ -161,7 +153,7 @@ class SurklFeed extends Component {
 								) : (
 									''
 								)}
-								<div className="surkl-chat-MsgText">{possibleUrlImg}</div>
+								<div style={{ padding: msg.userName ? '5px' : '0px' }} className="surkl-chat-MsgText">{possibleUrlImg}</div>
 							</div>
 						</div>
 					</div>

@@ -154,7 +154,8 @@
               word-break: break-word;
               font-size: 16px;
               color: #E6E9E9;
-              padding: 5px;
+              padding-bottom: 0px !important;
+              padding-left: 5px !important;
               width:100%;
               font-family: SourceSansLocal,source-sans-pro,Source Sans Pro,-apple-system,Roboto,pt sans,calibri,sans-serif;
               box-sizing: border-box;
@@ -229,6 +230,17 @@
         #surkl-emojis {
           background-image: url('/assets/UI-icons/grin-tongue-regular.svg');
           position: relative;
+          #emoji-lib::-webkit-scrollbar {
+            width:5px;
+          }
+          #emoji-lib::-webkit-scrollbar-thumb {
+            background: #545353; 
+            border-radius: 10px;
+            margin-right:1px;
+          }
+          #emoji-lib::-webkit-scrollbar-corner {
+            background: transparent;
+          }
           #emoji-lib {
             position:absolute;
             padding:5px;

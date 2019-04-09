@@ -387,7 +387,7 @@ class Header extends Component {
 						paddingLeft:'10px',
 						paddingRight:'10px',
 						boxSizing:'border-box',
-						background:'white',
+						background:'#DDE4E4',
 						borderRadius:'20px',
 						marginTop: '5px',
 						maxWidth:'80%',	
