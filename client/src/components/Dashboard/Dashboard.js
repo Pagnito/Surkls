@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { closeMenus } from 'actions/actions';
 import { openDMs } from 'actions/dm-actions';
+
 import { fetchSurkl, updateMsgs, updateOnMembers, updateYTPlayer } from 'actions/surkl-actions';
 import PropTypes from 'prop-types';
 import Loader1 from 'components/Loader1/Loader1';
@@ -27,7 +28,7 @@ class Dashboard extends Component {
 			volume: 40,
 			sharedImg: ''
 		};
-
+	
 		this.surklFetched = false;
 		this.joinedRoom = false;
 		this.resumed = false;
@@ -235,17 +236,31 @@ class Dashboard extends Component {
 		}
 	};
 
-	sendSurklMsg = (msg) => {
-		let msgObj = {
-			msg: msg,
-			userName: this.props.auth.user.userName,
-			avatarUrl: this.props.auth.user.avatarUrl,
-			surkl_id: this.props.match.params.id,
-			date: Date.now()
-		};
+	
+	sendSurklMsg = (msg) =>{
+		let msgObj;
+		let msgs = this.props.surkl.msgs
+		if(msgs[msgs.length-1].user_id===this.props.auth.user._id){
+			console.log('ok')
+			msgObj = {
+				msg:msg, 
+				surkl_id:this.props.match.params.id,
+				user_id: this.props.auth.user._id,
+			}
+		} else {
+			console.log('wtf')
+			msgObj =	{
+				msg: msg,
+				user_id: this.props.auth.user._id,
+				userName: this.props.auth.user.userName,
+				avatarUrl: this.props.auth.user.avatarUrl,
+				surkl_id: this.props.match.params.id,
+				date: Date.now()
+			} 
+		}
 		this.socket.emit('surkl-msg', msgObj);
-	};
-
+		
+	}
 	onInput = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
@@ -447,6 +462,7 @@ class Dashboard extends Component {
 				this.sendChunk(reader, file, size);
 			} else {
 				let msgObj = {
+					user_id: this.props.auth.user._id,
 					image_id: Math.random().toString(36).substring(2, 15),
 					userName: this.props.auth.user.userName,
 					avatarUrl: this.props.auth.user.avatarUrl,
@@ -459,6 +475,7 @@ class Dashboard extends Component {
 		};
 		reader.readAsArrayBuffer(file.slice(this.chunksSent, this.chunksSent + this.chunkSize));
 	};
+
 	render() {
 		if (this.props.auth.user === null) {
 			return <Loader1 />;
@@ -473,17 +490,7 @@ class Dashboard extends Component {
 					<section id="surkl-center">
 						<SurklFeed />
 						<div id="file-upload-progress" />
-						<div id="surkl-chat-controls">
-						
-							<ChatInput readOne={readOne} sendMsg={this.sendSurklMsg} />
-							<div id="surkl-chat-btns">
-								<div id="surkl-emojis" className="surkl-chat-btn" />
-
-								<label className="surkl-chat-btn" id="file-up-icon" htmlFor="surkl-file-up">
-									<input accept="image/*" onChange={this.uploadFile} name="file-up" type="file" id="surkl-file-up" />
-								</label>
-							</div>
-						</div>
+						<ChatInput uploadFile={this.uploadFile} readOne={readOne} sendMsg={this.sendSurklMsg} />
 					</section>
 					<section id="surkl-members">
 						<div id="surkl-members-header">

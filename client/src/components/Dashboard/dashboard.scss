@@ -78,9 +78,9 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    #surkl-feed>div:last-child {
+    /* #surkl-feed>div:last-child {
       padding-bottom: 10px;
-    }
+    } */
     #surkl-feed {
       height:calc(100% - 53px);
       width:100%;
@@ -94,40 +94,56 @@
       }
       .surkl-chat-msg-wrap {
         width:100%;
+        padding-top: 2px;
+        padding-bottom: 2px;  
         .surkl-chat-msg {
           margin-right:5px;
+          padding-top: 5px;
+          padding-bottom: 5px;
+          box-sizing: border-box;
           animation: fadeOut 2s ease-out forwards;
           width: calc(100% - 20px);
           font-family: 'Comfortaa';
           display: flex;
           box-sizing: border-box;
           margin-top: 2px;
-          .surkl-chat-msgAvatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 30px;
-            margin: 10px;
-            margin-left: 20px;
-            border: 1px solid #c2c3c4;
-          }
-          .surkl-chat-HeaderNmsg {
-            .surkl-chat-MsgUserInfo {
-              width: 100%;
+          .surkl-chat-msg-av-wrap{
+              width: 50px;
+              display:flex;
+              padding:10px;
+              padding-top:0px;
+              justify-content: center;
+            .surkl-chat-msgAvatar {
+              width: 30px;
               height: 30px;
-              display: flex;
-              align-items: flex-end;
-  
+              margin-left: 18px;
+              border-radius: 30px;
+              border: 1px solid #c2c3c4;
+            }
+          }
+          
+          .surkl-chat-HeaderNmsg {
+            width: calc(100% - 70px);
+            margin-left: 5px;
+            .surkl-chat-MsgUserInfo {
+              margin-top: 3px;
+              width: 100%;
+              height: 16px;
+              display: flex;            
               box-sizing: border-box;
               display: flex;
               width: 100%;
+              align-items: flex-end;
               justify-content: flex-start;
               .surkl-chat-MsgDate {
+                
                 font-size: 10px;
                 margin-bottom: 2px !important;
                 margin-left: 5px;
                 color:#91918D;
               }
               .surkl-chat-MsgName {
+              
                 font-size: 15px;
                 color:#91918D;
               }
@@ -136,7 +152,7 @@
             .surkl-chat-MsgText {
               overflow-wrap: break-word;
               word-break: break-word;
-              font-size: 13px;
+              font-size: 14px;
               color: #E6E9E9;
               padding: 5px;
               width:100%;
@@ -156,11 +172,29 @@
     #surkl-chat-controls {
       display:flex;
       width:100%;
-
+      position: relative;
       #surkl-chat-input::placeholder {
         font-size: 15px;
       }
       #surkl-chat-input {
+        width:calc(100% - 70px);
+        height:70px;
+        outline:none;
+        resize: none;
+        background: transparent;
+        border:none;
+        border-top: 1px solid #3E3E3E;
+        padding:10px;
+        box-sizing: border-box;
+        font-family: 'Comfortaa';
+        color:#C2C3C4;
+        font-size: 13px;
+        overflow-y: scroll; 
+        /* position: absolute;
+        top:0px;
+        left:0px; */
+      }
+      #surkl-chat-input-display {
         width:calc(100% - 70px);
         height:70px;
         outline:none;
@@ -193,6 +227,28 @@
         }     
         #surkl-emojis {
           background-image: url('/assets/UI-icons/grin-tongue-regular.svg');
+          position: relative;
+          #emoji-lib {
+            position:absolute;
+            padding:5px;
+            padding-right: 10px;
+            top:-220px;
+            left:-280px;
+            justify-content: space-around;
+            display:flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            width: 300px;
+            height: 200px;
+            border-radius:5px;
+            background: #313131;
+            box-shadow: 0px 0px 10px 1px rgba(0,0,0,.5);
+            overflow-y: scroll;
+            display: none;
+            .emoji:hover {
+              background-size: 30px !important; 
+            }
+          }
         }
         #surkl-file-up {
           display:none;

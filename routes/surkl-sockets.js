@@ -67,7 +67,7 @@ module.exports = (io, socket, connectedUsers) => {
       } else if(msgs!==null){       
         let msgsArr = JSON.parse(msgs);
         if (msgsArr.length > 200) {
-          msgsArr = msgsArr.slice(0, 200);
+          msgsArr = msgsArr.slice(200, 0);
         }
         msgsArr.push(msg);
         redClient.hset('surkls-msgs', msg.surkl_id, JSON.stringify(msgsArr), (err, done) => {

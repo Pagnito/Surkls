@@ -72,12 +72,12 @@ class SurklFeed extends Component {
 		return this.props.surkl.msgs.map((msg, ind) => {
       let date = new Date(msg.date);
       let imgCount;
-      let possbileUrlImg;
+      let possibleUrlImg;
 			let locale = date.toLocaleDateString();
 			let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
 			let time = date.getHours() + ':' + minutes;
 			let fullDate = locale + ' ' + time;
-			let url = msg.avatarUrl ? msg.avatarUrl : '/assets/whitehat.jpg';
+			let url = msg.avatarUrl;
 			if (msg.image_id) {
         imgCount++;
         this.imgs[msg.image_id] = {
@@ -89,26 +89,22 @@ class SurklFeed extends Component {
         this.imgCount = imgCount
       }
 			if (msg.msg) {
-        //console.log(msg.msg.indexOf('https://' || 'http://')>-1)
-        //console.log(msg.msg.match(/\.(jpeg|jpg|gif|png)$/))
-        if(msg.msg.indexOf('https://' || 'http://')>-1 && 
-          msg.msg.indexOf('.com' || 'net' || '.io' || '.us' || '.uk' || '.info' || 'org' || 'co')>-1 && 
-         msg.msg.match(/(jpeg|jpg|gif|png)/) !== null) {
-            
-            possbileUrlImg = <img onLoad={this.moveChat} src={msg.msg}/>
+        if(/(http|https)/.test(msg.msg) && /(.com|.net|.io|.us| .uk |.info|.org|.co)/.test(msg.msg)&& 
+         /(jpeg|jpg|gif|png)/.test( msg.msg)) {      
+          	possibleUrlImg = <img onLoad={this.moveChat} src={msg.msg}/>
         } else {
-            possbileUrlImg = msg.msg
+            possibleUrlImg = msg.msg
         }
 				return (
 					<div key={ind} className="surkl-chat-msg-wrap">
-						<div className="surkl-chat-msg">
-							<img data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
+						<div style ={{paddingTop: msg.userName ? '5px' : '0px'}} className="surkl-chat-msg">
+							<div className="surkl-chat-msg-av-wrap">{url ? <img data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} /> : ''}</div>
 							<div className="surkl-chat-HeaderNmsg">
-								<div className="surkl-chat-MsgUserInfo">
-									<div className="surkl-chat-MsgName">{msg.userName}</div>
-									<div className="surkl-chat-MsgDate">{fullDate}</div>
-								</div>
-								<div className="surkl-chat-MsgText">{possbileUrlImg}</div>
+									{msg.userName ? <div className="surkl-chat-MsgUserInfo">
+									 <div className="surkl-chat-MsgName">{msg.userName}</div>
+								  <div className="surkl-chat-MsgDate">{fullDate}</div> 
+								</div> : ''}
+								<div className="surkl-chat-MsgText">{possibleUrlImg}</div>
 							</div>
 						</div>
 					</div>
@@ -116,15 +112,15 @@ class SurklFeed extends Component {
 			} else if (msg.image_id) {
 				return (
 					<div key={ind} className="surkl-chat-msg-wrap">
-						<div className="surkl-chat-msg">
-							<img data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
+						<div style ={{paddingTop: msg.userName ? '5px' : '0px'}}className="surkl-chat-msg">
+						<div className="surkl-chat-msg-av-wrap">{url ? <img data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} /> : ''}</div>
 							<div className="surkl-chat-HeaderNmsg">
-								<div className="surkl-chat-MsgUserInfo">
-									<div className="surkl-chat-MsgName">{msg.userName}</div>
-									<div className="surkl-chat-MsgDate">{fullDate}</div>
-								</div>
+							{msg.userName ? <div className="surkl-chat-MsgUserInfo">
+									 <div className="surkl-chat-MsgName">{msg.userName}</div>
+								  <div className="surkl-chat-MsgDate">{fullDate}</div> 
+								</div> : ''}
 								<div className="surkl-chat-MsgText">
-									<img style={{display:'none'}} className="img" data-imageid={msg.image_id} src={'oof'} />
+									<img style={{display:'none', marginTop: '7px'}} className="img" data-imageid={msg.image_id} src={'oof'} />
 								</div>
 							</div>
 						</div>
