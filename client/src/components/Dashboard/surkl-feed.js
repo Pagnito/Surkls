@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {emojiRegex} from './emojis'
 import { readOne, readData, deleteOne } from '../../../tools/sw-utils';
 import PropTypes from 'prop-types';
 class SurklFeed extends Component {
@@ -91,7 +92,7 @@ class SurklFeed extends Component {
 							this.imgs[img.dataset.imageid].loaded = true;
 						});
 					})
-					.catch((err) => {});
+					.catch(() => {});
 			}
 			if (chatBox !== null && iter === images.length) {
 				setTimeout(() => {
@@ -130,7 +131,15 @@ class SurklFeed extends Component {
 					possibleUrlImg = (
 						<img style={{display:'none'}} onLoad={this.resizeImg} src={msg.msg} />
 					);
-				} else {
+				} /* else if(emojiRegex.test(msg.msg)){
+					possibleUrlImg = msg.msg.split('<>').map((piece, ind)=>{
+						if(emojiRegex.test(piece)){
+							return <span style={{fontSize:'17px'}} key={ind}>{piece}</span>
+						} else {
+							return <span style={{fontSize:'13px'}} key={ind}>{piece}</span>
+						}
+					})
+				}  */else {
 					possibleUrlImg = msg.msg;
 				}
 				return (

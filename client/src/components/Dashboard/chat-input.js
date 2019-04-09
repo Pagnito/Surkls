@@ -30,6 +30,7 @@ class ChatInput extends Component {
 	addEmoji = (emoji) => {
 		let msg = this.state.msg;
 		this.setState({ msg: (msg += emoji) });
+		document.getElementById('surkl-chat-input').focus()
 	};
 	showEmojiLib = () => {
 		document.getElementById('emoji-lib').style.display = 'flex';
