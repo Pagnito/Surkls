@@ -110,7 +110,7 @@ class Rooms extends Component {
 						<div className="joins-left">
 								<div className="joins-title">Join</div>
 								<div className="join-btns">
-									<button type="button" className="join-btn">No Cam</button>
+									<button onClick={() => this.joinSessionNoCam(room.sessionKey, room.room)} type="button" className="join-btn">No Cam</button>
 									<button  type="button" className="join-btn">Maxed out</button>
 								</div>	
 							</div>

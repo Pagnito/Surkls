@@ -147,4 +147,19 @@ module.exports = (io, socket, connectedUsers) => {
     
     //Surkl.updateOne({_id: surkl._id}, {$push:userToAdd}).exec()
   })
+    ////////////////////////////streams/////////////////////////////////
+  socket.on('surkl-file', (chunk, surkl, size, end, msgObj)=>{   
+    if(end==='end-of-file'){
+      redClient.hget('surkls-msgs', surkl, (err,msgsStr)=>{
+        let msgs = JSON.parse(msgsStr);
+        msgs.push(msgObj)
+        redClient.hset('surkls-msgs', surkl, JSON.stringify(msgs));
+      })
+      io.in(surkl).emit('surkl-sharing-file', chunk, 'end-of-file', msgObj)
+    } else {
+      io.in(surkl).emit('surkl-sharing-file', chunk, size)
+    }
+  })
+   
+  
 }

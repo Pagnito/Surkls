@@ -369,7 +369,7 @@ class Header extends Component {
 						<img className="msngr-avatar" src={msngrs[ms].avatarUrl}></img>
 						<div className="msngr-name-n-msg">
 							<div className="msngr-name">{msngrs[ms].userName}</div>
-							<div className="msngr-latest-msg">{msngrs[ms].latestMsg.substring(0,30)+'...'}</div>
+							<div className="msngr-latest-msg">{msngrs[ms].latestMsg.length>30 ? msngrs[ms].latestMsg.substring(0,30)+'...' : msngrs[ms].latestMsg}</div>
 						</div>
 						<div style={notif} className="msngr-notif-dot"></div>
 					</div>
@@ -787,7 +787,7 @@ class Header extends Component {
 				{/* 		{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />} */}
 						<div style={{marginLeft:'20px'}}>
 							<Link to="/">
-								<img className="logo" src="/assets/surkls-logo.png" />
+								<img className="logo" src="/assets/surkls_logo.png" />
 							</Link>
 						</div>
 						<div className="in-dev">In Development</div>
@@ -815,7 +815,7 @@ class Header extends Component {
 						{<div onClick={this.renderPulloutMenu} id="menuBarsIcon" />}
 						<div style={{marginLeft:'20px'}}>
 							<Link to="/">
-								<img className="logo" src="/assets/surkls-logo.png" />
+								<img className="logo" src="/assets/surkls_logo.png" />
 							</Link>			
 						</div>
 						<div className="in-dev">In Development</div>

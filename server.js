@@ -32,7 +32,7 @@ mongoose
   .catch(err => console.log(err));
 
 /////////////////////////////////////middlewares/////////////////////////////////////
-
+//app.use(cors())
 app.use(helmet())
 app.use(compression());
 app.use(bodyParser.json());
@@ -53,12 +53,12 @@ auth(app);
 twitter(app);
 sockets(io, app);
 
- if (process.env.NODE_ENV == "production") { 
+ //if (process.env.NODE_ENV == "production") { 
   app.use(express.static(path.resolve(__dirname, "client", "build")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
-}
+//}
 server.listen(PORT/* ,'192.168.1.4' */, ()=>{
   console.log('\x1b[35m%s\x1b[0m', "BACKEND ON PORT 4000");
   console.log('\x1b[36m%s\x1b[0m', "FRONTEND ON PORT 3000")

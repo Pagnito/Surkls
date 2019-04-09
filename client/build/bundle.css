@@ -96,6 +96,7 @@
   width: 100%;
   height: calc(100vh - 55px);
   display: flex;
+  margin-top: 55px;
   justify-content: center;
   align-items: center; }
 
@@ -103,7 +104,7 @@
   width: 40px;
   height: 40px;
   margin-top: -50px;
-  background-color: #333;
+  background-color: #EFC141;
   border-radius: 100%;
   -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
   animation: sk-scaleout 1.0s infinite ease-in-out; }
@@ -193,49 +194,53 @@
       height: calc(100% - 50px);
       width: 100%;
       box-sizing: border-box;
+      padding-top: 10px;
       padding-bottom: 10px;
       overflow: scroll;
       overflow-x: hidden; }
-      #surkl #surkl-center #surkl-feed .surkl-chat-msg:hover {
+      #surkl #surkl-center #surkl-feed .surkl-chat-msg-wrap:hover {
         background: #302f2f; }
-      #surkl #surkl-center #surkl-feed .surkl-chat-msg {
-        margin-right: 5px;
-        animation: fadeOut 2s ease-out forwards;
-        width: calc(100% - 10px);
-        font-family: 'Comfortaa';
-        display: flex;
-        box-sizing: border-box; }
-        #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-msgAvatar {
-          width: 30px;
-          height: 30px;
-          border-radius: 30px;
-          margin: 10px;
-          border: 1px solid #c2c3c4; }
-        #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo {
-          width: 100%;
-          height: 30px;
+      #surkl #surkl-center #surkl-feed .surkl-chat-msg-wrap {
+        width: 100%; }
+        #surkl #surkl-center #surkl-feed .surkl-chat-msg-wrap .surkl-chat-msg {
+          margin-right: 5px;
+          animation: fadeOut 2s ease-out forwards;
+          width: calc(100% - 10px);
+          font-family: 'Comfortaa';
           display: flex;
-          align-items: flex-end;
           box-sizing: border-box;
-          display: flex;
-          width: 100%;
-          justify-content: flex-start; }
-          #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo .surkl-chat-MsgDate {
-            font-size: 10px;
-            margin-bottom: 2px !important;
-            margin-left: 5px;
-            color: #91918D; }
-          #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo .surkl-chat-MsgName {
-            font-size: 15px;
-            color: #91918D; }
-        #surkl #surkl-center #surkl-feed .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgText {
-          overflow-wrap: break-word;
-          word-break: break-word;
-          font-size: 13px;
-          color: #c2c3c4;
-          padding: 5px;
-          width: 100%;
-          box-sizing: border-box; }
+          margin-top: 2px; }
+          #surkl #surkl-center #surkl-feed .surkl-chat-msg-wrap .surkl-chat-msg .surkl-chat-msgAvatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            margin: 10px;
+            border: 1px solid #c2c3c4; }
+          #surkl #surkl-center #surkl-feed .surkl-chat-msg-wrap .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo {
+            width: 100%;
+            height: 30px;
+            display: flex;
+            align-items: flex-end;
+            box-sizing: border-box;
+            display: flex;
+            width: 100%;
+            justify-content: flex-start; }
+            #surkl #surkl-center #surkl-feed .surkl-chat-msg-wrap .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo .surkl-chat-MsgDate {
+              font-size: 10px;
+              margin-bottom: 2px !important;
+              margin-left: 5px;
+              color: #91918D; }
+            #surkl #surkl-center #surkl-feed .surkl-chat-msg-wrap .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgUserInfo .surkl-chat-MsgName {
+              font-size: 15px;
+              color: #91918D; }
+          #surkl #surkl-center #surkl-feed .surkl-chat-msg-wrap .surkl-chat-msg .surkl-chat-HeaderNmsg .surkl-chat-MsgText {
+            overflow-wrap: break-word;
+            word-break: break-word;
+            font-size: 13px;
+            color: #E6E9E9;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box; }
     #surkl #surkl-center #surkl-chat-input::placeholder {
       font-size: 15px; }
     #surkl #surkl-center #surkl-chat-input {
@@ -257,15 +262,37 @@
     overflow: hidden; }
     #surkl #surkl-members #surkl-members-header {
       color: #F4FBFB;
-      height: 50px;
+      height: 65px;
       width: 100%;
       font-family: 'Comfortaa';
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       font-size: 20px;
       border-bottom: 1px solid #3E3E3E;
-      box-sizing: border-box; }
+      box-sizing: border-box;
+      padding-top: 10px; }
+      #surkl #surkl-members #surkl-members-header #member-tab-btns {
+        color: #F4FBFB;
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        width: 100%;
+        font-size: 12px;
+        height: 20px;
+        font-family: 'Comfortaa';
+        justify-content: space-around; }
+        #surkl #surkl-members #surkl-members-header #member-tab-btns .members-tab-btn {
+          background-color: #3E3E3E;
+          width: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center; }
+        #surkl #surkl-members #surkl-members-header #member-tab-btns .surkl-on-tab {
+          background: #FFCD44;
+          color: black;
+          border-right: 1px solid black; }
     #surkl #surkl-members #my-surkl-members::-webkit-scrollbar {
       width: 0px; }
     #surkl #surkl-members #my-surkl-members::-webkit-scrollbar-thumb {
@@ -275,7 +302,7 @@
       background: transparent; }
     #surkl #surkl-members #my-surkl-members {
       overflow-y: scroll;
-      height: calc(100% - 50px);
+      height: calc(100% - 165px);
       width: 100%; }
       #surkl #surkl-members #my-surkl-members .surkl-member:hover {
         background: #373636; }
@@ -301,6 +328,224 @@
           background-position: center;
           background-size: cover;
           width: calc(100% - 55px); }
+    #surkl #surkl-members #my-surkl-on-members::-webkit-scrollbar {
+      width: 0px; }
+    #surkl #surkl-members #my-surkl-on-members::-webkit-scrollbar-thumb {
+      background: #B1B6B6;
+      border-radius: 10px; }
+    #surkl #surkl-members #my-surkl-on-members::-webkit-scrollbar-corner {
+      background: transparent; }
+    #surkl #surkl-members #my-surkl-on-members {
+      overflow-y: scroll;
+      height: calc(100% - 165px);
+      width: 100%; }
+      #surkl #surkl-members #my-surkl-on-members .surkl-on-member:hover {
+        background: #373636; }
+      #surkl #surkl-members #my-surkl-on-members .surkl-on-member {
+        font-family: 'Comfortaa';
+        font-size: 13px;
+        color: #F4FBFB;
+        height: 50px;
+        width: 100%;
+        padding-left: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box; }
+        #surkl #surkl-members #my-surkl-on-members .surkl-on-member .surkl-name-n-avatar {
+          display: flex;
+          align-items: center;
+          width: calc(100% - 30px);
+          margin-left: 10px; }
+          #surkl #surkl-members #my-surkl-on-members .surkl-on-member .surkl-name-n-avatar .surkl-on-member-avatar {
+            width: 25px;
+            height: 25px;
+            border-radius: 25px;
+            border: 1px solid #F4FBFB; }
+          #surkl #surkl-members #my-surkl-on-members .surkl-on-member .surkl-name-n-avatar .surkl-on-member-name {
+            padding-left: 10px;
+            background-position: center;
+            background-size: cover;
+            width: calc(100% - 55px); }
+        #surkl #surkl-members #my-surkl-on-members .surkl-on-member .surkl-member-on-dot {
+          height: 8px;
+          width: 8px;
+          border-radius: 10px;
+          background-color: #34d449;
+          margin-right: 20px; }
+    #surkl #surkl-members #audio-player {
+      height: 100px;
+      margin-top: 2px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Josefin sans';
+      font-size: 12px;
+      color: #F4FBFB;
+      align-items: center;
+      padding: 3px;
+      position: relative; }
+      #surkl #surkl-members #audio-player #player-navs {
+        width: 100%;
+        display: flex;
+        box-sizing: border-box;
+        padding: 5px;
+        align-items: center;
+        margin-bottom: 5px; }
+        #surkl #surkl-members #audio-player #player-navs .track-time {
+          margin-left: 10px;
+          width: 35px;
+          display: flex;
+          justify-content: center; }
+        #surkl #surkl-members #audio-player #player-navs #audio-time-range[type=range] {
+          -webkit-appearance: none;
+          outline: none; }
+        #surkl #surkl-members #audio-player #player-navs #audio-time-range[type=range]::-webkit-slider-runnable-track {
+          -webkit-appearance: none;
+          background: #FFCD44;
+          height: 5px;
+          outline: none; }
+        #surkl #surkl-members #audio-player #player-navs #audio-time-range[type=range]::-webkit-slider-thumb {
+          outline: none;
+          -webkit-appearance: none;
+          border: 2px solid #FFCD44;
+          border-radius: 50%;
+          height: 13px;
+          width: 13px;
+          max-width: 80px;
+          position: relative;
+          bottom: 4px;
+          background-color: #242323 !important;
+          cursor: -webkit-grab; }
+        #surkl #surkl-members #audio-player #player-navs #audio-time-range {
+          margin-left: 10px;
+          outline: none;
+          width: calc(100% - 110px); }
+        #surkl #surkl-members #audio-player #player-navs #volume-icon:hover {
+          display: block; }
+        #surkl #surkl-members #audio-player #player-navs #volume-icon:hover > #rotator {
+          display: block; }
+        #surkl #surkl-members #audio-player #player-navs #volume-icon {
+          width: 20px;
+          height: 20px;
+          background-image: url("/assets/UI-icons/volume-solid.svg");
+          background-position: center;
+          background-size: 16px;
+          background-repeat: no-repeat;
+          margin-left: 5px;
+          position: relative;
+          overflow: visible; }
+          #surkl #surkl-members #audio-player #player-navs #volume-icon #rotator {
+            transform: rotate(-90deg);
+            margin-top: -55px;
+            margin-left: -38px;
+            padding: 4px;
+            border-radius: 10px;
+            width: 85px;
+            display: none;
+            background: #242323;
+            box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8); }
+            #surkl #surkl-members #audio-player #player-navs #volume-icon #rotator #audio-volume-range {
+              width: 80px; }
+            #surkl #surkl-members #audio-player #player-navs #volume-icon #rotator #audio-volume-range[type=range] {
+              -webkit-appearance: none;
+              outline: none; }
+            #surkl #surkl-members #audio-player #player-navs #volume-icon #rotator #audio-volume-range[type=range]::-webkit-slider-runnable-track {
+              -webkit-appearance: none;
+              background: #FFCD44;
+              height: 5px;
+              outline: none; }
+            #surkl #surkl-members #audio-player #player-navs #volume-icon #rotator #audio-volume-range[type=range]::-webkit-slider-thumb {
+              outline: none;
+              -webkit-appearance: none;
+              border: 2px solid #FFCD44;
+              border-radius: 50%;
+              height: 15px;
+              width: 15px;
+              max-width: 80px;
+              position: relative;
+              bottom: 5px;
+              background-color: #242323 !important;
+              cursor: -webkit-grab; }
+        #surkl #surkl-members #audio-player #player-navs .audio-btn {
+          background-position: center;
+          background-size: 25px;
+          background-repeat: no-repeat;
+          height: 25px;
+          width: 25px;
+          cursor: pointer; }
+        #surkl #surkl-members #audio-player #player-navs #play-button {
+          background-image: url("/assets/UI-icons/play-circle-regular.svg"); }
+        #surkl #surkl-members #audio-player #player-navs #pause-button {
+          background-image: url("/assets/UI-icons/pause-circle-regular.svg"); }
+      #surkl #surkl-members #audio-player #restof-player {
+        width: 100%;
+        display: flex; }
+        #surkl #surkl-members #audio-player #restof-player #track-info {
+          width: calc(100% - 30px); }
+          #surkl #surkl-members #audio-player #restof-player #track-info .track-info-item {
+            margin: 5px; }
+        #surkl #surkl-members #audio-player #restof-player #track-info > div:last-child {
+          margin-top: 10px; }
+        #surkl #surkl-members #audio-player #restof-player #audio-player-linker {
+          width: 25px;
+          height: 25px;
+          background-image: url("/assets/UI-icons/ellipsis-v-solid.svg");
+          background-size: 6px;
+          background-position: center;
+          background-repeat: no-repeat;
+          cursor: pointer;
+          position: relative; }
+        #surkl #surkl-members #audio-player #restof-player #linker-modal {
+          position: absolute;
+          padding: 5px;
+          box-sizing: border-box;
+          background: #3E3E3E;
+          border-radius: 3px;
+          width: 97%; }
+          #surkl #surkl-members #audio-player #restof-player #linker-modal #link-guide {
+            width: 100%;
+            border-radius: 3px; }
+          #surkl #surkl-members #audio-player #restof-player #linker-modal #input-n-btn {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px; }
+            #surkl #surkl-members #audio-player #restof-player #linker-modal #input-n-btn #audio-link-id {
+              width: calc(100% - 60px);
+              border-radius: 3px;
+              outline: none;
+              border: none;
+              height: 18px;
+              padding-left: 8px; }
+            #surkl #surkl-members #audio-player #restof-player #linker-modal #input-n-btn #linker-cancel-btn {
+              background-position: center;
+              background-size: 16px;
+              background-repeat: no-repeat;
+              height: 20px;
+              width: 20px;
+              cursor: pointer;
+              background-image: url("/assets/UI-icons/times-solid-yellow.svg"); }
+            #surkl #surkl-members #audio-player #restof-player #linker-modal #input-n-btn #linker-play-btn {
+              background-position: center;
+              background-size: 20px;
+              background-repeat: no-repeat;
+              height: 20px;
+              width: 20px;
+              cursor: pointer;
+              background-image: url("/assets/UI-icons/play-circle-regular.svg"); }
+
+#notLoggedIn {
+  height: calc(100vh - 55px);
+  width: 100%;
+  display: flex;
+  color: #FFCD44;
+  font-family: 'Josefin Sans';
+  font-size: 20px;
+  justify-content: center;
+  align-items: center; }
 
 .dropMenu_mutable {
   position: absolute;
@@ -1179,6 +1424,9 @@ h1 {
   .twitchDiscContent .twitchDiscContentViwer::-webkit-scrollbar-corner {
     background: transparent; }
 
+.profileModal:hover {
+  display: block; }
+
 .profileModal {
   z-index: 200;
   width: 220px;
@@ -1197,6 +1445,23 @@ h1 {
     background-size: cover;
     background-repeat: no-repeat;
     position: relative; }
+    .profileModal .profileBanner .prof-modal-top-arrow-wrap {
+      height: 30px;
+      width: 100%;
+      margin-top: -30px;
+      position: absolute;
+      display: flex;
+      align-items: flex-end; }
+      .profileModal .profileBanner .prof-modal-top-arrow-wrap .prof-modal-top-arrow {
+        -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+        clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+        background-color: #C7A035;
+        width: 20px;
+        height: 20px;
+        margin-left: 181px;
+        align-self: flex-end;
+        margin-bottom: -2px;
+        border-radius: 2px; }
     .profileModal .profileBanner .profileImg {
       position: absolute;
       left: 20px;
@@ -1209,8 +1474,21 @@ h1 {
   .profileModal .profileModalUsername {
     margin: 10px;
     margin-top: 25px; }
-  .profileModal .profileModalDesc {
-    min-height: 65px; }
+  .profileModal .profileModalQuote {
+    font-family: 'Josefin sans';
+    font-size: 15px;
+    margin-left: 15px; }
+  .profileModal .profileModalOwnerOf {
+    font-family: 'Comfortaa';
+    font-size: 13px;
+    margin-left: 10px;
+    margin-top: 10px; }
+  .profileModal .profileModalMemberOf {
+    margin-top: 10px;
+    font-family: 'Comfortaa';
+    font-size: 13px;
+    margin-left: 10px;
+    margin-bottom: 10px; }
   .profileModal .profileModalActions {
     color: rgba(0, 0, 0, 0.7);
     font-size: 11px;
@@ -1238,13 +1516,34 @@ h1 {
     .profileModal .profileModalActions .send-msg-action {
       width: 55%; }
     .profileModal .profileModalActions .add-to-surkl-action {
-      width: 43%; }
+      width: 43%;
+      position: relative; }
+      .profileModal .profileModalActions .add-to-surkl-action #feedback-ani-1 {
+        position: absolute;
+        display: none;
+        height: 20px;
+        font-family: 'Comfortaa';
+        font-size: 17px;
+        background: #242323;
+        color: #FBCA43;
+        top: -40px;
+        left: -30px;
+        padding: 5px;
+        border-radius: 3px;
+        animation: ani1 1.5s cubic-bezier(0.04, 1.06, 1, 0.32) forwards; }
     .profileModal .profileModalActions .modalAction {
       cursor: pointer;
       border-radius: 5px;
       padding: 5px;
       box-sizing: border-box;
       border: 1px solid rgba(0, 0, 0, 0.7); }
+
+@keyframes ani1 {
+  95% {
+    opacity: 1; }
+  100% {
+    transform: translateX(100px);
+    opacity: 0; } }
 
 #session {
   position: relative;
@@ -1289,14 +1588,17 @@ h1 {
     width: 500px;
     flex-direction: column;
     box-sizing: border-box;
-    background-color: black; }
-    #session #sessionLeftAside #videoStreams::-webkit-scrollbar {
-      width: 10px; }
-    #session #sessionLeftAside #videoStreams::-webkit-scrollbar-thumb {
-      background: #282828;
-      border-radius: 10px; }
-    #session #sessionLeftAside #videoStreams::-webkit-scrollbar-corner {
-      background: transparent; }
+    background-color: black;
+    /* 	#videoStreams::-webkit-scrollbar {
+			width:10px;
+		}
+		#videoStreams::-webkit-scrollbar-thumb {
+			background: #282828; 
+			border-radius: 10px;
+		}
+		#videoStreams::-webkit-scrollbar-corner {
+			background: transparent;
+		} */ }
     #session #sessionLeftAside #videoStreams {
       height: 505px;
       width: 100%;
@@ -1307,6 +1609,7 @@ h1 {
       flex-direction: column; }
       #session #sessionLeftAside #videoStreams #streamsErrorModal {
         position: absolute;
+        align-self: flex-start;
         left: 0px;
         right: 0px;
         display: none;
@@ -1444,21 +1747,6 @@ h1 {
         background-color: #282828;
         display: flex;
         flex-direction: column; }
-        #session #sessionCenterAside #chatSection #chatBox #noAuthLayer {
-          position: absolute;
-          bottom: 0px;
-          left: 0px;
-          display: flex;
-          width: 100%;
-          height: 65px;
-          outline: none;
-          justify-content: center;
-          align-items: center;
-          font-family: 'Comfortaa';
-          background: rgba(0, 0, 0, 0.6);
-          color: #c2c3c4;
-          z-index: 10;
-          font-size: 20px; }
         #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow::-webkit-scrollbar {
           width: 10px; }
         #session #sessionCenterAside #chatSection #chatBox #chatMsgsShow::-webkit-scrollbar-thumb {
@@ -1544,6 +1832,8 @@ h1 {
       flex-wrap: wrap;
       align-content: flex-start;
       display: flex; }
+      #session #sessionRightAside #whosInRoom .clientImgRightWrap:hover > .profileModal {
+        display: block; }
       #session #sessionRightAside #whosInRoom .clientImgRightWrap {
         cursor: pointer;
         position: relative;
@@ -1557,6 +1847,28 @@ h1 {
           border-radius: 100px;
           border: 2px solid white;
           box-sizing: border-box; }
+    #session #sessionRightAside #viewersInRoom {
+      width: 100%;
+      box-sizing: border-box;
+      border-bottom: 1px solid #1c1c1c;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      display: flex; }
+      #session #sessionRightAside #viewersInRoom .viewerImgRightWrap:hover > .profileModal {
+        display: block; }
+      #session #sessionRightAside #viewersInRoom .viewerImgRightWrap {
+        cursor: pointer;
+        position: relative;
+        width: calc(20% - 6px);
+        height: calc(20% - 6px);
+        margin-top: 5px;
+        margin-left: 5px; }
+        #session #sessionRightAside #viewersInRoom .viewerImgRightWrap .viewerSquareAv {
+          width: 100%;
+          height: 100%;
+          border-radius: 100px;
+          border: 1px solid white;
+          box-sizing: border-box; }
 
 #mic-icon {
   fill: #F4FBFB; }
@@ -1569,6 +1881,102 @@ h1 {
     border-right: 2px solid #FECC43; }
   100% {
     border-right: 2px solid rgba(0, 0, 0, 0); } }
+
+.simpleProfileModal-simple:hover {
+  display: block; }
+
+.simpleProfileModal {
+  margin-bottom: 20px;
+  z-index: 1;
+  width: 220px;
+  border-radius: 5px;
+  color: black;
+  position: absolute;
+  background: #DDE4E4;
+  font-family: 'Comfortaa';
+  display: none; }
+  .simpleProfileModal .simpleProfileBanner {
+    width: 100%;
+    height: 110px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-image: url("/assets/surkls_landing.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative; }
+    .simpleProfileModal .simpleProfileBanner .simple-prof-modal-top-arrow-wrap {
+      height: 15px;
+      width: 100%;
+      margin-top: -15px;
+      position: absolute;
+      display: flex;
+      align-items: flex-end; }
+      .simpleProfileModal .simpleProfileBanner .simple-prof-modal-top-arrow-wrap .simple-prof-modal-top-arrow {
+        -webkit-clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+        clip-path: polygon(50% 45%, 0 100%, 100% 100%);
+        background-color: #C7A035;
+        width: 20px;
+        height: 20px;
+        margin-left: 181px;
+        align-self: flex-end;
+        margin-bottom: -2px;
+        border-radius: 2px; }
+    .simpleProfileModal .simpleProfileBanner .simpleProfileImg {
+      position: absolute;
+      left: 20px;
+      bottom: -20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
+      border: 3px solid #DDE4E4;
+      background-size: cover; }
+  .simpleProfileModal .simpleProfileModalUsername {
+    margin: 10px;
+    margin-top: 25px; }
+  .simpleProfileModal .simpleProfileModalQuote {
+    font-family: 'Josefin sans';
+    font-size: 15px;
+    margin-left: 15px; }
+  .simpleProfileModal .simpleProfileModalOwnerOf {
+    font-family: 'Comfortaa';
+    font-size: 13px;
+    margin-left: 10px;
+    margin-top: 10px; }
+  .simpleProfileModal .simpleProfileModalMemberOf {
+    margin-top: 10px;
+    font-family: 'Comfortaa';
+    font-size: 13px;
+    margin-left: 10px;
+    margin-bottom: 10px; }
+  .simpleProfileModal .simpleProfileModalActions {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 11px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    padding: 5px; }
+    .simpleProfileModal .simpleProfileModalActions .simpleModalAction:hover {
+      background: #FECC44;
+      color: #282828; }
+    .simpleProfileModal .simpleProfileModalActions .simple-send-msg-action {
+      width: 100%;
+      display: flex;
+      justify-content: center; }
+    .simpleProfileModal .simpleProfileModalActions .simpleModalAction {
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 5px;
+      box-sizing: border-box;
+      border: 1px solid rgba(0, 0, 0, 0.7); }
+
+@keyframes ani1 {
+  95% {
+    opacity: 1; }
+  100% {
+    transform: translateX(100px);
+    opacity: 0; } }
 
 #rooms {
   height: calc( 100vh - 55px);
@@ -1593,28 +2001,14 @@ h1 {
     background-size: cover;
     box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.4);
     position: relative;
-    margin-bottom: 10px;
-    z-index: 0;
-    overflow: hidden; }
+    margin-bottom: 10px; }
     #rooms .room .hover-overlay {
       position: absolute;
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      color: #FBCA43;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 25px;
-      font-family: 'Comfortaa';
-      z-index: 1; }
-    #rooms .room .maxed-out-overlay {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 8px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
       color: #FBCA43;
       display: flex;
       justify-content: center;
@@ -1622,8 +2016,9 @@ h1 {
       font-size: 25px;
       font-family: 'Comfortaa'; }
     #rooms .room .room-header {
-      z-index: 2;
       height: 50px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
       padding: 5px;
       padding-left: 10px;
       padding-right: 10px;
@@ -1649,7 +2044,7 @@ h1 {
         font-size: 20px;
         user-select: none; }
   #rooms .joins {
-    z-index: 2;
+    position: relative;
     display: flex;
     padding: 10px;
     box-sizing: border-box;
@@ -1657,7 +2052,8 @@ h1 {
     font-family: 'Comfortaa';
     font-size: 15px; }
     #rooms .joins .joins-left {
-      width: 170px; }
+      width: 170px;
+      align-self: flex-end; }
       #rooms .joins .joins-left .joins-title {
         margin-bottom: 5px;
         user-select: none; }
@@ -1676,7 +2072,10 @@ h1 {
     #rooms .joins .joins-right {
       width: calc(100% - 170px);
       display: flex;
-      align-items: flex-end; }
+      align-items: flex-end;
+      height: 60px;
+      justify-content: flex-end;
+      flex-direction: column; }
       #rooms .joins .joins-right .room-clients {
         display: flex;
         width: 100%;
@@ -1686,7 +2085,23 @@ h1 {
           width: 30px;
           height: 30px;
           border-radius: 30px;
-          margin-right: 5px; }
+          margin-right: 5px;
+          position: relative; }
+        #rooms .joins .joins-right .room-clients .room-client:hover > .simpleProfileModal {
+          display: block; }
+      #rooms .joins .joins-right .room-viewers {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end; }
+        #rooms .joins .joins-right .room-viewers .room-viewer {
+          border: 1px solid #F7DF9D;
+          width: 20px;
+          height: 20px;
+          border-radius: 20px;
+          margin-right: 5px;
+          position: relative; }
+        #rooms .joins .joins-right .room-viewers .room-viewer:hover > .simpleProfileModal {
+          display: block; }
 
 .dropMenu {
   position: absolute;
@@ -1825,7 +2240,7 @@ h1 {
   left: 0px;
   top: 0px;
   background-color: rgba(0, 0, 0, 0);
-  z-index: 200;
+  z-index: 130;
   overflow: hidden;
   animation: removeOverlay .3s ease-out forwards;
   display: none; }
@@ -1929,9 +2344,9 @@ h1 {
       background-size: 25px;
       background-repeat: no-repeat; }
     .header #leftOfHeader .logo {
-      width: 40px;
-      height: 40px;
-      margin-top: 3px; }
+      width: 80px;
+      height: 29px;
+      margin-top: -3px; }
     .header #leftOfHeader .in-dev {
       margin-left: 20px;
       font-size: 15px;
@@ -1943,7 +2358,8 @@ h1 {
   .header #rightOfHeader {
     display: flex;
     justify-content: center;
-    align-items: center; }
+    align-items: center;
+    position: relative; }
     .header #rightOfHeader #threeDotsMenu {
       cursor: pointer;
       width: 30px;
@@ -1969,15 +2385,24 @@ h1 {
       background-size: 25px;
       background-repeat: no-repeat;
       margin-right: 20px; }
-    .header #rightOfHeader #toRoomsIcon {
+    .header #rightOfHeader #online-number {
+      margin-right: 30px;
+      font-family: 'Comfortaa';
+      color: #EFC141;
+      align-self: flex-end;
+      margin-bottom: 5px; }
+    .header #rightOfHeader #jump-into-surf-btn {
       cursor: pointer;
       width: 30px;
       height: 30px;
-      background-image: url("/assets/UI-icons/th-solid.1.svg");
+      background-image: url("/assets/UI-icons/8ball-yellow.svg");
       background-position: center;
-      background-size: 20px;
+      background-size: 23px;
       background-repeat: no-repeat;
-      margin-right: 20px; }
+      margin-right: 20px;
+      border-radius: 40px;
+      left: -50px;
+      position: absolute; }
     .header #rightOfHeader #messageIcon {
       cursor: pointer;
       width: 30px;
@@ -1995,11 +2420,11 @@ h1 {
         position: absolute;
         border-radius: 16px;
         color: white;
-        font-family: 'Quicksand';
+        font-family: Arial, Helvetica, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 12px;
+        font-size: 11px;
         right: 0px; }
     .header #rightOfHeader #notifIcon {
       cursor: pointer;
@@ -2018,7 +2443,7 @@ h1 {
         position: absolute;
         border-radius: 16px;
         color: white;
-        font-family: 'Quicksand';
+        font-family: Arial, Helvetica, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -2059,7 +2484,8 @@ h1 {
   margin-right: 21px; }
 
 #surklsIcon {
-  background-image: url("/assets/UI-icons/surkls_icon.svg"); }
+  background-image: url("/assets/UI-icons/surkls_icon.svg");
+  background-size: 24px; }
 
 #mySurklIcon {
   background-image: url("/assets/UI-icons/circle-notch-solid.svg"); }
@@ -2264,6 +2690,14 @@ h1 {
 
 /*dm-messanger*/
 /*pull-out menu*/
+.pulloutMenuIcon {
+  width: 25px;
+  height: 25px;
+  background-position: center;
+  background-size: 21px;
+  background-repeat: no-repeat;
+  margin-right: 21px; }
+
 /*pull-out menu*/
 /*notification menu*/
 .notif-feed {
@@ -2352,8 +2786,8 @@ h1 {
   background-image: url("/assets/twitter_btn.png"); }
 
 #createSurklIcon {
-  background-size: 18px !important;
-  background-image: url("/assets/UI-icons/add-surkl.svg"); }
+  background-image: url("/assets/UI-icons/add-surkl.svg");
+  background-size: 20px; }
 
 #roomsIcon {
   background-image: url("/assets/UI-icons/th-solid.svg"); }
@@ -2371,26 +2805,24 @@ h1 {
   background-image: url("/assets/UI-icons/user-plus-solid.svg"); }
 
 #surferIcon {
-  background-image: url("/assets/UI-icons/snowboarding-solid.svg"); }
+  background-image: url("/assets/UI-icons/8ball.svg");
+  background-size: 22px; }
 
 /*icons*/
+.moveOver {
+  animation: roll 1.5s cubic-bezier(0.04, 0.08, 0, 0.87) forwards, spin 1.5s cubic-bezier(0.04, 0.08, 0, 0.87) forwards; }
 
-#profile {
-  width: 100%;
-  height: calc(100vh - 55px);
-  display: flex; }
-  #profile #profileInfo {
-    width: 80%;
-    height: 100%;
-    /* #profileBanner {
-      background-image: url('/assets/banner.png');
-      background-size: cover;
-      background-position: center;
-      height: 250px;
-      width:100%;  
-      -webkit-clip-path: polygon(0 0, 100% 0, 100% 86%, 0% 100%);
-      clip-path: polygon(0 0, 100% 0, 100% 86%, 0% 100%);
-    } */ }
+@keyframes spin {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(-660deg); } }
+
+@keyframes roll {
+  from {
+    left: -50px; }
+  to {
+    left: -200px; } }
 
 #already-created {
   height: calc(100vh - 55px);
@@ -2568,8 +3000,7 @@ h1 {
         width: 100%;
         height: 200px;
         border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        margin-left: 5px; }
+        border-top-right-radius: 5px; }
       #account-settings .tab-win #tab-banner-n-avatar #tab-avatar {
         width: 100px;
         height: 100px;
@@ -2591,46 +3022,259 @@ h1 {
         font-size: 12;
         margin-bottom: 3px;
         margin-top: 10px; }
-      #account-settings .tab-win .account-tab-form .tab-input {
-        color: #F4FBFB;
-        background: #3F3E3E;
-        width: 100%;
+      #account-settings .tab-win .account-tab-form .edit-setting-input-wrap {
+        display: flex;
+        justify-content: space-between; }
+        #account-settings .tab-win .account-tab-form .edit-setting-input-wrap .tab-input {
+          color: #F4FBFB;
+          background: #3F3E3E;
+          border: none;
+          border-radius: 3px;
+          height: 28px;
+          width: calc(100% - 60px);
+          font-family: 'Comfortaa';
+          font-size: 14px;
+          padding-left: 10px;
+          box-sizing: border-box;
+          outline: none; }
+        #account-settings .tab-win .account-tab-form .edit-setting-input-wrap .tab-save-btn {
+          background: #C7A035;
+          color: black;
+          font-family: 'Comfortaa';
+          font-size: 17px;
+          height: 28px;
+          border: none;
+          border-radius: 3px;
+          padding-top: 5px;
+          padding-bottom: 5px;
+          cursor: pointer;
+          outline: none; }
+        #account-settings .tab-win .account-tab-form .edit-setting-input-wrap .tab-save-btn:hover {
+          background: black;
+          color: #C7A035; }
+      #account-settings .tab-win .account-tab-form .tab-del-btn {
+        margin-top: 20px;
+        background: #C7A035;
+        color: black;
+        font-family: 'Comfortaa';
+        font-size: 17px;
+        height: 28px;
         border: none;
         border-radius: 3px;
-        height: 28px;
-        font-family: 'Comfortaa';
-        font-size: 14px;
-        padding-left: 10px;
-        outline: none; }
+        padding-top: 5px;
+        padding-bottom: 5px;
+        cursor: pointer; }
+      #account-settings .tab-win .account-tab-form .tab-del-btn:hover {
+        background: black;
+        color: #C7A035; }
 
-#account-settings {
+#surkls-settings {
   width: 100%;
   height: 100%; }
-  #account-settings #tabs {
+  #surkls-settings #s-tabs {
     height: 30px;
     display: flex; }
-    #account-settings #tabs .tab {
-      width: 120px;
+    #surkls-settings #s-tabs .s-tab {
+      padding-left: 10px;
+      padding-right: 10px;
       border-top-left-radius: 3px;
       border-top-right-radius: 3px;
       height: 30px;
       margin-left: 5px;
       display: flex;
+      border: 1px #3E3E3E solid;
       background: #242323;
       justify-content: center;
       align-items: center;
       color: #F4FBFB;
       font-family: 'Comfortaa';
       cursor: pointer; }
-    #account-settings #tabs .profile-tab {
-      border-bottom: 1px solid #242323; }
-  #account-settings #tabs > div:first-child {
+  #surkls-settings #s-tabs > div:first-child {
     margin-left: 0px; }
-  #account-settings .tab-win {
-    height: calc(100% - 30px);
+  #surkls-settings .s-tab-win {
+    min-height: calc(100% - 30px);
     margin-top: 1px;
     border-radius: 5px;
-    border-top-left-radius: 0px; }
+    border-top-left-radius: 0px;
+    border: 1px #3E3E3E solid;
+    padding-bottom: 10px;
+    margin-bottom: 20px; }
+    #surkls-settings .s-tab-win .surkl-tab-primary {
+      margin-left: 20px;
+      margin-top: 25px;
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      align-content: flex-start; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-banner {
+        width: 100%;
+        height: 200px;
+        background: #EFC141;
+        border-radius: 3px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center; }
+        #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-banner .surkl-set-logo {
+          height: 100px;
+          width: 100px;
+          border-radius: 100px;
+          background: black;
+          margin-bottom: -50px; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .set-wrap1 {
+        margin-top: 80px !important; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap {
+        display: flex;
+        margin-top: 15px;
+        flex-direction: column;
+        height: 55px; }
+        #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap .surkl-set-input-n-btn {
+          display: flex;
+          align-items: center;
+          margin-top: 5px; }
+          #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap .surkl-set-input-n-btn .surkl-set-select {
+            outline: none;
+            color: #F4FBFB;
+            background: #3F3E3E;
+            border-radius: 1px;
+            box-sizing: border-box;
+            border: none;
+            margin-left: 5px;
+            height: 28px;
+            padding-left: 10px;
+            min-width: 320px;
+            font-size: 14px;
+            font-family: 'Comfortaa'; }
+          #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap .surkl-set-input-n-btn .surkl-set-input {
+            outline: none;
+            color: #F4FBFB;
+            background: #3F3E3E;
+            border-radius: 3px;
+            box-sizing: border-box;
+            border: none;
+            margin-left: 5px;
+            height: 28px;
+            padding-left: 10px;
+            min-width: 320px;
+            font-size: 14px;
+            font-family: 'Comfortaa'; }
+          #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap .surkl-set-input-n-btn .set-surkl-save-btn {
+            background: #C7A035;
+            color: black;
+            margin-left: 5px;
+            font-family: 'Comfortaa';
+            font-size: 17px;
+            height: 28px;
+            border: none;
+            border-radius: 3px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            cursor: pointer;
+            outline: none; }
+          #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap .surkl-set-input-n-btn .set-surkl-save-btn:hover {
+            background: black;
+            color: #C7A035; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap2 {
+        display: flex;
+        margin-top: 15px;
+        flex-direction: column;
+        height: 77px; }
+        #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap2 .surkl-set-input-n-btn2 {
+          display: flex;
+          align-items: center;
+          margin-top: 5px; }
+          #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap2 .surkl-set-input-n-btn2 .surkl-set-text {
+            box-sizing: border-box;
+            resize: none;
+            outline: none;
+            color: #F4FBFB;
+            background: #3F3E3E;
+            border-radius: 3px;
+            border: none;
+            margin-left: 5px;
+            height: 50px;
+            padding-left: 10px;
+            padding-top: 5px;
+            width: 320px;
+            font-size: 14px;
+            font-family: 'Comfortaa'; }
+          #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap2 .surkl-set-input-n-btn2 .set-surkl-notice-btn {
+            background: #C7A035;
+            color: black;
+            margin-left: 5px;
+            font-family: 'Comfortaa';
+            font-size: 17px;
+            height: 50px;
+            border: none;
+            border-radius: 3px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            cursor: pointer;
+            outline: none; }
+          #surkls-settings .s-tab-win .surkl-tab-primary .surkl-set-wrap2 .surkl-set-input-n-btn2 .set-surkl-notice-btn:hover {
+            color: #EFC141;
+            background: black; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .surkl-outwrap-btn {
+        margin-top: 30px;
+        align-self: flex-start;
+        margin-left: 10px;
+        font-family: 'Comfortaa';
+        font-size: 15px;
+        min-width: 120px;
+        color: #F4FBFB;
+        cursor: pointer; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .ev {
+        margin-top: 20px; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .surkl-outwrap-btn:hover {
+        color: #EFC141; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .leave-surkl {
+        color: #f48f42;
+        font-family: 'Comfortaa';
+        cursor: pointer; }
+      #surkls-settings .s-tab-win .surkl-tab-primary .destroy-surkl {
+        color: #D35529;
+        margin-bottom: 15px; }
+
+#need-new-admin {
+  margin-top: 30px;
+  align-self: flex-start;
+  margin-left: 10px;
+  font-family: 'Comfortaa';
+  font-size: 15px;
+  min-width: 120px;
+  color: red; }
+
+.confirm-wrap {
+  display: flex;
+  font-family: 'Comfortaa';
+  align-items: center;
+  align-self: flex-start;
+  margin-left: 10px;
+  font-size: 15px;
+  min-width: 120px;
+  color: #F4FBFB;
+  margin-top: 30px; }
+  .confirm-wrap .set-confirm-yes {
+    background: #D35529;
+    margin-left: 5px;
+    padding: 5px;
+    border-radius: 3px;
+    cursor: pointer; }
+  .confirm-wrap .set-confirm-no {
+    background: #C7A035;
+    cursor: pointer;
+    margin-left: 5px;
+    border-radius: 3px;
+    padding: 5px; }
+
+.surkl-inwrap-btn {
+  align-self: flex-start;
+  margin-left: 10px;
+  font-family: 'Comfortaa';
+  font-size: 15px;
+  min-width: 120px;
+  color: #F4FBFB;
+  cursor: default;
+  margin-right: 10px; }
 
 #account-settings {
   width: 100%;
