@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUser, signUp, closeMenus } from 'actions/actions';
-import './home.scss';
+import './sign-up.scss';
 import '../Loader1/loader1.scss';
 
 class SignUp extends Component {

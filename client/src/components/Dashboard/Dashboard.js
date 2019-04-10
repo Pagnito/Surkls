@@ -142,10 +142,12 @@ class Dashboard extends Component {
 		this.socket.removeListener('receive-surkl-msgs');
 		this.socket.removeListener('track');
 		this.socket.removeListener('mounted-track');
-		this.YTPlayer.pause();
-		if (this.props.surkl.currTime === null) {
-			this.props.updateYTPlayer({ currTime: this.YTPlayer.getCurrentTime(), audio_dur: this.state.audio_dur });
-		}
+		if(this.YTPlayer!==null){
+			this.YTPlayer.pause();
+			if (this.props.surkl.currTime === null) {
+				this.props.updateYTPlayer({ currTime: this.YTPlayer.getCurrentTime(), audio_dur: this.state.audio_dur });
+			}
+		}	
 	}
 
 	componentDidUpdate(prevProps) {

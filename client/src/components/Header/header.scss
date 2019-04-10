@@ -227,6 +227,26 @@
 	background-color: #FCCB43;
 	color: #282828;
 }
+#session-types {
+	height: 35px;
+	width: 92%;
+	background: white;
+	margin-top:10px;
+	display:flex;
+	border-radius:5px;
+	overflow:hidden;
+	.session-type {
+		width:50%;
+		height:100%;
+		font-weight: 700;
+		font-family: 'Comfortaa';
+		
+		font-size:15px;
+		display:flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
 #createSessBtn {
 	color: #FCCB43;
   outline:none;
@@ -337,6 +357,7 @@
 		padding-left:10px;
 		.msngr-name {
 			font-weight: 700;
+			font-family: SourceSansLocal,source-sans-pro,Source Sans Pro,-apple-system,Roboto,pt sans,calibri,sans-serif;
 		}
 		.msngr-latest-msg {
 			font-size: 12px;

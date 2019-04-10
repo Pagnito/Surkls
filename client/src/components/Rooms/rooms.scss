@@ -59,6 +59,20 @@
         display: flex;
         align-self: flex-start;
         align-items: center;
+        .room-type-icon {
+          height:28px;
+          width:28px;
+          background-size: 28px;
+          background-position: center;
+          background-repeat: no-repeat;  
+          margin-right: 5px;
+        }
+        .stream-icon {
+          background-image: url('/assets/UI-icons/stream_icon.svg') 
+        }
+        .trio-icon {
+          background-image: url('/assets/UI-icons/trio_icon.svg') 
+        }
         .on-dot {
           width:10px;
           height:10px;
@@ -72,6 +86,7 @@
         font-family: "comfortaa";
         font-size: 20px;
         user-select: none;
+        margin-top:2px;
       }
     }
   }
@@ -85,11 +100,11 @@
     font-size: 15px;
     .joins-left {
       width:170px;
+      //height:40px;
       align-self: flex-end;
-      .joins-title {
-        margin-bottom:5px;
-        user-select: none;
-      }
+      //display: flex;
+      align-items: center;
+      
       .join-btns {
         .join-btn:hover {
           border: 2px solid white;
@@ -98,8 +113,9 @@
         }
         .join-btn {
           outline: none;
+          padding:4px;
           margin-left: 5px;
-          background: black;
+          background: rgba(0,0,0,.4);
           font-family: 'Comfortaa';
           cursor: pointer;
           border: 2px solid #FBCA43;

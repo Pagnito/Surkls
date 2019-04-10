@@ -1149,12 +1149,12 @@ class Session extends Component {
 					</div>
 					<div id="restOfSettings">
 						<div id="shareLink">Invite Link</div>
-						<button onClick={() => this.mediaRecorder.stop()} type="button">
+						{/* <button onClick={() => this.mediaRecorder.stop()} type="button">
 							Stop
 						</button>
 						<button onClick={() => this.requestStream()} type="button">
 							Get Stream
-						</button>
+						</button> */}
 						{/* <select id="sessVidDevices" />
 					<select id="sessAudDevices" /> */}
 					</div>

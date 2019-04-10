@@ -49,6 +49,11 @@ class Rooms extends Component {
 	};
 	renderRooms = () => {
 		return this.props.sessions.sessions.map((room,ind) => {
+			let typeOfJoin = room.sessionType === 'trio' ? 
+			<button onClick={() => this.joinSession(room.sessionKey, room.room)} type="button" className="join-btn">Join Trio</button> :
+			<button onClick={() => this.joinSessionNoCam(room.sessionKey, room.room)} type="button" className="join-btn"> Join Stream</button>
+			let roomType = room.sessionType === 'trio' ? 
+			<div className="trio-icon room-type-icon"></div> : <div className="room-type-icon stream-icon"></div> 
 			if(!room.maxedOut){
 				return (
 					<div style={{backgroundImage: `url(${room_images[room.category.replace('+','_')]})`,
@@ -57,16 +62,15 @@ class Rooms extends Component {
 						backgroundSize:'cover'}} key={ind} className="room">
 						<div className="hover-overlay"></div>
 						<div className="room-header">
-							<div className="room-name"><div className="on-dot"></div>{room.room}</div>
+							<div className="room-name">{roomType}{room.room}</div>
 							<div className="room-category">{room.category.replace('+',' ')}</div>
 						</div>
 						
 						<div className="joins">
 							<div className="joins-left">
-								<div className="joins-title">Join</div>
+								
 								<div className="join-btns">
-									<button onClick={() => this.joinSessionNoCam(room.sessionKey, room.room)} type="button" className="join-btn"> No Cam</button>
-									<button onClick={() => this.joinSession(room.sessionKey, room.room)} type="button" className="join-btn">With Cam</button>
+									{typeOfJoin}								
 								</div>	
 							</div>
 							<div className="joins-right">

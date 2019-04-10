@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {emojiRegex} from './emojis'
+//import {emojiRegex} from './emojis'
 import { readOne, readData, deleteOne } from '../../../tools/sw-utils';
 import PropTypes from 'prop-types';
 class SurklFeed extends Component {

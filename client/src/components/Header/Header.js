@@ -17,6 +17,7 @@ class Header extends Component {
 			maxViewers: 5,
 			category: '',
 			subCategory: '',
+			sessionType: 'trio',
 			roomName: '',
 			email: '',
 			password: '',
@@ -527,6 +528,10 @@ class Header extends Component {
 					name="roomName"
 					value={this.state.roomName}
 				/>
+				<div id="session-types">
+					<div style={{background: this.state.sessionType==='trio' ? '#EFC141' : 'white'}} onClick={()=>this.setState({sessionType: 'trio'})} className="session-type">Trio</div>
+					<div style={{background: this.state.sessionType==='stream' ? '#EFC141 ' :'white'}} onClick={()=>this.setState({sessionType: 'stream'})} className="session-type">Stream</div>				
+				</div>
 				<select
 					onChange={this.onInputChange}
 					name="category"
@@ -558,8 +563,8 @@ class Header extends Component {
 					<option value="random">Random</option>
 				</select>
 			{/* 	{this.renderSubCategories()} */}
-				<div className="menuConfig">
-					Max Members
+				<div style={{display:this.state.sessionType==='trio' ? 'flex' : 'none'}} className="menuConfig">
+					Max Participators
 					<input
 						id="maxMembers"
 						onChange={this.onInputChange}
@@ -571,7 +576,7 @@ class Header extends Component {
 						max="3"
 					/>
 				</div>
-				<div className="menuConfig">
+				<div style={{display:this.state.sessionType==='stream' ? 'flex' : 'none'}} className="menuConfig">
 					Max Viewers
 					<input
 						id="maxViewers"
@@ -755,8 +760,8 @@ class Header extends Component {
 				maxMembers: this.state.maxMembers,
 				maxViewers: this.state.maxViewers,
 				category: this.state.category,
-				subCategory: this.state.subCategory,
 				isAdmin: true,
+				sessionType: this.state.sessionType,
 				notShareLink: true,
 				cam: document.getElementById('camSelect').value
 					? document.getElementById('camSelect').value
