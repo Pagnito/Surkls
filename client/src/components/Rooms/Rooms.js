@@ -16,7 +16,7 @@ class Rooms extends Component {
     }	
 	}
 
-	joinSession = (sessionKey, room) => {
+	joinTrio = (sessionKey, room) => {
 		let session = {
 			sessionKey: sessionKey,
 			room: room,
@@ -31,13 +31,29 @@ class Rooms extends Component {
 			//@TODO show error
 		}
 	};
-	joinSessionNoCam = (sessionKey, room) => {
+	joinStreamWithoutCam = (sessionKey, room, clients) => {
 		let session = {
 			sessionKey: sessionKey,
 			room: room,
-			isAdmin: false,
+			isAdmin: clients.length===0 ? true : false,
 			notShareLink: true,
 			noCam: true
+		}
+		if (sessionKey.length >= 3) {
+			this.props.joinSession(session, () => {
+				this.props.history.push('/session/noCamroom='+sessionKey.toString());
+			});
+		} else {
+			//@TODO show error
+		}
+	}
+	joinStreamWithCam = (sessionKey, room, clients) => {
+		let session = {
+			sessionKey: sessionKey,
+			room: room,
+			isAdmin: clients.length===0 ? true : false,
+			notShareLink: true,
+			noCam: false
 		}
 		if (sessionKey.length >= 3) {
 			this.props.joinSession(session, () => {
@@ -49,9 +65,29 @@ class Rooms extends Component {
 	};
 	renderRooms = () => {
 		return this.props.sessions.sessions.map((room,ind) => {
-			let typeOfJoin = room.sessionType === 'trio' ? 
-			<button onClick={() => this.joinSession(room.sessionKey, room.room)} type="button" className="join-btn">Join Trio</button> :
-			<button onClick={() => this.joinSessionNoCam(room.sessionKey, room.room)} type="button" className="join-btn"> Join Stream</button>
+			let typeOfJoins;
+			let joinAsHeader;
+			if(room.sessionType==='trio'){
+				typeOfJoins = 
+				<div className="join-btns">
+					<button onClick={() => this.joinTrio(room.sessionKey, room.room, room.clients)} type="button" className="join-btn">Join Trio</button>			
+				</div>
+			} else if(room.sessionType==='stream'){
+				if(room.clients.length===0){
+					joinAsHeader = <div style={{marginBottom:'5px', marginLeft:'5px'}}>Join as</div>
+					typeOfJoins = 
+				 <div className="join-btns">
+				 	<button onClick={() => this.joinStreamWithCam(room.sessionKey, room.room,room.clients)} type="button" className="join-btn"> Streamer</button>
+				 	<button onClick={() => this.joinStreamWithoutCam(room.sessionKey, room.room,room.clients)} type="button" className="join-btn"> Viewer</button>			
+				</div>
+				} else {
+					typeOfJoins =
+					<div className="join-btns">
+						<button onClick={() => this.joinStreamWithoutCam(room.sessionKey, room.room,room.clients)} type="button" className="join-btn"> Join Stream</button>	
+					</div>
+				}
+			}
+		
 			let roomType = room.sessionType === 'trio' ? 
 			<div className="trio-icon room-type-icon"></div> : <div className="room-type-icon stream-icon"></div> 
 			if(!room.maxedOut){
@@ -64,14 +100,11 @@ class Rooms extends Component {
 						<div className="room-header">
 							<div className="room-name">{roomType}{room.room}</div>
 							<div className="room-category">{room.category.replace('+',' ')}</div>
-						</div>
-						
+						</div>						
 						<div className="joins">
 							<div className="joins-left">
-								
-								<div className="join-btns">
-									{typeOfJoin}								
-								</div>	
+								{joinAsHeader}
+								{typeOfJoins}
 							</div>
 							<div className="joins-right">
 							<div className="room-clients">
@@ -114,7 +147,7 @@ class Rooms extends Component {
 						<div className="joins-left">
 								<div className="joins-title">Join</div>
 								<div className="join-btns">
-									<button onClick={() => this.joinSessionNoCam(room.sessionKey, room.room)} type="button" className="join-btn">No Cam</button>
+									<button onClick={() => this.joinStream(room.sessionKey, room.room)} type="button" className="join-btn">No Cam</button>
 									<button  type="button" className="join-btn">Maxed out</button>
 								</div>	
 							</div>

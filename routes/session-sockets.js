@@ -95,6 +95,7 @@ module.exports = (io, socket) => {
 											io.to(sessionObj.viewers[sessionObj.viewers.length - 2].socketId)
 												.emit('signal', { type: 'another-viewer' }, socket.id);
 										} else {
+											console.log('wowz')
 											socket.in(session.sessionKey)
 												.emit('signal', { type: 'newJoin' }, socket.id);
 										}
@@ -325,7 +326,7 @@ module.exports = (io, socket) => {
 			}
 			let msgsArr = JSON.parse(msgs);
 			if (msgsArr.length > 100) {
-				msgsArr = msgsArr.slice(0, 100);
+				msgsArr = msgsArr.slice(msgsArr.length-100);
 			}
 			msgsArr.push(msg);
 			redClient.hset('videoChatMsgs', msg.sessionKey, JSON.stringify(msgsArr), (err, done) => {

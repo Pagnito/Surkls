@@ -347,7 +347,7 @@ class Session extends Component {
 		currentConnection.onicecandidate = (e) => this.handleIceCandidate(e, remoteId);
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-		if (!this.props.session.noCam) {
+		if (/noCam/.test(this.props.match.params.room)===false) {
 			if (this.track[0].kind === 'audio') {
 				this.track.reverse();
 			}
@@ -562,8 +562,9 @@ class Session extends Component {
 				} else {
 					startingOrJoining = false;
 				}
-				session.inSession = true;
-				session.sessionKey = this.props.match.params.room.replace('room=', '');
+				session.inSession = true;	
+				session.noCam = /noCam/.test(this.props.match.params.room) ? true : false
+				session.sessionKey = this.props.match.params.room.split('=')[1]
 				session.creatingSession = startingOrJoining;
 				if (this.props.auth.user.userName) {
 					session.user = this.props.auth.user;
@@ -1019,7 +1020,7 @@ class Session extends Component {
 	};
 	startStream = (videoEl) => {
 		return new Promise((resolve, reject) => {
-			if (!this.props.session.noCam) {
+			if (/noCam/.test(this.props.match.params.room)===false) {
 				if (videoEl.srcObject === null) {
 					navigator.mediaDevices
 						.getUserMedia({
