@@ -4,7 +4,7 @@ let offers = {};
 let client;
 let connecting = false;
 let endOfCandidates = 0;
-let streaming = 0;
+let usersConnecting = {};
 let socketInSession = {};
 let session = false;
 const spliceObj = (obj, keys) => {
@@ -16,8 +16,7 @@ const spliceObj = (obj, keys) => {
 	});
 	return spliced;
 };
-module.exports = (io, socket, initSession) => {
-	console.log('SETTING LISTENERS');
+module.exports = (io, socket) => {
 	socket.on('createOrJoin', function(sessionObj) {
 		console.log('///////////////////////////////////////////////////');
 		session = sessionObj;
@@ -29,7 +28,8 @@ module.exports = (io, socket, initSession) => {
 				///////////joining session
 				//////////////////////if the room exists and isnt maxed out//////////////////////////
 				socketInSession[socket.id] = session.sessionKey;
-				connecting = true;
+				//connecting = true;
+				usersConnecting[socket.id] = true;
 				if (session.noCam) {
 					redClient.hexists('rooms', session.sessionKey, (err, done) => {
 						if (err) {
@@ -220,9 +220,8 @@ module.exports = (io, socket, initSession) => {
 					id: socket.id,
 					receiver: idTo
 				};
-				if (connecting == true) {
-					connecting = false;
-					sender = socket.id;
+				if (usersConnecting[idTo] == true) {
+					usersConnecting[idTo] = false;
 					io.to(idTo).emit('signal', data, socket.id);
 					delete offers[socket.id];
 					console.log('OFFERS', Object.keys(offers));
@@ -238,33 +237,24 @@ module.exports = (io, socket, initSession) => {
 				io.to(idTo).emit('signal', data, socket.id);
 				break;
 			case 'streaming':
-				streaming++;
+				//streaming++;
 				break;
 			case 'connected':
 				endOfCandidates++;
 				if (endOfCandidates === 2 /* && streaming===2 */) {
 					console.log('CONNECTED');
 					//console.log('OFFERS', Object.keys(offers))
-					connecting = true;
+					usersConnecting[idTo] = true;
 					endOfCandidates = 0;
 					streaming = 0;
 					if (Object.keys(offers).length > 0) {
 						let offerObj = offers[Object.keys(offers)[0]];
-						sender = offerObj.id;
 						receiver = offerObj.receiver;
 						console.log('OFFER OBJ', offerObj.id);
 						io.to(receiver).emit('signal', offerObj.offer, offerObj.id);
 						delete offers[offerObj.id];
 					} /*  else {
-									redClient.hexists('youtubeLists', session.sessionKey,(err,exists)=>{
-										if(exists===1){
-											redClient.hget('youtubeLists', session.sessionKey, (err, list) => {
-												if (err) {console.log(err)}										
-													io.to(receiver).emit('session-data', JSON.parse(list));
-																							
-											});
-										}
-									})				
+													
 								} */
 				}
 		}
