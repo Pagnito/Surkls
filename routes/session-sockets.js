@@ -2,7 +2,6 @@ const redClient = require('../database/redis');
 
 let offers = {};
 let client;
-let connecting = false;
 let endOfCandidates = 0;
 let usersConnecting = {};
 let socketInSession = {};
@@ -26,12 +25,12 @@ module.exports = (io, socket) => {
 			//////////////////////if this client joining or creating session///////////////////
 			if (session.creatingSession === false) {
 				///////////joining session
-				//////////////////////if the room exists and isnt maxed out//////////////////////////
+				
 				socketInSession[socket.id] = session.sessionKey;
-				//connecting = true;
 				usersConnecting[socket.id] = true;
 				if (session.noCam) {
 					redClient.hexists('rooms', session.sessionKey, (err, done) => {
+						//////////////////////if the room exists and isnt maxed out//////////////////////////
 						if (err) {
 							console.log(err);
 						}
@@ -90,18 +89,20 @@ module.exports = (io, socket) => {
 												msgs: JSON.parse(msgs)
 											});
 										});
-										if (sessionObj.viewers.length > 1) {
+										/* if (sessionObj.viewers.length > 5) {
 											console.log('WTF', sessionObj.viewers[sessionObj.viewers.length - 2]);
 											io.to(sessionObj.viewers[sessionObj.viewers.length - 2].socketId)
 												.emit('signal', { type: 'another-viewer' }, socket.id);
-										} else {
+										} else { */
 											console.log('wowz')
 											socket.in(session.sessionKey)
 												.emit('signal', { type: 'newJoin' }, socket.id);
-										}
+										//}
 									});
 								}
 							});
+						} else {
+							io.to(socket.id).emit({type:'expired', msg:'sessionExpired'});
 						}
 					});
 				} else {
@@ -109,63 +110,73 @@ module.exports = (io, socket) => {
 						if (err) {
 							console.log(err);
 						}
-
 						if (done === 1) {
 							redClient.hget('rooms', session.sessionKey, (err, sessionStr) => {
 								if (err) {
 									socket.emit('roomEntranceError', err);
 								}
 								let sessionObj = JSON.parse(sessionStr);
-								if (sessionObj.clients.length < sessionObj.maxMembers) {
-									socket.join(session.sessionKey);
-									client = Object.assign({ socketId: socket.id }, session.user);
-									if (sessionObj.clients.length === 0 && sessionObj.viewers.length === 0) {
-										client.isAdmin = true;
-										sessionObj.admin = socket.id;
-									}
-									sessionObj.clients.push(
-										spliceObj(client, [
-											'quote',
-											'socketId',
-											'userName',
-											'email',
-											'isAdmin',
-											'avatarUrl',
-											'memberOf',
-											'mySurkl',
-											'_id',
-											'guest'
-										])
-									);
-									if (sessionObj.clients.length === sessionObj.maxMembers) {
-										sessionObj.maxedOut = true;
-									}
-									delete sessionObj.isAdmin;
-									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
-										redClient.hget('videoChatMsgs', session.sessionKey, (err, msgs) => {
-											if (err) console.log(err);
-											io.in(session.sessionKey).emit('session', {
-												clients: sessionObj.clients,
-												viewers: sessionObj.viewers,
-												activePlatform: sessionObj.activePlatform,
-												videoId: sessionObj.videoId,
-												playing: sessionObj.playing,
-												sessionType: sessionObj.sessionType,
-												requestingTime: sessionObj.requestingTime,
-												maxMembers: sessionObj.maxMembers,
-												maxedOut: sessionObj.maxedOut,
-												maxViewers: sessionObj.maxViewers,
-												maxedOutViewers: sessionObj.maxedOutViewers,
-												category: sessionObj.category,
-												msgs: JSON.parse(msgs)
+								
+								if(session.sessionType==='stream' && sessionObj.clients.length===1) {
+									console.log('YOOOO', sessionObj.clients.length)
+									io.to(socket.id).emit('connect-error', {type: 'maxedOut', msg: 'Streamer is already present'})
+								} else {
+									if(sessionObj.clients.length===sessionObj.maxMembers){
+										io.to(socket.id).emit('connect-error', {type: 'maxedOutTrio', msg : 'Oof, its maxed out.'})
+									} else {
+										if (sessionObj.clients.length < sessionObj.maxMembers) {
+											socket.join(session.sessionKey);
+											client = Object.assign({ socketId: socket.id }, session.user);
+											if (sessionObj.clients.length === 0 && sessionObj.viewers.length === 0) {
+												client.isAdmin = true;
+												sessionObj.admin = socket.id;
+											}
+											sessionObj.clients.push(
+												spliceObj(client, [
+													'quote',
+													'socketId',
+													'userName',
+													'email',
+													'isAdmin',
+													'avatarUrl',
+													'memberOf',
+													'mySurkl',
+													'_id',
+													'guest'
+												])
+											);
+											if (sessionObj.clients.length === sessionObj.maxMembers) {
+												sessionObj.maxedOut = true;
+											}
+											delete sessionObj.isAdmin;
+											redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
+												redClient.hget('videoChatMsgs', session.sessionKey, (err, msgs) => {
+													if (err) console.log(err);
+													io.in(session.sessionKey).emit('session', {
+														clients: sessionObj.clients,
+														viewers: sessionObj.viewers,
+														activePlatform: sessionObj.activePlatform,
+														videoId: sessionObj.videoId,
+														playing: sessionObj.playing,
+														sessionType: sessionObj.sessionType,
+														requestingTime: sessionObj.requestingTime,
+														maxMembers: sessionObj.maxMembers,
+														maxedOut: sessionObj.maxedOut,
+														maxViewers: sessionObj.maxViewers,
+														maxedOutViewers: sessionObj.maxedOutViewers,
+														category: sessionObj.category,
+														msgs: JSON.parse(msgs)
+													});
+												});
+												socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);
 											});
-										});
-										socket.in(session.sessionKey).emit('signal', { type: 'newJoin' }, socket.id);
-									});
+										}
+									}					
 								}
+							
 							});
 						} else {
-							io.to(socket.id).emit('sessionExpired');
+							io.to(socket.id).emit({type:'expired', msg:'sessionExpired'});
 						}
 					});
 				}

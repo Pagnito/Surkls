@@ -5,7 +5,7 @@
 	height: calc(100vh - 55px);
 	margin-top: 55px;
 	background-color: #282828;
-	#sessionExpiredContainer {
+	#session-err-modal-bg{
 		justify-content: center;
 		align-items: center;
 		height:100%;
@@ -16,15 +16,26 @@
 		left:0px;
 		top:0px;
 		background: rgba(0,0,0,.6);
-		#sessionExpiredModal {
+		#session-err-modal {
 			display:flex;
-			justify-content: center;
-		  align-items: center;
-			font-family: 'Comfortaa';
+			flex-direction: column;
+			justify-content: space-around;
+		  align-items: center;	
 			width: 60%;
 			height:200px;
-			border-radius: 10px;
+			border-radius: 5px;
 			background-color: #DEB23B;
+			#sadIcon {
+				background-image: url('/assets/UI-icons/frown-regular.svg');
+				background-position: center;
+				background-size: 60px;
+				background-repeat: no-repeat; 
+				height:60px;
+				width:60px;
+			}
+			#msg {
+				font-family: Arial, Helvetica, sans-serif;
+			}
 		}
 	}
 	

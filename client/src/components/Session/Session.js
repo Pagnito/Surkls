@@ -44,7 +44,8 @@ class Session extends Component {
 			showMyStream: true,
 			clientList: [],
 			platformMenuVisible: false,
-			sessionExists: true
+			sessionExists: true,
+			modalErr: ''
 		};
 		////////////////^^^^end of rerendering type state^^^^//////////////////////
 		this.stunConfig = {
@@ -114,6 +115,24 @@ class Session extends Component {
 				this.props.updateSession(sessionObj);
 			});
 		}
+		this.socket.on('connect-error', ({type, msg})=>{
+			if(type==='maxedOut'){
+				this.setState({ modalErr: msg });
+				setTimeout(()=>{
+					this.props.history.push('/')
+				},2000)			
+			} else if( type==='expired'){
+				this.setState({ modalErr: 'Session is expired' });
+				setTimeout(()=>{
+					this.props.history.push('/')
+				},2000)
+			} else if(type==='maxedOutTrio'){
+				this.setState({ modalErr: msg });
+				setTimeout(()=>{
+					this.props.history.push('/')
+				},2000)
+			}
+		})
 		this.socket.on('setup-vid-dms', (users) => {
 			this.props.addMultiToDMs(users);
 		});
@@ -131,9 +150,6 @@ class Session extends Component {
 		});
 		this.socket.on('session-data', (sessionData) => {
 			this.props.updateSession({ youtubeList: sessionData });
-		});
-		this.socket.on('sessionExpired', () => {
-			this.setState({ sessionExists: false });
 		});
 		this.socket.on('giveMeVideoCurrentTime', (videoObj) => {
 			this.props.updateSession(videoObj);
@@ -528,12 +544,11 @@ class Session extends Component {
 		this.socket.removeListener('unpickThisVideo');
 		this.socket.removeListener('adminLeftImAdminNow');
 		this.socket.removeListener('youtubeList');
-		this.socket.removeListener('sessionExpired');
 		this.socket.removeListener('giveMeVideoCurrentTime');
 		this.socket.removeListener('hereIsVideoCurrentTime');
 		this.socket.removeListener('sharingTweet');
 		this.socket.removeListener('sharingLink');
-
+		this.socket.removeListener('connect-error');
 		this.props.updateSession({
 			inSession: false,
 			activePlatform: 'youtube',
@@ -1174,8 +1189,13 @@ class Session extends Component {
 		} else {
 			return (
 				<div onClick={this.closeMenus} id="session">
-					<div style={{ display: this.state.sessionExists ? 'none' : 'flex' }} id="sessionExpiredContainer">
-						<div id="sessionExpiredModal">This session has expired :/</div>
+					<div style={{ 
+						display: this.state.modalErr.length > 0 && this.state.modalErr.length !== null ? 'flex' : 'none' }}
+						 id="session-err-modal-bg">
+						<div id="session-err-modal">
+							<div id="sadIcon"></div>
+							<div id="msg">{this.state.modalErr}</div>
+						</div>
 					</div>
 					{/*////////////////////////////////////*/}
 					<div id="sessionLeftAside">
