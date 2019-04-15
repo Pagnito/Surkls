@@ -9,6 +9,11 @@ module.exports = (app) => {
 			res.json(surkl);
 		});
 	});
+	app.get('/api/surkls', (req, res) => {
+		Surkl.find().then((surkls) => {
+			res.json(surkls);
+		});
+	});
 	app.get('/api/notifs/:id', requireLogin, (req, res) => {
 		if (req.params.id !== undefined && req.params.id.length > 0 && req.params.id !== 'undefined') {
 			User.findById({ _id: req.params.id }).then((user) => {

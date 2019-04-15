@@ -19,7 +19,6 @@ module.exports = (io, socket) => {
 	socket.on('createOrJoin', function(sessionObj) {
 		console.log('///////////////////////////////////////////////////');
 		session = sessionObj;
-		console.log('coming in', session.noCam ? ' with no cam' : 'with cam');
 		///////////////////////////checking if client has the key//////////////////////////
 		if (session.sessionKey !== undefined && session.sessionKey !== 'undefined') {
 			//////////////////////if this client joining or creating session///////////////////
@@ -94,7 +93,6 @@ module.exports = (io, socket) => {
 											io.to(sessionObj.viewers[sessionObj.viewers.length - 2].socketId)
 												.emit('signal', { type: 'another-viewer' }, socket.id);
 										} else { */
-											console.log('wowz')
 											socket.in(session.sessionKey)
 												.emit('signal', { type: 'newJoin' }, socket.id);
 										//}

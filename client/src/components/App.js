@@ -13,7 +13,8 @@ import Session from 'components/Session/Session';
 import Rooms from 'components/Rooms/Rooms';
 import Header from 'components/Header/Header';
 import CreateSurkl from 'components/Create-surkl/Create-surkl';
-import Settings from 'components/Settings/Settings'
+import Settings from 'components/Settings/Settings';
+import Surkls from 'components/Surkls/Surkls';
 /*const Loading = () => Loader;
 
 const Entries = Loadable({
@@ -88,6 +89,7 @@ class App extends Component {
 	render() {
 			return (
 				<Provider store={Store}>	
+					<Route exact path="/surkls" component={Surkls} />
 					<Route exact path="/settings" component={Settings} />
 					<Route 
 						exact path="/signup" render={(props)=><SignUp {...props} socket={this.socket}/>}   />

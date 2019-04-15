@@ -112,6 +112,46 @@
 			left: -50px;
 			position: absolute;
 		}
+		#surf-next-btn {
+			display:flex;
+			font-family: 'Comfortaa';
+			color: #EFC141;
+			margin-top: 3px;
+			display:none;
+			margin-right: 5px;			
+			.surf-option {
+				border-bottom: 2px solid #282828;
+				box-sizing: border-box;
+				font-size: 18px;
+				margin-right:20px;
+				cursor: pointer;
+			}
+			.surf-option:hover {
+				color: #F4FBFB;
+				border-bottom: 2px solid #EFC141;
+				
+			}
+		}
+		#surf-options {
+			display:flex;
+			font-family: 'Comfortaa';
+			color: #EFC141;
+			margin-top: 3px;
+			display:none;
+			margin-right: 5px;			
+			.surf-option {
+				border-bottom: 2px solid #282828;
+				box-sizing: border-box;
+				font-size: 18px;
+				margin-right:20px;
+				cursor: pointer;
+			}
+			.surf-option:hover {
+				color: #F4FBFB;
+				border-bottom: 2px solid #EFC141;
+				
+			}
+		}
 		#messageIcon {
 			cursor: pointer;
 			width: 30px;
@@ -598,13 +638,118 @@
 }
 @keyframes spin {
 	from { transform: rotate(0deg); }
-  to { transform: rotate(-660deg); }
+  to { transform: rotate(-750deg); }
 }
 @keyframes roll {
 	from {
 		left: -50px;
 	}
 	to {
-		left: -200px;
+		left: -270px;
+	}
+}
+.moveOverBack {
+	animation: rollBack 1.5s cubic-bezier(.37,.05,.29,.82) forwards, spinBack 1.5s cubic-bezier(.37,.05,.29,.82) forwards; 
+}
+@keyframes spinBack {
+	from { transform: rotate(-750deg); }
+  to { transform: rotate(0deg); }
+}
+@keyframes rollBack {
+	from {
+		left: -270px;
+	}
+	to {
+		left: -50px;
+	}
+}
+.moveOverBackForSessions {
+	animation: rollBackForSessions .8s cubic-bezier(.37,.05,.29,.82) forwards, spinBackForSessions .8s cubic-bezier(.37,.05,.29,.82) forwards; 
+}
+@keyframes spinBackForSessions {
+	from { transform: rotate(-750deg); }
+  to { transform: rotate(-400deg); }
+}
+@keyframes rollBackForSessions {
+	from {
+		left: -270px;
+	}
+	to {
+		left: -130px;
+	}
+}
+.moveOverBackNoSessions {
+	animation: rollBackNoSessions .8s cubic-bezier(.37,.05,.29,.82) forwards, spinBackNoSessions .8s cubic-bezier(.37,.05,.29,.82) forwards; 
+}
+@keyframes spinBackNoSessions {
+	from { transform: rotate(-400deg); }
+  to { transform: rotate(-0deg); }
+}
+@keyframes rollBackNoSessions {
+	from {
+		left: -130px;
+	}
+	to {
+		left: -50px;
+	}
+}
+.pullDownOptionsNoSessions {
+	animation: pullDownOptionsNoSessions .7s ease-out forwards;
+	position: absolute;
+	right: 200px;
+}
+@keyframes pullDownOptionsNoSessions {
+	from {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-30px);
+	}
+}
+.pullUpOptionsForSessions {
+	animation: pullUpOptionsForSessions .7s ease-out forwards;
+	position: absolute;
+	right: 200px;
+}
+@keyframes pullUpOptionsForSessions {
+	from {
+		opacity: 0;
+		transform: translateY(-30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+}
+.pullUpOptions {
+	animation: pullUpOptions .7s ease-out forwards;
+	position: absolute;
+	right: 200px;
+}
+@keyframes pullUpOptions {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+}
+.pullDownOptions {
+	animation: pullDownOptions .7s ease-out forwards;
+	position: absolute;
+	right: 200px;
+}
+@keyframes pullDownOptions {
+	from {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(30px);
 	}
 }

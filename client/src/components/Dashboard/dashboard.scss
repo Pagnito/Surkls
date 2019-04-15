@@ -191,24 +191,7 @@
         font-family: 'Comfortaa';
         color:#C2C3C4;
         font-size: 13px;
-        overflow-y: scroll; 
-        /* position: absolute;
-        top:0px;
-        left:0px; */
-      }
-      #surkl-chat-input-display {
-        width:calc(100% - 70px);
-        height:70px;
-        outline:none;
-        resize: none;
-        background: transparent;
-        border:none;
-        border-top: 1px solid #3E3E3E;
-        padding:10px;
-        box-sizing: border-box;
-        font-family: 'Comfortaa';
-        color:#C2C3C4;
-        font-size: 13px;
+        overflow-y: scroll;   
       }
       #surkl-chat-btns {
         display: flex;
@@ -465,7 +448,7 @@
           position: relative;
           bottom: 4px;
           background-color: #242323 !important;
-          cursor: -webkit-grab;
+          cursor: pointer;
         }
         #audio-time-range {
           margin-left: 10px;
@@ -500,6 +483,7 @@
             display: none;
             background: #242323;
             box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
+            
             #audio-volume-range {
               width:80px;
             }
@@ -514,7 +498,11 @@
               height:5px;
               outline: none;
             }
+            #audio-volume-range[type=range]::-webkit-slider-thumb:hover {
+              transform: scale(1.2)
+            }
             #audio-volume-range[type=range]::-webkit-slider-thumb {
+              transition: all .3s;
               outline: none;
               -webkit-appearance: none;
               border: 2px solid #FFCD44;
@@ -525,7 +513,7 @@
               position: relative;
               bottom: 5px;
               background-color: #242323 !important;
-              cursor: -webkit-grab;
+              cursor: pointer;
             }
           }
          

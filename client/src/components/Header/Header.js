@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import DropMenu from 'components/smalls/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
-import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp, updateUserMem } from 'actions/actions';
+import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp, updateUserMem, removeKeys } from 'actions/actions';
 import { closeDMs, openDMs, updateDMs, updateMsgs, addToDMs, fetchMsgThreads} from 'actions/dm-actions';
 import { fetchNotifs, updateNotifs, addNotif, removeNotif } from 'actions/notif-actions';
 import { subCategories } from 'components/Session/Sub-comps/sub-categories';
@@ -24,6 +24,8 @@ class Header extends Component {
 			dm_msg: '',
 			onlinePpl: 0,
 		};
+		this.rolled=false;
+		this.activeSession = 0;
 		this.menusClosed = true;
 		this.socketId = ''
 		this.socket = this.props.socket;
@@ -247,9 +249,9 @@ class Header extends Component {
 				{/* <div className="menuItem">
 					<div className="pulloutMenuIcon" id="helpIcon" />Streams
 				</div> */}
-	{			<div className="menuItem">
+				<Link to="/surkls" className="menuItem">
 					<div className="pulloutMenuIcon" id="surklsIcon" />Surkls
-				</div>}
+				</Link>
 				<div className="menuItem">
 					<div className="pulloutMenuIcon" id="eventsIcon" />Events
 				</div>
@@ -620,7 +622,131 @@ class Header extends Component {
 		});
 	};
 	rollTheBall = () =>{
-		 document.getElementById('jump-into-surf-btn').classList.add('moveOver');
+		let regex = /\/session\/room=/
+		if(regex.test(window.location.pathname)===false){
+			console.log('ok')
+			let ball = document.getElementById('surf-options');
+			let nextBtn = document.getElementById('surf-next-btn');
+		if(this.rolled===false){
+			this.rolled=true;
+			document.getElementById('jump-into-surf-btn').classList.remove('moveOverBackNoSessions');
+			document.getElementById('jump-into-surf-btn').classList.remove('moveOverBack');
+			document.getElementById('jump-into-surf-btn').classList.add('moveOver');
+			setTimeout(()=>{			
+				ball.style.display = 'flex';
+				ball.classList.remove('pullDownOptions');
+				ball.classList.add('pullUpOptions');
+			},500)
+		} else if(this.rolled===true){
+			this.rolled = false;
+			if(nextBtn.style.display === 'flex'){
+				nextBtn.classList.remove('pullUpOptionsForSessions');
+				nextBtn.classList.add('pullDownOptionsNoSessions');				
+				setTimeout(()=>{
+					nextBtn.style.display = 'none'
+					document.getElementById('jump-into-surf-btn').classList.remove('moveOverBackForSessions');
+					document.getElementById('jump-into-surf-btn').classList.add('moveOverBackNoSessions');
+				},50)
+			} else {
+				this.rolled=false;
+				ball.classList.remove('pullUpOptions');
+				ball.classList.add('pullDownOptions')
+				setTimeout(()=>{
+					document.getElementById('jump-into-surf-btn').classList.remove('moveOver');
+					document.getElementById('jump-into-surf-btn').classList.add('moveOverBack');
+				},50)
+			}
+
+		}	
+		}
+			 
+	}
+
+	surfing = (mode) =>{
+		fetch('/api/sessions').then(res=>res.json())
+		.then(data=>{
+			let sessions = [];
+			for (let room in data) {
+				sessions.push(JSON.parse(data[room]));
+			}
+			this.props.removeKeys(['noCam', 'imStreamer'], ()=>{
+				if(mode==='streams'){
+
+				} else if(mode==='trios'){
+		
+				} else {
+					let session = sessions[this.activeSession]
+					this.activeSession+=1;
+					let noCamObj = {
+						sessionKey: session.sessionKey,
+						room: session.room,
+						isAdmin: session.clients.length === 0 ? true : false,
+						notShareLink: true,
+						noCam: true,
+						sessionType: 'stream',
+						surfing:true
+					}
+					if(session.sessionType==='trio'){
+						let sessionObj = {
+							sessionKey: session.sessionKey,
+							room: session.room,
+							isAdmin: false,
+							notShareLink: true,
+							sessionType: 'trio',
+							surfing:true
+						};
+						this.props.joinSession(sessionObj,()=>{
+							this.props.history.push('/session/room='+session.sessionKey)
+						})
+						
+					} else {
+						if(session.clients.length===0){
+							let random = Math.floor(Math.random()*2)
+							if(random===1){
+								let sessionObj = {
+									sessionKey: session.sessionKey,
+									room: session.room,
+									isAdmin: session.clients.length === 0 ? true : false,
+									notShareLink: true,
+									noCam: false,
+									sessionType: 'stream',
+									imStreamer: true,
+									surfing:true
+								}
+								this.props.joinSession(sessionObj,()=>{
+									this.props.history.push('/session/room='+session.sessionKey)
+								})
+							} else {					
+								this.props.joinSession(noCamObj,()=>{
+									this.props.history.push('/session/noCamroom='+session.sessionKey)
+								})						
+							}
+						} else {					
+							this.props.joinSession(noCamObj,()=>{
+								this.props.history.push('/session/noCamroom='+session.sessionKey)
+							})
+							
+						}
+					}
+	
+				let ops = document.getElementById('surf-options');
+				let ops2 = document.getElementById('surf-next-btn');
+				
+			 
+					ops.classList.remove('pullUpOptions');
+					ops.classList.add('pullDownOptions');
+					ops2.style.display = 'flex';
+					ops2.classList.add('pullUpOptionsForSessions');
+					setTimeout(()=>{
+						document.getElementById('jump-into-surf-btn').classList.remove('moveOverForSessions');
+						document.getElementById('jump-into-surf-btn').classList.add('moveOverBackForSessions');
+					},50)
+						
+				}
+			})
+			
+		})
+		
 	}
 	signInMenu = () => {
 		let visibility = this.props.app.signInMenuVisible ? 'flex' : 'none';
@@ -762,6 +888,7 @@ class Header extends Component {
 				category: this.state.category,
 				isAdmin: true,
 				sessionType: this.state.sessionType,
+				imStreamer: this.state.sessionType === 'stream' ? true : false,
 				notShareLink: true,
 				cam: document.getElementById('camSelect').value
 					? document.getElementById('camSelect').value
@@ -778,6 +905,7 @@ class Header extends Component {
 			//@TODO show error
 		}
 	};
+	
 	render() {
 		if(this.props.auth.user===null){
 			return (
@@ -834,7 +962,17 @@ class Header extends Component {
 						{this.createSessionMenu()}
 						{this.messagesMenu()}
 						{/* <div id="online-number">{this.state.onlinePpl+' People online'}</div> */}
-						<div onClick={this.rollTheBall} id="jump-into-surf-btn"></div>
+						<div onClick={this.rollTheBall} id="jump-into-surf-btn">
+						
+						</div>
+						<div id="surf-next-btn">
+							<div onClick={()=>this.surfing('both')} className="surf-option">{`Next>>`}</div>
+						</div>
+						<div id="surf-options">
+							<div onClick={()=>this.surfing('streams')} className="surf-option">Streams</div>
+							<div onClick={()=>this.surfing('trios')} className="surf-option">Trios</div>
+							<div onClick={()=>this.surfing('both')} className="surf-option">Both</div>
+						</div>
 						<div onClick={this.renderCreateSessionMenu} id="startSessionIcon" />				
 						<div onClick={this.renderMessagesMenu} id="messageIcon" >
 							{this.props.dms.notifCount> 0 ? <div className="red-alert-dot">{this.props.dms.notifCount}</div>: ''}
@@ -884,8 +1022,12 @@ Header.propTypes = {
 	fetchNotifs: PropTypes.func,
 	updateNotifs: PropTypes.func,
 	addNotif: PropTypes.func,
-	 removeNotif: PropTypes.func,
-	 updateUserMem: PropTypes.func
+	removeNotif: PropTypes.func,
+	updateUserMem: PropTypes.func,
+	sessions: PropTypes.object,
+	joinSession: PropTypes.func,
+	location: PropTypes.object,
+	removeKeys: PropTypes.func
 };
 function stateToProps(state) {
 	return {
@@ -893,7 +1035,8 @@ function stateToProps(state) {
 		devices: state.devices,
 		app: state.app,
 		dms: state.dms,
-		notifs: state.notifs
+		notifs: state.notifs,
+		sessions: state.sessions
 	};
 }
 export default connect(stateToProps, 
@@ -911,5 +1054,7 @@ export default connect(stateToProps,
 		 updateNotifs,
 		 addNotif,
 		 removeNotif,
-		 updateUserMem
+		 updateUserMem,
+		 joinSession, 
+		 removeKeys
 	})(withRouter(Header));

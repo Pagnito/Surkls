@@ -7,7 +7,8 @@ import {
 	sendTweetAction,
 	updateSession,
 	unpickThisVideoAction,
-	closeMenus
+	closeMenus,
+	removeKeys
 } from 'actions/actions';
 import PropTypes from 'prop-types';
 import { openDMs, addMultiToDMs, addSessDMs } from 'actions/dm-actions';
@@ -60,27 +61,28 @@ class Session extends Component {
 				}
 			]
 		};
-		this.dcOptions = {//dataChannelOptions			
+		this.dcOptions = {
+			//dataChannelOptions
 			ordered: false, //no guaranteed delivery, unreliable but faster
 			maxPacketLifeTime: 500 //milliseconds
 		};
-		this.streamInterval = null;//interval sending buffers from 1st viewer
+		this.streamInterval = null; //interval sending buffers from 1st viewer
 		this.streamInterval2 = null;
 		this.toBeRecorded1 = null; //variable to put remote stream into for the first viewer
 		this.toBeRecorded2 = null; //variable to put remote stream into for the first viewer
-		this.toBeRecorded3= null; //variable to put remote stream into for the first viewer
+		this.toBeRecorded3 = null; //variable to put remote stream into for the first viewer
 		this.recordedStreams = {
 			stream1: null,
 			stream2: null,
 			stream3: null //video recorded from remote stream
-		}
-		 
-		 this.mediaRecorders = {
+		};
+
+		this.mediaRecorders = {
 			recorder1: null,
 			recorder2: null,
 			recorder3: null
-		 }
-	
+		};
+
 		this.dataChannel1 = null;
 		this.dataChannel2 = null;
 		this.dataChannel3 = null;
@@ -88,13 +90,13 @@ class Session extends Component {
 			buffer1: null,
 			buffer2: null,
 			buffer3: null
-		}
+		};
 		this.viewStreams = {
 			stream1: false,
 			stream2: false,
-		  stream3: false
-		}
-	
+			stream3: false
+		};
+
 		this.alreadyStarted = false;
 		this.stream;
 		this.track = [];
@@ -105,7 +107,7 @@ class Session extends Component {
 			videoEl: null
 		};
 		this.socket = this.props.socket;
-		this.sessionObjSetup= false;
+		this.sessionObjSetup = false;
 		if (this.sessionObjSetup === false) {
 			this.sessionObjSetup = true;
 			this.socket.on('session', (sessionObj) => {
@@ -115,24 +117,24 @@ class Session extends Component {
 				this.props.updateSession(sessionObj);
 			});
 		}
-		this.socket.on('connect-error', ({type, msg})=>{
-			if(type==='maxedOut'){
+		this.socket.on('connect-error', ({ type, msg }) => {
+			if (type === 'maxedOut') {
 				this.setState({ modalErr: msg });
-				setTimeout(()=>{
-					this.props.history.push('/')
-				},2000)			
-			} else if( type==='expired'){
+				setTimeout(() => {
+					this.props.history.push('/');
+				}, 2000);
+			} else if (type === 'expired') {
 				this.setState({ modalErr: 'Session is expired' });
-				setTimeout(()=>{
-					this.props.history.push('/')
-				},2000)
-			} else if(type==='maxedOutTrio'){
+				setTimeout(() => {
+					this.props.history.push('/');
+				}, 2000);
+			} else if (type === 'maxedOutTrio') {
 				this.setState({ modalErr: msg });
-				setTimeout(()=>{
-					this.props.history.push('/')
-				},2000)
+				setTimeout(() => {
+					this.props.history.push('/');
+				}, 2000);
 			}
-		})
+		});
 		this.socket.on('setup-vid-dms', (users) => {
 			this.props.addMultiToDMs(users);
 		});
@@ -254,7 +256,7 @@ class Session extends Component {
 			this.remoteAdded.videoEl.srcObject = event.streams[0];
 			this.remoteAdded.added = false;
 			console.log('STREAMS ARE IN');
-			if (this.props.session.noCam && this.props.session.viewers.length > 0) {
+			/* 	if (this.props.session.noCam && this.props.session.viewers.length > 0) {
 				if(this.toBeRecorded3===null && this.toBeRecorded1!==null && this.toBeRecorded2!==null){
 					console.log('stream3')
 					this.toBeRecorded3 = event.streams[0];
@@ -266,7 +268,7 @@ class Session extends Component {
 					this.toBeRecorded1 = event.streams[0];
 				}
 				
-			}
+			} */
 		}
 	};
 
@@ -357,13 +359,41 @@ class Session extends Component {
 
 		delete this.rtcs[remoteId];
 	};
+	handleSurfCleanUp = () =>{
+		this.remoteClients = [];
+		this.rtcs
+		let streams = document.getElementsByClassName('stream');
+		let streamWraps = document.getElementsByClassName('streamWrap');
+		let streamList = document.getElementById('videoStreams');
+		/*for (let stream of streams) {
+				if (stream.srcObject !== null) {
+					stream.srcObject.getTracks().forEach((track) => {
+						track.stop();
+						stream.srcObject = null;
+					
+					});
+				}
+			iterator++;
+		} */
+		for(let rtc in this.rtcs){
+			if(rtc){
+				this.rtcs[rtc].close()
+			}		
+		}
+		if(streams!==null){
+			for (let streamWrap of streamWraps) {			
+				streamList.removeChild(streamWrap);
+			}
+		}
+		
+	}
 	createPeerRtc = (remoteId, cb) => {
 		this.rtcs[remoteId] = new RTCPeerConnection(this.stunConfig);
 		let currentConnection = this.rtcs[remoteId];
 		currentConnection.onicecandidate = (e) => this.handleIceCandidate(e, remoteId);
 		currentConnection.ontrack = this.handleRemoteStreamAdded;
 		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-		if (/noCam/.test(this.props.match.params.room)===false) {
+		if (/noCam/.test(this.props.match.params.room) === false) {
 			if (this.track[0].kind === 'audio') {
 				this.track.reverse();
 			}
@@ -375,7 +405,7 @@ class Session extends Component {
 			cb(currentConnection);
 		}
 	};
-	createViewerPeerRtc = (remoteId, cb) => {
+	/* createViewerPeerRtc = (remoteId, cb) => {
 		console.log('WE IN HERE');
 		this.rtcs[remoteId] = new RTCPeerConnection(this.stunConfig);
 		let currentConnection = this.rtcs[remoteId];
@@ -398,13 +428,11 @@ class Session extends Component {
 			this.dataChannel3 = this.rtcs[remoteId].createDataChannel('viewer-stream3', this.dcOptions);
 			this.record(this.toBeRecorded3 , '3', this.mediaRecorders, this.recordedStreams);
 		}
-		
-	
 		if (currentConnection.setRemoteDescription) {
 			cb(currentConnection, 'with-dc');
 		}
-	};
-	dcOffererEvents = () => {
+	}; */
+	/* 	dcOffererEvents = () => {
 		this.dataChannel1.onmessage = (e) => {
 			console.log(e.data);
 		};
@@ -435,8 +463,8 @@ class Session extends Component {
 				}
 			};
 		};
-	};
-	record(sourceStream, which, mediaRecorders, recordedStreams) {
+	}; */
+	/* 	record(sourceStream, which, mediaRecorders, recordedStreams) {
 		mediaRecorders['recorder'+which] = new MediaRecorder(sourceStream, { mimeType: 'video/webm;codecs=vp8,opus' });
 		mediaRecorders['recorder'+which].ondataavailable = (e) => (recordedStreams['stream'+which] = [ e.data ]);
 		mediaRecorders['recorder'+which].start();
@@ -452,33 +480,18 @@ class Session extends Component {
 				this.process(2,recordedStreams.stream2);
 			}, 1000);
 		}
-		/* this.mediaRecorder.onstop = () => this.process(this.recordedStream); */
 	}
 	process(which, stream) {
 		const blob1 = stream !== null ? new Blob(stream) : null;
-		/* const blob2 = data.stream2 !== null ? new Blob(data.stream2) : null;
-		const blob3 = data.stream3 !== null ? new Blob(data.stream3) : null; */
 		if(blob1!==null){
-			this.convertToArrayBuffer(which,blob1, ()=>{
-			/* 	if(blob2!==null){
-					this.convertToArrayBuffer(2,blob2, ()=>{
-						if(blob3!==null){
-							this.convertToArrayBuffer(3,blob3);
-						}	
-					});
-				} */
-			});
-		}
-		
-		
-		//console.log(blob1, blob2, blob3)	
+			this.convertToArrayBuffer(which,blob1);
+		}	
 	}
-	convertToArrayBuffer(which, blob, cb) {
+	convertToArrayBuffer(which, blob) {
 		console.log('converting ', which, blob)
 		let reader = new FileReader();
 		reader.onload = (e) => {
 			this.sendStream(which, e.target.result);
-			cb()
 		};
 		reader.readAsArrayBuffer(blob);
 	}
@@ -490,8 +503,7 @@ class Session extends Component {
 			this.dataChannel2.send(stream);
 		} else {
 			this.dataChannel3.send(stream);
-		}
-		
+		}	
 	};
 	requestStream = (which) => {
 		if(this.mediaRecorders.recorder1!==null && which===1){
@@ -503,7 +515,7 @@ class Session extends Component {
 		if (this.mediaRecorders.recorder3!==null && which===3){
 			this.mediaRecorders.recorder3.requestData();
 		}
-	};
+	}; */
 	///////////////////////////////////////////webrtc^^^ funcs////////////////////////////////////////////
 
 	//////////////////////////////////////////////lifecycle hook//////////////////////////////////////////
@@ -566,8 +578,17 @@ class Session extends Component {
 		});
 	}
 
-	startOrJoin = () => {
-		this.startStream(document.getElementById('streamOfMe'))
+	startAsStreamer = () => {
+		if (this.props.session.sessionType === 'stream' && this.props.session.imStreamer) {
+			this.createVideo('streamer_stream').then(({ vid }) => {
+				this.startOrJoin(vid);
+			});
+		}
+	};
+	startOrJoin = (videoEl) => {
+		videoEl = videoEl ? videoEl : document.getElementById('streamOfMe');
+		console.log(videoEl)
+		this.startStream(videoEl)
 			.then(() => {
 				this.alreadyStarted = true;
 				let startingOrJoining;
@@ -577,9 +598,9 @@ class Session extends Component {
 				} else {
 					startingOrJoining = false;
 				}
-				session.inSession = true;	
-				session.noCam = /noCam/.test(this.props.match.params.room) ? true : false
-				session.sessionKey = this.props.match.params.room.split('=')[1]
+				session.inSession = true;
+				session.noCam = /noCam/.test(this.props.match.params.room) ? true : false;
+				session.sessionKey = this.props.match.params.room.split('=')[1];
 				session.creatingSession = startingOrJoining;
 				if (this.props.auth.user.userName) {
 					session.user = this.props.auth.user;
@@ -590,7 +611,7 @@ class Session extends Component {
 				this.socket.emit('createOrJoin', session);
 				this.socket.on('signal', (data, remoteId) => {
 					switch (data.type) {
-						case 'another-viewer':
+						/* case 'another-viewer':
 							console.log('VIEWER');
 							this.createViewerPeerRtc(remoteId, (rtc, withDc) => {
 								if (withDc === 'with-dc') {
@@ -598,7 +619,7 @@ class Session extends Component {
 								}
 								this.createOffer(rtc, (offer) => this.socket.emit('signal', offer, remoteId));
 							});
-							break;
+							break; */
 						case 'newJoin':
 							this.createPeerRtc(remoteId, (rtc) => {
 								this.createOffer(rtc, (offer) => this.socket.emit('signal', offer, remoteId));
@@ -613,7 +634,7 @@ class Session extends Component {
 								this.remoteClients.push(remoteId);
 							}
 							this.createPeerRtc(remoteId, (rtc) => {
-								this.dcAnswererEvents(rtc);
+								//this.dcAnswererEvents(rtc);
 								rtc
 									.setRemoteDescription(new RTCSessionDescription(data))
 									.then(() => {
@@ -667,7 +688,25 @@ class Session extends Component {
 			//notShareLink wont exist in props because its a direct enter via share link
 			if (!this.props.session.notShareLink && !this.alreadyStarted) {
 				this.socket.emit('setup-vid-dms', this.props.auth.user);
-				this.startOrJoin();
+				if (this.props.session.sessionType === 'stream' && this.props.session.imStreamer) {			
+					this.startAsStreamer();
+				} else {			
+					this.startOrJoin();
+				}
+			}
+		} else if(this.props.session.surfing){
+			console.log(this.props.location.pathname)
+			if(prevProps.location.pathname!==this.props.location.pathname){
+				
+				this.handleSurfCleanUp()			
+					this.socket.emit('leave', prevProps.session.sessionKey)
+				if (this.props.session.sessionType === 'stream' && this.props.session.imStreamer) {
+					console.log('streamer')
+					this.startAsStreamer();
+				} else {
+					console.log('caller')
+					this.startOrJoin();
+				}	
 			}
 		}
 		if (this.props.session.clients !== prevProps.session.clients) {
@@ -686,8 +725,9 @@ class Session extends Component {
 		};*/
 		///////////////////////////////////////////////
 	}
-
+	
 	componentDidMount() {
+		
 		////start session button provides creatingSession = true in props
 		////notShareLink is provided if clicked via join button
 		///those props being passed to the server which will handle
@@ -699,7 +739,11 @@ class Session extends Component {
 		};
 		if (this.props.session.notShareLink || this.props.session.creatingSession) {
 			if (this.props.session.sessionKey && !this.alreadyStarted) {
-				this.startOrJoin();
+				if (this.props.session.sessionType === 'stream' && this.props.session.imStreamer) {
+					this.startAsStreamer();
+				} else {
+					this.startOrJoin();
+				}
 			}
 		}
 	}
@@ -721,6 +765,10 @@ class Session extends Component {
 		this.props.updateSession({ activePlatform: platform });
 	};
 	renderPlatform = () => {
+		/* 	console.log(this.props.session)
+		if(this.props.session.sessionType==='stream' && this.props.session.imStreamer){
+			return '';
+		} else { */
 		if (this.props.session.activePlatform === 'youtube') {
 			return (
 				<SessionContentYoutube
@@ -755,18 +803,9 @@ class Session extends Component {
 			);
 		} else if (this.props.session.activePlatform === 'twitter') {
 			return <SessionContentTwitter sendTweetToOthers={this.sendTweetToOthers} />;
-		} /* else {
-			return (
-				<SessionContentDailymotion
-					sendVideoSignal={this.sendVideoSignal}
-					saveYoutubeListRedis={this.saveYoutubeListRedis}
-					unpickThisVideo={this.unpickThisVideo}
-					sendVideoCurrentTime={this.sendVideoCurrentTime}
-					askForVideoCurrentTime={this.askForVideoCurrentTime}
-				/>
-			);
-		} */
+		}
 	};
+	//};
 
 	updateDevices = () => {
 		this.props.getDevices();
@@ -954,18 +993,18 @@ class Session extends Component {
 				let mediaSource = new MediaSource();
 				video.vid.src = URL.createObjectURL(mediaSource);
 				mediaSource.addEventListener('sourceopen', () => {
-					if (streams['stream'+which] === false) {
-						sourceBuffers['buffer'+which] = mediaSource.addSourceBuffer(mimeCodec);
+					if (streams['stream' + which] === false) {
+						sourceBuffers['buffer' + which] = mediaSource.addSourceBuffer(mimeCodec);
 					}
-					sourceBuffers['buffer'+which].addEventListener('updateend', () => {
-						if (!sourceBuffers['buffer'+which].updating && mediaSource.readyState === 'open') {
+					sourceBuffers['buffer' + which].addEventListener('updateend', () => {
+						if (!sourceBuffers['buffer' + which].updating && mediaSource.readyState === 'open') {
 							mediaSource.endOfStream();
 							video.vid.play();
 						}
 					});
-					if (sourceBuffers['buffer'+which]!== null && streams['stream'+which] === false) {
-						streams['stream'+which] = true;
-						sourceBuffers['buffer'+which].appendBuffer(e.data);
+					if (sourceBuffers['buffer' + which] !== null && streams['stream' + which] === false) {
+						streams['stream' + which] = true;
+						sourceBuffers['buffer' + which].appendBuffer(e.data);
 					}
 				});
 			} else {
@@ -973,7 +1012,6 @@ class Session extends Component {
 			}
 		});
 	};
-
 
 	createVideo = (id = '') => {
 		return new Promise((resolve) => {
@@ -997,7 +1035,9 @@ class Session extends Component {
 	};
 	toggleAudio = () => {
 		let icon = document.getElementById('mic-icon');
-		let aud = document.getElementById('streamOfMe').srcObject.getAudioTracks();
+		let sess = this.props.session;
+		let videoElId = sess.imStreamer && sess.sessionType === 'stream' ? 'streamer_stream' : 'streamOfMe'
+		let aud = document.getElementById(videoElId).srcObject.getAudioTracks();
 		if (this.state.talk === true) {
 			for (let i = 0; i < aud.length; i++) {
 				aud[i].enabled = false;
@@ -1015,8 +1055,10 @@ class Session extends Component {
 		}
 	};
 	toggleVideo = () => {
+		let sess = this.props.session;
 		let icon = document.getElementById('cam-icon');
-		let vid = document.getElementById('streamOfMe').srcObject.getVideoTracks();
+		let videoElId = sess.imStreamer && sess.sessionType === 'stream' ? 'streamer_stream' : 'streamOfMe'
+		let vid = document.getElementById(videoElId).srcObject.getVideoTracks();
 		if (this.state.showMyStream === true) {
 			for (let i = 0; i < vid.length; i++) {
 				vid[i].enabled = false;
@@ -1034,9 +1076,12 @@ class Session extends Component {
 		}
 	};
 	startStream = (videoEl) => {
+		console.log('UMM', /noCam/.test(this.props.match.params.room))
 		return new Promise((resolve, reject) => {
-			if (/noCam/.test(this.props.match.params.room)===false) {
+			if (/noCam/.test(this.props.match.params.room) === false) {
+				console.log('BEFORE')
 				if (videoEl.srcObject === null) {
+					console.log('HEYO')
 					navigator.mediaDevices
 						.getUserMedia({
 							audio: {
@@ -1055,6 +1100,7 @@ class Session extends Component {
 								this.track.push(track);
 								//console.log('TRACK', track);
 							});
+							
 							resolve();
 						});
 				} else {
@@ -1129,7 +1175,7 @@ class Session extends Component {
 		);
 	};
 	videoSettings = () => {
-		if (this.props.session.noCam || this.props.session) {
+		if (!this.props.session.noCam) {
 			return (
 				<div id="sessionLeftAsideSettings">
 					<video id="streamOfMe" muted="muted" autoPlay />
@@ -1138,39 +1184,37 @@ class Session extends Component {
 							<svg
 								aria-hidden="true"
 								focusable="false"
-								data-prefix="fas"
-								data-icon="microphone-slash"
 								id="mic-icon"
+								data-prefix="fas"
+								data-icon="microphone"
 								role="img"
+								width='20'
 								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 640 512"
+								viewBox="0 0 352 512"
 							>
-								<path d="M633.82 458.1l-157.8-121.96C488.61 312.13 496 285.01 496 256v-48c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v48c0 17.92-3.96 34.8-10.72 50.2l-26.55-20.52c3.1-9.4 5.28-19.22 5.28-29.67V96c0-53.02-42.98-96-96-96s-96 42.98-96 96v45.36L45.47 3.37C38.49-2.05 28.43-.8 23.01 6.18L3.37 31.45C-2.05 38.42-.8 48.47 6.18 53.9l588.36 454.73c6.98 5.43 17.03 4.17 22.46-2.81l19.64-25.27c5.41-6.97 4.16-17.02-2.82-22.45zM400 464h-56v-33.77c11.66-1.6 22.85-4.54 33.67-8.31l-50.11-38.73c-6.71.4-13.41.87-20.35.2-55.85-5.45-98.74-48.63-111.18-101.85L144 241.31v6.85c0 89.64 63.97 169.55 152 181.69V464h-56c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16z" />
+								<path
+									d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z"
+								/>
 							</svg>
 						</div>
 						<div onClick={this.toggleVideo} id="toggleVideo">
 							<svg
 								aria-hidden="true"
+								id="cam-icon"
 								focusable="false"
 								data-prefix="fas"
-								data-icon="video-slash"
-								id="cam-icon"
+								data-icon="video"
 								role="img"
 								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 640 512"
+								viewBox="0 0 576 512"
 							>
-								<path d="M633.8 458.1l-55-42.5c15.4-1.4 29.2-13.7 29.2-31.1v-257c0-25.5-29.1-40.4-50.4-25.8L448 177.3v137.2l-32-24.7v-178c0-26.4-21.4-47.8-47.8-47.8H123.9L45.5 3.4C38.5-2 28.5-.8 23 6.2L3.4 31.4c-5.4 7-4.2 17 2.8 22.4L42.7 82 416 370.6l178.5 138c7 5.4 17 4.2 22.5-2.8l19.6-25.3c5.5-6.9 4.2-17-2.8-22.4zM32 400.2c0 26.4 21.4 47.8 47.8 47.8h288.4c11.2 0 21.4-4 29.6-10.5L32 154.7v245.5z" />
+								<path d="M336.2 64H47.8C21.4 64 0 85.4 0 111.8v288.4C0 426.6 21.4 448 47.8 448h288.4c26.4 0 47.8-21.4 47.8-47.8V111.8c0-26.4-21.4-47.8-47.8-47.8zm189.4 37.7L416 177.3v157.4l109.6 75.5c21.2 14.6 50.4-.3 50.4-25.8V127.5c0-25.4-29.1-40.4-50.4-25.8z" />
 							</svg>
 						</div>
 					</div>
 					<div id="restOfSettings">
 						<div id="shareLink">Invite Link</div>
-						{/* <button onClick={() => this.mediaRecorder.stop()} type="button">
-							Stop
-						</button>
-						<button onClick={() => this.requestStream()} type="button">
-							Get Stream
-						</button> */}
+
 						{/* <select id="sessVidDevices" />
 					<select id="sessAudDevices" /> */}
 					</div>
@@ -1189,11 +1233,15 @@ class Session extends Component {
 		} else {
 			return (
 				<div onClick={this.closeMenus} id="session">
-					<div style={{ 
-						display: this.state.modalErr.length > 0 && this.state.modalErr.length !== null ? 'flex' : 'none' }}
-						 id="session-err-modal-bg">
+					<div
+						style={{
+							display:
+								this.state.modalErr.length > 0 && this.state.modalErr.length !== null ? 'flex' : 'none'
+						}}
+						id="session-err-modal-bg"
+					>
 						<div id="session-err-modal">
-							<div id="sadIcon"></div>
+							<div id="sadIcon" />
 							<div id="msg">{this.state.modalErr}</div>
 						</div>
 					</div>
@@ -1253,7 +1301,9 @@ Session.propTypes = {
 	openDMs: PropTypes.func,
 	addMultiToDMs: PropTypes.func,
 	addSessDMs: PropTypes.func,
-	dms: PropTypes.object
+	dms: PropTypes.object,
+	removeKeys: PropTypes.func,
+	location: PropTypes.object
 };
 function stateToProps(state) {
 	return {
@@ -1274,5 +1324,6 @@ export default connect(stateToProps, {
 	closeMenus,
 	openDMs,
 	addMultiToDMs,
-	addSessDMs
+	addSessDMs,
+	removeKeys
 })(Session);

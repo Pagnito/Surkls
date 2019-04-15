@@ -56,7 +56,8 @@ class Rooms extends Component {
 			isAdmin: clients.length === 0 ? true : false,
 			notShareLink: true,
 			noCam: false,
-			sessionType: 'stream'
+			sessionType: 'stream',
+			imStreamer: true
 		};
 		if (sessionKey.length >= 3) {
 			this.props.joinSession(session, () => {

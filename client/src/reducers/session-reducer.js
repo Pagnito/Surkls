@@ -5,7 +5,8 @@ import {
 	SEND_VIDEO,
 	UNPICK_VIDEO,
 	NEW_ADMIN,
-	SEND_TWEET
+	SEND_TWEET,
+	REMOVE_KEYS
 } from 'actions/types';
 import { isEmpty } from '../../tools/isEmpty';
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
 	playing: false,
 	videoId:'',
 	msgs: [],
+	clients: [],
 /* 	twitchVidId: '',
 	youtubeVidId: '',
 	dailymotionVidId: '', */
@@ -32,6 +34,14 @@ const initialState = {
 
 export default function(state = initialState, action) {
 	switch (action.type) {
+		case REMOVE_KEYS: 
+			let stateClone = JSON.parse(JSON.stringify(state))
+			action.payload.forEach(key => {
+				delete stateClone[key] 
+			})
+			return {
+				...stateClone
+			}
 		case NEW_ADMIN:
 			return {
 				...state,

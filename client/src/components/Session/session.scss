@@ -99,6 +99,7 @@
 			}
 		}
 		#sessionLeftAsideSettings {
+			background: rgba(0,0,0,.5);
 			height: 100px;
 			width:500px;
 			border-top: 1px solid #1a1a1a;
@@ -108,7 +109,7 @@
       align-content: flex-start;
 			overflow: hidden;
 			position: fixed;
-			bottom:5px;
+			bottom:0px;
 			left:0px;
       #streamOfMe {
 				margin-top: 5px;
@@ -122,17 +123,17 @@
 				margin-left: 10px;
 				flex-direction: column;
 				justify-content: space-around;
-				width: 200px;
+				width: 40px;
 				height:100%;
 				#toggleAudio {
-					margin-top: 20px;
+					
 					cursor: pointer;
 					//background-image: url('/assets/UI-icon/microphone-slash-solid.svg');
 					width:25px;
 					height:25px;					
 				}
 				#toggleVideo {
-					margin-top: 20px;
+					
 					cursor: pointer;
 					//background-image: url('/assets/UI-icon/microphone-slash-solid.svg');
 					width:25px;
@@ -141,10 +142,11 @@
 				}
 			}
 			#restOfSettings {
-				display:flex;
-				width:calc(100% - 280px);
+				//display:flex;
+				width:calc(100% - 120px);
 				height:100%;
-				flex-direction: column;
+			/* 	align-content: flex-end;
+				flex-direction: column; */
 				#sessVidDevices {
 					font-size: 17px;
 					display: flex;
@@ -168,18 +170,18 @@
 				#shareLink {
 					font-family: 'Comfortaa';
 					font-size: 17px;
-					width:94%;
+					//width:94%;
 					box-sizing: border-box;
 					cursor: pointer;
 					padding:5px;
-					border:2px solid #F4FBFB;
-					border-radius: 5px;
+					//border:2px solid #F4FBFB;
+					//border-radius: 5px;
 					margin-top: 5px;
 					text-align: center;
 					color: #F4FBFB
 				}	
 				#shareLink:hover {
-					background-color: rgba(240,194,65,.9)
+					color: rgba(240,194,65,.9)
 				}
 			}
 			
@@ -312,7 +314,91 @@
 						}
 					}
 				}
-				#chatInputBox {
+				#session-chat-controls {
+					display:flex;
+					width:100%;
+					position: relative;
+					#chatInputBox::placeholder {
+						font-size: 15px;
+					}
+					#chatInputBox {
+						width:calc(100% - 50px);
+						height:70px;
+						outline:none;
+						resize: none;
+						background: transparent;
+						border:none;
+						border-top: 1px solid #1C1C1C;
+						padding:10px;
+						box-sizing: border-box;
+						font-family: 'Comfortaa';
+						color:#C2C3C4;
+						font-size: 13px;
+						overflow-y: scroll;   
+					}
+					#session-chat-btns {
+						display: flex;
+						width:50px;
+						flex-direction: column;
+						justify-content: space-around;
+						align-items: center;
+						box-sizing: border-box;
+						border-top: 1px solid #1C1C1C;
+						border-left: 1px solid #1C1C1C;
+						.session-chat-btn {
+							background-position: center;
+							background-size: 20px;
+							background-repeat: no-repeat;  
+							width:25px;
+							height:25px;
+							cursor: pointer;
+						}     
+						#session-emojis {
+							background-image: url('/assets/UI-icons/grin-tongue-regular.svg');
+							position: relative;
+							#emoji-lib::-webkit-scrollbar {
+								width:5px;
+							}
+							#emoji-lib::-webkit-scrollbar-thumb {
+								background: #545353; 
+								border-radius: 10px;
+								margin-right:1px;
+							}
+							#emoji-lib::-webkit-scrollbar-corner {
+								background: transparent;
+							}
+					
+							#emoji-lib {
+								position:absolute;
+								padding:5px;
+								padding-right: 10px;
+								top:-220px;
+								left:-280px;
+								justify-content: space-around;
+								display:flex;
+								flex-wrap: wrap;
+								align-content: flex-start;
+								width: 300px;
+								height: 200px;
+								border-radius:5px;
+								background: #313131;
+								box-shadow: 0px 0px 10px 1px rgba(0,0,0,.5);
+								overflow-y: scroll;
+								display: none;
+								.emoji:hover {
+									background-size: 30px !important; 
+								}
+							}
+						}
+						#session-gifs {
+							background-size: 22px;
+							width:25px;
+							height:25px;
+							background-image: url('/assets/UI-icons/gif_icon.svg');
+						}
+					}
+				}
+				/* #chatInputBox {
 					-webkit-appearance: none;
 					resize: none;
 					appearance: none;
@@ -330,7 +416,7 @@
 				}
 				#chatBtns {
 					height: 50px;
-				}
+				} */
 			}
 		}
 	}
@@ -339,10 +425,10 @@
 		border-left: 1px solid#1c1c1c;
 		height: calc(100vh - 55px);
 		width: 200px;
+		box-sizing: border-box;
 		#whosInRoom {
 			width:100%;
 			box-sizing: border-box;
-			border-bottom: 1px solid #1c1c1c;
 			flex-wrap: wrap;
 			align-content: flex-start;
 			display: flex;
@@ -372,7 +458,6 @@
 		#viewersInRoom {
 			width:100%;
 			box-sizing: border-box;
-			border-bottom: 1px solid #1c1c1c;
 			flex-wrap: wrap;
 			align-content: flex-start;
 			display: flex;

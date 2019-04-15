@@ -13,7 +13,8 @@ import {
 	UPDATE_USER_MEMBERSHIP,
 	CLOSE_ALLMENUS,
 	TOGGLE_MENU,
-	UPDATE_APP
+	UPDATE_APP,
+	REMOVE_KEYS
 } from 'actions/types';
 import axios from 'axios';
 export const getUser = () => (dispatch) => {
@@ -155,6 +156,13 @@ export const updateSession = (payload) =>  {
 		payload: payload
 	};
 };
+export const removeKeys = (payload, cb) => (dispatch)=> {
+	dispatch({
+		type: REMOVE_KEYS,
+		payload: payload
+	})
+	cb()
+}
 export const newAdmin = () => {
 	return {
 		type: NEW_ADMIN,

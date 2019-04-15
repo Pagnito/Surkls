@@ -519,7 +519,7 @@ displayAudioLinker = () =>{
 					</section>
 					<section id="surkl-members">
 						<div id="surkl-members-header">
-							My Surkl
+							{this.props.surkl.activeSurkl.name}
 							<div id="member-tab-btns">
 								<div
 									onClick={() => this.switchMembersTab('online', this.state.currTab)}
