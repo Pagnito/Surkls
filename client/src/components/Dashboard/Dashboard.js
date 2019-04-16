@@ -251,7 +251,14 @@ class Dashboard extends Component {
 
 	
 	sendSurklMsg = (msg) =>{
-		let msgObj;
+		let msgObj =	{
+			msg: msg,
+			user_id: this.props.auth.user._id,
+			userName: this.props.auth.user.userName,
+			avatarUrl: this.props.auth.user.avatarUrl,
+			surkl_id: this.props.match.params.id,
+			date: Date.now()
+		} 
 		let msgs = this.props.surkl.msgs
 		if(msgs[msgs.length-1].user_id===this.props.auth.user._id){
 			console.log('ok')
@@ -260,17 +267,7 @@ class Dashboard extends Component {
 				surkl_id:this.props.match.params.id,
 				user_id: this.props.auth.user._id,
 			}
-		} else {
-			console.log('wtf')
-			msgObj =	{
-				msg: msg,
-				user_id: this.props.auth.user._id,
-				userName: this.props.auth.user.userName,
-				avatarUrl: this.props.auth.user.avatarUrl,
-				surkl_id: this.props.match.params.id,
-				date: Date.now()
-			} 
-		}
+		} 
 		this.socket.emit('surkl-msg', msgObj);
 		
 	}
