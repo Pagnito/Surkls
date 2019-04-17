@@ -78,9 +78,36 @@ module.exports = (io, socket, connectedUsers) => {
             io.to(socket.id).emit('videoChatError');
           }
           io.to(msg.surkl_id).emit('receive-surkl-msgs', msgsArr);
-        });
+        });     
+        if(msg.mentions){
+          if(msg.mentions.length>0){
+            let notif = {
+              source: {
+                name: msg.userName,
+                source_id: msg.user_id,
+                avatarUrl: msg.avatarUrl,         
+              },
+              notifType: 'mention',
+              text: msg.msg,
+              date: Date.now()
+            }
+            let menIds = msg.mentions.filter(men=>{                       
+              io.to(connectedUsers[men.user_id].socketId).emit('notif', notif)
+              return men.user_id
+            })
+            
+            User.updateMany({_id:{$in:menIds}}, {$push:{notifs: {
+              $each:[notif], 
+              $position:0
+              }
+            },
+            $inc: {notif_count:1}
+          }).exec()
+          }        
+        }
       }
-     
+      
+    
     });
   });
   /////////////////////////////////////////////////////////////
@@ -120,7 +147,7 @@ module.exports = (io, socket, connectedUsers) => {
   })
   /////////////////////////////////////////////////////////////
   socket.on('add-to-surkl', (userToAdd, surkl)=>{
-    console.log(userToAdd, surkl)
+    //console.log(userToAdd, surkl)
     delete userToAdd.dms
     delete userToAdd.followers
     delete userToAdd.following

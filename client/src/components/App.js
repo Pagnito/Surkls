@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 import {socketUrl} from '../../tools/socketUrl';
 import Store from '../store';
 import SignUp from 'components/Sign-up/Sign-up';
-import Dashboard from 'components/Dashboard/Dashboard';
+import Surkl from 'components/Surkl/Surkl';
 import Session from 'components/Session/Session';
 import Rooms from 'components/Rooms/Rooms';
 import Header from 'components/Header/Header';
@@ -94,7 +94,7 @@ class App extends Component {
 					<Route 
 						exact path="/signup" render={(props)=><SignUp {...props} socket={this.socket}/>}   />
 					<Route 
-						exact path="/surkl/:id" render={(props)=><Dashboard {...props} socket={this.socket}/>}   />
+						exact path="/surkl/:id" render={(props)=><Surkl {...props} socket={this.socket}/>}   />
 					<Route 
 						exact path="/create_surkl" render={(props)=><CreateSurkl {...props} socket={this.socket}/>}   />
 					<Route 

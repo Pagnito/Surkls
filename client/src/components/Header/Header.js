@@ -285,6 +285,9 @@ class Header extends Component {
 			backgroundSize:'cover',
 			backgroundRepeat:'no-repeat'
 		}
+		switch(notif.type){
+			case 'add-to-surkl':
+		}
 		return {
 			'add-to-surkl':
 			 <div className="notif add-to-surkl-notif">
@@ -296,6 +299,20 @@ class Header extends Component {
 			 	<div className="notif-options">
 				  <div onClick={()=>this.acceptSurklInvite(notif,this.props.auth.user)} className="notif-option">Yes</div>
 				 	<div onClick={()=> this.declineSurklInvite(notif._id, this.props.auth.user._id)}className="notif-option">No</div>
+				</div>
+			</div>,
+			'mention': 
+			<div className="notif mention-notif">
+			 <div className="notif-top-part">
+				<div style={imgStyle} className="notif-banner-avatar"></div>
+				<div><span style={{
+					padding:'2px',paddingTop:'0px', borderRadius:'3px', color:'#FFCD44', background:'black'} }>{notif.source.name} </span>
+					{' mentioned you.'}</div>		
+			 </div>	
+			 <div className="notif-text">{notif.text}</div>		 
+				<div className="notif-options">
+				  <div onClick={()=>this.acceptSurklInvite(notif,this.props.auth.user)} className="notif-option">Reply directly</div>
+				 	<div onClick={()=> this.declineSurklInvite(notif._id, this.props.auth.user._id)}className="notif-option">Reply in chat</div>
 				</div>
 			</div>
 		}

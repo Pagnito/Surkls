@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {emojis} from 'components/Dashboard/emojis';
+import {emojis} from 'components/Surkl/emojis';
 class ChatInput extends Component {
   constructor(props){
     super(props)

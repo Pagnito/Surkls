@@ -102,6 +102,12 @@ class SurklFeed extends Component {
 			}
 		}
 	};
+	createMention = (user) =>{
+		console.log(user,' or')
+		let msg = this.state.msg;
+		msg += '@'+user;
+		this.setState({msg})
+	}
 	displayMsgs = () => {
 		return this.props.surkl.msgs.map((msg, ind) => {
 			let date = new Date(msg.date);
@@ -133,13 +139,23 @@ class SurklFeed extends Component {
 					);
 				} else {
 					possibleUrlImg = msg.msg;
+					if(/(\ ?@.*)/g.test(msg.msg)){
+						let split = msg.msg.split(' ');
+					possibleUrlImg = split.map((msg, key)=>{
+						if(/^(\ ?@.*)/.test(msg)){
+							return <span style={{color:'#FFCD44'}} key={key}>{' '+msg+' '}</span>
+						} else {
+							return msg
+						}
+					})
+					}
 				}
 				return (
 					<div key={ind} className="surkl-chat-msg-wrap">
 						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="surkl-chat-msg">
 							<div className="surkl-chat-msg-av-wrap">
 								{url ? (
-									<img data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
+									<img onClick={()=>this.createMention(msg.userName)} data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
 								) : (
 									''
 								)}
@@ -164,7 +180,7 @@ class SurklFeed extends Component {
 						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="surkl-chat-msg">
 							<div className="surkl-chat-msg-av-wrap">
 								{url ? (
-									<img data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
+									<img onClick={()=>this.createMention(msg.userName)} data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
 								) : (
 									''
 								)}

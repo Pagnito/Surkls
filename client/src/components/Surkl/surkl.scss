@@ -8,11 +8,11 @@
   border-bottom: 1px solid #3E3E3E;
   box-sizing: border-box; 
   overflow-x: hidden;
-  #newsSources {
+  #surkl-board {
     width:255px;
     height:100%;
     border-right: 1px solid #3E3E3E;    
-    #newsSourcesHeader {
+    #surkl-board-header {
       color:#F4FBFB;
       height:50px;
       width:100%;
@@ -23,19 +23,34 @@
       font-size: 20px;
       border-bottom: 1px solid #3E3E3E;
       box-sizing: border-box;
+      position: relative;
+      #surkl-board-header-title {
+      
+      }
+      #add-note-icon {
+        position: absolute;
+        right:10px;
+        cursor: pointer;
+        background-image: url('/assets/UI-icons/add_note.svg');
+        width:30px;
+        height:30px;
+        background-position: center right;
+        background-size: 30px;
+        background-repeat: no-repeat;
+      }
     }
-    #newsSourcesFeed::-webkit-scrollbar {
+    #surkl-board-feed::-webkit-scrollbar {
       width:5px;
       //background:rgba(40,40,40, .2);
     }
-    #newsSourcesFeed::-webkit-scrollbar-thumb {
+    #surkl-board-feed::-webkit-scrollbar-thumb {
       background: #B1B6B6; 
       border-radius: 10px;
     }
-    #newsSourcesFeed::-webkit-scrollbar-corner {
+    #surkl-board-feed::-webkit-scrollbar-corner {
       background: transparent;
     }
-    #newsSourcesFeed {
+    #surkl-board-feed {
       overflow-y: scroll;
       height:calc(100% - 50px);
       width:100%;
@@ -175,6 +190,46 @@
       display:flex;
       width:100%;
       position: relative;
+      /* #mention-on-members-list>div:first-child {
+        background: #EFC141;
+        color:black;
+      } */
+      #mention-on-members-list {
+        padding: 5px;
+        position:absolute;
+        background: #3E3E3E;
+        border-radius:5px;
+        bottom: 75px;
+        left:5px;
+        padding-top: 5px;
+        box-shadow: 3px -1px 5px 0px rgba(0,0,0,.5);
+        display: none;
+        .mention-on-member:hover {
+          background: #EFC141;
+          color:black;
+        }
+        .mention-on-member {
+          display: flex;
+          cursor: pointer;
+          color: #F4FBFB;
+          padding-right:5px;
+          border-radius: 3px;
+          padding-top: 5px;
+          padding-bottom: 5px;
+          margin-top: 1px;
+          font-family: 'Comfortaa';
+          font-size:12px;
+          align-items: center;
+          .mentions-list-avatar{
+            border-radius:20px;
+            width:15px;
+            height:15px;
+            margin-left: 5px;
+            margin-right:7px;
+          }
+        }
+       
+      }
       #surkl-chat-input::placeholder {
         font-size: 15px;
       }

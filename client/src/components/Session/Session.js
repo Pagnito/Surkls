@@ -709,12 +709,15 @@ class Session extends Component {
 				}	
 			}
 		}
+		
 		if (this.props.session.clients !== prevProps.session.clients) {
-			let constraints = {
-				width: this.props.session.clients.length < 3 ? '100%' : '400px',
-				height: this.props.session.clients.length < 3 ? '100%' : '50%'
-			};
 			let streams = document.getElementsByClassName('streamWrap');
+			let clients = this.props.session.clients.length
+			let constraints = {
+				width: clients < 3 ? '100%' : '400px',
+				height: clients < 3 ? '100%' : '50%'
+			};
+				
 			for (let stream of streams) {
 				stream.style.width = constraints.width;
 				stream.style.height = constraints.height;

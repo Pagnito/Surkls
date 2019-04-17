@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 import Loader1 from 'components/Loader1/Loader1';
 import YTplayer from 'yt-player';
 import {writeData, readOne} from '../../../tools/sw-utils';
-import './dashboard.scss';
+import './surkl.scss';
 import ChatInput from './chat-input';
 import SurklFeed from './surkl-feed';
 
-class Dashboard extends Component {
+class Surkl extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -252,18 +252,18 @@ class Dashboard extends Component {
 	
 	sendSurklMsg = (msg) =>{
 		let msgObj =	{
-			msg: msg,
+			msg: msg.msg,
 			user_id: this.props.auth.user._id,
 			userName: this.props.auth.user.userName,
 			avatarUrl: this.props.auth.user.avatarUrl,
 			surkl_id: this.props.match.params.id,
+			mentions: msg.mentions,
 			date: Date.now()
 		} 
 		let msgs = this.props.surkl.msgs
-		if(msgs[msgs.length-1].user_id===this.props.auth.user._id){
-			console.log('ok')
+		if(msgs[msgs.length-1].user_id===this.props.auth.user._id && msg.mentions.length===0){
 			msgObj = {
-				msg:msg, 
+				msg:msg.msg, 
 				surkl_id:this.props.match.params.id,
 				user_id: this.props.auth.user._id,
 			}
@@ -505,9 +505,13 @@ displayAudioLinker = () =>{
 		if (this.props.auth.isAuthenticated) {
 			return (
 				<div onClick={this.closeMenus} id="surkl">
-					<section id="newsSources">
-						<div id="newsSourcesHeader">Sessions</div>
-						<div id="newsSourcesFeed" />
+					<section id="surkl-board">
+						<div id="surkl-board-header">
+							<div id="surkl-board-header-title">Board</div>
+							<div id="add-note-icon"></div>
+						</div>
+						
+						<div id="surkl-board-feed" />
 					</section>
 					<section id="surkl-center">
 						<SurklFeed />
@@ -587,9 +591,8 @@ displayAudioLinker = () =>{
 		}
 	}
 }
-Dashboard.propTypes = {
+Surkl.propTypes = {
 	auth: PropTypes.object,
-	updateDashboard: PropTypes.func,
 	closeMenus: PropTypes.func,
 	app: PropTypes.object,
 	fetchSurkl: PropTypes.func,
@@ -619,4 +622,4 @@ export default connect(stateToProps, {
 	openDMs,
 	updateYTPlayer,
 	updateSurkl
-})(Dashboard);
+})(Surkl);
