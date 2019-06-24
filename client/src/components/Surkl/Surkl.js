@@ -12,6 +12,7 @@ import './surkl.scss';
 import ChatInput from './chat-input';
 import SurklFeed from './surkl-feed';
 
+
 class Surkl extends Component {
 	constructor(props) {
 		super(props);
@@ -307,37 +308,41 @@ class Surkl extends Component {
 			});
 		}
 	};
-	pluginAudio = (audio_id, cb) => {
-		fetch(this.audioDataFetcher + audio_id).then((res) => res.json()).then((data) => {
-			this.setState({ linker: false, audioState: true }, () => {
-				this.props.updateYTPlayer({ audio_id: audio_id, artist: data.author_name, title: data.title });
-				this.YTPlayer.load(audio_id, { autoplay: true });
-				this.YTPlayer.on('playing', () => {
-					this.YTPlayer.setVolume(this.state.volume);
-					this.setState({ audio_dur: this.YTPlayer.getDuration() });
-					this.timeInterval = setInterval(() => {
-						let currTime = this.YTPlayer.getCurrentTime();
-
-						let time =
-							currTime < 60
-								? '0:' + Math.floor(currTime)
-								: Math.floor(currTime / 60) +
-									':' +
-									(Math.floor(currTime % 60) > 9
-										? Math.floor(currTime % 60)
-										: '0' + Math.floor(currTime % 60));
-						this.setState({ time: time, audio_time: currTime });
-					}, 1000);
-				});
+	pluginAudio = (audio_id) => {
+		if(audio_id.length>5){
+		//refactor this fetch to a redux action
+			fetch(this.audioDataFetcher + audio_id).then((res) => res.json()).then((data) => {
+				if(!('error' in data)){
+					this.setState({ linker: false, audioState: true }, () => {
+						this.props.updateYTPlayer({ audio_id: audio_id, artist: data.author_name, title: data.title });
+						this.YTPlayer.load(audio_id, { autoplay: true });
+						this.YTPlayer.on('playing', () => {
+							this.YTPlayer.setVolume(this.state.volume);
+							this.setState({ audio_dur: this.YTPlayer.getDuration() });
+							this.timeInterval = setInterval(() => {
+								let currTime = this.YTPlayer.getCurrentTime();
+		
+								let time =
+									currTime < 60
+										? '0:' + Math.floor(currTime)
+										: Math.floor(currTime / 60) +
+											':' +
+											(Math.floor(currTime % 60) > 9
+												? Math.floor(currTime % 60)
+												: '0' + Math.floor(currTime % 60));
+								this.setState({ time: time, audio_time: currTime });
+							}, 1000);
+						});
+					});
+					this.socket.emit('share-track', audio_id, this.props.surkl.activeSurkl._id);
+				}
+				
 			});
-			cb(audio_id);
-		});
+		}	
 	};
 	pluginAudioOnEnter = (e) => {
 		if (e.key === 'Enter') {
-			this.pluginAudio(this.state.audio_id, (audio_id) => {
-				this.socket.emit('share-track', audio_id, this.props.surkl.activeSurkl._id);
-			});
+			this.pluginAudio(this.state.audio_id);
 		}
 	};
 	playButton = () => {
@@ -404,7 +409,7 @@ class Surkl extends Component {
 							name="audio_id"
 						/>
 						<div onClick={this.toggleLinkerModal} id="linker-cancel-btn" />
-						<div onClick={this.pluginAudio} id="linker-play-btn" />
+						<div onClick={()=>this.pluginAudio(this.state.audio_id)} id="linker-play-btn" />
 					</div>
 				</div>
 			);

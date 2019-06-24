@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 import {updateSurkl, newSurklAdmin, leaveSurkl, destroySurkl} from 'actions/settings-actions';
-import './Surkls-settings.scss';
+import './surkls-settings.scss';
 class SurklsSettings extends Component {
   constructor(props){
     super(props);

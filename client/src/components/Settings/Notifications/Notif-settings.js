@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import './Notif-settings.scss';
+import './notif-settings.scss';
 class NotifSettings extends Component {
   constructor(props){
     super(props);

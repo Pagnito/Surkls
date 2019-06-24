@@ -1,0 +1,97 @@
+Surkls To Do:
+
+Finish Random Surf
+
+Chat gifs,
+
+request image,
+
+finish mentions with push notif
+
+mic/cam input change,
+
+session left settings need to set up for viewers
+
+events
+
+surkl events
+
+switching places
+
+help page
+
+private sessions
+
+terms of service 
+
+———————————————————————————|
+
+	v2 
+
+	agreeing points from events
+
+	agreeing points from specifically configured sessions
+
+	recording session from specifically configured sessions
+
+	possibly add viewers to trios if doesn’t effect cpu loads
+
+	roll the dice to receive a user from a surf pool when at least 2 ppl are in video session
+
+
+
+    appFeatures = {
+
+	videoMembers: 6 max,
+
+	chatMembers: 10max,
+
+	sessionMode: ?,
+
+	editMaxMembers: true,
+
+	trendingTopicsModal: true,
+
+	importVidoesForDiscusion: true,
+
+	ownVideoPlatform: undefined
+
+	socialCircles: true,
+
+	events: true.
+
+	politicalDebates: true,
+
+	profileImgOnSignUp: upload or userMedia/canvas,
+
+	choiceToOnlyShowImage: in session,
+
+	toggle sound
+
+	administrator can pause video
+
+	randomShuffle: ?,
+
+	setPrivateSessions | | passwords on sessions,
+
+	request to switch places between active surkls,
+
+	roll the dice to switch places with someone for 5 min,
+
+	just chat with watching vids
+
+	debates
+
+	dj inside surkls
+
+	roll the dice to receive a user from a surf pool when at least 2 ppl are in video session
+
+sessionettings={
+
+	setMemberLimit: true,
+
+	setViewerLimit: true,
+
+	
+
+}
