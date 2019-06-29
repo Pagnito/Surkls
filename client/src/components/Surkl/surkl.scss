@@ -202,7 +202,7 @@
         bottom: 75px;
         left:5px;
         padding-top: 5px;
-        box-shadow: 3px -1px 5px 0px rgba(0,0,0,.5);
+        box-shadow: 3px -1px 2px 0px rgba(0,0,0,.5);
         display: none;
         .mention-on-member:hover {
           background: #EFC141;
@@ -232,6 +232,17 @@
       }
       #surkl-chat-input::placeholder {
         font-size: 15px;
+      }
+      #surkl-chat-input::-webkit-scrollbar {
+        width:7px;
+        //background:rgba(40,40,40, .2);
+      }
+      #surkl-chat-input::-webkit-scrollbar-thumb {
+        background: #B1B6B6; 
+        border-radius: 10px;
+      }
+      #surkl-chat-input::-webkit-scrollbar-corner {
+        background: transparent;
       }
       #surkl-chat-input {
         width:calc(100% - 70px);

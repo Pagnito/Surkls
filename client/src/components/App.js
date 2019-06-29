@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { GET_USER,UPDATE_DMS,LOAD_NOTIFS, SET_GUEST } from 'actions/types';
+import { GET_USER,UPDATE_DMS,LOAD_NOTIFS, SET_GUEST, SETUP_COMPLETE } from 'actions/types';
 import { Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setUserMedia } from '../../tools/setUserMedia';
@@ -26,6 +26,12 @@ class App extends Component {
 	constructor(props){
 		super(props);
 		this.socket = io(socketUrl.url);
+		this.socket.on('setup-complete', (ppl)=>{
+			Store.dispatch({
+				type:SETUP_COMPLETE,
+				payload:ppl
+			})
+		})
 	}
 	componentDidMount() {
 	

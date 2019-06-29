@@ -12,7 +12,6 @@ const spliceObj = (obj, keys) =>{
 		return spliced;
 }
 module.exports = (io, socket, connectedUsers) => {
-
 /////////////////////////////////////////////////////////////
   socket.on('share-track', (track_id, surkl_id)=>{
     redClient.set('track'+surkl_id, track_id);
@@ -41,9 +40,7 @@ module.exports = (io, socket, connectedUsers) => {
       let online = surkl.members.filter(mem=>{
         return connectedUsers.hasOwnProperty(mem.user_id)
       })
-     /*  console.log(online) */
-      //console.log('//////////')
-      //console.log(connectedUsers)
+      console.log('ONLINE SURKLS MEMBERS', Object.keys(online))
       redClient.get('track'+surkl_id,(err,track)=>{
         io.to(surkl_id).emit('online-users-n-surkl', online, surkl, track)
       });

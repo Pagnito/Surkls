@@ -5,6 +5,7 @@ const notifs = require('./notif-sockets');
 const redClient = require('../database/redis');
 let connectedUsers = {};
 let surkls = {};
+
 module.exports = (io, app) => {  
   io.on('connection', (socket)=>{
 	/* redClient.flushdb( function (err, succeeded) {
@@ -27,11 +28,13 @@ module.exports = (io, app) => {
       connectedUsers[user._id] = user;
       delete connectedUsers['undefined'];
       console.log('CONNECTED USERS', Object.keys(connectedUsers));
-      socket.emit('ppl-online', Object.keys(connectedUsers).length)
+      socket.emit('setup-complete', Object.keys(connectedUsers).length)
     });
-     notifs(io, socket, connectedUsers)
-     dms(io, socket, connectedUsers)
-     sessions(io,socket)
-     surkl(io,socket, connectedUsers)
+
+    notifs(io, socket, connectedUsers)
+    dms(io, socket, connectedUsers)
+    sessions(io,socket)
+    surkl(io,socket, connectedUsers)
+    
   })
 }

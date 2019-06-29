@@ -1,8 +1,9 @@
-import { CREATED_SURKL, DESTROYED_SURKL, SET_USER, GET_USER, UPDATE_USER_MEMBERSHIP, SET_GUEST, NEW_SURKL_ADMIN, LEFT_SURKL  } from "actions/types";
+import { CREATED_SURKL, SETUP_COMPLETE, DESTROYED_SURKL, SET_USER, GET_USER, UPDATE_USER_MEMBERSHIP, SET_GUEST, NEW_SURKL_ADMIN, LEFT_SURKL  } from "actions/types";
 import {isEmpty} from '../../tools/isEmpty';
 const initialState = {
 	isAuthenticated: false,
-	user: null
+	user: null,
+	socket_connected: false,
 };
 let dms = {};
 export default function(state = initialState, action) {
@@ -13,6 +14,11 @@ export default function(state = initialState, action) {
 			return {
 				...state,
 				...clone0
+			}	
+		case SETUP_COMPLETE:
+			return {
+				...state,
+				socket_connected: true
 			}		
 		case UPDATE_USER_MEMBERSHIP:
 			let clone1 = JSON.parse(JSON.stringify(state))

@@ -40,4 +40,5 @@ export const DESTROYED_SURKL = "DESTROYED_SURKL";
 export const NEW_SURKL_ADMIN = "NEW_SURKL_ADMIN";
 export const LEFT_MYSURKL = "LEFT_MYSURKL";
 export const REMOVE_KEYS = "REMOVE_KEYS";
+export const SETUP_COMPLETE = 'SETUP_COMPLETE';
 

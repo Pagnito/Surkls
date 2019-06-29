@@ -97,10 +97,6 @@ class ChatInput extends Component {
 			<div id="surkl-chat-controls">
 				<div id="mention-on-members-list">
 					{this.mentionsList()}
-					{this.mentionsList()}
-					{this.mentionsList()}
-					{this.mentionsList()}
-					{this.mentionsList()}
 				</div>
 				<textarea
 					value={this.state.msg}

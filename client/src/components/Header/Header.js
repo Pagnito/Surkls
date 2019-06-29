@@ -56,9 +56,7 @@ class Header extends Component {
 			this.props.removeNotif(notif_id)
 		
 		})
-		this.socket.on('ppl-online', (ppl)=>{
-			this.setState({onlinePpl: ppl})
-		})
+		
 	}
 
 	componentDidMount() {
