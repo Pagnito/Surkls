@@ -1,8 +1,14 @@
 Surkls To Do:
 
 Finish Random Surf
+	- Starting stream error causes the bug of non renewal of session
+		causes?: 
+						- trying to create peer connection when there isnt anyone there
+						- multiple streams after changing rooms creates a stack overflow on streams?
 
 Chat gifs,
+
+different layouts for session?
 
 request image,
 

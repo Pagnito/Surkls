@@ -111,6 +111,7 @@ class Session extends Component {
 		if (this.sessionObjSetup === false) {
 			this.sessionObjSetup = true;
 			this.socket.on('session', (sessionObj) => {
+				console.log('received session')
 				if (sessionObj.clients.length === 1) {
 					sessionObj.isAdmin = true;
 				}
@@ -590,6 +591,7 @@ class Session extends Component {
 		console.log(videoEl)
 		this.startStream(videoEl)
 			.then(() => {
+				console.log('stream started')
 				this.alreadyStarted = true;
 				let startingOrJoining;
 				let session = JSON.parse(JSON.stringify(this.props.session));
@@ -610,6 +612,7 @@ class Session extends Component {
 
 				this.socket.emit('createOrJoin', session);
 				this.socket.on('signal', (data, remoteId) => {
+					console.log('signal received')
 					switch (data.type) {
 						/* case 'another-viewer':
 							console.log('VIEWER');
@@ -695,9 +698,8 @@ class Session extends Component {
 				}
 			}
 		} else if(this.props.session.surfing){
-			console.log(this.props.location.pathname)
 			if(prevProps.location.pathname!==this.props.location.pathname){
-				
+				console.log('changed room')
 				this.handleSurfCleanUp()			
 					this.socket.emit('leave', prevProps.session.sessionKey)
 				if (this.props.session.sessionType === 'stream' && this.props.session.imStreamer) {
@@ -731,7 +733,7 @@ class Session extends Component {
 	
 	componentDidMount() {
 		
-		////start session button provides creatingSession = true in props
+		////start session button provides creatingSession = true in props if creating session
 		////notShareLink is provided if clicked via join button
 		///those props being passed to the server which will handle
 		///those entrances accordingly
@@ -1079,12 +1081,9 @@ class Session extends Component {
 		}
 	};
 	startStream = (videoEl) => {
-		console.log('UMM', /noCam/.test(this.props.match.params.room))
 		return new Promise((resolve, reject) => {
 			if (/noCam/.test(this.props.match.params.room) === false) {
-				console.log('BEFORE')
 				if (videoEl.srcObject === null) {
-					console.log('HEYO')
 					navigator.mediaDevices
 						.getUserMedia({
 							audio: {
@@ -1105,7 +1104,9 @@ class Session extends Component {
 							});
 							
 							resolve();
-						});
+						}).catch(err=>{
+							console.log(err)
+						})
 				} else {
 					reject('Nop');
 				}

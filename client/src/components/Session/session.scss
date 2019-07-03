@@ -43,7 +43,7 @@
 	#sessionLeftAside {
 		scrollbar-color: light;
 		display: flex;
-		width: 500px;
+		width: 40%;
 		flex-direction: column;
 		box-sizing: border-box;
 		background-color:black;
@@ -203,7 +203,7 @@
 		} */
 	#sessionCenterAside {
 		scrollbar-color: light;
-		width: calc(100% - 700px);
+		width: calc(60% - 1px);
 		display: flex;
 		flex-direction: column;
 		border-left: 1px solid #1c1c1c;
@@ -211,7 +211,7 @@
 		/* overflow-y:scroll; */
 	
 		#discussContent {
-			height: 320px;
+			height: 460px;
 			width: 100%;
 			background-color: black;
 			border-bottom: 1px solid #1c1c1c;
@@ -325,6 +325,17 @@
 					#chatInputBox::placeholder {
 						font-size: 15px;
 					}
+					#chatInputBox::-webkit-scrollbar {
+            width:5px;
+          }
+          #chatInputBox::-webkit-scrollbar-thumb {
+            background: #545353; 
+            border-radius: 10px;
+            margin-right:1px;
+          }
+          #chatInputBox::-webkit-scrollbar-corner {
+            background: transparent;
+          }
 					#chatInputBox {
 						width:calc(100% - 50px);
 						height:70px;
@@ -425,6 +436,7 @@
 		}
 	}
 	#sessionRightAside {
+		display:none;
 		background-color: #242323;
 		border-left: 1px solid#1c1c1c;
 		height: calc(100vh - 55px);

@@ -85,7 +85,6 @@ class Surkl extends Component {
 			this.props.updateMsgs(msgs);
 		});
 		this.socket.on('online-users-n-surkl', (users, surkl, audio_id) => {
-			console.log(users)
 			this.props.updateOnMembers(users);
 			if(surkl._id!==this.props.surkl.activeSurkl._id){
 				this.props.updateSurkl(surkl);
@@ -102,7 +101,6 @@ class Surkl extends Component {
 		this.socket.on('track', (track_id) => {
 			this.setState({ audio_id: track_id });
 			this.pluginAudio(track_id, () => {
-				console.log('started');
 			});
 		});
 		/* this.socket.on('mounted-track', (audio_id) => {
@@ -154,7 +152,6 @@ class Surkl extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.match.params.id !== this.props.match.params.id) {
-			console.log('oof')
 			this.socket.emit('join-surkl-room', this.props.match.params.id);
 		}
 		// @TODO Check if user is member of this Surkl

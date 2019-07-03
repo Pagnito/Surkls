@@ -29,12 +29,11 @@ class Header extends Component {
 		this.menusClosed = true;
 		this.socketId = ''
 		this.socket = this.props.socket;
-		
+		this.current_room = 0;
 		this.socket.on('msg',(msg)=>{
 			this.props.updateMsgs(msg)
 		})
 		this.socket.on('notif',(notif)=>{
-			console.log(notif)
 			this.props.addNotif(notif)
 		})
 		this.socket.on('open-dm',(user)=>{
@@ -676,7 +675,14 @@ class Header extends Component {
 		}
 			 
 	}
-
+	pickRoom = (current_room, len) => {
+		let random_room = Math.floor(Math.random() * len);;
+		while (random_room===current_room){
+			random_room = Math.floor(Math.random() * len);
+		} 
+		this.current_room = random_room;
+		return random_room;
+	}
 	surfing = (mode) =>{
 		fetch('/api/sessions').then(res=>res.json())
 		.then(data=>{
@@ -690,8 +696,8 @@ class Header extends Component {
 				} else if(mode==='trios'){
 		
 				} else {
-					let session = sessions[this.activeSession]
-					this.activeSession+=1;
+					let room_index = this.pickRoom(this.current_room, sessions.length)
+					let session = sessions[room_index]
 					let noCamObj = {
 						sessionKey: session.sessionKey,
 						room: session.room,
@@ -716,8 +722,8 @@ class Header extends Component {
 						
 					} else {
 						if(session.clients.length===0){
-							let random = Math.floor(Math.random()*2)
-							if(random===1){
+							let streamer_or_viewer = Math.floor(Math.random()*2)
+							if(streamer_or_viewer===1){
 								let sessionObj = {
 									sessionKey: session.sessionKey,
 									room: session.room,
