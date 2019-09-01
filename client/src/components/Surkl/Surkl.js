@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { closeMenus } from 'actions/actions';
 import { openDMs } from 'actions/dm-actions';
-
 import { fetchSurkl, updateSurkl, updateMsgs, updateOnMembers, updateYTPlayer } from 'actions/surkl-actions';
 import PropTypes from 'prop-types';
 import Loader1 from 'components/Loader1/Loader1';
@@ -11,6 +10,7 @@ import {writeData, readOne} from '../../../tools/sw-utils';
 import './surkl.scss';
 import ChatInput from './chat-input';
 import SurklFeed from './surkl-feed';
+import Board from './board'
 
 
 class Surkl extends Component {
@@ -509,14 +509,7 @@ displayAudioLinker = () =>{
 		if (this.props.auth.isAuthenticated) {
 			return (
 				<div onClick={this.closeMenus} id="surkl">
-					<section id="surkl-board">
-						<div id="surkl-board-header">
-							<div id="surkl-board-header-title">Board</div>
-							<div id="add-note-icon"></div>
-						</div>
-						
-						<div id="surkl-board-feed" />
-					</section>
+					<Board />
 					<section id="surkl-center">
 						<SurklFeed />
 						<div id="file-upload-progress" />

@@ -110,6 +110,7 @@
 			margin-right: 20px;
 			border-radius:40px;
 			left: -50px;
+			display:none;
 			position: absolute;
 		}
 		#surf-next-btn {
@@ -358,7 +359,17 @@
 /*three dot menu */
 /////////////////////////////////////////////////////////////////////////////////
 /*msgs menu*/
-
+.dmMsgsFeed::-webkit-scrollbar {
+	width:5px;
+}
+.dmMsgsFeed::-webkit-scrollbar-thumb {
+	background: #545353; 
+	border-radius: 10px;
+	margin-right:1px;
+}
+.dmMsgsFeed::-webkit-scrollbar-corner {
+	background: transparent;
+}
 .dmMsgsFeed {
 	max-height:287px;
 	width:100%;
@@ -512,6 +523,17 @@
 
 /*pull-out menu*/
 /*notification menu*/
+.notif-feed::-webkit-scrollbar {
+	width:5px;
+}
+.notif-feed::-webkit-scrollbar-thumb {
+	background: #545353; 
+	border-radius: 10px;
+	margin-right:1px;
+}
+.notif-feed::-webkit-scrollbar-corner {
+	background: transparent;
+}
 .notif-feed {
 	max-height:287px;
 	width:100%;

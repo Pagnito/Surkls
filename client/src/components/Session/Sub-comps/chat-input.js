@@ -47,6 +47,7 @@ class ChatInput extends Component {
 	hideEmojiLib = () => {
 		document.getElementById('emoji-lib').style.display = 'none';
 	};
+	
 	render() {
 		return (
       <div id="session-chat-controls">
@@ -64,9 +65,18 @@ class ChatInput extends Component {
 							{this.displayEmojis()}
 						</div>
 					</div>
-          <div id="session-gifs" className="session-chat-btn">
+					<label className="session-chat-btn" id="file-up-icon" htmlFor="surkl-file-up">
+						<input
+							accept="image/*"
+							onChange={this.props.uploadFile}
+							name="file-up"
+							type="file"
+							id="surkl-file-up"
+						/>
+					</label>
+          {/* <div id="session-gifs" className="session-chat-btn">
               <div></div>
-            </div>
+            </div> */}
         </div>
       </div>
 			
@@ -74,6 +84,7 @@ class ChatInput extends Component {
 	}
 }
 ChatInput.propTypes = {
-  sendMsg: PropTypes.func
+	sendMsg: PropTypes.func,
+	uploadFile: PropTypes.func
 }
 export default ChatInput;

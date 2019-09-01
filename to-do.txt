@@ -6,7 +6,7 @@ Finish Random Surf
 						- trying to create peer connection when there isnt anyone there
 						- multiple streams after changing rooms creates a stack overflow on streams?
 
-Chat gifs,
+
 
 different layouts for session?
 
@@ -22,6 +22,8 @@ events
 
 surkl events
 
+que up for maxed out rooms
+
 switching places
 
 help page
@@ -29,6 +31,8 @@ help page
 private sessions
 
 terms of service 
+
+Chat gifs,
 
 ———————————————————————————|
 

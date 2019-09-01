@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default
-const webpack = require('webpack');
+
 let env = process.env.NODE_ENV ==='production' ? 'prod' : 'dev';
 //const Visualizer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 module.exports = {
@@ -15,6 +15,7 @@ module.exports = {
     publicPath: '/'
   },
   devtool: env==='dev' ? 'source-map' : 'none',
+
   module: {
     rules: [
       {

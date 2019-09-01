@@ -28,6 +28,7 @@ module.exports = (io, socket) => {
 				socketInSession[socket.id] = session.sessionKey;
 				usersConnecting[socket.id] = true;
 				if (session.noCam) {
+					// if its a viewer
 					redClient.hexists('rooms', session.sessionKey, (err, done) => {
 						//////////////////////if the room exists and isnt maxed out//////////////////////////
 						if (err) {
@@ -143,6 +144,7 @@ module.exports = (io, socket) => {
 													'guest'
 												])
 											);
+											console.log(sessionObj.clients.length, ' clients in the room');
 											if (sessionObj.clients.length === sessionObj.maxMembers) {
 												sessionObj.maxedOut = true;
 											}
@@ -269,6 +271,7 @@ module.exports = (io, socket) => {
 				}
 		}
 	});
+	console.log(offers)
 	/////////////////////////////////^^^^^^^^signaling^^^^^^^^////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////handling discussion content//////////////////////////////////
@@ -346,7 +349,20 @@ module.exports = (io, socket) => {
 			});
 		});
 	});
-	socket.on('koo', (data) => console.log(data));
+	socket.on('session-file', (chunk, session, size, end, msgObj)=>{   
+    if(end==='end-of-session-file'){
+      redClient.hget('videoChatMsgs', session, (err,msgsStr)=>{
+				console.log("WTFFFF")
+        let msgs = JSON.parse(msgsStr);
+        msgs.push(msgObj)
+        redClient.hset('videoChatMsgs', session, JSON.stringify(msgs));
+      })
+      io.in(session).emit('session-sharing-file', chunk, 'end-of-session-file', msgObj)
+    } else {
+      io.in(session).emit('session-sharing-file', chunk, size)
+    }
+  })
+
 	///////////////////////////^^^^^^handling discussion content^^^^//////////////////////////////
 
 	/////////////////////////////////////////////////////////////////////////////

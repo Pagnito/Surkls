@@ -58,11 +58,10 @@
 			background: transparent;
 		} */
 		#videoStreams {
-			height: 505px;
+			height: calc(100% - 110px);
 			width: 100%;
 			position: relative;
 			display: flex;
-			justify-content: center;
 			align-items: center;
 			flex-direction: column;
 			#streamsErrorModal {
@@ -87,6 +86,7 @@
 				align-items: center;
 				//margin-top:5px;
 				//padding: 5px;
+				align-self: flex-start;
 				box-sizing: border-box;
 				overflow: hidden;
 				.stream {
@@ -290,7 +290,7 @@
 								height: 30px;
 								display: flex;
 								align-items: flex-end;
-
+								color: rgb(226, 222, 222);
 								box-sizing: border-box;
 								display: flex;
 								width: 100%;
@@ -299,7 +299,7 @@
 									font-size: 10px;
 									margin-bottom: 2px !important;
 									margin-left: 5px;
-									color: rgba(0, 0, 0, .4);
+									color: rgb(226, 222, 222);
 								}
 								.chatMsgName {
 									font-size: 15px;
@@ -499,6 +499,12 @@
 			}
 		}
 	}
+}
+#surkl-file-up {
+	display:none;
+}
+#file-up-icon {
+	background-image:url('/assets/UI-icons/image-regular.svg'); 
 }
 #mic-icon {
 	fill:#F4FBFB;
