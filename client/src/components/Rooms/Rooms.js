@@ -69,6 +69,7 @@ class Rooms extends Component {
 	};
 	renderRooms = () => {
 		return this.props.sessions.sessions.map((room, ind) => {
+			console.log(room)
 			let typeOfJoins;
 			let joinAsHeader;
 			if (room.sessionType === 'trio') {

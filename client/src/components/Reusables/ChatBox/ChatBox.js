@@ -40,7 +40,7 @@ class ChatBox extends Component {
 					file: newFile,
 					size: newFile.size
 				}
-				writeData(this.props.type+'chat-media', fileObj)
+				writeData(this.props.type+'-chat-media', fileObj)
 
 			} else {
 				this.sharedFileBuffers.push(buffer);		
@@ -127,7 +127,7 @@ class ChatBox extends Component {
 					surkl_id: id,
 					date: Date.now()
 				};
-				this.socket.emit(this.props.type + '-file', e.target.result, this.props.match.params.id, size, 'end-of-file', msgObj);
+				this.socket.emit(this.props.type + '-file', e.target.result, id, size, 'end-of-file', msgObj);
 				this.chunksSent = 0;
 			}
 		};

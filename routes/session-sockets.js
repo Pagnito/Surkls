@@ -59,7 +59,7 @@ module.exports = (io, socket) => {
 											'memberOf',
 											'mySurkl',
 											'_id',
-											'guest'
+											'guest',
 										])
 									);
 									if (sessionObj.clients.length === sessionObj.maxMembers) {
@@ -117,7 +117,6 @@ module.exports = (io, socket) => {
 								let sessionObj = JSON.parse(sessionStr);
 								
 								if(session.sessionType==='stream' && sessionObj.clients.length===1) {
-									console.log('YOOOO', sessionObj.clients.length)
 									io.to(socket.id).emit('connect-error', {type: 'maxedOut', msg: 'Streamer is already present'})
 								} else {
 									if(sessionObj.clients.length===sessionObj.maxMembers){
@@ -270,7 +269,6 @@ module.exports = (io, socket) => {
 				}
 		}
 	});
-	console.log(offers)
 	/////////////////////////////////^^^^^^^^signaling^^^^^^^^////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////handling discussion content//////////////////////////////////
@@ -339,7 +337,6 @@ module.exports = (io, socket) => {
 			if ( msgsArr !== null && msgsArr.length > 100) {
 				msgsArr = msgsArr.slice(msgsArr.length-100);
 			} 
-			console.log(msgsArr)
 			msgsArr.push(msg);
 			redClient.hset('session-msgs', msg.session_id, JSON.stringify(msgsArr), (err, done) => {
 				if (err) {
@@ -350,13 +347,13 @@ module.exports = (io, socket) => {
 		});
 	});
 	socket.on('session-file', (chunk, session, size, end, msgObj)=>{   
-    if(end==='end-of-session-file'){
+    if(end==='end-of-file'){
       redClient.hget('session-msgs', session, (err,msgsStr)=>{
         let msgs = JSON.parse(msgsStr);
         msgs.push(msgObj)
         redClient.hset('session-msgs', session, JSON.stringify(msgs));
       })
-      io.in(session).emit('session-sharing-file', chunk, 'end-of-session-file', msgObj)
+      io.in(session).emit('session-sharing-file', chunk, 'end-of-file', msgObj)
     } else {
       io.in(session).emit('session-sharing-file', chunk, size)
     }

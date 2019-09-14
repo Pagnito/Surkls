@@ -7,6 +7,7 @@ function ProfileModal(props) {
   
 
   if(!user.guest){
+    console.log(user)
       return (
         <div id={props.id} style={pos} className="simpleProfileModal">
         <div className="simpleProfileBanner">
