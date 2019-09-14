@@ -104,7 +104,7 @@ class App extends Component {
 					<Route 
 						exact path="/create_surkl" render={(props)=><CreateSurkl {...props} socket={this.socket}/>}   />
 					<Route 
-						exact path="/session/:room" render={(props)=><Session {...props} socket={this.socket}/>}   />
+						exact path="/session/:id" render={(props)=><Session {...props} socket={this.socket}/>}   />
 					<Route exact path="/" component={Rooms}  />
 					<Header socket={this.socket} />
 				</Provider>

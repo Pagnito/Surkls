@@ -89,7 +89,7 @@ class SurklFeed extends Component {
 		this.setState({msg})
 	}
 	displayMsgs = () => {
-		return this.props[this.props.type].msgs.map((msg, ind) => {
+		return this.props.msgs.map((msg, ind) => {
 			let date = new Date(msg.date);
 			let imgCount;
 			let possibleUrlImg;
@@ -105,7 +105,7 @@ class SurklFeed extends Component {
 					id: msg.image_id
 				};
 			}
-			if (ind === this.props[this.props.type].msgs.length - 1) {
+			if (ind === this.props.msgs.length - 1) {
 				this.imgCount = imgCount;
 			}
 			if (msg.msg) {
@@ -203,9 +203,5 @@ SurklFeed.propTypes = {
 	socket: PropTypes.object,
 	surkl: PropTypes.object
 };
-function stateToProps(state) {
-	return {
-		surkl: state.surkl
-	};
-}
-export default connect(stateToProps, {updateMsgs})(SurklFeed);
+
+export default connect(null, {updateMsgs})(SurklFeed);

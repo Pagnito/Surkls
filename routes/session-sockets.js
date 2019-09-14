@@ -71,7 +71,7 @@ module.exports = (io, socket) => {
 									}
 									delete sessionObj.isAdmin;
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
-										redClient.hget('videoChatMsgs', session.sessionKey, (err, msgs) => {
+										redClient.hget('session-msgs', session.sessionKey, (err, msgs) => {
 											if (err) console.log(err);
 											io.in(session.sessionKey).emit('session', {
 												clients: sessionObj.clients,
@@ -150,7 +150,7 @@ module.exports = (io, socket) => {
 											}
 											delete sessionObj.isAdmin;
 											redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
-												redClient.hget('videoChatMsgs', session.sessionKey, (err, msgs) => {
+												redClient.hget('session-msgs', session.sessionKey, (err, msgs) => {
 													if (err) console.log(err);
 													io.in(session.sessionKey).emit('session', {
 														clients: sessionObj.clients,
@@ -209,8 +209,7 @@ module.exports = (io, socket) => {
 							};
 
 							socket.join(session.sessionKey);
-							redClient.hset('chatMsgs', session.sessionKey, JSON.stringify([]));
-							redClient.hset('videoChatMsgs', session.sessionKey, JSON.stringify([]));
+							redClient.hset('session-msgs', session.sessionKey, JSON.stringify([]));
 							redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
 								io.in(session.sessionKey).emit('session', sessionObj);
 							});
@@ -331,31 +330,31 @@ module.exports = (io, socket) => {
 			socket.to(tweetObj.sessionKey).emit('sharingTweet', tweetObj);
 		});
 	});
-	socket.on('sendMsg', (msg) => {
-		redClient.hget('videoChatMsgs', msg.sessionKey, (err, msgs) => {
+	socket.on('session-msg', (msg) => {
+		redClient.hget('session-msgs', msg.session_id, (err, msgs) => {
 			if (err) {
 				socket.emit('videoChatError');
 			}
 			let msgsArr = JSON.parse(msgs);
-			if (msgsArr.length > 100) {
+			if ( msgsArr !== null && msgsArr.length > 100) {
 				msgsArr = msgsArr.slice(msgsArr.length-100);
-			}
+			} 
+			console.log(msgsArr)
 			msgsArr.push(msg);
-			redClient.hset('videoChatMsgs', msg.sessionKey, JSON.stringify(msgsArr), (err, done) => {
+			redClient.hset('session-msgs', msg.session_id, JSON.stringify(msgsArr), (err, done) => {
 				if (err) {
 					io.to(socket.id).emit('videoChatError');
 				}
-				io.to(msg.sessionKey).emit('recieveMsgs', msgsArr);
+				io.to(msg.session_id).emit('receive-session-msgs', msgsArr);
 			});
 		});
 	});
 	socket.on('session-file', (chunk, session, size, end, msgObj)=>{   
     if(end==='end-of-session-file'){
-      redClient.hget('videoChatMsgs', session, (err,msgsStr)=>{
-				console.log("WTFFFF")
+      redClient.hget('session-msgs', session, (err,msgsStr)=>{
         let msgs = JSON.parse(msgsStr);
         msgs.push(msgObj)
-        redClient.hset('videoChatMsgs', session, JSON.stringify(msgs));
+        redClient.hset('session-msgs', session, JSON.stringify(msgs));
       })
       io.in(session).emit('session-sharing-file', chunk, 'end-of-session-file', msgObj)
     } else {

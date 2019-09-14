@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { emojis } from '../emojis';
 import {connect} from 'react-redux';
-import { readOne } from 'tools/sw-utils';
-import './ChatInput.scss'
+import './ChatInput.scss';
 class ChatInput extends Component {
 	constructor(props) {
 		super(props);

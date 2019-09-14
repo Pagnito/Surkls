@@ -9,7 +9,7 @@ import Loader1 from 'components/Loader1/Loader1';
 import YTplayer from 'yt-player';
 import './surkl.scss';
 import ChatBox from '../Reusables/ChatBox/ChatBox';
-import Board from './board'
+import Board from './board';
 
 
 class Surkl extends Component {
@@ -68,7 +68,6 @@ class Surkl extends Component {
 	}
 
 	componentDidMount() {
-		console.log('mounted');
 		//this.socket.emit('join-surkl-room', this.props.match.params.id);
 		if (this.props.surkl.artist !== 'Artist') {
 			let currTime = this.props.surkl.currTime;

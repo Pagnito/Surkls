@@ -10,7 +10,7 @@ class ChatBox extends Component {
   constructor(props){
     super(props);
     this.socket = this.props.socket
-		this.socket.on('receive-surkl-msgs', (msgs) => {
+		this.socket.on('receive-'+this.props.type+'-msgs', (msgs) => {
 			this.props.updateMsgs(msgs, this.props.type);
     });
     this.chunkSize = 4024;
@@ -18,7 +18,7 @@ class ChatBox extends Component {
 		this.bufferedFile;
 		this.sharedFileReader;
 		this.sharingFileStarted = false;
-		this.socket.on('surkl-sharing-file', (buffer, size, msgObj) => {
+		this.socket.on(this.props.type + '-sharing-file', (buffer, size, msgObj) => {
 			if (this.sharingFileStarted === false) {
 				this.sharingFileStarted = true;
 				this.sharedFileBuffers = [];
@@ -40,7 +40,7 @@ class ChatBox extends Component {
 					file: newFile,
 					size: newFile.size
 				}
-				writeData('surkl-chat-media', fileObj)
+				writeData(this.props.type+'chat-media', fileObj)
 
 			} else {
 				this.sharedFileBuffers.push(buffer);		
@@ -53,8 +53,8 @@ class ChatBox extends Component {
 		});
   }
   componentWillUnmount() {
-		this.socket.removeListener('surkl-sharing-file');
-		this.socket.removeListener('receive-surkl-msgs');
+		this.socket.removeListener(this.props.type + '-sharing-file');
+		this.socket.removeListener('receive-'+this.props.type+ '-msgs');
 	}
   /////////////////////upload file///////////////////
   dataURLtoBlob(dataurl) {
@@ -112,8 +112,9 @@ class ChatBox extends Component {
 		})
 	};
 	sendChunk = (reader, file, size) => {
+		let id = this.props.match.params.id.indexOf('=') > -1 ? this.props.match.params.id.split("=")[1] : this.props.match.params.id
 		reader.onload = (e) => {
-			this.socket.emit('surkl-file', e.target.result, this.props.match.params.id, size, 'buffering');
+			this.socket.emit(this.props.type + '-file', e.target.result, id, size, 'buffering');
 			this.chunksSent += this.chunkSize;
 			if (e.target.result.byteLength===this.chunkSize) {
 				this.sendChunk(reader, file, size);
@@ -123,10 +124,10 @@ class ChatBox extends Component {
 					image_id: Math.random().toString(36).substring(2, 15),
 					userName: this.props.auth.user.userName,
 					avatarUrl: this.props.auth.user.avatarUrl,
-					surkl_id: this.props.match.params.id,
+					surkl_id: id,
 					date: Date.now()
 				};
-				this.socket.emit('surkl-file', e.target.result, this.props.match.params.id, size, 'end-of-file', msgObj);
+				this.socket.emit(this.props.type + '-file', e.target.result, this.props.match.params.id, size, 'end-of-file', msgObj);
 				this.chunksSent = 0;
 			}
 		};
@@ -134,24 +135,26 @@ class ChatBox extends Component {
   };
    /////////////////////upload file///////////////////
   sendMsg = (msg) =>{
+		let id = this.props.match.params.id.indexOf('=') > -1 ? this.props.match.params.id.split("=")[1] : this.props.match.params.id
 		let msgObj =	{
 			msg: msg.msg,
 			user_id: this.props.auth.user._id,
 			userName: this.props.auth.user.userName,
 			avatarUrl: this.props.auth.user.avatarUrl,
-			surkl_id: this.props.match.params.id,
+			[this.props.type+'_id']: id,
 			mentions: msg.mentions,
 			date: Date.now()
 		} 
-		let msgs = this.props.surkl.msgs
-		if(msgs[msgs.length-1].user_id===this.props.auth.user._id && msg.mentions.length===0){
+		let msgs = this.props[this.props.type].msgs
+		if(msgs.length > 0 && msgs[msgs.length-1].user_id===this.props.auth.user._id && msg.mentions.length===0){
 			msgObj = {
 				msg:msg.msg, 
-				surkl_id:this.props.match.params.id,
+				[this.props.type+'_id']: id,
 				user_id: this.props.auth.user._id,
+				mentions: msg.mentions,
 			}
 		} 
-		this.socket.emit('surkl-msg', msgObj);
+		this.socket.emit(this.props.type + '-msg', msgObj);
 	}
   render() {
     let { type } = this.props;

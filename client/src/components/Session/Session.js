@@ -10,6 +10,7 @@ import {
   closeMenus,
   removeKeys
 } from "actions/actions";
+import ChatBox from '../Reusables/ChatBox/ChatBox';
 import {writeData, readOne} from '../../../tools/sw-utils';
 import PropTypes from "prop-types";
 import { openDMs, addMultiToDMs, addSessDMs } from "actions/dm-actions";
@@ -18,7 +19,6 @@ import SessionContentYoutube from "./Sub-comps/session-content-youtube";
 import SessionContentDailymotion from "./Sub-comps/session-content-dailymotion";
 import SessionContentTwitter from "./Sub-comps/session-content-twitter";
 import SessionContentTwitch from "./Sub-comps/session-content-twitch";
-import ChatInput from "./Sub-comps/chat-input";
 import "./Sub-comps/styles/profile-modal.scss";
 import "./session.scss";
 import "../Loader1/loader1.scss";
@@ -450,7 +450,7 @@ class Session extends Component {
       this.handleIceCandidate(e, remoteId);
     currentConnection.ontrack = this.handleRemoteStreamAdded;
     currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-    if (/noCam/.test(this.props.match.params.room) === false) {
+    if (/noCam/.test(this.props.match.params.id) === false) {
       if (this.track[0].kind === "audio") {
         this.track.reverse();
       }
@@ -622,7 +622,7 @@ class Session extends Component {
     this.props.updateSession({
       inSession: false,
       activePlatform: "youtube",
-      room: "",
+      id: "",
       admin: "",
       clients: [],
       viewers: [],
@@ -663,10 +663,10 @@ class Session extends Component {
           startingOrJoining = false;
         }
         session.inSession = true;
-        session.noCam = /noCam/.test(this.props.match.params.room)
+        session.noCam = /noCam/.test(this.props.match.params.id)
           ? true
           : false;
-        session.sessionKey = this.props.match.params.room.split("=")[1];
+        session.sessionKey = this.props.match.params.id.split("=")[1];
         session.creatingSession = startingOrJoining;
         if (this.props.auth.user.userName) {
           session.user = this.props.auth.user;
@@ -772,7 +772,6 @@ class Session extends Component {
       }
     } else if (this.props.session.surfing) {
       if (prevProps.location.pathname !== this.props.location.pathname) {
-        console.log("changed room");
         this.handleSurfCleanUp();
         this.socket.emit("leave", prevProps.session.sessionKey);
         if (
@@ -1270,7 +1269,7 @@ class Session extends Component {
   };
   startStream = videoEl => {
     return new Promise(resolve => {
-      if (/noCam/.test(this.props.match.params.room) === false) {
+      if (/noCam/.test(this.props.match.params.id) === false) {
         if (videoEl.srcObject === null) {
           console.log('src is null')
           if (this.stream === null) {
@@ -1571,8 +1570,7 @@ class Session extends Component {
             </div>
             <div id="chatSection">
               <div id="chatBox">
-                <div id="chatMsgsShow">{this.renderChatText()}</div>
-                <ChatInput uploadFile={this.uploadFile} sendMsg={this.sendMsg} />
+                <ChatBox match={this.props.match} type='session' socket={this.props.socket} />
               </div>
             </div>
           </div>

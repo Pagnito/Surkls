@@ -1,5 +1,6 @@
 Surkls To Do:
 
+Clean session from previous stream implementation
 Finish Random Surf
 	- Starting stream error causes the bug of non renewal of session
 		causes?: 
