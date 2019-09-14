@@ -1069,6 +1069,12 @@ class Session extends Component {
   };
   renderChatText = () => {
     return this.props.session.msgs.map((msg, ind) => {
+      let possibleUrlImg;
+      let date = new Date(msg.date);
+      let locale = date.toLocaleDateString();
+			let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+			let time = date.getHours() + ':' + minutes;
+			let fullDate = locale + ' ' + time;
       let url = msg.avatar ? msg.avatar : "/assets/whitehat.jpg";
       if(msg.image_id){
         return (
@@ -1103,8 +1109,51 @@ class Session extends Component {
 					</div>
 				);
       } else {
+        if (
+					/(http|https)/.test(msg.msgText) &&
+					/(.com|.net|.io|.us| .uk |.info|.org|.co)/.test(msg.msgText) &&
+					/(jpeg|jpg|gif|png)/.test(msg.msgText)
+				) {
+					possibleUrlImg = (
+						<img style={{display:'none'}} onLoad={this.resizeImg} src={msg.msgText} />
+					);
+				} else {
+					possibleUrlImg = msg.msgText;
+					if(/(\ ?@.*)/g.test(msg.msgText)){
+						let split = msg.msgText.split(' ');
+					possibleUrlImg = split.map((msg, key)=>{
+						if(/^(\ ?@.*)/.test(msg)){
+							return <span style={{color:'#FFCD44'}} key={key}>{' '+msg+' '}</span>
+						} else {
+							return msg
+						}
+					})
+					}
+        }
         return (
-          <div key={ind} className="chatMsg">
+          <div key={ind} className="session-chat-msg-wrap">
+						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="session-chat-msg">
+							<div className="session-chat-msg-av-wrap">
+								{url ? (
+									<img onClick={()=>this.createMention(msg.userName)} data-user={JSON.stringify(msg)} className="session-chat-msgAvatar" src={url} />
+								) : (
+									''
+								)}
+							</div>
+							<div className="session-chat-HeaderNmsg">
+								{msg.userName ? (
+									<div className="session-chat-MsgUserInfo">
+										<div className="session-chat-MsgName">{msg.userName}</div>
+										<div className="session-chat-MsgDate">{fullDate}</div>
+									</div>
+								) : (
+									''
+								)}
+								<div style={{ padding: msg.userName ? '5px' : '0px' }} className="session-chat-MsgText">{possibleUrlImg}</div>
+							</div>
+						</div>
+					</div>
+          /* <div key={ind} className="chatMsg">
             <img
               data-user={JSON.stringify(msg)}
               className="chatMsgAvatar"
@@ -1118,7 +1167,7 @@ class Session extends Component {
               </div>
               <div className="chatMsgText">{msg.msgText}</div>
             </div>
-          </div>
+          </div> */
         );
       }  
     });

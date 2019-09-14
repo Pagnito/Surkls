@@ -1,0 +1,94 @@
+#chat-feed::-webkit-scrollbar {
+  width:8px;
+  background:#242323
+}
+#chat-feed::-webkit-scrollbar-thumb {
+  background: #545353; 
+  border-radius: 10px;
+  margin-right:1px;
+}
+#chat-feed::-webkit-scrollbar-corner {
+  background: transparent;
+}
+#chat-feed {
+  height:100%;
+  width:100%;
+  box-sizing: border-box;
+  padding-top: 10px;
+  overflow: scroll;
+  overflow-x: hidden;  
+  .chat-msg-wrap:hover {
+    background: #272626;
+  }
+  .chat-msg-wrap {
+    width:100%;
+    padding-top: 2px;
+    padding-bottom: 2px;  
+    .chat-msg {
+      margin-right:5px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      box-sizing: border-box;
+      animation: fadeOut 2s ease-out forwards;
+      width: calc(100% - 20px);
+      font-family: 'Comfortaa';
+      display: flex;
+      box-sizing: border-box;
+      margin-top: 2px;
+      .chat-msg-av-wrap{
+          width: 50px;
+          display:flex;
+          padding:10px;
+          padding-top:0px;
+          justify-content: center;
+        .chat-msgAvatar {
+          width: 32px;
+          height: 32px;
+          margin-left: 14px;
+          border-radius: 30px;
+          border: 2px solid #c2c3c4;
+        }
+      }
+      
+      .chat-HeaderNmsg {
+        width: calc(100% - 70px);
+        margin-left: 5px;
+        .chat-MsgUserInfo {
+          margin-top: 3px;
+          width: 100%;
+          height: 16px;
+          display: flex;            
+          box-sizing: border-box;
+          display: flex;
+          width: 100%;
+          align-items: flex-end;
+          justify-content: flex-start;
+          .chat-MsgDate {
+            
+            font-size: 10px;
+            margin-bottom: 2px !important;
+            margin-left: 5px;
+            color:#91918D;
+          }
+          .chat-MsgName {
+          
+            font-size: 15px;
+            color:#91918D;
+          }
+        }
+
+        .chat-MsgText {
+          overflow-wrap: break-word;
+          word-break: break-word;
+          font-size: 16px;
+          color: #E6E9E9;
+          padding-bottom: 0px !important;
+          padding-left: 5px !important;
+          width:100%;
+          font-family: SourceSansLocal,source-sans-pro,Source Sans Pro,-apple-system,Roboto,pt sans,calibri,sans-serif;
+          box-sizing: border-box;
+        }
+      }
+    }
+  }
+}

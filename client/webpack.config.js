@@ -57,7 +57,8 @@ module.exports = {
       components: path.resolve(__dirname, 'src/components'),
       actions: path.resolve(__dirname, 'src/actions'),
       reducers: path.resolve(__dirname, 'src/reducers'),
-      types: path.resolve(__dirname, 'src/actions')
+      types: path.resolve(__dirname, 'src/actions'),
+      tools: path.resolve(__dirname, 'tools')
     }
   },
   plugins: [new MiniCssExtractPlugin({ filename: "bundle.css" }),

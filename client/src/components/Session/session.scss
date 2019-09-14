@@ -268,8 +268,82 @@
 					overflow-x: hidden;
           .chatMsg:hover {
             background: #302f2f;
-          }
-					.chatMsg {
+					}
+					.surkl-chat-msg-wrap:hover {
+						background: #272626;
+					}
+					.session-chat-msg-wrap {
+						width:100%;
+						padding-top: 2px;
+						padding-bottom: 2px;  
+						.session-chat-msg {
+							margin-right:5px;
+							padding-top: 5px;
+							padding-bottom: 5px;
+							box-sizing: border-box;
+							animation: fadeOut 2s ease-out forwards;
+							width: calc(100% - 20px);
+							font-family: 'Comfortaa';
+							display: flex;
+							box-sizing: border-box;
+							margin-top: 2px;
+							.session-chat-msg-av-wrap{
+									width: 50px;
+									display:flex;
+									padding:10px;
+									padding-top:0px;
+									justify-content: center;
+								.session-chat-msgAvatar {
+									width: 32px;
+									height: 32px;
+									margin-left: 14px;
+									border-radius: 30px;
+									border: 2px solid #c2c3c4;
+								}
+							}
+							
+							.session-chat-HeaderNmsg {
+								width: calc(100% - 70px);
+								margin-left: 5px;
+								.session-chat-MsgUserInfo {
+									margin-top: 3px;
+									width: 100%;
+									height: 16px;
+									display: flex;            
+									box-sizing: border-box;
+									display: flex;
+									width: 100%;
+									align-items: flex-end;
+									justify-content: flex-start;
+									.session-chat-MsgDate {
+										
+										font-size: 10px;
+										margin-bottom: 2px !important;
+										margin-left: 5px;
+										color:#91918D;
+									}
+									.session-chat-MsgName {
+									
+										font-size: 15px;
+										color:#91918D;
+									}
+								}
+			
+								.session-chat-MsgText {
+									overflow-wrap: break-word;
+									word-break: break-word;
+									font-size: 16px;
+									color: #E6E9E9;
+									padding-bottom: 0px !important;
+									padding-left: 5px !important;
+									width:100%;
+									font-family: SourceSansLocal,source-sans-pro,Source Sans Pro,-apple-system,Roboto,pt sans,calibri,sans-serif;
+									box-sizing: border-box;
+								}
+							}
+						}
+					}
+					/* .chatMsg {
 						margin-right:5px;
 						animation: fadeOut 2s ease-out forwards;
 						width: 100%;
@@ -316,7 +390,7 @@
 								box-sizing: border-box;
 							}
 						}
-					}
+					} */
 				}
 				#session-chat-controls {
 					display:flex;

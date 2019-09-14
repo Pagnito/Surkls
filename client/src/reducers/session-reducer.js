@@ -6,7 +6,8 @@ import {
 	UNPICK_VIDEO,
 	NEW_ADMIN,
 	SEND_TWEET,
-	REMOVE_KEYS
+	REMOVE_KEYS,
+	UPDATE_SESSION_MSGS
 } from 'actions/types';
 import { isEmpty } from '../../tools/isEmpty';
 const initialState = {
@@ -67,6 +68,11 @@ export default function(state = initialState, action) {
 				...state,
 				...action.payload
 			};
+		case UPDATE_SESSION_MSGS:
+			return {
+				...state,
+				msgs:action.payload
+			}
 		case START_SESSION:
 			return {
 				...state,

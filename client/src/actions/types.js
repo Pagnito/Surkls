@@ -7,6 +7,7 @@ export const GET_SESSIONS = 'GET_SESSIONS';
 export const GET_SESSION= 'GET_SESSION';
 export const GET_DEVICES= 'GET_DEVICES';
 export const UPDATE_SESSION= 'UPDATE_SESSION';
+export const UPDATE_SESSION_MSGS = 'UPDATE_SESSION_MSGS';
 export const SEND_VIDEO = 'SEND_VIDEO';
 export const UNPICK_VIDEO = 'UNPICK_VIDEO';
 export const SEND_TWEET = 'SEND_TWEET';

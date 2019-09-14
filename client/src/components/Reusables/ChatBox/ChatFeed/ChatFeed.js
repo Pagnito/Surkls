@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-//import {emojiRegex} from './emojis'
+import { updateMsgs } from 'actions/surkl-actions'
 import { readOne, readData, deleteOne } from 'tools/sw-utils';
 import PropTypes from 'prop-types';
+import './ChatFeed.scss';
 class SurklFeed extends Component {
 	constructor(props) {
 		super(props);
@@ -13,27 +14,58 @@ class SurklFeed extends Component {
 	}
 	
 	shouldComponentUpdate(prevProps) {
-		return this.equals(prevProps.surkl.msgs, this.props.surkl.msgs);
+		return this.equals(prevProps.msgs, this.props.msgs);
 	}
 	componentDidUpdate(prevProps) {
-		if (prevProps.surkl.msgs !== this.props.surkl.msgs && this.prevImgCount !== this.imgCount) {
+		if (prevProps.msgs !== this.props.msgs && this.prevImgCount !== this.imgCount) {
 			setTimeout(() => {
 				this.prevImgCount = this.imgCount - 1;
 				this.loadImages();
 			}, 1000);
 		}
-		if (this.props.surkl.msgs !== prevProps.surkl.msgs) {
+		if (this.props.msgs !== prevProps.msgs) {
 			this.moveChat();
 		}
 	}
+	moveChat = () => {
+		const chatBox = document.getElementById('chat-feed');
+		if (chatBox !== null) {
+			chatBox.scrollTop = chatBox.scrollHeight;
+		}
+	};
+	cleanIndexedDB = () => {
+		readData(this.props.type + '-chat-media').then((val) => {
+			if (val.length > 50) {
+				let toBeDeleted = val.slice(50, val.length - 1);
+				toBeDeleted.forEach((file) => {
+					deleteOne(this.props.type + '-chat-media', file.id);
+				});
+			}
+		});
+	};
+	equals = (prev, curr) => {
+		if (prev === curr) {
+			return false;
+		} else {
+			return true;
+		}
+	};
+
+	blobToDataURL(blob, callback) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			callback(e.target.result);
+		};
+		reader.readAsDataURL(blob);
+	}
 	loadImages = () => {
-		let images = document.getElementsByClassName('img');
-		const chatBox = document.getElementById('surkl-feed');
+		const images = document.getElementsByClassName('img');
+		const chatBox = document.getElementById('chat-feed');
 		let iter = 0;
 		for (let img of images) {
 			iter++;
 			if (!this.imgs[img.dataset.imageid].loaded) {
-				readOne('surkl-chat-media', img.dataset.imageid)
+				readOne(this.props.type+'-chat-media', img.dataset.imageid)
 					.then((resImg) => {
 						this.blobToDataURL(resImg.file, (url) => {
 							img.src = url;
@@ -51,40 +83,13 @@ class SurklFeed extends Component {
 			}
 		}
 	};
-	moveChat = () => {
-		const chatBox = document.getElementById('surkl-feed');
-		if (chatBox !== null) {
-			chatBox.scrollTop = chatBox.scrollHeight;
-		}
-	};
-	cleanIndexedDB = () => {
-		readData('surkl-chat-media').then((val) => {
-			if (val.length > 50) {
-				let toBeDeleted = val.slice(50, val.length - 1);
-				toBeDeleted.forEach((file) => {
-					deleteOne('surkl-chat-media', file.id);
-				});
-			}
-		});
-	};
-	equals = (prev, curr) => {
-		if (prev === curr) {
-			return false;
-		} else {
-			return true;
-		}
-	};
-	
-	
-	
-	createMention = (user) =>{
-		console.log(user,' or')
+	displayMention = (user) =>{
 		let msg = this.state.msg;
 		msg += '@'+user;
 		this.setState({msg})
 	}
 	displayMsgs = () => {
-		return this.props.surkl.msgs.map((msg, ind) => {
+		return this.props[this.props.type].msgs.map((msg, ind) => {
 			let date = new Date(msg.date);
 			let imgCount;
 			let possibleUrlImg;
@@ -100,7 +105,7 @@ class SurklFeed extends Component {
 					id: msg.image_id
 				};
 			}
-			if (ind === this.props.surkl.msgs.length - 1) {
+			if (ind === this.props[this.props.type].msgs.length - 1) {
 				this.imgCount = imgCount;
 			}
 			if (msg.msg) {
@@ -126,50 +131,50 @@ class SurklFeed extends Component {
 					}
 				}
 				return (
-					<div key={ind} className="surkl-chat-msg-wrap">
-						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="surkl-chat-msg">
-							<div className="surkl-chat-msg-av-wrap">
+					<div key={ind} className="chat-msg-wrap">
+						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="chat-msg">
+							<div className="chat-msg-av-wrap">
 								{url ? (
-									<img onClick={()=>this.createMention(msg.userName)} data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
+									<img onClick={()=>this.displayMention(msg.userName)} data-user={JSON.stringify(msg)} className="chat-msgAvatar" src={url} />
 								) : (
 									''
 								)}
 							</div>
-							<div className="surkl-chat-HeaderNmsg">
+							<div className="chat-HeaderNmsg">
 								{msg.userName ? (
-									<div className="surkl-chat-MsgUserInfo">
-										<div className="surkl-chat-MsgName">{msg.userName}</div>
-										<div className="surkl-chat-MsgDate">{fullDate}</div>
+									<div className="chat-MsgUserInfo">
+										<div className="chat-MsgName">{msg.userName}</div>
+										<div className="chat-MsgDate">{fullDate}</div>
 									</div>
 								) : (
 									''
 								)}
-								<div style={{ padding: msg.userName ? '5px' : '0px' }} className="surkl-chat-MsgText">{possibleUrlImg}</div>
+								<div style={{ padding: msg.userName ? '5px' : '0px' }} className="chat-MsgText">{possibleUrlImg}</div>
 							</div>
 						</div>
 					</div>
 				);
 			} else if (msg.image_id) {
 				return (
-					<div key={ind} className="surkl-chat-msg-wrap">
-						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="surkl-chat-msg">
-							<div className="surkl-chat-msg-av-wrap">
+					<div key={ind} className="chat-msg-wrap">
+						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="chat-msg">
+							<div className="chat-msg-av-wrap">
 								{url ? (
-									<img onClick={()=>this.createMention(msg.userName)} data-user={JSON.stringify(msg)} className="surkl-chat-msgAvatar" src={url} />
+									<img onClick={()=>this.displayMention(msg.userName)} data-user={JSON.stringify(msg)} className="chat-msgAvatar" src={url} />
 								) : (
 									''
 								)}
 							</div>
-							<div className="surkl-chat-HeaderNmsg">
+							<div className="chat-HeaderNmsg">
 								{msg.userName ? (
-									<div className="surkl-chat-MsgUserInfo">
-										<div className="surkl-chat-MsgName">{msg.userName}</div>
-										<div className="surkl-chat-MsgDate">{fullDate}</div>
+									<div className="chat-MsgUserInfo">
+										<div className="chat-MsgName">{msg.userName}</div>
+										<div className="chat-MsgDate">{fullDate}</div>
 									</div>
 								) : (
 									''
 								)}
-								<div className="surkl-chat-MsgText">
+								<div className="chat-MsgText">
 									<img
 										style={{ display: 'none', marginTop: '7px' }}
 										className="img"
@@ -185,11 +190,17 @@ class SurklFeed extends Component {
 		});
 	};
 	render() {
-		return <div id="surkl-feed">{this.displayMsgs()}</div>;
+		return <div id="chat-feed">{this.displayMsgs()}</div>;
 	}
 }
 SurklFeed.propTypes = {
 	children: PropTypes.oneOfType([ PropTypes.array, PropTypes.object ]),
+  type: PropTypes.string,
+	msgs: PropTypes.array,
+	width: PropTypes.number,
+	height: PropTypes.number,
+	updateMsgs: PropTypes.func,
+	socket: PropTypes.object,
 	surkl: PropTypes.object
 };
 function stateToProps(state) {
@@ -197,4 +208,4 @@ function stateToProps(state) {
 		surkl: state.surkl
 	};
 }
-export default connect(stateToProps)(SurklFeed);
+export default connect(stateToProps, {updateMsgs})(SurklFeed);

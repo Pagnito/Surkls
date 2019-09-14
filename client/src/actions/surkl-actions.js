@@ -1,5 +1,5 @@
 import {
-  CREATED_SURKL, USER_SURKL, UPDATE_SURKL_MSGS, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER, UPDATE_SURKL
+  CREATED_SURKL, USER_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER, UPDATE_SURKL
   } from 'actions/types';
   
   export const updateYTPlayer = (data) => {
@@ -8,12 +8,7 @@ import {
       payload: data
     }
   }
-  export const updateMsgs = (msgs) =>{
-    return {
-      type: UPDATE_SURKL_MSGS,
-      payload:msgs === null ? [] : msgs
-    }
-  }
+  
   export const updateOnMembers = (users) =>{
     return {
       type: UPDATE_ON_MEMBERS,
