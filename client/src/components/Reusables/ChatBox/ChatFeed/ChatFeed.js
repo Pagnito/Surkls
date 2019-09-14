@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateMsgs } from 'actions/surkl-actions'
+import { updateMsgs } from 'actions/chat-actions'
 import { readOne, readData, deleteOne } from 'tools/sw-utils';
 import PropTypes from 'prop-types';
 import './ChatFeed.scss';

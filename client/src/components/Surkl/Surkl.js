@@ -89,8 +89,8 @@ class Surkl extends Component {
 	}
 	componentWillUnmount() {
 		clearInterval(this.timeInterval);
-		this.socket.removeListener('online-users');
 		this.socket.removeListener('track');
+		this.socket.removeListener('online-users-n-surkl')
 		this.socket.removeListener('mounted-track');
 		if(this.YTPlayer!==null){
 			this.YTPlayer.pause();

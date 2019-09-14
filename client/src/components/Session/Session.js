@@ -11,7 +11,6 @@ import {
   removeKeys
 } from "actions/actions";
 import ChatBox from '../Reusables/ChatBox/ChatBox';
-import {writeData, readOne} from '../../../tools/sw-utils';
 import PropTypes from "prop-types";
 import { openDMs, addMultiToDMs, addSessDMs } from "actions/dm-actions";
 import Dropdown from "components/smalls/drop-menu-mutable";
@@ -67,37 +66,6 @@ class Session extends Component {
       ordered: false, //no guaranteed delivery, unreliable but faster
       maxPacketLifeTime: 500 //milliseconds
     };
-    this.streamInterval = null; //interval sending buffers from 1st viewer
-    this.streamInterval2 = null;
-    this.toBeRecorded1 = null; //variable to put remote stream into for the first viewer
-    this.toBeRecorded2 = null; //variable to put remote stream into for the first viewer
-    this.toBeRecorded3 = null; //variable to put remote stream into for the first viewer
-    this.recordedStreams = {
-      stream1: null,
-      stream2: null,
-      stream3: null //video recorded from remote stream
-    };
-
-    this.mediaRecorders = {
-      recorder1: null,
-      recorder2: null,
-      recorder3: null
-    };
-
-    this.dataChannel1 = null;
-    this.dataChannel2 = null;
-    this.dataChannel3 = null;
-    this.sourceBuffers = {
-      buffer1: null,
-      buffer2: null,
-      buffer3: null
-    };
-    this.viewStreams = {
-      stream1: false,
-      stream2: false,
-      stream3: false
-    };
-
     this.alreadyStarted = false;
     this.stream = null;
     this.track = [];
@@ -208,20 +176,6 @@ class Session extends Component {
     ) {
       this.remoteAdded.videoEl.srcObject = event.streams[0];
       this.remoteAdded.added = false;
-      console.log("STREAMS ARE IN");
-      /* 	if (this.props.session.noCam && this.props.session.viewers.length > 0) {
-				if(this.toBeRecorded3===null && this.toBeRecorded1!==null && this.toBeRecorded2!==null){
-					console.log('stream3')
-					this.toBeRecorded3 = event.streams[0];
-				} else if(this.toBeRecorded2===null && this.toBeRecorded1!==null){
-					console.log('stream2')
-					this.toBeRecorded2 = event.streams[0];
-				} else if(this.toBeRecorded1===null){
-					console.log('stream1')
-					this.toBeRecorded1 = event.streams[0];
-				}
-				
-			} */
     }
   };
 
@@ -318,41 +272,6 @@ class Session extends Component {
 
   createSocketChannels = () => {
     if (this.socketChanneledCreated === false) {
-      this.socket.on('session-sharing-file', (buffer, size, msgObj) => {
-        if (this.sharingFileStarted === false) {
-          this.sharingFileStarted = true;
-          this.sharedFileBuffers = [];
-          this.progressPercent = 0;				
-          this.amountOfChunks = size / this.chunkSize;
-          this.percentPerChunk =this.amountOfChunks> 100 ? 100/this.amountOfChunks : 1/(this.amountOfChunks/100);
-          //this.progressBar = document.getElementById('file-upload-progress');
-        }
-        if (size === 'end-of-session-file') {
-          //this.progressBar.style.width = '0%';
-          console.log("END")
-          this.sharingFileStarted = false;
-          let newFile = new Blob(this.sharedFileBuffers);
-          let msgsClone = this.props.session.msgs.slice(0);
-          msgsClone.push(msgObj)
-          this.props.updateSession({ msgs: msgsClone });
-          let fileObj = {
-            id: msgObj.image_id,
-            file: newFile,
-            size: newFile.size
-          }
-          writeData('session-chat-media', fileObj)
-  
-        } else {
-          console.log("WTF")
-          this.sharedFileBuffers.push(buffer);		
-          this.progressPercent += this.percentPerChunk;
-          if(this.progressPercent>100){
-            this.progressPercent = 100
-          }
-          //this.progressBar.style.width = this.progressPercent + '%';
-          
-        }
-      });
       this.socket.on("session", sessionObj => {
         if (sessionObj.clients.length === 1) {
           sessionObj.isAdmin = true;
@@ -462,125 +381,10 @@ class Session extends Component {
       cb(currentConnection);
     }
   };
-  /* createViewerPeerRtc = (remoteId, cb) => {
-		console.log('WE IN HERE');
-		this.rtcs[remoteId] = new RTCPeerConnection(this.stunConfig);
-		let currentConnection = this.rtcs[remoteId];
-		currentConnection.onicecandidate = this.handleIceCandidate;
-		currentConnection.ontrack = this.handleRemoteStreamAdded;
-		currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-		if(this.dataChannel1==null && this.toBeRecorded1 !== null){
-			console.log('channel1')
-			this.dataChannel1 = this.rtcs[remoteId].createDataChannel('viewer-stream1', this.dcOptions);
-			this.record(this.toBeRecorded1, '1', this.mediaRecorders, this.recordedStreams);
-		}
-		if (this.dataChannel2 == null && this.dataChannel1 !== null && this.toBeRecorded2!==null) {
-			console.log('channel2')
-			this.dataChannel2 = this.rtcs[remoteId].createDataChannel('viewer-stream2', this.dcOptions);
-			this.record(this.toBeRecorded2, '2', this.mediaRecorders, this.recordedStreams);
-		}
-		if (this.dataChannel3 == null && this.dataChannel1 !== null 
-			&& this.dataChannel2 !== null  && this.toBeRecorded3!==null) {
-			console.log('channel3')
-			this.dataChannel3 = this.rtcs[remoteId].createDataChannel('viewer-stream3', this.dcOptions);
-			this.record(this.toBeRecorded3 , '3', this.mediaRecorders, this.recordedStreams);
-		}
-		if (currentConnection.setRemoteDescription) {
-			cb(currentConnection, 'with-dc');
-		}
-	}; */
-  /* 	dcOffererEvents = () => {
-		this.dataChannel1.onmessage = (e) => {
-			console.log(e.data);
-		};
-	};
-	dcAnswererEvents = (pc) => {
-		pc.ondatachannel = (e) => {
-			let channel = e.channel;
-			console.log('channel', e.channel)
-			channel.onmessage = (e) => {
-			
-				if (e.currentTarget.label === 'viewer-stream1') {
-					console.log('ONE', e.data)
-					if(this.viewStreams.stream1===false){
-						this.viewersStream(e, '1', 'viewer1', this.viewStreams, this.sourceBuffers);
-					}		
-					if (this.sourceBuffers.buffer1 !== null) {
-						this.sourceBuffers.buffer1.appendBuffer(e.data);
-					}
-				}
-				if (e.currentTarget.label === 'viewer-stream2') {
-					console.log('TWO', e.data)
-					if(this.viewStreams.stream2===false){
-						this.viewersStream(e, '2', 'viewer2', this.viewStreams, this.sourceBuffers);
-					}		
-					if (this.sourceBuffers.buffer2 !== null) {
-						this.sourceBuffers.buffer2.appendBuffer(e.data);
-					}
-				}
-			};
-		};
-	}; */
-  /* 	record(sourceStream, which, mediaRecorders, recordedStreams) {
-		mediaRecorders['recorder'+which] = new MediaRecorder(sourceStream, { mimeType: 'video/webm;codecs=vp8,opus' });
-		mediaRecorders['recorder'+which].ondataavailable = (e) => (recordedStreams['stream'+which] = [ e.data ]);
-		mediaRecorders['recorder'+which].start();
-		if(which === '1'){
-			this.streamInterval = setInterval(() => {
-				this.requestStream(1);
-				this.process(1,recordedStreams.stream1);
-			}, 500);
-		}
-		if(which === '2'){
-			this.streamInterval1 = setInterval(() => {
-				this.requestStream(2);
-				this.process(2,recordedStreams.stream2);
-			}, 1000);
-		}
-	}
-	process(which, stream) {
-		const blob1 = stream !== null ? new Blob(stream) : null;
-		if(blob1!==null){
-			this.convertToArrayBuffer(which,blob1);
-		}	
-	}
-	convertToArrayBuffer(which, blob) {
-		console.log('converting ', which, blob)
-		let reader = new FileReader();
-		reader.onload = (e) => {
-			this.sendStream(which, e.target.result);
-		};
-		reader.readAsArrayBuffer(blob);
-	}
-	sendStream = (which,stream) => {
-		console.log(which, stream)
-		if(which === 1){
-			this.dataChannel1.send(stream);
-		} else if( which === 2) {
-			this.dataChannel2.send(stream);
-		} else {
-			this.dataChannel3.send(stream);
-		}	
-	};
-	requestStream = (which) => {
-		if(this.mediaRecorders.recorder1!==null && which===1){
-			this.mediaRecorders.recorder1.requestData();
-		} 
-		if (this.mediaRecorders.recorder2!==null && which===2){
-			this.mediaRecorders.recorder2.requestData();
-		}
-		if (this.mediaRecorders.recorder3!==null && which===3){
-			this.mediaRecorders.recorder3.requestData();
-		}
-	}; */
   ///////////////////////////////////////////webrtc^^^ funcs////////////////////////////////////////////
 
   //////////////////////////////////////////////lifecycle hook//////////////////////////////////////////
   componentWillUnmount() {
-    if (this.streamInterval !== null) {
-      clearInterval(this.streamInterval);
-    }
-
     for (let rtc in this.rtcs) {
       this.rtcs[rtc].close();
     }
@@ -677,15 +481,6 @@ class Session extends Component {
         this.socket.emit("createOrJoin", session);
         this.socket.on("signal", (data, remoteId) => {
           switch (data.type) {
-            /* case 'another-viewer':
-							console.log('VIEWER');
-							this.createViewerPeerRtc(remoteId, (rtc, withDc) => {
-								if (withDc === 'with-dc') {
-									this.dcOffererEvents();
-								}
-								this.createOffer(rtc, (offer) => this.socket.emit('signal', offer, remoteId));
-							});
-							break; */
             case "newJoin":
               this.createPeerRtc(remoteId, rtc => {
                 this.createOffer(rtc, offer =>
@@ -1152,52 +947,12 @@ class Session extends Component {
 							</div>
 						</div>
 					</div>
-          /* <div key={ind} className="chatMsg">
-            <img
-              data-user={JSON.stringify(msg)}
-              className="chatMsgAvatar"
-              src={url}
-            />
-  
-            <div className="chatHeaderNmsg">
-              <div className="chatMsgUserInfo">
-                <div className="chatMsgName">{msg.userName}</div>
-                <div className="chatMsgDate">{msg.date}</div>
-              </div>
-              <div className="chatMsgText">{msg.msgText}</div>
-            </div>
-          </div> */
         );
       }  
     });
   };
 
-  /* viewersStream = (e, which, videoEl_id, streams, sourceBuffers) => {
-		this.createVideo(videoEl_id).then((video) => {
-			let mimeCodec = 'video/webm;codecs=vp8,opus';
-			if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
-				let mediaSource = new MediaSource();
-				video.vid.src = URL.createObjectURL(mediaSource);
-				mediaSource.addEventListener('sourceopen', () => {
-					if (streams['stream' + which] === false) {
-						sourceBuffers['buffer' + which] = mediaSource.addSourceBuffer(mimeCodec);
-					}
-					sourceBuffers['buffer' + which].addEventListener('updateend', () => {
-						if (!sourceBuffers['buffer' + which].updating && mediaSource.readyState === 'open') {
-							mediaSource.endOfStream();
-							video.vid.play();
-						}
-					});
-					if (sourceBuffers['buffer' + which] !== null && streams['stream' + which] === false) {
-						streams['stream' + which] = true;
-						sourceBuffers['buffer' + which].appendBuffer(e.data);
-					}
-				});
-			} else {
-				console.error('Unsupported MIME type or codec: ', mimeCodec);
-			}
-		});
-	}; */
+  
 
   createVideo = (id = "") => {
     return new Promise(resolve => {
