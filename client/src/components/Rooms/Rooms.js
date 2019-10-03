@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { getSessions, joinSession, closeMenus } from 'actions/actions';
 import PropTypes from 'prop-types';
 import room_images from './room-images';
-import ProfileModal from '../smalls/profile-modal-simple';
+import ProfileModal from '../Reusables/ProfileModal/ProfileModal';
 import './rooms.scss';
 import { connect } from 'react-redux';
 
@@ -69,7 +69,6 @@ class Rooms extends Component {
 	};
 	renderRooms = () => {
 		return this.props.sessions.sessions.map((room, ind) => {
-			console.log(room)
 			let typeOfJoins;
 			let joinAsHeader;
 			if (room.sessionType === 'trio') {
@@ -177,6 +176,14 @@ class Rooms extends Component {
 												}}
 											>
 												<ProfileModal
+													triangle={{
+														top: true,
+														position:{
+															marginLeft: '181px',
+															marginBottom: '-2px'
+														}
+													}}
+													simple={true}
 													id={'c-modal' + ind}
 													position={{ right: '-15px', top: '45px' }}
 													user={client}
@@ -202,6 +209,14 @@ class Rooms extends Component {
 												}}
 											>
 												<ProfileModal
+													triangle={{
+														top: true,
+														position:{
+															marginLeft: '181px',
+															marginBottom: '-2px'
+														}
+													}}
+													simple={true}
 													id={'v-modal' + ind}
 													position={{ right: '-20px', top: '40px' }}
 													user={viewer}

@@ -34,6 +34,8 @@ terms of service
 
 Chat gifs,
 
+make bar between session chat and content draggable
+
 ———————————————————————————|
 
 	v2 

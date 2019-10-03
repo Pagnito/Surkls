@@ -10,6 +10,7 @@ import {
   closeMenus,
   removeKeys
 } from "actions/actions";
+import ProfileModal from '../Reusables/ProfileModal/ProfileModal';
 import ChatBox from '../Reusables/ChatBox/ChatBox';
 import PropTypes from "prop-types";
 import { openDMs, addMultiToDMs, addSessDMs } from "actions/dm-actions";
@@ -18,7 +19,6 @@ import SessionContentYoutube from "./Sub-comps/session-content-youtube";
 import SessionContentDailymotion from "./Sub-comps/session-content-dailymotion";
 import SessionContentTwitter from "./Sub-comps/session-content-twitter";
 import SessionContentTwitch from "./Sub-comps/session-content-twitch";
-import "./Sub-comps/styles/profile-modal.scss";
 import "./session.scss";
 import "../Loader1/loader1.scss";
 class Session extends Component {
@@ -61,11 +61,6 @@ class Session extends Component {
         }
       ]
     };
-    this.dcOptions = {
-      //dataChannelOptions
-      ordered: false, //no guaranteed delivery, unreliable but faster
-      maxPacketLifeTime: 500 //milliseconds
-    };
     this.alreadyStarted = false;
     this.stream = null;
     this.track = [];
@@ -77,11 +72,6 @@ class Session extends Component {
     };
     this.socket = this.props.socket;
     this.socketChanneledCreated = false;
-    this.chunkSize = 4024;
-		this.chunksSent = 0;
-		this.bufferedFile;
-		this.sharedFileReader;
-		this.sharingFileStarted = false;
   }
   /////////////////////////////////////////end of state//////////////////////////////////
   sendVideoSignal = playState => {
@@ -715,65 +705,7 @@ class Session extends Component {
       document.getElementById("feedback-ani-1").style.display = "none";
     }, 1500);
   };
-  renderProfileModal = user => {
-    if (!user.guest) {
-      let addToSurklBtn = !user.memberOf ? (
-        <div
-          onClick={() => this.addToSurkl(user, this.props.auth.user.mySurkl)}
-          className="modalAction add-to-surkl-action"
-        >
-          <div id="feedback-ani-1">Sent</div>
-          Add To Surkl
-        </div>
-      ) : (
-        ""
-      );
-      if (user._id !== this.props.auth.user._id) {
-        let askAdminBtn = user.isAdmin ? (
-          <div className="profileModalPassAdmin">Ask for admin rights</div>
-        ) : (
-          <div className="profileModalPassAdmin">Give admin rights</div>
-        );
-        askAdminBtn = user._id === this.props.auth.user._id ? "" : askAdminBtn;
-        return (
-          <div className="profileModal">
-            <div className="profileBanner">
-              <div className="prof-modal-top-arrow-wrap">
-                <div className="prof-modal-top-arrow" />
-              </div>
-              <div
-                style={{
-                  backgroundImage: `url(${
-                    user.avatarUrl ? user.avatarUrl : "/assets/whitehat.jpg"
-                  })`
-                }}
-                className="profileImg"
-              />
-            </div>
-            <div className="profileModalUsername">{user.userName}</div>
-            <div className="profileModalQuote">{'"' + user.quote + '"'}</div>
-            <div className="profileModalOwnerOf">
-              {user.mySurkl ? "Owner of " + user.mySurkl.name : ""}
-            </div>
-            <div className="profileModalMemberOf">
-              {user.memberOf ? "Member of " + user.memberOf.name : ""}
-            </div>
-            <div className="profileModalActions">
-              {addToSurklBtn}
-              <div
-                onClick={() => this.openDMs(user)}
-                data-user={JSON.stringify(user)}
-                className="modalAction send-msg-action"
-              >
-                Send a Message
-              </div>
-              {askAdminBtn}
-            </div>
-          </div>
-        );
-      }
-    }
-  };
+
   updateClientList = () => {
     if (
       this.props.session.clients !== undefined &&
@@ -792,14 +724,14 @@ class Session extends Component {
                 src={url}
                 className="clientSquareAv"
               />
-              {this.renderProfileModal(client)}
+              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}} simple={false} id={'p-modal-'+client.id} user={client}/>
             </div>
           );
         } else {
           return (
             <div className="clientImgRightWrap" key={ind}>
               <img key={ind} src={url} className="clientSquareAv" />
-              {this.renderProfileModal(client)}
+              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
             </div>
           );
         }
@@ -824,14 +756,14 @@ class Session extends Component {
                 src={url}
                 className="viewerSquareAv"
               />
-              {this.renderProfileModal(viewer)}
+              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
             </div>
           );
         } else {
           return (
             <div className="viewerImgRightWrap" key={ind}>
               <img key={ind} src={url} className="viewerSquareAv" />
-              {this.renderProfileModal(viewer)}
+              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
             </div>
           );
         }
@@ -1193,8 +1125,12 @@ class Session extends Component {
             </div>
           </div>
           <div id="restOfSettings">
-            <div id="shareLink">Invite Link</div>
-
+            <div id="whosInRoom">
+               {this.updateClientList()}
+            </div>
+            <div id="viewersInRoom">
+               {this.updateViewerList()}
+            </div>
             {/* <select id="sessVidDevices" />
 					<select id="sessAudDevices" /> */}
           </div>
@@ -1202,79 +1138,8 @@ class Session extends Component {
       );
     }
   };
-  dataURLtoBlob(dataurl) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], {type:mime});
-}
-	resizeImage = (blob) => {
-		let canvas = document.createElement('canvas');
-		let reader = new FileReader();
-		let resizedImage;
-		return new Promise((resolve)=>{
-			reader.onload =  (readerEvent) =>{
-				let image = new Image();
-				image.onload = () => {
-								let max_size = 550,
-								width = image.width,
-								height = image.height;
-						if (width > height) {
-								if (width > max_size) {
-										height *= max_size / width;
-										width = max_size;
-								}
-						} else {
-								if (height > max_size) {
-										width *= max_size / height;
-										height = max_size;
-								}
-						}
-						canvas.width = width;
-						canvas.height = height;
-						canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-						let dataUrl = canvas.toDataURL('image/png');
-						resizedImage = this.dataURLtoBlob(dataUrl);
-						resolve(resizedImage)
-				}
-				image.src = readerEvent.target.result;
-		}
-		reader.readAsDataURL(blob);
-	})
-		
-};
-	uploadFile = (ev) => {	
-		let file = ev.target.files[0];
-		this.resizeImage(file).then((img)=>{
-			let reader = new FileReader();
-			let fileSize = img.size;
-			this.sendChunk(reader, img, fileSize);
-		})
-		
-	};
-	sendChunk = (reader, file, size) => {
-		reader.onload = (e) => {
-			this.socket.emit('session-file', e.target.result, this.props.session.sessionKey, size, 'buffering');
-			this.chunksSent += this.chunkSize;
-			if (e.target.result.byteLength===this.chunkSize) {
-				this.sendChunk(reader, file, size);
-			} else {
-				let msgObj = {
-					user_id: this.props.auth.user._id,
-					image_id: Math.random().toString(36).substring(2, 15),
-					userName: this.props.auth.user.userName,
-					avatarUrl: this.props.auth.user.avatarUrl,
-					sessionKey: this.props.session.sessionKey,
-					date: Date.now()
-				};
-				this.socket.emit('session-file', e.target.result, this.props.session.sessionKey, size, 'end-of-session-file', msgObj);
-				this.chunksSent = 0;
-			}
-		};
-		reader.readAsArrayBuffer(file.slice(this.chunksSent, this.chunksSent + this.chunkSize));
-	};
+  
+
   //////////////////////////////////////////////RENDER//////////////////////////////////////////////////
   render() {
     if (this.props.auth.user == null || this.props.session === null) {
@@ -1328,10 +1193,6 @@ class Session extends Component {
                 <ChatBox match={this.props.match} type='session' socket={this.props.socket} />
               </div>
             </div>
-          </div>
-          <div id="sessionRightAside">
-            <div id="whosInRoom">{this.updateClientList()}</div>
-            <div id="viewersInRoom">{this.updateViewerList()}</div>
           </div>
         </div>
       );

@@ -111,7 +111,6 @@
       display:flex;
 			align-items: center; 
       align-content: flex-start;
-			overflow: hidden;
 		
 			bottom:0px;
 			left:0px;
@@ -170,6 +169,62 @@
 					justify-content: space-between;
 					outline:none;
 					cursor: pointer;
+				}
+				#whosInRoom {
+					padding-top:5px;
+					width:100%;
+					box-sizing: border-box;
+					flex-wrap: wrap;
+					display: flex;
+					height: 100%;
+					.clientImgRightWrap:hover >.profileModal {
+						display: block;
+					}
+					.clientImgRightWrap {
+						cursor: pointer;
+						position: relative;
+						width:40px;
+						height:40px;
+						margin-top:5px;
+						margin-left: 10px;
+					
+						.clientSquareAv {
+							width:100%;
+							height:100%;			
+							border-radius:100px;
+							border: 2px solid white;
+							box-sizing: border-box;
+						}
+		
+					}
+				
+				}
+				#viewersInRoom {
+					width:100%;
+					box-sizing: border-box;
+					flex-wrap: wrap;
+					align-content: flex-start;
+					display: flex;
+					.viewerImgRightWrap:hover >.profileModal {
+						display: block;
+					}
+					.viewerImgRightWrap {
+						cursor: pointer;
+						position: relative;
+						width:calc(20% - 6px);
+						height:calc(20% - 6px);
+						margin-top:5px;
+						margin-left: 5px;
+					
+						.viewerSquareAv {
+							width:100%;
+							height:100%;			
+							border-radius:100px;
+							border: 1px solid white;
+							box-sizing: border-box;
+						}
+		
+					}
 				}
 				#shareLink {
 					font-family: 'Comfortaa';
@@ -506,70 +561,6 @@
 				#chatBtns {
 					height: 50px;
 				} */
-			}
-		}
-	}
-	#sessionRightAside {
-		display:none;
-		background-color: #242323;
-		border-left: 1px solid#1c1c1c;
-		height: calc(100vh - 55px);
-		width: 200px;
-		box-sizing: border-box;
-		#whosInRoom {
-			width:100%;
-			box-sizing: border-box;
-			flex-wrap: wrap;
-			align-content: flex-start;
-			display: flex;
-			
-			.clientImgRightWrap:hover >.profileModal {
-				display: block;
-			}
-			.clientImgRightWrap {
-				cursor: pointer;
-				position: relative;
-				width:calc(33.333% - 6px);
-				height:calc(33.333% - 6px);
-				margin-top:5px;
-				margin-left: 5px;
-			
-				.clientSquareAv {
-					width:100%;
-					height:100%;			
-					border-radius:100px;
-					border: 2px solid white;
-					box-sizing: border-box;
-				}
-
-			}
-		
-		}
-		#viewersInRoom {
-			width:100%;
-			box-sizing: border-box;
-			flex-wrap: wrap;
-			align-content: flex-start;
-			display: flex;
-			.viewerImgRightWrap:hover >.profileModal {
-				display: block;
-			}
-			.viewerImgRightWrap {
-				cursor: pointer;
-				position: relative;
-				width:calc(20% - 6px);
-				height:calc(20% - 6px);
-				margin-top:5px;
-				margin-left: 5px;
-			
-				.viewerSquareAv {
-					width:100%;
-					height:100%;			
-					border-radius:100px;
-					border: 1px solid white;
-					box-sizing: border-box;
-				}
-
 			}
 		}
 	}
