@@ -431,12 +431,9 @@ class Session extends Component {
   }
 
   startAsStreamer = () => {
-    if (
-      this.props.session.sessionType === "stream" &&
-      this.props.session.imStreamer
-    ) {
+    if (this.props.match.params.type==='stream') {
       document.getElementById("streamOfMe").style.display = "none";
-      this.createVideo("streamer_stream").then(({ vid }) => {
+      this.createVideo("streamer_stream", "muted").then(({ vid }) => {
         this.startOrJoin(vid);
       });
     }
@@ -460,7 +457,6 @@ class Session extends Component {
         session.noCam = this.props.match.params.type === 'viewer'
           ? true
           : false;
-        console.log(this.props.match.params.id)
         session.sessionKey = this.props.match.params.id;
         session.creatingSession = startingOrJoining;
         if (this.props.auth.user.userName) {
@@ -601,7 +597,7 @@ class Session extends Component {
     };
     if (this.props.session.notShareLink || this.props.session.creatingSession) {
       if (this.props.session.sessionKey && !this.alreadyStarted) {
-        if (/stream/.test(this.props.match.params.id.sessionType)) {
+        if (this.props.match.params.type === 'stream') {
           this.startAsStreamer();
         } else {
           this.startOrJoin();
@@ -882,7 +878,7 @@ class Session extends Component {
 
   
 
-  createVideo = (id = "") => {
+  createVideo = (id = "", muted=null) => {
     return new Promise(resolve => {
       let constraints = {
         width: "100%",
@@ -897,6 +893,7 @@ class Session extends Component {
       video.autoplay = true;
       video.setAttribute("id", id);
       video.setAttribute("class", "stream");
+      if(muted!==null){video.muted = true};
       videoWrap.appendChild(video);
       streamRows.appendChild(videoWrap);
       resolve({ vid: video, vidWrap: videoWrap });
@@ -954,9 +951,7 @@ class Session extends Component {
     return new Promise(resolve => {
       if (/viewer/.test(this.props.match.params.type) === false) {
         if (videoEl !== null && videoEl.srcObject === null) {
-          console.log('src is null')
           if (this.stream === null) {
-            console.log('this.stream is null')
             navigator.mediaDevices
               .getUserMedia({
                 audio: {
@@ -975,10 +970,8 @@ class Session extends Component {
               .then(stream => {
                 videoEl.srcObject = stream;
                 this.stream = stream;
-                console.log('we got the stream')
                 stream.getTracks().forEach(track => {
                   this.track.push(track);
-                  //console.log('TRACK', track);
                 });
 
                 resolve();
@@ -1132,6 +1125,18 @@ class Session extends Component {
           </div>
         </div>
       );
+    } else {
+      return (
+        <div id="sessionLeftAsideSettings">
+        <div id="restOfSettings">
+          <div id="viewersInRoom">
+             {this.updateViewerList()}
+          </div>
+          {/* <select id="sessVidDevices" />
+        <select id="sessAudDevices" /> */}
+        </div>
+      </div>
+      )
     }
   };
   

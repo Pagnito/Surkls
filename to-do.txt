@@ -24,8 +24,6 @@ surkl events
 
 que up for maxed out rooms
 
-switching places
-
 help page
 
 private sessions
@@ -39,6 +37,8 @@ make bar between session chat and content draggable
 ———————————————————————————|
 
 	v2 
+
+	switching places
 
 	agreeing points from events
 
