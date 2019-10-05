@@ -920,7 +920,7 @@ class Header extends Component {
 					sessionMenuVisible: false
 				});			
 			this.props.startSession(sessionObj, () => {
-				this.props.history.push('/session/room=' + sessionKey.toString());
+				this.props.history.push('/session/'+ this.state.sessionType + '/' + sessionKey.toString());
 				});
 		} else {
 			//@TODO show error

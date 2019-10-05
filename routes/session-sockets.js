@@ -28,6 +28,7 @@ module.exports = (io, socket) => {
 				socketInSession[socket.id] = session.sessionKey;
 				usersConnecting[socket.id] = true;
 				if (session.noCam) {
+					console.log('VIEWER');
 					// if its a viewer
 					redClient.hexists('rooms', session.sessionKey, (err, done) => {
 						//////////////////////if the room exists and isnt maxed out//////////////////////////

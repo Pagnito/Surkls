@@ -26,7 +26,7 @@ class Rooms extends Component {
 		};
 		if (sessionKey.length >= 3) {
 			this.props.joinSession(session, () => {
-				this.props.history.push('/session/room=' + sessionKey.toString());
+				this.props.history.push('/session/trio/' + sessionKey.toString());
 			});
 		} else {
 			//@TODO show error
@@ -43,7 +43,7 @@ class Rooms extends Component {
 		};
 		if (sessionKey.length >= 3) {
 			this.props.joinSession(session, () => {
-				this.props.history.push('/session/noCamroom=' + sessionKey.toString());
+				this.props.history.push('/session/viewer/' + sessionKey.toString());
 			});
 		} else {
 			//@TODO show error
@@ -61,7 +61,7 @@ class Rooms extends Component {
 		};
 		if (sessionKey.length >= 3) {
 			this.props.joinSession(session, () => {
-				this.props.history.push('/session/room=' + sessionKey.toString());
+				this.props.history.push('/session/stream/' + sessionKey.toString());
 			});
 		} else {
 			//@TODO show error

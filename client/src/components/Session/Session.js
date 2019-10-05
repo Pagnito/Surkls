@@ -359,7 +359,7 @@ class Session extends Component {
       this.handleIceCandidate(e, remoteId);
     currentConnection.ontrack = this.handleRemoteStreamAdded;
     currentConnection.onremovestream = this.handleRemoteStreamRemoved;
-    if (/noCam/.test(this.props.match.params.id) === false) {
+    if (/viewer/.test(this.props.match.params.type) === false) {
       if (this.track[0].kind === "audio") {
         this.track.reverse();
       }
@@ -457,10 +457,11 @@ class Session extends Component {
           startingOrJoining = false;
         }
         session.inSession = true;
-        session.noCam = /noCam/.test(this.props.match.params.id)
+        session.noCam = this.props.match.params.type === 'viewer'
           ? true
           : false;
-        session.sessionKey = this.props.match.params.id.split("=")[1];
+        console.log(this.props.match.params.id)
+        session.sessionKey = this.props.match.params.id;
         session.creatingSession = startingOrJoining;
         if (this.props.auth.user.userName) {
           session.user = this.props.auth.user;
@@ -546,10 +547,7 @@ class Session extends Component {
       //notShareLink wont exist in props because its a direct enter via share link
       if (!this.props.session.notShareLink && !this.alreadyStarted) {
         this.socket.emit("setup-vid-dms", this.props.auth.user);
-        if (
-          this.props.session.sessionType === "stream" &&
-          this.props.session.imStreamer
-        ) {
+        if (/stream/.test(this.props.match.params.id.sessionType)) {
           this.startAsStreamer();
         } else {
           this.startOrJoin();
@@ -557,7 +555,7 @@ class Session extends Component {
       }
     } else if (this.props.session.surfing) {
       if (prevProps.location.pathname !== this.props.location.pathname) {
-        this.handleSurfCleanUp();
+        //this.handleSurfCleanUp();
         this.socket.emit("leave", prevProps.session.sessionKey);
         if (
           this.props.session.sessionType === "stream" &&
@@ -603,10 +601,7 @@ class Session extends Component {
     };
     if (this.props.session.notShareLink || this.props.session.creatingSession) {
       if (this.props.session.sessionKey && !this.alreadyStarted) {
-        if (
-          this.props.session.sessionType === "stream" &&
-          this.props.session.imStreamer
-        ) {
+        if (/stream/.test(this.props.match.params.id.sessionType)) {
           this.startAsStreamer();
         } else {
           this.startOrJoin();
@@ -744,6 +739,7 @@ class Session extends Component {
       this.props.session.viewers.length > 0
     ) {
       return this.props.session.viewers.map((viewer, ind) => {
+        console.log(viewer)
         let url = viewer.avatarUrl ? viewer.avatarUrl : "/assets/whitehat.jpg";
         if (viewer.isAdmin) {
           return (
@@ -756,14 +752,14 @@ class Session extends Component {
                 src={url}
                 className="viewerSquareAv"
               />
-              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
+              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
             </div>
           );
         } else {
           return (
             <div className="viewerImgRightWrap" key={ind}>
               <img key={ind} src={url} className="viewerSquareAv" />
-              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
+              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
             </div>
           );
         }
@@ -956,8 +952,8 @@ class Session extends Component {
   };
   startStream = videoEl => {
     return new Promise(resolve => {
-      if (/noCam/.test(this.props.match.params.id) === false) {
-        if (videoEl.srcObject === null) {
+      if (/viewer/.test(this.props.match.params.type) === false) {
+        if (videoEl !== null && videoEl.srcObject === null) {
           console.log('src is null')
           if (this.stream === null) {
             console.log('this.stream is null')

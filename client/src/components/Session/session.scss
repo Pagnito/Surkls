@@ -176,7 +176,7 @@
 					box-sizing: border-box;
 					flex-wrap: wrap;
 					display: flex;
-					height: 100%;
+					height: 50%;
 					.clientImgRightWrap:hover >.profileModal {
 						display: block;
 					}
@@ -201,6 +201,7 @@
 				}
 				#viewersInRoom {
 					width:100%;
+					height:50%;
 					box-sizing: border-box;
 					flex-wrap: wrap;
 					align-content: flex-start;
@@ -211,10 +212,10 @@
 					.viewerImgRightWrap {
 						cursor: pointer;
 						position: relative;
-						width:calc(20% - 6px);
-						height:calc(20% - 6px);
+						width:25px;
+						height:25px;
 						margin-top:5px;
-						margin-left: 5px;
+						margin-left: 10px;
 					
 						.viewerSquareAv {
 							width:100%;
