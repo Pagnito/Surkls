@@ -698,6 +698,7 @@ class Session extends Component {
   };
 
   updateClientList = () => {
+    console.log('this shit here')
     if (
       this.props.session.clients !== undefined &&
       this.props.session.clients.length > 0
@@ -1078,11 +1079,24 @@ class Session extends Component {
     );
   };
   videoSettings = () => {
-    if (!this.props.session.noCam) {
+    if (this.props.session.noCam) {
+      return (
+        <div id="sessionLeftAsideSettings">
+        <div id="restOfSettings">
+          <div id="viewersInRoom">
+             {this.updateViewerList()}
+          </div>
+          {/* <select id="sessVidDevices" />
+        <select id="sessAudDevices" /> */}
+        </div>
+      </div>
+      )
+      
+    } else {
       return (
         <div id="sessionLeftAsideSettings">
           <video id="streamOfMe" muted="muted" autoPlay />
-          <div id="toggleDevices">
+          <div style={{marginLeft: /stream/.test(this.props.match.params.type) ? '25px' : '10px'}} id="toggleDevices">
             <div onClick={this.toggleAudio} id="toggleAudio">
               <svg
                 aria-hidden="true"
@@ -1115,7 +1129,7 @@ class Session extends Component {
           </div>
           <div id="restOfSettings">
             <div id="whosInRoom">
-               {this.updateClientList()}
+               {/trio/.test(this.props.match.params.type) ?  this.updateClientList() : ""}
             </div>
             <div id="viewersInRoom">
                {this.updateViewerList()}
@@ -1125,18 +1139,6 @@ class Session extends Component {
           </div>
         </div>
       );
-    } else {
-      return (
-        <div id="sessionLeftAsideSettings">
-        <div id="restOfSettings">
-          <div id="viewersInRoom">
-             {this.updateViewerList()}
-          </div>
-          {/* <select id="sessVidDevices" />
-        <select id="sessAudDevices" /> */}
-        </div>
-      </div>
-      )
     }
   };
   

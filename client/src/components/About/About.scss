@@ -1,0 +1,30 @@
+#about-banner-1 {
+  height: 350px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 66%);
+  background-color: #CBF637;
+}
+#about-banner-2 {
+  height: 350px;
+  margin-top: -150px;
+  clip-path: polygon(0 0, 100% 40%, 100% 83%, 0 100%);
+  background-color: #5B2AF9;
+}
+#about-banner-3 {
+  height: 350px;
+  margin-top: -85px;
+  clip-path: polygon(0 19%, 100% 0, 100% 100%, 0 100%);
+  background-color: #F9D42A;
+}
+#about-text {
+  min-height: 100vh;
+  width:100%;
+  display:flex;
+  justify-content: center;
+  align-items:center;
+  background: white;
+  padding: 50px;
+  font-size: 30px;
+  box-sizing: border-box;
+  font-family: 'Josefin Sans';
+  line-height: 2;
+}

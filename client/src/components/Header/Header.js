@@ -824,21 +824,21 @@ class Header extends Component {
 				<Link to="/signup" className="menuItem">
 					<div className="threeDotMenuIcon" id="signUpIcon" />Sign Up
 				</Link>
-				<Link to="/" className="menuItem">
+				{/* <Link to="/" className="menuItem">
 					<div className="threeDotMenuIcon" id="surferIcon" />Surfing
-				</Link>
+				</Link> */}
 				<Link to="/" className="menuItem">
 					<div className="threeDotMenuIcon" id="roomsIcon" />Rooms
 				</Link>
-				<div className="menuItem">
+				<Link to="surkls" className="menuItem">
 					<div className="threeDotMenuIcon" id="surklsIcon" />Surkls
-				</div>
+				</Link>
 				<div className="menuItem">
 					<div className="threeDotMenuIcon" id="helpIcon" />Help
 				</div>
-				<div className="menuItem">
+				<Link to="/about" className="menuItem">
 					<div className="threeDotMenuIcon" id="aboutIcon" />About
-				</div>
+				</Link>
 			</DropMenu>
 		);
 	};

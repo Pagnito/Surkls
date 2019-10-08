@@ -58,7 +58,7 @@
 			background: transparent;
 		} */
 		#videoStreams {
-			//height: calc(100% - 110px);
+			height: calc(100% - 110px);
 			width: 100%;
 			position: relative;
 			display: flex;
@@ -123,7 +123,6 @@
 			}
 			#toggleDevices{
 				display:flex;
-				margin-left: 10px;
 				flex-direction: column;
 				justify-content: space-around;
 				width: 40px;
@@ -212,10 +211,10 @@
 					.viewerImgRightWrap {
 						cursor: pointer;
 						position: relative;
-						width:25px;
-						height:25px;
+						width:32px;
+						height:32px;
 						margin-top:5px;
-						margin-left: 10px;
+						margin-left: 20px;
 					
 						.viewerSquareAv {
 							width:100%;

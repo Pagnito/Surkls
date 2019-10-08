@@ -10,8 +10,7 @@ import './surkls.scss';
   componentDidMount(){
      fetch('/api/surkls').then(res=>res.json())
      .then(surkls=>{
-      this.setState({surkls})
-      console.log(surkls)
+      this.setState({surkls:[...surkls, ...surkls, ...surkls, ...surkls]})
      })
    }
    displaySurkls = () => {

@@ -15,6 +15,7 @@ import Header from 'components/Header/Header';
 import CreateSurkl from 'components/Create-surkl/Create-surkl';
 import Settings from 'components/Settings/Settings';
 import Surkls from 'components/Surkls/Surkls';
+import About from 'components/About/About';
 /*const Loading = () => Loader;
 
 const Entries = Loadable({
@@ -97,6 +98,7 @@ class App extends Component {
 				<Provider store={Store}>	
 					<Route exact path="/surkls" component={Surkls} />
 					<Route exact path="/settings" component={Settings} />
+					<Route exact path="/about" component={About} />
 					<Route 
 						exact path="/signup" render={(props)=><SignUp {...props} socket={this.socket}/>}   />
 					<Route 
