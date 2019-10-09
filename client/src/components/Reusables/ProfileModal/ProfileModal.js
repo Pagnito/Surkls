@@ -2,7 +2,7 @@ import React from "react";
 import "./ProfileModal.scss";
 import PropTypes from "prop-types";
 function ProfileModal(props) {
-  let {user, position, triangle} = props;
+  let {user, position, triangle, openDMs, addToSurkl} = props;
   if (!user.guest) {
     if (props.simple) {
       return (
@@ -102,7 +102,7 @@ ProfileModal.propTypes = {
   user: PropTypes.object,
   hideProfileModal: PropTypes.func,
   openDMs: PropTypes.func,
-  sendDM: PropTypes.func,
+  addToSurkl: PropTypes.func,
   pointing: PropTypes.string,
   position: PropTypes.object,
   triangle: PropTypes.object

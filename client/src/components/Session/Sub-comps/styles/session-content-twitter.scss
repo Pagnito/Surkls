@@ -37,7 +37,7 @@
     }
     .TWdiscHeaderSearch {
       display: flex;
-      width: calc(100% - 370px);
+      width: calc(50% - 75px);
       margin-left: 20px;
       justify-content: flex-start;
       position: relative;
@@ -91,6 +91,9 @@
       font-size: 20px;
       margin-top: 10px;
       margin-bottom: 10px; 
+      display: flex;
+      width: 100%;
+      justify-content: center;
       color:black;
       font-weight: 900;
       font-family: Arial, Helvetica , sans-serif,

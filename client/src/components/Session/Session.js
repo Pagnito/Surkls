@@ -543,26 +543,24 @@ class Session extends Component {
       //notShareLink wont exist in props because its a direct enter via share link
       if (!this.props.session.notShareLink && !this.alreadyStarted) {
         this.socket.emit("setup-vid-dms", this.props.auth.user);
-        if (/stream/.test(this.props.match.params.id.sessionType)) {
+        if (/stream/.test(this.props.match.params.type)) {
           this.startAsStreamer();
         } else {
           this.startOrJoin();
         }
       }
-    } else if (this.props.session.surfing) {
-      if (prevProps.location.pathname !== this.props.location.pathname) {
-        //this.handleSurfCleanUp();
-        this.socket.emit("leave", prevProps.session.sessionKey);
-        if (
-          this.props.session.sessionType === "stream" &&
-          this.props.session.imStreamer
-        ) {
-          this.startAsStreamer();
-        } else {
-          this.startOrJoin();
-        }
-      }
-    }
+    } 
+    // else if (this.props.session.surfing) {
+    //   if (prevProps.location.pathname !== this.props.location.pathname) {
+    //     //this.handleSurfCleanUp();
+    //     this.socket.emit("leave", prevProps.session.sessionKey);
+    //     if (/stream/.test(this.props.match.params.id.sessionType)) {
+    //       this.startAsStreamer();
+    //     } else {
+    //       this.startOrJoin();
+    //     }
+    //   }
+    // }
 
     if (this.props.session.clients !== prevProps.session.clients) {
       let streams = document.getElementsByClassName("streamWrap");
@@ -671,10 +669,10 @@ class Session extends Component {
     this.props.getDevices();
   };
   openDMs = dm_user => {
-    let modals = document.querySelectorAll(".profileModal");
-    for (let mod of modals) {
-      mod.style.display = "none";
-    }
+    // let modals = document.querySelectorAll(".profileModal");
+    // for (let mod of modals) {
+    //   mod.style.display = "none";
+    // }
     dm_user.user_id = dm_user._id;
     //console.log(dm_user)
     if (this.props.auth.user.dms[dm_user.user_id]) {
@@ -698,16 +696,15 @@ class Session extends Component {
   };
 
   updateClientList = () => {
-    console.log('this shit here')
     if (
       this.props.session.clients !== undefined &&
       this.props.session.clients.length > 0
     ) {
-      return this.props.session.clients.map((client, ind) => {
+      return this.props.session.clients.map((client) => {
         let url = client.avatarUrl ? client.avatarUrl : "/assets/whitehat.jpg";
         if (client.isAdmin) {
           return (
-            <div className="clientImgRightWrap" key={ind}>
+            <div key={client._id} className="clientImgRightWrap" >
               <img
                 style={{
                   border: "2px solid #FECC44",
@@ -716,14 +713,14 @@ class Session extends Component {
                 src={url}
                 className="clientSquareAv"
               />
-              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}} simple={false} id={'p-modal-'+client.id} user={client}/>
+              <ProfileModal addToSurkl={this.addToSurkl} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}} simple={false} id={'p-modal-'+client.id} user={client}/>
             </div>
           );
         } else {
           return (
-            <div className="clientImgRightWrap" key={ind}>
-              <img key={ind} src={url} className="clientSquareAv" />
-              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
+            <div className="clientImgRightWrap" key={client._id}>
+              <img src={url} className="clientSquareAv" />
+              <ProfileModal addToSurkl={this.addToSurkl} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
             </div>
           );
         }
@@ -735,12 +732,11 @@ class Session extends Component {
       this.props.session.viewers !== undefined &&
       this.props.session.viewers.length > 0
     ) {
-      return this.props.session.viewers.map((viewer, ind) => {
-        console.log(viewer)
+      return this.props.session.viewers.map((viewer) => {
         let url = viewer.avatarUrl ? viewer.avatarUrl : "/assets/whitehat.jpg";
         if (viewer.isAdmin) {
           return (
-            <div className="viewerImgRightWrap" key={ind}>
+            <div className="viewerImgRightWrap" key={viewer._id}>
               <img
                 style={{
                   border: "2px solid #FECC44",
@@ -749,14 +745,14 @@ class Session extends Component {
                 src={url}
                 className="viewerSquareAv"
               />
-              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
+              <ProfileModal addToSurkl={this.addToSurkl} openDMs={this.openDMs} position={{bottom:'52px', left:'-14px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
             </div>
           );
         } else {
           return (
-            <div className="viewerImgRightWrap" key={ind}>
-              <img key={ind} src={url} className="viewerSquareAv" />
-              <ProfileModal position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
+            <div className="viewerImgRightWrap" key={viewer._id}>
+              <img key={viewer.id} src={url} className="viewerSquareAv" />
+              <ProfileModal addToSurkl={this.addToSurkl} openDMs={this.openDMs} position={{bottom:'52px', left:'-14px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
             </div>
           );
         }
@@ -1079,7 +1075,7 @@ class Session extends Component {
     );
   };
   videoSettings = () => {
-    if (this.props.session.noCam) {
+    if (/viewer/.test(this.props.match.params.type)) {
       return (
         <div id="sessionLeftAsideSettings">
         <div id="restOfSettings">
