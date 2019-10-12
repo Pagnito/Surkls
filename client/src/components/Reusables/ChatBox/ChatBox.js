@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ChatFeed from './ChatFeed/ChatFeed';
-import {names} from './names';
 import { connect } from 'react-redux';
 import { updateMsgs } from 'actions/chat-actions'
 import { writeData } from 'tools/sw-utils';
@@ -169,7 +168,6 @@ class ChatBox extends Component {
 				date: Date.now()
 		}	
 		if(msgs.length > 0 && msgs[msgs.length-1].user_id===this.props.auth.guest._id && msg.mentions.length===0){
-			console.log('wtf')
 			msgObj = {
 				msg:msg.msg, 
 				[this.props.type+'_id']: id,
@@ -178,7 +176,6 @@ class ChatBox extends Component {
 			}
 		}
 	}
-	 console.log(msgObj)
 	this.socket.emit(this.props.type + '-msg', msgObj);
 }
   render() {

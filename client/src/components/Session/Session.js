@@ -14,7 +14,7 @@ import ProfileModal from '../Reusables/ProfileModal/ProfileModal';
 import ChatBox from '../Reusables/ChatBox/ChatBox';
 import PropTypes from "prop-types";
 import { openDMs, addMultiToDMs, addSessDMs } from "actions/dm-actions";
-import Dropdown from "components/smalls/drop-menu-mutable";
+import Dropdown from "components/Reusables/DropMenu/drop-menu-mutable";
 import SessionContentYoutube from "./Sub-comps/session-content-youtube";
 import SessionContentDailymotion from "./Sub-comps/session-content-dailymotion";
 import SessionContentTwitter from "./Sub-comps/session-content-twitter";

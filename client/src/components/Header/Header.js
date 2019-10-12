@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
-import DropMenu from 'components/smalls/drop-menu';
+import DropMenu from 'components/Reusables/DropMenu/drop-menu';
 import Pullout from 'components/Header/Pullout-menu';
 import { startSession, joinSession, signIn, getDevices, toggleMenu, closeMenus, updateApp, updateUserMem, removeKeys } from 'actions/actions';
 import { closeDMs, openDMs, updateDMs, updateMsgs, addToDMs, fetchMsgThreads} from 'actions/dm-actions';
