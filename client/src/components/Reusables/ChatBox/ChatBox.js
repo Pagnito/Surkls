@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ChatFeed from './ChatFeed/ChatFeed';
+import {names} from './names';
 import { connect } from 'react-redux';
 import { updateMsgs } from 'actions/chat-actions'
 import { writeData } from 'tools/sw-utils';
@@ -135,27 +136,51 @@ class ChatBox extends Component {
   };
    /////////////////////upload file///////////////////
   sendMsg = (msg) =>{
-		let id = this.props.match.params.id.indexOf('=') > -1 ? this.props.match.params.id.split("=")[1] : this.props.match.params.id
-		let msgObj =	{
-			msg: msg.msg,
-			user_id: this.props.auth.user._id,
-			userName: this.props.auth.user.userName,
-			avatarUrl: this.props.auth.user.avatarUrl,
-			[this.props.type+'_id']: id,
-			mentions: msg.mentions,
-			date: Date.now()
-		} 
+		let id = this.props.match.params.id.indexOf('=') > -1 ? this.props.match.params.id.split("=")[1] : this.props.match.params.id;
+		let msgObj;
 		let msgs = this.props[this.props.type].msgs
-		if(msgs.length > 0 && msgs[msgs.length-1].user_id===this.props.auth.user._id && msg.mentions.length===0){
+
+		if(this.props.auth.isAuthenticated){
+			msgObj =	{
+				msg: msg.msg,
+				user_id: this.props.auth.user._id,
+				userName: this.props.auth.user.userName,
+				avatarUrl: this.props.auth.user.avatarUrl,
+				[this.props.type+'_id']: id,
+				mentions: msg.mentions,
+				date: Date.now()
+			} 
+			if(msgs.length > 0 && msgs[msgs.length-1].user_id===this.props.auth.user._id && msg.mentions.length===0){
+				msgObj = {
+					msg:msg.msg, 
+					[this.props.type+'_id']: id,
+					user_id: this.props.auth.user._id,
+					mentions: msg.mentions,
+				}
+			}
+		} else {	
+			msgObj =	{
+				msg: msg.msg,
+				user_id: this.props.auth.guest._id,
+				userName: this.props.auth.guest.userName,
+				avatarUrl: this.props.auth.guest.avatarUrl,
+				[this.props.type+'_id']: id,
+				mentions: msg.mentions,
+				date: Date.now()
+		}	
+		if(msgs.length > 0 && msgs[msgs.length-1].user_id===this.props.auth.guest._id && msg.mentions.length===0){
+			console.log('wtf')
 			msgObj = {
 				msg:msg.msg, 
 				[this.props.type+'_id']: id,
-				user_id: this.props.auth.user._id,
+				user_id: this.props.auth.guest._id,
 				mentions: msg.mentions,
 			}
-		} 
-		this.socket.emit(this.props.type + '-msg', msgObj);
+		}
 	}
+	 console.log(msgObj)
+	this.socket.emit(this.props.type + '-msg', msgObj);
+}
   render() {
     let { type } = this.props;
     return (

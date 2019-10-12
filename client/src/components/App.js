@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { setUserMedia } from '../../tools/setUserMedia';
 import io from 'socket.io-client';
 import {socketUrl} from '../../tools/socketUrl';
+import {names} from '../../tools/names';
 import Store from '../store';
 import SignUp from 'components/Sign-up/Sign-up';
 import Surkl from 'components/Surkl/Surkl';
@@ -53,10 +54,13 @@ class App extends Component {
 					payload: {notifCount: user.notif_count, notifs: user.notifs}
 				})
 			}	else {
+				let randomFirstName = Math.floor(Math.random() * names.first.length);
+				let randomLastName = Math.floor(Math.random() * names.last.length);
+
 				let temp = {
 					_id: Math.random().toString(36).substring(2, 15),
 					avatarUrl: '/assets/whitehat.jpg',
-					userName: 'Guest'+Math.random().toString(36).substring(2, 15),
+					userName: names.first[randomFirstName] + '_' + names.last[randomLastName],
 					isAdmin:false,
 					guest: true
 				}
@@ -64,20 +68,12 @@ class App extends Component {
 					type: SET_GUEST,
 					payload: {guest:temp}
 				});
-				Store.dispatch({
-					type: GET_USER,
-					payload: {}
-				})
 				this.socket.emit('setup', temp)	
 			}		
 			if(this.props.location.pathname == '/signup' ){		
 				this.props.history.push('/')
 			}		
 		}).catch(()=>{
-			Store.dispatch({
-				type: GET_USER,
-				payload: {}
-			})
 			let temp = {
 				_id: Math.random().toString(36).substring(2, 15),
 				avatarUrl: '/assets/whitehat.jpg',

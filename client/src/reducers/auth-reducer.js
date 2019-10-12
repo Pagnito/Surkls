@@ -35,7 +35,8 @@ export default function(state = initialState, action) {
 			return {
 				...state,
 				isAuthenticated: !isEmpty(action.payload),
-				user: action.payload
+				user: action.payload,
+				guest: {}
 			};
 		case SET_USER:
 			if(action.payload.dms){
@@ -45,7 +46,8 @@ export default function(state = initialState, action) {
 			return {
 				...state,
 				isAuthenticated: !isEmpty(action.payload),
-				user: action.payload
+				user: action.payload,
+				guest: {}
 			}
 			
 		case SET_GUEST:

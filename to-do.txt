@@ -1,12 +1,8 @@
 Surkls To Do:
 let user pick quality/resolution of stream
-Finish Random Surf
-	- Starting stream error causes the bug of non renewal of session
-		causes?: 
-						- trying to create peer connection when there isnt anyone there
-						- multiple streams after changing rooms creates a stack overflow on streams?
 
 
+debug sessions if there are bugs
 
 different layouts for session?
 
@@ -37,6 +33,13 @@ make bar between session chat and content draggable
 ———————————————————————————|
 
 	v2 
+	Finish Random Surf
+	- Starting stream error causes the bug of non renewal of session
+		causes?: 
+						- trying to create peer connection when there isnt anyone there
+						- multiple streams after changing rooms creates a stack overflow on streams?
+
+
 
 	switching places
 
