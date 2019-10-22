@@ -14,27 +14,33 @@ class SessionContentTwitch extends Component {
 			videoPicked: false,
 			playingVideo: ''
 		};
+		this.token = 'myeqv7fcl1x0mv6uotktjmnuwck42n'
 		this.twitchByUsers =
-			'https://api.twitch.tv/kraken/search/channels?client_id=z0zn6hk34j09blpvy8bji7tzfdvvmc&query=';
+			'https://api.twitch.tv/helix/search/channels&query=';
 		this.twitchByGames =
-			'https://api.twitch.tv/kraken/search/games?type=suggest&client_id=z0zn6hk34j09blpvy8bji7tzfdvvmc&query=';
+			'https://api.twitch.tv/helix/search/games?type=suggest&query=';
 		this.twitchByStreams =
-			'https://api.twitch.tv/kraken/search/streams?limit=81&client_id=z0zn6hk34j09blpvy8bji7tzfdvvmc&query=';
+			'https://api.twitch.tv/helix/streams?first=81&title=';
 		this.twitchByClips = 
-			'https://api.twitch.tv/kraken/clips?limit=81&client_id=z0zn6hk34j09blpvy8bji7tzfdvvmc&query='
+			'https://api.twitch.tv/helix/clips?limit=81&query='
 	
 	}
 	handleInput = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
 	fetchIt = (apiUrl, query) =>{
-		fetch(apiUrl+query).then(res=>res.json())
+		fetch(apiUrl+query, {
+			headers:{
+				'Client-ID': 'z0zn6hk34j09blpvy8bji7tzfdvvmc'
+			}		
+		}).then(res=>res.json())
 			.then(data=>{
-				if(data.streams || data.channels){
-					if(data.streams){
-						this.props.updateSession({twitchStreams:data.streams})
+				console.log(data)
+				if(data.data){
+					if(data.data){
+						this.props.updateSession({twitchStreams:data.data})
 					} else {
-						this.props.updateSession({twitchChannels:data.channels})
+						this.props.updateSession({twitchChannels:data.data})
 					}				
 				} else {
 					this.fetchIt(apiUrl, query)
@@ -52,6 +58,7 @@ class SessionContentTwitch extends Component {
             this.fetchIt(this.twitchByStreams, this.state.search)
           })
       } else {
+				console.log(this.twitchByStreams + this.state.search)
         this.fetchIt(this.twitchByStreams, this.state.search)
       }   
 		}
@@ -110,6 +117,7 @@ class SessionContentTwitch extends Component {
 		});
 	};
 	sendPickedVideo = (videoId) => {
+		this.showVideo(videoId)
 		if (this.props.session.isAdmin) {
 			this.props.sendVideoSignal({
 				activePlatform: 'twitch',
@@ -127,23 +135,26 @@ class SessionContentTwitch extends Component {
 		this.props.session.twitchStreams === undefined 
 		 ? [] : this.props.session.twitchStreams;
 		if (this.props.session) {
+			console.log(twitchStreams)
 			if(twitchStreams.length){
 				return twitchStreams.map((snippet, ind) => {
-					let live = snippet.stream_type === 'live' ?
-					 <div className="streamIsLive"><div className="redLiveDot"></div>Live</div> : ''
+					let live = snippet.type === 'live' ?
+					 <div className="streamIsLive"><div className="redLiveDot"></div>Live</div> : '';
+					let imgUrl = snippet.thumbnail_url.replace('{width}', '200');
+					imgUrl = imgUrl.replace('{height}', '115');
 					return (
-						<div onClick={() => this.sendPickedVideo(snippet.channel.name)} key={ind} className="twitchVidSnippet">
+						<div onClick={() => this.sendPickedVideo(snippet.user_name)} key={ind} className="twitchVidSnippet">
 									{live}
 							<div className="twitchVideoSignalBtn"></div>
-							<img className="twitchSnippetImg" src={snippet.preview.medium} />	
+							<img className="twitchSnippetImg" src={imgUrl} />	
 						<div className="twitchStreamInfoWrap">
-							<div style={{backgroundImage:`url(${snippet.channel.logo})`}}className="twitchAvatar"></div>									
-								<div className="twitchStreamInfo">						
+							{/*<div style={{backgroundImage:`url(${snippet.channel.logo})`}}className="twitchAvatar"></div>*/}									
+								{/* <div className="twitchStreamInfo">						
 									<div className="twitchChannelTitle">{snippet.channel.name}</div>
 								 	<div className="twitchSnippetViewers">{snippet.viewers}
 									 	<span style={{marginLeft:'5px'}}></span>Viewers
 									 </div>
-								</div>
+								</div> */}
 							</div>						
 						</div>
 					);

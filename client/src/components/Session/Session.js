@@ -713,14 +713,14 @@ class Session extends Component {
                 src={url}
                 className="clientSquareAv"
               />
-              <ProfileModal addToSurkl={this.addToSurkl} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}} simple={false} id={'p-modal-'+client.id} user={client}/>
+              <ProfileModal addToSurkl={()=>this.addToSurkl(client, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}} simple={false} id={'p-modal-'+client.id} user={client}/>
             </div>
           );
         } else {
           return (
             <div className="clientImgRightWrap" key={client._id}>
               <img src={url} className="clientSquareAv" />
-              <ProfileModal addToSurkl={this.addToSurkl} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
+              <ProfileModal addToSurkl={()=>this.addToSurkl(client, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
             </div>
           );
         }
@@ -745,14 +745,14 @@ class Session extends Component {
                 src={url}
                 className="viewerSquareAv"
               />
-              <ProfileModal addToSurkl={this.addToSurkl} openDMs={this.openDMs} position={{bottom:'52px', left:'-14px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
+              <ProfileModal addToSurkl={()=>this.addToSurkl(viewer, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'52px', left:'-14px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
             </div>
           );
         } else {
           return (
             <div className="viewerImgRightWrap" key={viewer._id}>
               <img key={viewer.id} src={url} className="viewerSquareAv" />
-              <ProfileModal addToSurkl={this.addToSurkl} openDMs={this.openDMs} position={{bottom:'52px', left:'-14px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
+              <ProfileModal addToSurkl={()=>this.addToSurkl(viewer, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'52px', left:'-14px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
             </div>
           );
         }

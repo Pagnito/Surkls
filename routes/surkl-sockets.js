@@ -144,7 +144,7 @@ module.exports = (io, socket, connectedUsers) => {
   })
   /////////////////////////////////////////////////////////////
   socket.on('add-to-surkl', (userToAdd, surkl)=>{
-    //console.log(userToAdd, surkl)
+    console.log(userToAdd, surkl)
     delete userToAdd.dms
     delete userToAdd.followers
     delete userToAdd.following
@@ -168,7 +168,7 @@ module.exports = (io, socket, connectedUsers) => {
       $inc: {notif_count:1}
     }, {new:true},(err,upNotif)=>{
       if(err)console.log(err)
-      io.to(connectedUsers[userToAdd._id].socketId).emit('notif',  upNotif.notifs[0])
+      //io.to(connectedUsers[userToAdd._id].socketId).emit('notif',  upNotif.notifs[0])
     })
      
     
