@@ -1,6 +1,8 @@
+Left Off At:
+Fixing twitch content. Need to properly switch from streams to stream and back to streams and back to games
 Surkls To Do:
-let user pick quality/resolution of stream
 
+let user pick quality/resolution of stream
 
 debug sessions if there are bugs
 
