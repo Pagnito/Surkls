@@ -17,19 +17,39 @@ class SessionContentTwitch extends Component {
 		this.token = 'myeqv7fcl1x0mv6uotktjmnuwck42n'
 		this.twitchByUsers =
 			'https://api.twitch.tv/helix/search/channels&query=';
-		this.twitchByGames =
-			'https://api.twitch.tv/helix/search/games?type=suggest&query=';
+		this.twitchByGame =
+			'https://api.twitch.tv/helix/streams?game_id=';
 		this.twitchByStreams =
 			'https://api.twitch.tv/helix/streams?first=81&title=';
 		this.twitchByClips = 
-			'https://api.twitch.tv/helix/clips?limit=81&query='
-	
+			'https://api.twitch.tv/helix/clips?=';
 	}
 	handleInput = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
 	};
-	fetchIt = (apiUrl, query) =>{
+	fetchIt = (apiUrl, query) => {
 		fetch(apiUrl+query, {
+			headers:{
+				'Client-ID': 'z0zn6hk34j09blpvy8bji7tzfdvvmc'
+			}		
+		}).then(res=>res.json())
+			.then(data=>{
+				if(data.data){
+					if(data.data){
+						this.props.updateSession({
+							twitchStreams:data.data,
+							twitchLoading: false
+							})
+					} 			
+				} else {
+					this.fetchIt(apiUrl, query)
+				}		
+			}).catch(err=>{
+				console.log('wtf', err)
+			})
+	}
+	fetchGames = (query) =>{
+		fetch(query, {
 			headers:{
 				'Client-ID': 'z0zn6hk34j09blpvy8bji7tzfdvvmc'
 			}		
@@ -38,13 +58,12 @@ class SessionContentTwitch extends Component {
 				console.log(data)
 				if(data.data){
 					if(data.data){
-						this.props.updateSession({twitchStreams:data.data})
-					} else {
-						this.props.updateSession({twitchChannels:data.data})
-					}				
-				} else {
-					this.fetchIt(apiUrl, query)
-				}		
+						this.props.updateSession({
+							twitchGames:data.data,
+							twitchLoading: false
+						})
+					}			
+				} 		
 			}).catch(err=>{
 				console.log('wtf', err)
 			})
@@ -90,9 +109,8 @@ class SessionContentTwitch extends Component {
       }
     }
 		if (this.props.session) {
-			this.fetchIt(this.twitchByStreams, 'league+of+legends', (data)=>{
-				this.props.updateSession({twitchStreams: data.streams})
-			}) 
+			this.props.updateSession({twitchLoading: true});
+			this.fetchGames('https://api.twitch.tv/helix/games/top');
 		}
 	};
 	hideVideo = () => {
@@ -129,13 +147,40 @@ class SessionContentTwitch extends Component {
 		}
 	};
 	
+	pickGame = (id) =>{
+		let clickHistory = this.props.session.twitchClickHistory.slice(0,2);
+		clickHistory.unshift('streams');
+		this.props.updateSession({
+			twitchLoading: true,
+			twitchClickHistory: clickHistory});
+		this.fetchIt(this.twitchByGame, id);
+	}
+
+	displayGameSnippets = () => {
+		if(this.props.session){
+			let twitchGames = this.props.session.twitchGames === null || 
+			this.props.session.twitchGames === undefined ? [] : this.props.session.twitchGames
+			if(twitchGames.length){
+				return twitchGames.map((snippet, ind)=>{
+					let imgUrl = snippet.box_art_url.replace('{width}', '200');
+					imgUrl = imgUrl.replace('{height}', '300');
+					return (
+						<div 
+							onClick={() => this.pickGame(snippet.id)}
+							style={{backgroundImage: `url(${imgUrl})`}} key={snippet.id} className="twitchGameSnippet">
+
+						</div>
+					)
+				})
+			}
+		}
+	}
 
 	displayStreamSnippets = () => {
 		let twitchStreams = this.props.session.twitchStreams === null ||
 		this.props.session.twitchStreams === undefined 
 		 ? [] : this.props.session.twitchStreams;
 		if (this.props.session) {
-			console.log(twitchStreams)
 			if(twitchStreams.length){
 				return twitchStreams.map((snippet, ind) => {
 					let live = snippet.type === 'live' ?
@@ -182,7 +227,15 @@ class SessionContentTwitch extends Component {
 			</div>
 		);
 	};
-
+	content = () =>{
+		if (this.props.session.twitchLoading){
+			return <Loader2 color="#4B367C" />
+		} else if(this.props.session.twitchClickHistory[0]==='streams'){
+			return this.displayStreamSnippets()
+		} else if(this.props.session.twitchClickHistory[0]==='games'){
+			return this.displayGameSnippets()
+		}
+	}
 	render() {
 		//if (this.props.session.isAtwitchin) {
 		if (this.state.videoPicked) {
@@ -211,8 +264,8 @@ class SessionContentTwitch extends Component {
 				<div className="twitchDiscContent">
             {this.renderHeader()}
 					<div className="twitchDiscContentPreview">
-					{this.props.session.twitchStreams.length > 0 ? this.displayStreamSnippets() :
-						<Loader2 color="#4B367C" />}</div>
+						{this.content()}
+					</div>
 				</div>
 			);
 		}

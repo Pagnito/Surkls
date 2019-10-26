@@ -187,7 +187,23 @@
     
     
     }
-   
+    .twitchGameSnippet {
+      width: calc(33.333% - 10px);  
+      height: 95%;
+      margin-top:10px;
+      border-bottom: 1px solid #D4DADA;
+      box-sizing: border-box;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
   }
   .twitchDiscContentViwer::-webkit-scrollbar {
     width:5px;
