@@ -283,6 +283,7 @@ module.exports = (io, socket) => {
 		socket.to(linkObj.sessionKey).emit('sharingLink', linkObj.link);
 	});
 	socket.on('pickThisVideo', (videoObj) => {
+		console.log(videoObj)
 		redClient.hget('rooms', videoObj.sessionKey, (err, sessionStr) => {
 			if (err) {
 				console.log(err);

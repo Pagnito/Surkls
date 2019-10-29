@@ -18,7 +18,7 @@ class SessionContentTwitch extends Component {
 		this.twitchByUsers =
 			'https://api.twitch.tv/helix/search/channels&query=';
 		this.twitchByGame =
-			'https://api.twitch.tv/helix/streams?game_id=';
+			'https://api.twitch.tv/helix/streams?first=81&game_id=';
 		this.twitchByStreams =
 			'https://api.twitch.tv/helix/streams?first=81&title=';
 		this.twitchByClips = 
@@ -68,24 +68,27 @@ class SessionContentTwitch extends Component {
 				console.log('wtf', err)
 			})
 	}
-	searchVideos = (e) => {
-		if (e.key === 'Enter') {
-      if(this.state.videoPicked===true){
-        this.setState({
-          playingVideo: '',
-          videoPicked: false},()=>{
-            this.fetchIt(this.twitchByStreams, this.state.search)
-          })
-      } else {
-				console.log(this.twitchByStreams + this.state.search)
-        this.fetchIt(this.twitchByStreams, this.state.search)
-      }   
-		}
-	};
+	// searchVideos = (e) => {
+	// 	if (e.key === 'Enter') {
+  //     if(this.state.videoPicked===true){
+  //       this.setState({
+  //         playingVideo: '',
+  //         videoPicked: false},()=>{
+  //           this.fetchIt(this.twitchByStreams, this.state.search)
+  //         })
+  //     } else {
+	// 			console.log(this.twitchByStreams + this.state.search)
+  //       this.fetchIt(this.twitchByStreams, this.state.search)
+  //     }   
+	// 	}
+	// };
 	componentDidUpdate = (prevProps) => {
     let prop = this.props.session;
     if(prop){
       if (prop.videoId !== prevProps.session.videoId && prop.videoId.length > 0) {
+				let clickHistory = this.props.session.twitchClickHistory.slice(0,2);
+				clickHistory.unshift('video');
+				this.props.updateSession({twitchLoading: false, twitchClickHistory: clickHistory})
         this.showVideo(prop.videoId);
       }
     }
@@ -135,14 +138,12 @@ class SessionContentTwitch extends Component {
 		});
 	};
 	sendPickedVideo = (videoId) => {
-		this.showVideo(videoId)
 		if (this.props.session.isAdmin) {
 			this.props.sendVideoSignal({
 				activePlatform: 'twitch',
 				videoId: videoId,
 				playing: true,
 				requestingTime: false,
-			
 			});
 		}
 	};
@@ -155,7 +156,18 @@ class SessionContentTwitch extends Component {
 			twitchClickHistory: clickHistory});
 		this.fetchIt(this.twitchByGame, id);
 	}
+	goBack = () =>{
+		let clickHistory = this.props.session.twitchClickHistory.slice(0,2);
 
+		if(clickHistory[0]==='video'){
+			this.hideVideo();
+			clickHistory.unshift('streams');
+			this.props.updateSession({twitchClickHistory:clickHistory});
+		} else if(clickHistory[0]==='streams'){
+			clickHistory.unshift('games');
+			this.props.updateSession({twitchClickHistory: clickHistory})
+		}
+	}
 	displayGameSnippets = () => {
 		if(this.props.session){
 			let twitchGames = this.props.session.twitchGames === null || 
@@ -165,11 +177,10 @@ class SessionContentTwitch extends Component {
 					let imgUrl = snippet.box_art_url.replace('{width}', '200');
 					imgUrl = imgUrl.replace('{height}', '300');
 					return (
-						<div 
+						<img
 							onClick={() => this.pickGame(snippet.id)}
-							style={{backgroundImage: `url(${imgUrl})`}} key={snippet.id} className="twitchGameSnippet">
-
-						</div>
+							src={imgUrl} key={snippet.id} className="twitchGameSnippet"/>
+						
 					)
 				})
 			}
@@ -193,13 +204,12 @@ class SessionContentTwitch extends Component {
 							<div className="twitchVideoSignalBtn"></div>
 							<img className="twitchSnippetImg" src={imgUrl} />	
 						<div className="twitchStreamInfoWrap">
-							{/*<div style={{backgroundImage:`url(${snippet.channel.logo})`}}className="twitchAvatar"></div>*/}									
-								{/* <div className="twitchStreamInfo">						
-									<div className="twitchChannelTitle">{snippet.channel.name}</div>
-								 	<div className="twitchSnippetViewers">{snippet.viewers}
+								 <div className="twitchStreamInfo">						
+									<div className="twitchChannelTitle">{snippet.user_name}</div>
+								 	<div className="twitchSnippetViewers">{snippet.viewer_count}
 									 	<span style={{marginLeft:'5px'}}></span>Viewers
 									 </div>
-								</div> */}
+								</div> 
 							</div>						
 						</div>
 					);
@@ -211,9 +221,11 @@ class SessionContentTwitch extends Component {
 	renderHeader = () => {
 		return (
 			<div className="twitchDiscContentHeader">
-				<div onClick={() => this.hideVideo()} id="twitchContentBack" className="twitchDiscHeaderIcon" />
-				<div id="twitchContentDice" className="twitchDiscHeaderIcon" />
-				<div className="twitchDiscHeaderSearch">
+				<div onClick={() => this.goBack()} id="twitchContentBack" className="twitchDiscHeaderIcon" />
+				{/* <div id="twitchContentDice" className="twitchDiscHeaderIcon" /> */}
+				<div id="twitchHeaderLogo"></div>
+				{/* <div className="twitchDiscHeaderSearch">
+					
 					<input
 						onKeyDown={this.searchVideos}
 						id={this.props.contentType}
@@ -223,7 +235,7 @@ class SessionContentTwitch extends Component {
 						onChange={this.handleInput}
 					/>
 					<div id="twitchDiscSearchIcon" className="twitchDiscHeaderIcon" />
-				</div>
+				</div> */}
 			</div>
 		);
 	};

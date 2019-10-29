@@ -55,6 +55,7 @@ export default function(state = initialState, action) {
 				...action.payload
 			};
 		case SEND_VIDEO:
+			console.log(action.payload)
 			return {
 				...state,
 				...action.payload
