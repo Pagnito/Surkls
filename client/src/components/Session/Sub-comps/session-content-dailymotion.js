@@ -28,13 +28,11 @@ class SessionContentDailymotion extends Component {
           playingVideo: '',
           videoPicked: false},()=>{
             fetch(this.DMapi + this.state.dmsearch.replace(' ', '+')).then((res) => res.json()).then((data) => {
-              console.log(data);
               this.props.updateSession({ dailymotionList: data.list });
             });
           })
       } else {
         fetch(this.DMapi +  this.state.dmsearch.replace(' ', '+')).then((res) => res.json()).then((data) => {
-          console.log(data);
           this.props.updateSession({ dailymotionList: data.list });
         });
       }   
@@ -43,8 +41,8 @@ class SessionContentDailymotion extends Component {
 	componentDidUpdate = (prevProps) => {
     let prop = this.props.session;
     if(prop){
-      if (prop.videoId !== prevProps.session.videoId && prop.videoId.length > 0) {
-        this.showVideo(prop.videoId+'?autoplay=1');
+      if (prop.videoId.id && prop.videoId.id !== prevProps.session.videoId.id && prop.videoId.length.id > 0) {
+        this.showVideo(prop.videoId.id+'?autoplay=1');
       }
     }
 		/* if(prop.playState.requestingTime!==prevProps.session.playState.requestingTime){	
@@ -62,8 +60,8 @@ class SessionContentDailymotion extends Component {
 			this.props.askForVideoCurrentTime()
     } */
     if(prop){
-      if(prop.videoId.length>0 && prop.playing) {
-        this.showVideo(prop.videoId);
+      if(prop.videoId.id && prop.videoId.platfrom==='dailymotion' && prop.videoId.id && prop.videoId.id.length>0 && prop.playing) {
+        this.showVideo(prop.videoId.id);
       }
     }
 		if (this.props.session.category && this.state.videos.length === 0) {
@@ -81,7 +79,7 @@ class SessionContentDailymotion extends Component {
 			if (this.props.session.isAdmin) {
 				this.props.unpickThisVideo({
 					activePlatform: 'dailymotion',
-					videoId: '',
+					videoId: {},
 					playing: false,				
 				});
 			}
@@ -100,7 +98,7 @@ class SessionContentDailymotion extends Component {
 		if (this.props.session.isAdmin) {
 			this.props.sendVideoSignal({
 				activePlatform: 'dailymotion',
-				videoId: videoId,
+				videoId: {id:videoId, platform:'dailymotion'},
 				playing: true,
 				requestingTime: false,
 			

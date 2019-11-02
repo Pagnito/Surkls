@@ -71,11 +71,11 @@ class SessionContentYoutube extends Component {
 	componentDidUpdate = (prevProps) => {
 		let prop = this.props.session;
 		if(prop){
-			if(prop.videoId!==prevProps.session.videoId && prop.videoId.length>0){
+			if(prop.videoId.id && prop.videoId.platfrom==='youtube' && prop.videoId.id!==prevProps.session.videoId.id && prop.videoId.id.length>0){
 				if(this.YTPlayer!==null){
-					this.YTPlayer.load(prop.videoId,{autoplay:true})
+					this.YTPlayer.load(prop.videoId.id,{autoplay:true})
 				} else {
-					this.showVideo(prop.videoId);
+					this.showVideo(prop.videoId.id);
 				}
 				
 			}		
@@ -97,7 +97,7 @@ class SessionContentYoutube extends Component {
 			this.props.askForVideoCurrentTime()
 		} */
 		if(prop){
-      if(prop.videoId.length>0 && prop.playing) {
+      if(prop.videoId.id && prop.videoId.platfrom==='youtube' && prop.videoId.length>0 && prop.playing) {
         this.showVideo(prop.videoId);
       }
     }
@@ -115,7 +115,7 @@ class SessionContentYoutube extends Component {
 				if(this.props.session.isAdmin){
 					this.props.unpickThisVideo({
 						activePlatform:'youtube',
-						videoId:'', 
+						videoId:{}, 
 						playing:false
 					})
 				}	
@@ -153,7 +153,7 @@ class SessionContentYoutube extends Component {
 		if(this.props.session.isAdmin){
 			this.props.sendVideoSignal({
 				activePlatform:'youtube',
-				videoId:videoId, 
+				videoId:{platfrom: 'youtube', id:videoId}, 
 				playing:true,
 				requestingTime:false,
 				
