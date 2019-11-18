@@ -136,7 +136,7 @@ class SurklFeed extends Component {
 					/(jpeg|jpg|gif|png)/.test(msg.msg)
 				) {
 					possibleUrlImgMsg = (
-						<img onLoad={this.resizeImg} src={msg.msg} />
+						<img style={{display:'none'}} onLoad={this.resizeImg} src={msg.msg} />
 					);
 				} else {
 					possibleUrlImgMsg = msg.msg;

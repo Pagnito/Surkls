@@ -349,7 +349,6 @@ module.exports = (io, socket) => {
 		});
 	});
 	socket.on('session-file', (chunk, session, size, end, msgObj)=>{   
-		console.log('session')
     if(end==='end-of-file'){
       redClient.hget('session-msgs', session, (err,msgsStr)=>{
         let msgs = JSON.parse(msgsStr);
