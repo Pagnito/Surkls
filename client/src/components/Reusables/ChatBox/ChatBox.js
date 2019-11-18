@@ -32,7 +32,7 @@ class ChatBox extends Component {
 				this.progressBar.style.width = '0%';
 				this.sharingFileStarted = false;
 				let newFile = new Blob(this.sharedFileBuffers);
-				let msgsClone = this.props.surkl.msgs.slice(0);
+				let msgsClone = this.props[this.props.type].msgs.slice(0);
 				msgsClone.push(msgObj)
 				this.props.updateMsgs(msgsClone, this.props.type)
 				let fileObj = {
@@ -124,7 +124,7 @@ class ChatBox extends Component {
 					image_id: Math.random().toString(36).substring(2, 15),
 					userName: this.props.auth.user.userName,
 					avatarUrl: this.props.auth.user.avatarUrl,
-					surkl_id: id,
+					[this.props.type+'_id']: id,
 					date: Date.now()
 				};
 				this.socket.emit(this.props.type + '-file', e.target.result, id, size, 'end-of-file', msgObj);

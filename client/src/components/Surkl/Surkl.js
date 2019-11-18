@@ -134,7 +134,7 @@ class Surkl extends Component {
 		}
 	};
 	displayMembers = () => {
-		let members = this.props.surkl.activeSurkl.members;
+		let members = this.props.surkl.members;
 		if (members) {
 			return (
 				<div id="my-surkl-members">

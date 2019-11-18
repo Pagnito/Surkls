@@ -58,6 +58,27 @@ class SurklFeed extends Component {
 		};
 		reader.readAsDataURL(blob);
 	}
+	resizeImg = (e) => {
+		this.moveChat();
+		let image = e.target
+		let max_size = 460, 
+			width = image.width,
+			height = image.height;
+		if (width > height) {
+			if (width > max_size) {
+				height *= max_size / width;
+				width = max_size;
+				image.width = width
+			}
+		} else {
+			if (height > max_size) {
+				width *= max_size / height;
+				height = max_size;
+				image.height = height
+			}
+		}
+		image.style.display = 'block';
+	};
 	loadImages = () => {
 		const images = document.getElementsByClassName('img');
 		const chatBox = document.getElementById('chat-feed');
@@ -92,7 +113,7 @@ class SurklFeed extends Component {
 		return this.props.msgs.map((msg, ind) => {
 			let date = new Date(msg.date);
 			let imgCount;
-			let possibleUrlImg;
+			let possibleUrlImgMsg;
 			let locale = date.toLocaleDateString();
 			let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
 			let time = date.getHours() + ':' + minutes;
@@ -114,21 +135,22 @@ class SurklFeed extends Component {
 					/(.com|.net|.io|.us| .uk |.info|.org|.co)/.test(msg.msg) &&
 					/(jpeg|jpg|gif|png)/.test(msg.msg)
 				) {
-					possibleUrlImg = (
-						<img style={{display:'none'}} onLoad={this.resizeImg} src={msg.msg} />
+					possibleUrlImgMsg = (
+						<img onLoad={this.resizeImg} src={msg.msg} />
 					);
 				} else {
-					possibleUrlImg = msg.msg;
+					possibleUrlImgMsg = msg.msg;
 					if(/(\ ?@.*)/g.test(msg.msg)){
-						let split = msg.msg.split(' ');
-					possibleUrlImg = split.map((msg, key)=>{
-						if(/^(\ ?@.*)/.test(msg)){
-							return <span style={{color:'#FFCD44'}} key={key}>{' '+msg+' '}</span>
-						} else {
-							return msg
-						}
-					})
-					}
+							let split = msg.msg.split(' ');
+							possibleUrlImgMsg = split.map((msgText, ind)=>{
+							if(/^(\ ?@.*)/.test(msgText)){
+								return  <span key={ind} style={{color:'#FFCD44'}}>{' ' + msgText +' '}</span>
+							} else {
+								return  ' '+msgText+' '
+							}
+						})
+					}	
+						
 				}
 				return (
 					<div key={ind} className="chat-msg-wrap">
@@ -149,7 +171,7 @@ class SurklFeed extends Component {
 								) : (
 									''
 								)}
-								<div style={{ padding: msg.userName ? '5px' : '0px' }} className="chat-MsgText">{possibleUrlImg}</div>
+								<div style={{ padding: msg.userName ? '5px' : '0px' }} className="chat-MsgText">{possibleUrlImgMsg}</div>
 							</div>
 						</div>
 					</div>

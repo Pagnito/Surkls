@@ -60,7 +60,10 @@ module.exports = (io, socket, connectedUsers) => {
   })
   /////////////////////////////////////////////////////////////
   socket.on('surkl-msg', (msg) => {
+    console.log('wtf')
+    console.log(msg)
     redClient.hget('surkls-msgs', msg.surkl_id, (err, msgs) => {
+
       
       if (err) {
         socket.emit('videoChatError');
@@ -88,8 +91,10 @@ module.exports = (io, socket, connectedUsers) => {
               text: msg.msg,
               date: Date.now()
             }
-            let menIds = msg.mentions.filter(men=>{                       
-              io.to(connectedUsers[men.user_id].socketId).emit('notif', notif)
+            let menIds = msg.mentions.filter(men=>{
+              if(connectedUsers[men.user_id]) {
+                io.to(connectedUsers[men.user_id].socketId).emit('notif', notif)
+              }                          
               return men.user_id
             })
             
@@ -176,6 +181,7 @@ module.exports = (io, socket, connectedUsers) => {
   })
     ////////////////////////////streams/////////////////////////////////
   socket.on('surkl-file', (chunk, surkl, size, end, msgObj)=>{   
+    console.log('surkl')
     if(end==='end-of-file'){
       redClient.hget('surkls-msgs', surkl, (err,msgsStr)=>{
         let msgs = JSON.parse(msgsStr);

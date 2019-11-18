@@ -25,7 +25,8 @@ export default function(state = initialState, action) {
 		case UPDATE_SURKL:
 			return {
 				...state,
-				activeSurkl: action.payload
+				activeSurkl: action.payload,
+				members: action.payload.members
 			};
 		case UPDATE_SURKL_MSGS:
 			return {

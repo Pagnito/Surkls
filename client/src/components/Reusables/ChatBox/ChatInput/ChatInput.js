@@ -83,7 +83,14 @@ class ChatInput extends Component {
 	triggerMentionsList = () => {
 		let mentionsList = document.getElementById('mention-on-members-list');
 		mentionsList.style.display = "block"
-		//mentionsList.firstChild.focus();
+		mentionsList.firstChild.focus();
+	}
+	arrowThroughMentionsList = (direction) =>{
+		let mentionsList = document.getElementById('mention-on-members-list');
+		if(direction==="up"){
+			
+		}
+
 	}
 	createMention = (user) =>{
 		let msg = this.state.msg;

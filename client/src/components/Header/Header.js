@@ -906,7 +906,7 @@ class Header extends Component {
 				sessionKey: sessionKey,
 				maxMembers: this.state.maxMembers,
 				maxViewers: this.state.maxViewers,
-				category: this.state.category,
+				category: this.state.category ? this.state.category : 'trending',
 				isAdmin: true,
 				sessionType: this.state.sessionType,
 				imStreamer: this.state.sessionType === 'stream' ? true : false,
