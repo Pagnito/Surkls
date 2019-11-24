@@ -15,7 +15,15 @@
     left:5px;
     padding-top: 5px;
     box-shadow: 3px -1px 2px 0px rgba(0,0,0,.5);
-    display: none;
+    #mentions-member-search {
+      outline-color: #FACD44;
+      padding:5px;
+      color: #F4FBFB;
+      border:none;
+      border-radius: 3px;
+      background-color: rgba(255,255,255,.3);
+      margin-bottom:3px;
+    }
     .mention-on-member:hover {
       background: #EFC141;
       color:black;

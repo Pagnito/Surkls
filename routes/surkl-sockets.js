@@ -37,10 +37,19 @@ module.exports = (io, socket, connectedUsers) => {
     })
   
     Surkl.findById({_id: surkl_id}).then(surkl=>{
-      let online = surkl.members.filter(mem=>{
-        return connectedUsers.hasOwnProperty(mem.user_id)
+      let online = [];
+       surkl.members.forEach(mem=>{
+        let notConfusingObject = {
+          user_id: mem.user_id,
+          userName: mem.userName,
+          avatarUrl: '/assets/whitehat.jpg'
+        }
+        if(connectedUsers.hasOwnProperty(mem.user_id)){
+          online.push(notConfusingObject);
+          // mongos _id wouldnt let me delete it for sone reason.
+        }
       })
-      console.log('ONLINE SURKLS MEMBERS', Object.keys(online))
+     
       redClient.get('track'+surkl_id,(err,track)=>{
         io.to(surkl_id).emit('online-users-n-surkl', online, surkl, track)
       });
@@ -60,8 +69,6 @@ module.exports = (io, socket, connectedUsers) => {
   })
   /////////////////////////////////////////////////////////////
   socket.on('surkl-msg', (msg) => {
-    console.log('wtf')
-    console.log(msg)
     redClient.hget('surkls-msgs', msg.surkl_id, (err, msgs) => {
 
       

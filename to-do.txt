@@ -2,7 +2,7 @@ Left Off At:
 Fixing twitch content. Need to properly switch from streams to stream and back to streams and back to games
 Surkls To Do:
 
-fix mentions msg text having no spaces
+fix mentions to be able to arrows through mentions
 
 let user pick quality/resolution of stream
 
