@@ -11,9 +11,12 @@ class ChatInput extends Component {
       mentions: [],
       mentionsMemberSearch: "",
       mentionsListVisibility: false,
-      filteredMentionList: this.props.surkl.online
+      filteredMentionList: [],
+      originalMentionsList: [],
+      mentionFilterChars: ''
     };
     this.socket = this.props.socket;
+    this.mentionFilterTriggered = false;
   }
   displayEmojis = () => {
     return emojis.map((emoji, ind) => {
@@ -35,7 +38,8 @@ class ChatInput extends Component {
   };
 	componentDidUpdate(prevProps){
 		if(this.props.surkl.online!== prevProps.surkl.online){
-			this.setState({filteredMentionList: this.props.surkl.online})
+      this.setState({filteredMentionList: this.props.surkl.online,
+                    originalMentionsList: this.props.surkl.online})
 		}
 	}
 	addEmoji = emoji => {
@@ -53,19 +57,20 @@ class ChatInput extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
   onMsgInput = e => {
-		
 		if(this.state.mentionsListVisibility){
-			let original = this.state. filteredMentionList.slice();
+      let original = this.state.originalMentionsList.slice();
 			let filtered = original.filter((val)=>{
-				let regex = new RegExp(this.state.msg, 'g');
-				return regex.test(val.userName)
+				let regex = new RegExp(this.state.mentionFilterChars.replace("@", ''), 'g');
+				return regex.test(val.userName);
 			});
 			this.setState({
 				filteredMentionList: filtered,
-				msg: e.target.value
+        msg: e.target.value,
+        mentionFilterChars: e.target.value
 			})
 		} else {
-			this.setState({ msg: e.target.value });
+      this.setState({ msg: e.target.value });
+    
 		}
   };
   sendMsg = e => {
@@ -73,18 +78,23 @@ class ChatInput extends Component {
       e.key === " " &&
       this.state.msg.slice(this.state.msg.length - 1) === "@"
     ) {
+      this.mentionFilterTriggered = false;
 			this.setState({ mentionsListVisibility: false });
     }
     if (
       e.key === "Backspace" &&
       this.state.msg.slice(this.state.msg.length - 1) === "@"
     ) {
+      this.mentionFilterTriggered = false;
 			this.setState({ mentionsListVisibility: false });
     }
     if (e.keyCode === 32) {
       this.setState({ mentionsListVisibility: false });
     }
     if (e.key === "@") {
+     
+      this.mentionFilterTriggered = true;
+      console.log(this.mentionFilterTriggered)
       if (this.state.msg.slice(this.state.msg.length - 1) === " ") {
         this.triggerMentionsList();
       } else if (this.state.msg.length === 0) {
@@ -125,11 +135,12 @@ class ChatInput extends Component {
 
   // }
   createMention = user => {
-    let msg = this.state.msg;
+    this.mentionFilterTriggered = false;
+    let name = this.state.mentionFilterChars;
     let mentions = this.state.mentions;
     mentions.push(user);
-    msg += user.userName;
-    this.setState({ msg, mentionsListVisibility: false });
+    name += user.userName;
+    this.setState({ name, mentionsListVisibility: false });
     document.getElementById("chat-input").focus();
   };
   render() {
