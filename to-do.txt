@@ -1,5 +1,5 @@
 Left Off At:
-Fixing twitch content. Need to properly switch from streams to stream and back to streams and back to games
+	Fixing mentions up and down arrowing thru names and adding mentions without using pop box of names
 Surkls To Do:
 
 fix mentions to be able to arrows through mentions

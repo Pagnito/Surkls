@@ -75,7 +75,7 @@ class ChatInput extends Component {
       this.setState({ msg: e.target.value });
     }
   };
-  recordKeyForMentionsFilter = key => {
+  recordKeyForMentionsFilter = (e, key) => {
     let invalidKeys = [
       "Shift",
       "Control",
@@ -93,14 +93,14 @@ class ChatInput extends Component {
     } else if (key === 'Backspace'){
       this.mentionsFilterWord = this.mentionsFilterWord.slice(0, this.mentionsFilterWord.length-1);
     } else if (key === 'ArrowUp') {
-
+      e.preventDefault()
     } else if (key === 'ArrowDown'){
-
+      e.preventDefault()
     }
   };
   sendMsg = e => {
     if(this.state.mentionsListVisibility){
-      this.recordKeyForMentionsFilter(e.key)
+      this.recordKeyForMentionsFilter(e, e.key)
     }
     if (
       e.key === " " &&
@@ -160,13 +160,7 @@ class ChatInput extends Component {
   triggerMentionsList = () => {
     this.setState({ mentionsListVisibility: true });
   };
-  // arrowThroughMentionsList = (direction) =>{
-  // 	let mentionsList = document.getElementById('mention-on-members-list');
-  // 	if(direction==="up"){ 
-
-  // 	}
-
-  // }
+ 
   findInMentions = (name) =>{
     let mentions = this.state.mentions.slice(0);
     let found = mentions.find(val=>{
