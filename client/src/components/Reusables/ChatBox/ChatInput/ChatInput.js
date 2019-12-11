@@ -92,8 +92,11 @@ class ChatInput extends Component {
       this.mentionsFilterWord += key;
     } else if (key === 'Backspace'){
       this.mentionsFilterWord = this.mentionsFilterWord.slice(0, this.mentionsFilterWord.length-1);
+    } else if (key === 'ArrowUp') {
+
+    } else if (key === 'ArrowDown'){
+
     }
-    console.log(this.mentionsFilterWord)
   };
   sendMsg = e => {
     if(this.state.mentionsListVisibility){
@@ -110,8 +113,15 @@ class ChatInput extends Component {
       e.key === "Backspace" &&
       this.state.msg.slice(this.state.msg.length - 1) === "@"
     ) {
-      this.setState({ mentionsListVisibility: false });
       this.mentionsFilterWord = '';
+      let mentions = this.state.mentions.slice(0);
+      let msg = this.state.msg.slice(0).split(' ');
+      mentions.forEach((mention, ind)=>{
+        if(msg.indexOf(mention.userName)===-1){
+          mentions.splice(ind, 1);
+        }
+      });
+      this.setState({ mentions, mentionsListVisibility: false });
     }
     if (e.keyCode === 32) {
       this.setState({ mentionsListVisibility: false });
@@ -152,17 +162,34 @@ class ChatInput extends Component {
   };
   // arrowThroughMentionsList = (direction) =>{
   // 	let mentionsList = document.getElementById('mention-on-members-list');
-  // 	if(direction==="up"){
+  // 	if(direction==="up"){ 
 
   // 	}
 
   // }
+  findInMentions = (name) =>{
+    let mentions = this.state.mentions.slice(0);
+    let found = mentions.find(val=>{
+      return val.userName === name
+    });
+    return found === undefined || found === 'undefined' ? false : true;
+  }
   createMention = user => {
-    let name = this.state.mentionFilterChars;
+    let msg = this.state.msg;
+    let dividedMsg = msg.split(' ');
     let mentions = this.state.mentions;
-    mentions.push(user);
-    name += user.userName;
-    this.setState({ name, mentionsListVisibility: false });
+    let mentionWordReplacedWithUserName = dividedMsg.map(word=>{
+      if(user.userName.includes(word.replace('@', '')) && !this.findInMentions(user.userName)){
+        mentions.push(user);
+        return '@'+user.userName;
+      } else {
+        return word;
+      }
+    }).join(' ');
+    
+    
+    msg = mentionWordReplacedWithUserName;
+    this.setState({ msg, mentionsListVisibility: false });
     document.getElementById("chat-input").focus();
   };
   render() {
