@@ -98,13 +98,13 @@ module.exports = (io, socket, connectedUsers) => {
               text: msg.msg,
               date: Date.now()
             }
-            let menIds = msg.mentions.filter(men=>{
+            let menIds = msg.mentions.map(men=>{
               if(connectedUsers[men.user_id]) {
                 io.to(connectedUsers[men.user_id].socketId).emit('notif', notif)
               }                          
               return men.user_id
             })
-            
+          
             User.updateMany({_id:{$in:menIds}}, {$push:{notifs: {
               $each:[notif], 
               $position:0

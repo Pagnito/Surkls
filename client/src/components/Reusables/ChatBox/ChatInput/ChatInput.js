@@ -12,10 +12,11 @@ class ChatInput extends Component {
       mentionsMemberSearch: "",
       mentionsListVisibility: false,
       filteredMentionList: [],
-      originalMentionsList: []
+      originalMentionsList: [],
+      selectedUserInMentionListViaArrowKeys: 0
     };
     this.socket = this.props.socket;
-    this.mentionsFilterWord = '';
+    this.mentionsFilterWord = "";
   }
   displayEmojis = () => {
     return emojis.map((emoji, ind) => {
@@ -61,10 +62,7 @@ class ChatInput extends Component {
     if (this.state.mentionsListVisibility) {
       let original = this.state.originalMentionsList.slice();
       let filtered = original.filter(val => {
-        let regex = new RegExp(
-          this.mentionsFilterWord.replace("@", ""),
-          "g"
-        );
+        let regex = new RegExp(this.mentionsFilterWord.replace("@", ""), "g");
         return regex.test(val.userName);
       });
       this.setState({
@@ -90,34 +88,52 @@ class ChatInput extends Component {
     ];
     if (invalidKeys.indexOf(key) === -1) {
       this.mentionsFilterWord += key;
-    } else if (key === 'Backspace'){
-      this.mentionsFilterWord = this.mentionsFilterWord.slice(0, this.mentionsFilterWord.length-1);
-    } else if (key === 'ArrowUp') {
-      e.preventDefault()
-    } else if (key === 'ArrowDown'){
-      e.preventDefault()
+    } else if (key === "Backspace") {
+      this.mentionsFilterWord = this.mentionsFilterWord.slice(
+        0,
+        this.mentionsFilterWord.length - 1
+      );
+    } else if (key === "ArrowUp") {
+      e.preventDefault();
+      if (this.state.selectedUserInMentionListViaArrowKeys > 0) {
+        this.setState(prevState => ({
+          selectedUserInMentionListViaArrowKeys:
+            prevState.selectedUserInMentionListViaArrowKeys - 1
+        }));
+      }
+    } else if (key === "ArrowDown") {
+      e.preventDefault();
+      if (
+        this.state.selectedUserInMentionListViaArrowKeys <
+        this.state.filteredMentionList.length - 1
+      ) {
+        this.setState(prevState => ({
+          selectedUserInMentionListViaArrowKeys:
+            prevState.selectedUserInMentionListViaArrowKeys + 1
+        }));
+      }
     }
   };
   sendMsg = e => {
-    if(this.state.mentionsListVisibility){
-      this.recordKeyForMentionsFilter(e, e.key)
+    if (this.state.mentionsListVisibility) {
+      this.recordKeyForMentionsFilter(e, e.key);
     }
     if (
       e.key === " " &&
       this.state.msg.slice(this.state.msg.length - 1) === "@"
     ) {
       this.setState({ mentionsListVisibility: false });
-      this.mentionsFilterWord = '';
+      this.mentionsFilterWord = "";
     }
     if (
       e.key === "Backspace" &&
       this.state.msg.slice(this.state.msg.length - 1) === "@"
     ) {
-      this.mentionsFilterWord = '';
+      this.mentionsFilterWord = "";
       let mentions = this.state.mentions.slice(0);
-      let msg = this.state.msg.slice(0).split(' ');
-      mentions.forEach((mention, ind)=>{
-        if(msg.indexOf(mention.userName)===-1){
+      let msg = this.state.msg.slice(0).split(" ");
+      mentions.forEach((mention, ind) => {
+        if (msg.indexOf(mention.userName) === -1) {
           mentions.splice(ind, 1);
         }
       });
@@ -125,7 +141,7 @@ class ChatInput extends Component {
     }
     if (e.keyCode === 32) {
       this.setState({ mentionsListVisibility: false });
-      this.mentionsFilterWord = '';
+      this.mentionsFilterWord = "";
     }
     if (e.key === "@") {
       if (this.state.msg.slice(this.state.msg.length - 1) === " ") {
@@ -136,17 +152,38 @@ class ChatInput extends Component {
     }
     if (e.key === "Enter") {
       e.preventDefault();
-      this.props.sendMsg({
-        msg: this.state.msg,
-        mentions: this.state.mentions
-      });
-      this.setState({ msg: "", mentions: [], mentionsListVisibility: false });
+      if (this.state.mentionsListVisibility) {
+        this.createMention(
+          this.state.filteredMentionList[
+            this.state.selectedUserInMentionListViaArrowKeys
+          ]
+        );
+      } else {
+        this.checkForManuallyTypedMentions(() => {
+          this.props.sendMsg({
+            msg: this.state.msg,
+            mentions: this.state.mentions
+          });
+          console.log(this.state.mentions)
+          this.setState({
+            msg: "",
+            mentions: [],
+            mentionsListVisibility: false
+          });
+        });
+      }
     }
   };
   mentionsList = () => {
     return this.state.filteredMentionList.map((mem, ind) => {
       return (
         <div
+          style={{
+            background:
+              this.state.selectedUserInMentionListViaArrowKeys === ind
+                ? "#FACD44"
+                : "#3E3E3E"
+          }}
           onClick={() => this.createMention(mem)}
           key={ind}
           className="mention-on-member"
@@ -160,28 +197,56 @@ class ChatInput extends Component {
   triggerMentionsList = () => {
     this.setState({ mentionsListVisibility: true });
   };
- 
-  findInMentions = (name) =>{
+
+  findInMentions = name => {
     let mentions = this.state.mentions.slice(0);
-    let found = mentions.find(val=>{
-      return val.userName === name
+    let found = mentions.find(val => {
+      return val.userName === name;
     });
-    return found === undefined || found === 'undefined' ? false : true;
-  }
+    return found === undefined || found === "undefined" ? false : true;
+  };
+  checkForManuallyTypedMentions = cb => {
+    let possibleMentions = this.state.msg.split(" ").filter(word => {
+      return word.indexOf("@") > -1;
+    });
+
+    possibleMentions.forEach(posMention => {
+      let itsNotCreated = this.state.mentions.find(madeMention => {
+        return madeMention.userName !== posMention.replace("@", "");
+      });
+      let matchMemberUserName = this.state.filteredMentionList.find(member => {
+        return member.userName === posMention.replace("@", "");
+      });
+      if (matchMemberUserName && itsNotCreated === undefined) {
+        this.setState(
+          prevState => ({
+            mentions: [...prevState.mentions, matchMemberUserName]
+          }),
+          () => {
+            cb();
+          }
+        );
+      }
+    });
+  };
   createMention = user => {
     let msg = this.state.msg;
-    let dividedMsg = msg.split(' ');
+    let dividedMsg = msg.split(" ");
     let mentions = this.state.mentions;
-    let mentionWordReplacedWithUserName = dividedMsg.map(word=>{
-      if(user.userName.includes(word.replace('@', '')) && !this.findInMentions(user.userName)){
-        mentions.push(user);
-        return '@'+user.userName;
-      } else {
-        return word;
-      }
-    }).join(' ');
-    
-    
+    let mentionWordReplacedWithUserName = dividedMsg
+      .map(word => {
+        if (
+          user.userName.includes(word.replace("@", "")) &&
+          !this.findInMentions(user.userName)
+        ) {
+          mentions.push(user);
+          return "@" + user.userName;
+        } else {
+          return word;
+        }
+      })
+      .join(" ");
+
     msg = mentionWordReplacedWithUserName;
     this.setState({ msg, mentionsListVisibility: false });
     document.getElementById("chat-input").focus();
