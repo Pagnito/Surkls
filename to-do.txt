@@ -1,5 +1,5 @@
 Left Off At:
-	Fixing mentions up and down arrowing thru names and adding mentions without using pop box of names
+	Redirect to proper place when clicking reply to mention
 Surkls To Do:
 
 fix mentions to be able to arrows through mentions
