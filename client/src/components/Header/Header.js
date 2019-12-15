@@ -303,7 +303,7 @@ class Header extends Component {
 			 <div className="notif-top-part">
 				<div style={imgStyle} className="notif-banner-avatar"></div>
 				<div><span style={{
-					padding:'2px',paddingTop:'0px', borderRadius:'3px', color:'#FFCD44', background:'black'} }>{notif.source.name} </span>
+					padding:'2px',paddingTop:'0px', borderRadius:'3px', color:'#FFCD44', background:'black'} }>{notif.source.name}</span>
 					{' mentioned you.'}</div>		
 			 </div>	
 			 <div className="notif-text">{notif.text}</div>		 
@@ -321,7 +321,6 @@ class Header extends Component {
 		this.socket.emit('accept-surkl', invite, user)
 	}
 	declineSurklInvite = (invite_id, user_id) =>{
-		console.log(invite_id)
 		this.socket.emit('decline-surkl', invite_id, user_id)
 	}
 	openNotifs = () => {	

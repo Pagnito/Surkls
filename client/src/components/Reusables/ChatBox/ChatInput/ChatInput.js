@@ -164,7 +164,6 @@ class ChatInput extends Component {
             msg: this.state.msg,
             mentions: this.state.mentions
           });
-          console.log(this.state.mentions)
           this.setState({
             msg: "",
             mentions: [],
@@ -206,11 +205,12 @@ class ChatInput extends Component {
     return found === undefined || found === "undefined" ? false : true;
   };
   checkForManuallyTypedMentions = cb => {
+    let mentionsToCreate = [];
     let possibleMentions = this.state.msg.split(" ").filter(word => {
       return word.indexOf("@") > -1;
     });
 
-    possibleMentions.forEach(posMention => {
+    possibleMentions.forEach((posMention, ind) => {
       let itsNotCreated = this.state.mentions.find(madeMention => {
         return madeMention.userName !== posMention.replace("@", "");
       });
@@ -218,16 +218,17 @@ class ChatInput extends Component {
         return member.userName === posMention.replace("@", "");
       });
       if (matchMemberUserName && itsNotCreated === undefined) {
-        this.setState(
-          prevState => ({
-            mentions: [...prevState.mentions, matchMemberUserName]
-          }),
-          () => {
-            cb();
-          }
-        );
-      }
+        mentionsToCreate.push(matchMemberUserName)
+      } 
     });
+    this.setState(
+      prevState => ({
+        mentions: [...prevState.mentions, ...mentionsToCreate]
+      }),
+      () => {
+       cb()
+      }
+    );
   };
   createMention = user => {
     let msg = this.state.msg;

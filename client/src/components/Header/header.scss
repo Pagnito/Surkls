@@ -549,9 +549,11 @@
 		padding:5px;
 		box-sizing: border-box;
 		border-bottom: 1px solid #CBD2D2;
-		background-color: rgba(0,0,0,.3);
+		font-family: SourceSansLocal,source-sans-pro,Source Sans Pro,-apple-system,Roboto,pt sans,calibri,sans-serif !important;
+		//background-color: #B7BEBE;
 		.notif-top-part{
 			display:flex;
+
 			justify-content: space-around;
 			.notif-banner-avatar {
 				width:30px;
@@ -562,11 +564,11 @@
 			}	
 			.notif-text{
 				width: calc(100% - 45px);
-				font-family: SourceSansLocal,source-sans-pro,Source Sans Pro,-apple-system,Roboto,pt sans,calibri,sans-serif !important;
 				font-weight: 700;
 				margin-top:10px;
 				margin-left:10px;
 				margin-bottom: 5px; 
+				color: #EFC141;
 			}
 		}
 		
