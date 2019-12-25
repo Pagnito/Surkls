@@ -184,7 +184,7 @@ class ChatBox extends Component {
       <section id="chat-box">
         <ChatFeed msgs={this.props[type].msgs} type={this.props.type} />
         <div id="file-upload-progress" />
-        <ChatInput match={this.props.match} uploadFile={this.uploadFile} sendMsg={this.sendMsg} socket={this.props.socket}
+        <ChatInput members={type === "session" ? this.props.session.clients : this.props.surkl.online} match={this.props.match} uploadFile={this.uploadFile} sendMsg={this.sendMsg} socket={this.props.socket}
         />
       </section>
     );

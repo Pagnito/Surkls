@@ -6,5 +6,4 @@ const User = require('../database/models/user-model');
 
 
 module.exports = (io, socket, connectedUsers) => {
- 
 }

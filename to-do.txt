@@ -1,4 +1,5 @@
 Left Off At:
+	Fix online members props in chatbox input
 	Redirect to proper place when clicking reply to mention
 Surkls To Do:
 

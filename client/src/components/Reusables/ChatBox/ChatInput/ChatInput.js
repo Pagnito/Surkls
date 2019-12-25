@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { emojis } from "../emojis";
-import { connect } from "react-redux";
 import "./ChatInput.scss";
 class ChatInput extends Component {
   constructor(props) {
@@ -37,10 +36,10 @@ class ChatInput extends Component {
     });
   };
   componentDidUpdate(prevProps) {
-    if (this.props.surkl.online !== prevProps.surkl.online) {
+    if (this.props.members !== prevProps.members) {
       this.setState({
-        filteredMentionList: this.props.surkl.online,
-        originalMentionsList: this.props.surkl.online
+        filteredMentionList: this.props.members,
+        originalMentionsList: this.props.members
       });
     }
   }
@@ -197,7 +196,7 @@ class ChatInput extends Component {
     this.setState({ mentionsListVisibility: true });
   };
 
-  findInMentions = name => {
+  findNameInMentions = name => {
     let mentions = this.state.mentions.slice(0);
     let found = mentions.find(val => {
       return val.userName === name;
@@ -210,14 +209,14 @@ class ChatInput extends Component {
       return word.indexOf("@") > -1;
     });
 
-    possibleMentions.forEach((posMention, ind) => {
-      let itsNotCreated = this.state.mentions.find(madeMention => {
-        return madeMention.userName !== posMention.replace("@", "");
+    possibleMentions.forEach((posMention) => {
+      let itsNotCreated = this.state.mentions.every(madeMention => {
+        return madeMention.userName.replace('@', '') !== posMention.replace('@', '');
       });
       let matchMemberUserName = this.state.filteredMentionList.find(member => {
         return member.userName === posMention.replace("@", "");
       });
-      if (matchMemberUserName && itsNotCreated === undefined) {
+      if (matchMemberUserName && itsNotCreated) {
         mentionsToCreate.push(matchMemberUserName)
       } 
     });
@@ -233,12 +232,12 @@ class ChatInput extends Component {
   createMention = user => {
     let msg = this.state.msg;
     let dividedMsg = msg.split(" ");
-    let mentions = this.state.mentions;
+    let mentions = this.state.mentions.slice();
     let mentionWordReplacedWithUserName = dividedMsg
       .map(word => {
         if (
           user.userName.includes(word.replace("@", "")) &&
-          !this.findInMentions(user.userName)
+          !this.findNameInMentions(user.userName)
         ) {
           mentions.push(user);
           return "@" + user.userName;
@@ -247,9 +246,8 @@ class ChatInput extends Component {
         }
       })
       .join(" ");
-
     msg = mentionWordReplacedWithUserName;
-    this.setState({ msg, mentionsListVisibility: false });
+    this.setState({ msg, mentionsListVisibility: false, mentions });
     document.getElementById("chat-input").focus();
   };
   render() {
@@ -308,11 +306,8 @@ ChatInput.propTypes = {
   sendMsg: PropTypes.func,
   uploadFile: PropTypes.func,
   surkl: PropTypes.object,
-  socket: PropTypes.object
+  socket: PropTypes.object,
+  members: PropTypes.array
 };
-function stateToProps(state) {
-  return {
-    surkl: state.surkl
-  };
-}
-export default connect(stateToProps)(ChatInput);
+
+export default ChatInput;

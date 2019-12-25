@@ -202,8 +202,16 @@ class Header extends Component {
 			}, 300);
 		}
 	};
+
+	replyToMentionInChat = () =>{
+
+	}
+
+	replyToMentionDirectly = () => {
+		
+	}
 	
-	/////////////////////////////////^^^^unctions^^^^/////////////////////////////////
+	/////////////////////////////////^^^^functions^^^^/////////////////////////////////
 	pulloutMenu = () => {
 		let toMemberOf;
 		let mySurklBtn;
@@ -282,9 +290,6 @@ class Header extends Component {
 			backgroundSize:'cover',
 			backgroundRepeat:'no-repeat'
 		}
-		switch(notif.type){
-			case 'add-to-surkl':
-		}
 		return {
 			'add-to-surkl':
 			 <div className="notif add-to-surkl-notif">
@@ -302,14 +307,13 @@ class Header extends Component {
 			<div className="notif mention-notif">
 			 <div className="notif-top-part">
 				<div style={imgStyle} className="notif-banner-avatar"></div>
-				<div><span style={{
-					padding:'2px',paddingTop:'0px', borderRadius:'3px', color:'#FFCD44', background:'black'} }>{notif.source.name}</span>
+				<div><b >{notif.source.name}</b>
 					{' mentioned you.'}</div>		
 			 </div>	
 			 <div className="notif-text">{notif.text}</div>		 
 				<div className="notif-options">
-				  <div onClick={()=>this.acceptSurklInvite(notif,this.props.auth.user)} className="notif-option">Reply directly</div>
-				 	<div onClick={()=> this.declineSurklInvite(notif._id, this.props.auth.user._id)}className="notif-option">Reply in chat</div>
+				  <div onClick={()=>this.replyToMentionDirectly(notif,this.props.auth.user)} className="notif-option">Reply directly</div>
+				 	<div onClick={()=> this.replyToMentionInChat(notif._id, this.props.auth.user._id)}className="notif-option">Reply in chat</div>
 				</div>
 			</div>
 		}
@@ -328,9 +332,9 @@ class Header extends Component {
 		this.props.updateNotifs({notifCount: 0})
 	}
 	feedNotifs = () =>{
-		let notifs = this.props.notifs
+		let notifs = this.props.notifs.notifs
 		if(notifs){
-			return notifs.notifs.map((notif,ind)=>{
+			return notifs.map((notif,ind)=>{
 				return (
 					<div key={ind}>
 						{this.notifTypes(notif)[notif.notifType]}

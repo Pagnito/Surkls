@@ -156,7 +156,6 @@ module.exports = (io, socket, connectedUsers) => {
   })
   /////////////////////////////////////////////////////////////
   socket.on('add-to-surkl', (userToAdd, surkl)=>{
-    console.log(userToAdd, surkl)
     delete userToAdd.dms
     delete userToAdd.followers
     delete userToAdd.following
@@ -188,7 +187,6 @@ module.exports = (io, socket, connectedUsers) => {
   })
     ////////////////////////////streams/////////////////////////////////
   socket.on('surkl-file', (chunk, surkl, size, end, msgObj)=>{   
-    console.log('surkl')
     if(end==='end-of-file'){
       redClient.hget('surkls-msgs', surkl, (err,msgsStr)=>{
         let msgs = JSON.parse(msgsStr);
