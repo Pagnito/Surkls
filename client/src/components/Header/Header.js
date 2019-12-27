@@ -205,6 +205,7 @@ class Header extends Component {
 
 	replyToMentionInChat = (notif) =>{
 		this.props.history.push('/surkl/'+notif.source.surkl_id);
+		this.socket.emit('delete-notif', this.props.auth.user._id, notif)
 	}
 
 	replyToMentionDirectly = (notif) => {
@@ -216,7 +217,9 @@ class Header extends Component {
     }
     delete dm_user._id;
     delete dm_user.name;
-		this.props.openDMs(dm_user,()=>{});
+		this.props.openDMs(dm_user,()=>{
+			this.socket.emit('delete-notif', this.props.auth.user._id, notif)
+		});
 	}
 	
 	/////////////////////////////////^^^^functions^^^^/////////////////////////////////
