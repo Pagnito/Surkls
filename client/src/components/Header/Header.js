@@ -203,12 +203,20 @@ class Header extends Component {
 		}
 	};
 
-	replyToMentionInChat = () =>{
-
+	replyToMentionInChat = (notif) =>{
+		this.props.history.push('/surkl/'+notif.source.surkl_id);
 	}
 
-	replyToMentionDirectly = () => {
-		
+	replyToMentionDirectly = (notif) => {
+		let dm_user = notif.source;
+		dm_user.user_id = dm_user.source_id;
+		dm_user.userName = dm_user.name;
+    if (this.props.auth.user.dms[dm_user.source_id]) {
+      dm_user.thread_id = this.props.auth.user.dms[dm_user.source_id].thread_id;
+    }
+    delete dm_user._id;
+    delete dm_user.name;
+		this.props.openDMs(dm_user,()=>{});
 	}
 	
 	/////////////////////////////////^^^^functions^^^^/////////////////////////////////
@@ -313,7 +321,7 @@ class Header extends Component {
 			 <div className="notif-text">{notif.text}</div>		 
 				<div className="notif-options">
 				  <div onClick={()=>this.replyToMentionDirectly(notif,this.props.auth.user)} className="notif-option">Reply directly</div>
-				 	<div onClick={()=> this.replyToMentionInChat(notif._id, this.props.auth.user._id)}className="notif-option">Reply in chat</div>
+				 	<div onClick={()=> this.replyToMentionInChat(notif, this.props.auth.user)}className="notif-option">Reply in chat</div>
 				</div>
 			</div>
 		}

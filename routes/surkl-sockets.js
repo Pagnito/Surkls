@@ -92,7 +92,8 @@ module.exports = (io, socket, connectedUsers) => {
               source: {
                 name: msg.userName,
                 source_id: msg.user_id,
-                avatarUrl: msg.avatarUrl,         
+                avatarUrl: msg.avatarUrl,  
+                surkl_id: msg.surkl_id       
               },
               notifType: 'mention',
               text: msg.msg,

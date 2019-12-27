@@ -176,6 +176,7 @@ class ChatBox extends Component {
 			}
 		}
 	}
+	console.log(msgObj)
 	this.socket.emit(this.props.type + '-msg', msgObj);
 }
   render() {

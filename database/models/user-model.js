@@ -25,6 +25,7 @@ const UserSchema = new Schema({
     source: {
       name:String,
       source_id:String,
+      surkl_id: String,
       bannerUrl: String,
       adminName: String,
       avatarUrl:String

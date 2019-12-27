@@ -194,7 +194,7 @@ class SessionContentTwitch extends Component {
           ? []
           : this.props.session.twitchGames;
       if (twitchGames.length) {
-        return twitchGames.map((snippet, ind) => {
+        return twitchGames.map((snippet) => {
           let imgUrl = snippet.box_art_url.replace("{width}", "200");
           imgUrl = imgUrl.replace("{height}", "300");
           return (

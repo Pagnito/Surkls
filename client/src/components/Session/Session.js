@@ -679,6 +679,7 @@ class Session extends Component {
       dm_user.thread_id = this.props.auth.user.dms[dm_user._id].thread_id;
     }
     delete dm_user._id;
+    
     this.props.openDMs(dm_user, user => {
       this.socket.emit("clear-notifs", user);
     });
