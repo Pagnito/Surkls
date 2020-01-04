@@ -109,6 +109,14 @@ module.exports = (app) => {
 					user.userName = req.body.userName
 					user.save().then(saved=>{
 						res.json(saved);
+						if(user.memeberOf){
+							Surkl.findOneAndUpdate({_id: user.memberOf.surkl_id, 'members.user_id': user._id}, {
+								$set:{'members.$.userName': user.userName}}).exec()
+						}
+						if(user.mySurkl){
+							Surkl.findOneAndUpdate({_id: user.mySurkl.surkl_id, 'members.user_id': user._id}, {
+								$set:{'members.$.userName': user.userName}}).exec()
+						}
 					})
 				}
 			})

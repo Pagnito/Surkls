@@ -1,6 +1,5 @@
 Left Off At:
-	Fix online members props in chatbox input
-	Redirect to proper place when clicking reply to mention
+	
 Surkls To Do:
 
 fix mentions to be able to arrows through mentions

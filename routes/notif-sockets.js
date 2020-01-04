@@ -15,6 +15,6 @@ module.exports = (io, socket, connectedUsers) => {
       ).then(result=>{
         console.log(result)
       })
-    sokcket.io()
+    //socket.io()
   })
 }

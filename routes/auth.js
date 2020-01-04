@@ -60,25 +60,40 @@ module.exports = (app) => {
 		res.redirect('/');
 	});
 	/////////////////////////////////////////account routes///////////////////////////////////////////
-	app.put('/account/update', requireLogin, (req, res) => {
-		let userProps = req.body;
-		User.findOneAndUpdate({ email: req.user.email }, { $set: userProps }, { new: true })
-			.then((user) => {
-				if (user) {
-					let userRes = {
-						email: user.email,
-						userName: user.userName,
-						_id: user._id
-					};
-					res.json(userRes);
-				} else {
-					res.status(404).json({ err: 'User not found' });
-				}
-			})
-			.catch((err) => {
-				res.status(500).json({ err: 'Internal server error' });
-			});
-	});
+	// app.put('/account/update', requireLogin, (req, res) => {
+	// 	let userProps = req.body;
+	// 	User.findOneAndUpdate({ email: req.user.email }, { $set: userProps }, { new: true })
+	// 		.then((user) => {
+	// 			if (user) {
+	// 				let userRes = {
+	// 					email: user.email,
+	// 					userName: user.userName,
+	// 					_id: user._id
+	// 				};
+	// 				console.log(user)
+	// 				if(user.memeberOf){
+	// 					console.log('memberOf')
+	// 					Surkl.findOneAndUpdate({_id: user.memberOf.surkl_id}, {
+	// 						$pull:{members:{user_id: user._id}},
+	// 						$push:{members:{avatarUrl: user.avatarUrl, userName:user.userName, user_id: user._id}}}).exec()
+	// 				}
+	// 				if(user.mySurkl){
+	// 					console.log('mySurkl')
+	// 					Surkl.findOneAndUpdate({_id: user.mySurkl.surkl_id}, {
+	// 						$pull:{members:{user_id: user._id}},
+	// 						$push:{members:{avatarUrl: user.avatarUrl, userName:user.userName, user_id: user._id}}}).then((res)=>{
+	// 							console.log(res)
+	// 						})
+	// 				}
+	// 				res.json(userRes);
+	// 			} else {
+	// 				res.status(404).json({ err: 'User not found' });
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			res.status(500).json({ err: 'Internal server error' });
+	// 		});
+	// });
 
 	app.delete('/account/delete', requireLogin, (req, res) => {
 		User.findById({ _id: req.user._id })
