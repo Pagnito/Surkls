@@ -15,6 +15,7 @@ import './surkls.scss';
    }
    displaySurkls = () => {
      return this.state.surkls.map((surkl, ind)=>{
+       console.log(surkl)
       return (
         <div key={ind} className="surkl">
           <div className="surkls-surkl-banner">
@@ -32,7 +33,7 @@ import './surkls.scss';
             })}
           </div>
           <div className="surkls-surkl-actionbtns">
-            <div className="surkls-surkl-actionbtn" >Join Surkl</div>
+            <div  className="surkls-surkl-actionbtn" >Join Surkl</div>
           </div>
         </div>
       )

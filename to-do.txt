@@ -2,8 +2,6 @@ Left Off At:
 	
 Surkls To Do:
 
-fix mentions to be able to arrows through mentions
-
 let user pick quality/resolution of stream
 
 debug sessions if there are bugs

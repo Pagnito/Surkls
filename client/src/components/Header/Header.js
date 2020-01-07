@@ -269,7 +269,7 @@ class Header extends Component {
 					<div className="pulloutMenuIcon" id="surklsIcon" />Surkls
 				</Link>
 				<div className="menuItem">
-					<div className="pulloutMenuIcon" id="eventsIcon" />Events
+					<div className="pulloutMenuIcon" id="eventsIcon" />Events <b style={{fontSize: '12px', marginTop:'5px', marginLeft:'10px'}}><i>Coming Soon</i></b>
 				</div>
 				<div className="menuSurkls">
 					<div className="menuSurklsHeader">My Surkl Name</div>

@@ -122,6 +122,12 @@ module.exports = (app) => {
 			})
 		})
 	});
+	app.post('/api/surkl/user/joinRequest', requireLogin, (req,res)=>{
+		console.log(req.body)
+		Surkl.findOneAndUpdate({_id: req.body.surkl_id}, {$push:{requests:req.body.user.user_id}}).then(res=>{
+			console.log(res)
+		});
+	})
 	app.put('/api/surkl/member/add/:id', requireLogin, (req, res) => {
 		Surkl.findOneAndUpdate({ _id: req.params.id }, { $push: { members: req.body } }, { new: true }, (err, up) => {
 			if (err) console.log(err);

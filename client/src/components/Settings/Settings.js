@@ -36,18 +36,28 @@ class Settings extends Component {
   }
   
   render() {
-    return (
-      <div id="settings">
-        <div id="settings-nav">
-          <div onClick={()=>this.swtichSetting('account', 'account-tab')} id="account-tab" className="setting-type">Account</div>
-          <div onClick={()=>this.swtichSetting('surkls', 'surkls-tab')} id="surkls-tab" className="setting-type">Surkls</div>
-         {/* <div onClick={()=>this.swtichSetting('notif', 'notif-tab')} id="notif-tab" className="setting-type">Notifications</div>*/}
+    if(this.props.auth.user){
+      return (
+        <div id="settings">
+          <div id="settings-nav">
+            <div onClick={()=>this.swtichSetting('account', 'account-tab')} id="account-tab" className="setting-type">Account</div>
+            {this.props.auth.user.mySurkl || this.props.auth.user.memberOf ? <div onClick={()=>this.swtichSetting('surkls', 'surkls-tab')} id="surkls-tab" className="setting-type">Surkls</div> : ''}
+           {/* <div onClick={()=>this.swtichSetting('notif', 'notif-tab')} id="notif-tab" className="setting-type">Notifications</div>*/}
+          </div>
+          <div id="settings-actions">
+            {this.renderSettingsType()}
+          </div>
         </div>
-        <div id="settings-actions">
-          {this.renderSettingsType()}
+      )
+    } else {
+      return (
+        <div id="settings">
+          <div style={{fontFamily:'Quicksand', fontSize: '20px', margin:'40px', color: 'white'}}>Chu not logged in homes.</div>
         </div>
-      </div>
-    )
+      )
+      
+    }
+    
   }
 }
 Settings.propTypes = {

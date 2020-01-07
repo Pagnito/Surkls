@@ -1,5 +1,5 @@
 import {
-  CREATED_SURKL, USER_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER, UPDATE_SURKL
+  CREATED_SURKL, USER_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER, UPDATE_SURKL, JOIN_SURKL_REQUEST_SENT
   } from 'actions/types';
   
   export const updateYTPlayer = (data) => {
@@ -29,6 +29,26 @@ import {
       type:UPDATE_SURKL,
       payload:surkl
     }
+  }
+  export const requestToJoinSurkl = (requestObj) => (dispatch) =>{
+    let options = {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+      body: requestObj
+    };
+    fetch('/api/surkl/user/joinReques', options)
+    .then(res=>res.json())
+    .then(data=>{
+      dispatch({
+        type: JOIN_SURKL_REQUEST_SENT,
+        payload: true
+      })
+      cb(data)
+    })
   }
   export const newSurkl = (surkl,cb) => (dispatch) =>{
     let options = {
