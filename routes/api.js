@@ -95,6 +95,28 @@ module.exports = (app) => {
 	);
 	
 	/////////////////////////////////////////////////EDITS/////////////////////////////////////////////
+	app.post('/api/surkl/user/joinRequest', requireLogin, (req,res)=>{
+		let requestingUser = {
+				source_id: req.body.source_id,
+				name: req.body.userName,
+				avatarUrl: req.body.avatarUrl
+		}
+		Surkl.findOneAndUpdate({_id: req.body.surkl_id}, {$push:{requests:requestingUser}}).then(resp=>{
+			let notificationForAdmin = {
+				source: {
+					name:req.body.userName,
+					source_id:req.body.user_id,
+					avatarUrl:req.body.avatarUrl
+				},
+				notifType: 'add-to-surkl',
+				text: req.body.userName+' wants to join your Surkl',
+				date: Date.now()
+			}
+			User.findOneAndUpdate({_id: req.body.admin_id}, {$push:{notifs:notificationForAdmin }}).then(resp=>{
+				res.json({msg:'request sent'});
+			})
+		});
+	})
 	app.put('/api/user/update', requireLogin, (req, res) => {
 		User.findByIdAndUpdate({_id: req.user._id},{$set:req.body},{new:true},(err,up)=>{
 			res.json(up)
@@ -122,12 +144,7 @@ module.exports = (app) => {
 			})
 		})
 	});
-	app.post('/api/surkl/user/joinRequest', requireLogin, (req,res)=>{
-		console.log(req.body)
-		Surkl.findOneAndUpdate({_id: req.body.surkl_id}, {$push:{requests:req.body.user.user_id}}).then(res=>{
-			console.log(res)
-		});
-	})
+
 	app.put('/api/surkl/member/add/:id', requireLogin, (req, res) => {
 		Surkl.findOneAndUpdate({ _id: req.params.id }, { $push: { members: req.body } }, { new: true }, (err, up) => {
 			if (err) console.log(err);

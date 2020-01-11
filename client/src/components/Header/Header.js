@@ -301,8 +301,21 @@ class Header extends Component {
 			backgroundSize:'cover',
 			backgroundRepeat:'no-repeat'
 		}
+		console.log(notif)
 		return {
 			'add-to-surkl':
+			 <div className="notif add-to-surkl-notif">
+			 <div className="notif-top-part">
+				<div style={imgStyle} className="notif-banner-avatar"></div>
+				<div className="notif-text">{notif.text}</div>
+			 </div>			 
+			 <div>{'Accept '+notif.source.userName+' into your Surkl?'}</div>
+			 	<div className="notif-options">
+				  <div onClick={()=>this.acceptSurklInvite(notif,this.props.auth.user)} className="notif-option">Yes</div>
+				 	<div onClick={()=> this.declineSurklInvite(notif._id, this.props.auth.user._id)}className="notif-option">No</div>
+				</div>
+			</div>,
+			'join-surkl':
 			 <div className="notif add-to-surkl-notif">
 			 <div className="notif-top-part">
 				<div style={imgStyle} className="notif-banner-avatar"></div>

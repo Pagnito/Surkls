@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {requestToJoinSurkl, fetchSurkls} from 'actions/actions';
+import {PropTypes} from 'prop-types';
 import './surkls.scss';
  class Surkls extends Component {
    constructor(props){
@@ -13,6 +16,17 @@ import './surkls.scss';
       this.setState({surkls})
      })
    }
+  requestToJoinSurkl = (surkl) =>{
+    let request = {
+      admin_id: surkl.admin.user_id,
+      userName:this.props.auth.user.userName,
+      source_id:this.props.auth.user._id,
+      avatarUrl:this.props.auth.user.avatarUrl,
+      surkl_id: surkl.surkl_id
+    }
+    this.props.requestToJoinSurkl(JSON.stringify(request));
+  }
+  
    displaySurkls = () => {
      return this.state.surkls.map((surkl, ind)=>{
        console.log(surkl)
@@ -33,7 +47,7 @@ import './surkls.scss';
             })}
           </div>
           <div className="surkls-surkl-actionbtns">
-            <div  className="surkls-surkl-actionbtn" >Join Surkl</div>
+            <div onClick={() => this.requestToJoinSurkl(surkl)} className="surkls-surkl-actionbtn" >Join Surkl</div>
           </div>
         </div>
       )
@@ -48,4 +62,15 @@ import './surkls.scss';
     )
   }
 }
-export default Surkls;
+Surkls.propTypes = {
+  auth:PropTypes.object,
+  fetchSurkls: PropTypes.func,
+  requestToJoinSurkl: PropTypes.func
+}
+function stateToProps(state){
+  return{
+    auth:state.auth
+
+  }
+}
+export default connect(stateToProps,{fetchSurkls,requestToJoinSurkl})(Surkls);

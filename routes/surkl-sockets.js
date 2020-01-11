@@ -182,7 +182,7 @@ module.exports = (io, socket, connectedUsers) => {
     delete userToAdd.following;
     delete userToAdd.mySurkl;
     let notif = {
-      notifType: "add-to-surkl",
+      notifType: "join-surkl",
       source: {
         name: surkl.name,
         adminName: surkl.adminName,

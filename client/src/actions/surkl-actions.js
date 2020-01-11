@@ -1,5 +1,5 @@
 import {
-  CREATED_SURKL, USER_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER, UPDATE_SURKL, JOIN_SURKL_REQUEST_SENT
+  CREATED_SURKL, USER_SURKL, UPDATE_ON_MEMBERS, UPDATE_YTPLAYER, UPDATE_SURKL, JOIN_SURKL_REQ_SENT
   } from 'actions/types';
   
   export const updateYTPlayer = (data) => {
@@ -44,7 +44,7 @@ import {
     .then(res=>res.json())
     .then(data=>{
       dispatch({
-        type: JOIN_SURKL_REQUEST_SENT,
+        type: JOIN_SURKL_REQ_SENT,
         payload: true
       })
       cb(data)
