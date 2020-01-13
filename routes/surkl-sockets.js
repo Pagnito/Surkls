@@ -211,6 +211,43 @@ module.exports = (io, socket, connectedUsers) => {
 
     //Surkl.updateOne({_id: surkl._id}, {$push:userToAdd}).exec()
   });
+  socket.on("approve-join-surkl-req", (data, surkl) => { 
+    let notif = {
+      source: {
+        name: surkl.name,
+        surkl_id: surkl.surkl_id,
+        bannerUrl: surkl.bannerUrl
+      },
+      notifType: "surkl-join-approved",
+      text: "You have been approved to join " + surkl.name
+    };
+    let newMember = {
+      user_id: data.source.source_id,
+      userName:data.source.name,
+      avatarUrl:data.source.avatarUrl 
+    }
+    Surkl.findByIdAndUpdate({_id: surkl.surkl_id}, {$push:{members:newMember}}).then(val=>{
+      User.findOneAndUpdate(
+        { _id: data.source.source_id },
+        { $push:{notifs: {
+          $each: [notif],
+          $position: 0
+        }},
+          $set: {
+            memberOf: {
+              name: surkl.name,
+              surkl_id: surkl.surkl_id
+            }
+          },
+          $inc: { notif_count: 1 }
+        },
+        { new: true },
+        (err, upNotif) => {
+          if(err) console.log(err)
+        }
+      );
+    })
+  });
   ////////////////////////////streams/////////////////////////////////
   socket.on("surkl-file", (chunk, surkl, size, end, msgObj) => {
     if (end === "end-of-file") {

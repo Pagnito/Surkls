@@ -97,12 +97,12 @@ module.exports = (app) => {
 	/////////////////////////////////////////////////EDITS/////////////////////////////////////////////
 	app.post('/api/surkl/user/joinRequest', requireLogin, (req,res)=>{
 		let requestingUser = {
-				source_id: req.body.source_id,
+				user_id: req.body.user_id,
 				name: req.body.userName,
 				avatarUrl: req.body.avatarUrl
 		}
 		Surkl.findOneAndUpdate({_id: req.body.surkl_id}, {$push:{requests:requestingUser}}).then(resp=>{
-			let notificationForAdmin = {
+			let notifForAdmin = {
 				source: {
 					name:req.body.userName,
 					source_id:req.body.user_id,
@@ -112,7 +112,12 @@ module.exports = (app) => {
 				text: req.body.userName+' wants to join your Surkl',
 				date: Date.now()
 			}
-			User.findOneAndUpdate({_id: req.body.admin_id}, {$push:{notifs:notificationForAdmin }}).then(resp=>{
+			User.findOneAndUpdate({_id: req.body.admin_id}, {
+				$inc: { notif_count: 1 },
+				$push:{notifs: {
+					$each: [notifForAdmin],
+					$position: 0
+				}}}).then(resp=>{
 				res.json({msg:'request sent'});
 			})
 		});

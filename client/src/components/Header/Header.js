@@ -50,6 +50,9 @@ class Header extends Component {
 			}
 			this.props.removeNotif(notif_id)
 			this.props.updateUserMem(mem)
+		});
+		this.socket.on('surkl-join-req-accepted',(data)=>{
+			
 		})
 		this.socket.on('declined-surkl',(notif_id)=>{
 			this.props.removeNotif(notif_id)
@@ -221,7 +224,18 @@ class Header extends Component {
 			this.socket.emit('delete-notif', this.props.auth.user._id, notif)
 		});
 	}
-	
+	approveSurklJoinReq = (notif) =>{
+		this.socket.emit('approve-join-surkl-req', notif, this.props.auth.user.mySurkl);
+		this.socket.emit('delete-notif', this.props.auth.user._id, notif);
+	}
+	declineSurklJoinRequest = (notif) => {
+		//this.socket.emit('decline-join-surkl-req', notif);
+		this.socket.emit('delete-notif', this.props.auth.user._id, notif);
+	}
+	deleteStaticNotifaction = (notif) =>{
+	  this.socket.emit('delete-notif', this.props.auth.user._id, notif);
+	}
+
 	/////////////////////////////////^^^^functions^^^^/////////////////////////////////
 	pulloutMenu = () => {
 		let toMemberOf;
@@ -301,18 +315,27 @@ class Header extends Component {
 			backgroundSize:'cover',
 			backgroundRepeat:'no-repeat'
 		}
-		console.log(notif)
 		return {
+			'surkl-join-approved':
+			 <div className="notif add-to-surkl-notif">
+			 <div className="notif-top-part">
+				<div style={imgStyle} className="notif-banner-avatar"></div>
+				<div className="notif-text">{notif.text}</div>
+			 </div>			 
+			 	<div className="notif-options">
+				  <div onClick={()=>this.deleteStaticNotifaction(notif)} className="notif-option">Ok</div>
+				</div>
+			</div>,
 			'add-to-surkl':
 			 <div className="notif add-to-surkl-notif">
 			 <div className="notif-top-part">
 				<div style={imgStyle} className="notif-banner-avatar"></div>
 				<div className="notif-text">{notif.text}</div>
 			 </div>			 
-			 <div>{'Accept '+notif.source.userName+' into your Surkl?'}</div>
+			 <div>{'Accept '+notif.source.name+' into your Surkl?'}</div>
 			 	<div className="notif-options">
-				  <div onClick={()=>this.acceptSurklInvite(notif,this.props.auth.user)} className="notif-option">Yes</div>
-				 	<div onClick={()=> this.declineSurklInvite(notif._id, this.props.auth.user._id)}className="notif-option">No</div>
+				  <div onClick={()=>this.approveSurklJoinReq(notif)} className="notif-option">Yes</div>
+				 	<div onClick={()=> this.declineSurklJoinRequest(notif)}className="notif-option">No</div>
 				</div>
 			</div>,
 			'join-surkl':

@@ -59,6 +59,7 @@ export default function(state = initialState, action) {
 				...state,
 				messanger: action.payload,
 				currThread: action.payload!==null? action.payload.thread_id : undefined,
+				msgs: action.payload === null ? [] : state.msgs,
 				notifCount: 0
 			};
 		default:

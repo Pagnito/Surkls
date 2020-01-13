@@ -1,5 +1,6 @@
 Left Off At:
-	join surkl function
+	debugging messanger	
+	live updates for join surkl notifacations
 	
 Surkls To Do:
 

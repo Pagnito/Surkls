@@ -20,7 +20,7 @@ import './surkls.scss';
     let request = {
       admin_id: surkl.admin.user_id,
       userName:this.props.auth.user.userName,
-      source_id:this.props.auth.user._id,
+      user_id:this.props.auth.user._id,
       avatarUrl:this.props.auth.user.avatarUrl,
       surkl_id: surkl.surkl_id
     }

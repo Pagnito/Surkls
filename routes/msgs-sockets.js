@@ -21,7 +21,6 @@ module.exports = (io, socket, connectedUsers) => {
   socket.on('clear-msg-notifs', (user, thread_id)=>{
 		////this fire after open msngr widget
 		//console.log('OPEN WIDGET')
-		console.log(user)
     user.socketId = socket.id;
     msngr_widget[user.user_id || user._id] = socket.id;
     if(thread_id){
@@ -52,7 +51,6 @@ module.exports = (io, socket, connectedUsers) => {
       } else {
         io.to(socket.id).emit('msg', msg)
 			}
-			console.log(msngr_widget, msg.receiver)
       if(!msngr_widget[msg.receiver.user_id]){
         User.updateOne({_id:msg.receiver.user_id, 'dms.thread_id': msg._id}, {
           $inc:{new_msg_count:1},
