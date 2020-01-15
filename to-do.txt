@@ -1,5 +1,5 @@
 Left Off At:
-	debugging messanger	
+	debugging messanger, update messenger msgs on changing user when msnger doesnt unmount
 	live updates for join surkl notifacations
 	
 Surkls To Do:

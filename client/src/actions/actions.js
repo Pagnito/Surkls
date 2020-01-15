@@ -29,7 +29,7 @@ export const getUser = () => dispatch => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.log(err)
       dispatch({
         type: GET_USER,
         payload: {}

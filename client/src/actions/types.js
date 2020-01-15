@@ -29,6 +29,7 @@ export const UPDATE_ON_MEMBERS = 'UPDATE_ON_MEMBERS';
 export const LOAD_MSGS = 'LOAD_MSGS';
 export const ADD_DM = 'ADD_DM';
 export const ADD_DMS = 'ADD_DMS';
+export const ADD_NEW_USER_TO_DM_LIST = 'ADD_NEW_USER_TO_DM_LIST';
 export const ADD_SESS_DMS = 'ADD_SESS_DMS';
 export const USER_SURKL = 'MY_SURKL';
 export const MY_SURKL = 'MY_SURKL';

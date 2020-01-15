@@ -4,7 +4,8 @@ UPDATE_DMS,
 UPDATE_MSGS,
 ADD_DM,
 ADD_DMS,
-LOAD_MSGS
+LOAD_MSGS,
+ADD_NEW_USER_TO_DM_LIST
 } from 'actions/types';
 
 export const fetchMsgThreads = (id) => (dispatch) =>{
@@ -26,10 +27,16 @@ export const updateDMs = (dms) => {
 		payload: dms
 	}
 }
-export const updateMsgs = (msg) => {
-	return {
+export const updateMsgs = (msg, newUser) => (dispatch)=>{
+	dispatch({
 		type: UPDATE_MSGS,
 		payload: msg
+	})
+	if(newUser){
+		dispatch({
+			type: ADD_NEW_USER_TO_DM_LIST,
+			payload: newUser
+		})
 	}
 }
 export const addToDMs = (user) => {

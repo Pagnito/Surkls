@@ -30,8 +30,8 @@ class Header extends Component {
 		this.socketId = ''
 		this.socket = this.props.socket;
 		this.current_room = 0;
-		this.socket.on('msg',(msg)=>{
-			this.props.updateMsgs(msg)
+		this.socket.on('msg',(msg, newUserToAdd)=>{
+			this.props.updateMsgs(msg, newUserToAdd)
 		})
 		this.socket.on('notif',(notif)=>{
 			this.props.addNotif(notif)

@@ -64,18 +64,6 @@ module.exports = (io, socket, connectedUsers) => {
 			});
 			newThread.save().then((thread) => {
 				msg._id = thread._id;
-				if (rec) {
-					io.to(rec.socketId).emit('msg', msg);
-					io.to(socket.id).emit('msg', msg);
-				} else {
-					io.to(socket.id).emit('msg', msg);
-        }
-        if(!msngr_widget[msg.receiver.user_id]){
-          User.updateOne({_id:msg.receiver.user_id, 'dms.thread_id': msg._id}, {
-            $inc:{new_msg_count:1},
-            $set:{'dms.$.notif':true}
-          }).exec()
-        }     
 				let dm1 = {
 					thread_id: thread._id,
 					user_id: msg.user_id,
@@ -90,6 +78,19 @@ module.exports = (io, socket, connectedUsers) => {
           userName: msg.receiver.userName,
           latestMsg: msg.msg
 				};
+				if (rec) {
+					io.to(rec.socketId).emit('msg', msg, dm1);
+					io.to(socket.id).emit('msg', msg, dm2);
+				} else {
+					io.to(socket.id).emit('msg', msg, dm2);
+        }
+        if(!msngr_widget[msg.receiver.user_id]){
+          User.updateOne({_id:msg.receiver.user_id, 'dms.thread_id': msg._id}, {
+            $inc:{new_msg_count:1},
+            $set:{'dms.$.notif':true}
+          }).exec()
+        }     
+			
 				User.updateOne({ _id: msg.user_id }, { $push: { dms: dm2 } }).exec();
 				User.updateOne({ _id: msg.receiver.user_id }, { $push: { dms: dm1 } }).exec();
 			});
