@@ -1,5 +1,5 @@
 Left Off At:
-	first message isnt being saved as notification in certain cases
+	Create pending status for button after clicking it to request to join surkl
 	live updates for join surkl notifacations
 	
 Surkls To Do:
