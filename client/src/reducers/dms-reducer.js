@@ -24,7 +24,7 @@ export default function(state = initialState, action) {
 			msgs: msgsClone,
 			messangers: msngrsClone,
 			currThread: action.payload._id ? action.payload._id : undefined,
-			notifCount: state.messanger==null ? state.notifCount+=1 : 0
+			notifCount: state.messanger===null ? state.notifCount+=1 : 0
 		};
 		case LOAD_MSGS:	
 			return {

@@ -61,15 +61,23 @@ export const openDMs = (dm_user, cb) =>(dispatch)=> {
 	dispatch({
 		type: OPEN_DMS,
 		payload: dm_user
-	})
-	fetch('/api/dm_thread/'+dm_user.thread_id)
-	.then(res=>res.json())
-	.then(data=>{
+	});
+	if(dm_user.thread_id){
+		fetch('/api/dm_thread/'+dm_user.thread_id)
+		.then(res=>res.json())
+		.then(data=>{
+			dispatch({
+				type:LOAD_MSGS,
+				payload: data
+			})
+		})
+	} else {
 		dispatch({
 			type:LOAD_MSGS,
-			payload: data
+			payload: []
 		})
-	})
+	}
+	
 	cb(dm_user)
 }
 export const closeDMs = () =>{
