@@ -25,11 +25,26 @@ import './surkls.scss';
       surkl_id: surkl.surkl_id
     }
     this.props.requestToJoinSurkl(JSON.stringify(request));
+    let btn = document.getElementById('goog-ani');
+    btn.classList.add('request-animation');
+  }
+  requestToJoinSurklButton = (surkl) =>{
+    if(this.props.auth.user){
+      let memberOf = this.props.auth.user.memberOf ? this.props.auth.user.memberOf.surkl_id : null;
+      let ownerOf = this.props.auth.user.mySurkl ? this.props.auth.user.mySurkl.surkl_id : null;
+      if( memberOf === surkl._id || ownerOf === surkl._id){
+        return <div id="btnn"  className="surkls-surkl-btn">Member
+        </div>
+      } else {
+        return <div onClick={() => this.requestToJoinSurkl(surkl)} className="surkls-surkl-actionbtn" >Join Surkl
+        <div id="goog-ani"></div></div>
+      }
+    }
+   
   }
   
    displaySurkls = () => {
      return this.state.surkls.map((surkl, ind)=>{
-       console.log(surkl)
       return (
         <div key={ind} className="surkl">
           <div className="surkls-surkl-banner">
@@ -47,7 +62,7 @@ import './surkls.scss';
             })}
           </div>
           <div className="surkls-surkl-actionbtns">
-            <div onClick={() => this.requestToJoinSurkl(surkl)} className="surkls-surkl-actionbtn" >Join Surkl</div>
+            {this.requestToJoinSurklButton(surkl)}
           </div>
         </div>
       )

@@ -1,5 +1,5 @@
 Left Off At:
-	debugging messanger, update messenger msgs on changing user when msnger doesnt unmount
+	first message isnt being saved as notification in certain cases
 	live updates for join surkl notifacations
 	
 Surkls To Do:

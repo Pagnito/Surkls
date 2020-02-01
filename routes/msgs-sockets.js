@@ -83,16 +83,16 @@ module.exports = (io, socket, connectedUsers) => {
 					io.to(socket.id).emit('msg', msg, dm2);
 				} else {
 					io.to(socket.id).emit('msg', msg, dm2);
-        }
-        if(!msngr_widget[msg.receiver.user_id]){
-          User.updateOne({_id:msg.receiver.user_id, 'dms.thread_id': msg._id}, {
-            $inc:{new_msg_count:1},
-            $set:{'dms.$.notif':true}
-          }).exec()
-        }     
-			
+				}
 				User.updateOne({ _id: msg.user_id }, { $push: { dms: dm2 } }).exec();
-				User.updateOne({ _id: msg.receiver.user_id }, { $push: { dms: dm1 } }).exec();
+				User.updateOne({ _id: msg.receiver.user_id }, { $push: { dms: dm1 } }).then((res)=>{
+					if(!msngr_widget[msg.receiver.user_id]){
+						User.updateOne({_id:msg.receiver.user_id, 'dms.thread_id': msg._id}, {
+							$inc:{new_msg_count:1},
+							$set:{'dms.$.notif':true}
+						}).exec()
+					} 
+				});
 			});
 		}
 	});

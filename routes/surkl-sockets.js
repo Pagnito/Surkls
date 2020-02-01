@@ -246,6 +246,7 @@ module.exports = (io, socket, connectedUsers) => {
           if(err) console.log(err)
         }
       );
+      io.to(connectedUsers[data.source.source_id].socketId).emit("join-surkl-req-approved", notif)
     })
   });
   ////////////////////////////streams/////////////////////////////////

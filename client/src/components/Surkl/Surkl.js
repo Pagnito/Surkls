@@ -124,7 +124,7 @@ class Surkl extends Component {
 			}
 			delete dm_user._id;
 			this.props.openDMs(dm_user, (user) => {
-				this.socket.emit('clear-msg-notifs', user);
+				this.socket.emit('clear-msg-notifs', this.props.auth.user);
 			});
 		}
 	};

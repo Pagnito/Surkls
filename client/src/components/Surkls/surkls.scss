@@ -79,10 +79,54 @@
 				padding-right: 7px;
 				border-radius: 5px;
 				cursor: pointer;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				overflow: hidden;
+				position: relative;
+			}
+			.surkls-surkl-btn {
+				font-size: 15px;
+				font-family: 'Comfortaa';
+				border: 2px solid black;
+				padding:3px;
+				padding-top:5px;
+				padding-left: 7px;
+				padding-right: 7px;
+				border-radius: 5px;
+				cursor: pointer;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				overflow: hidden;
+				position: relative;
 			}
 			.surkls-surkl-actionbtn:hover {
 				background: #EFC141;
 			}
 		}
+	}
+}
+#goog-ani {
+	border-radius: 100%;
+	width:5px;
+	height:5px;
+	background: black;
+	position: absolute;
+	opacity: 0;
+}
+.request-animation {
+	animation: request .5s ease-in-out forwards;
+}
+@keyframes request {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		transform: scale(20);
+		opacity: 0;
 	}
 }

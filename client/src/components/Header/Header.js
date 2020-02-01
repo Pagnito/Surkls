@@ -51,8 +51,9 @@ class Header extends Component {
 			this.props.removeNotif(notif_id)
 			this.props.updateUserMem(mem)
 		});
-		this.socket.on('surkl-join-req-accepted',(data)=>{
-			
+		this.socket.on('join-surkl-req-approved',(notif)=>{
+			this.props.addNotif(notif);
+			this.props.updateUserMem(notif.source)
 		})
 		this.socket.on('declined-surkl',(notif_id)=>{
 			this.props.removeNotif(notif_id)
