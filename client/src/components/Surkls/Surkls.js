@@ -9,11 +9,18 @@ import './surkls.scss';
      this.state = {
        surkls: []
      }
+     this.socket = this.props.socket;
    }
   componentDidMount(){
      fetch('/api/surkls').then(res=>res.json())
      .then(surkls=>{
       this.setState({surkls})
+     })
+     this.createSocketChannels()
+   }
+   createSocketChannels = () =>{
+     this.socket.on('request-to-join-surkl-pending',(status)=>{
+       console.log('status', status)
      })
    }
   requestToJoinSurkl = (surkl) =>{
@@ -22,9 +29,10 @@ import './surkls.scss';
       userName:this.props.auth.user.userName,
       user_id:this.props.auth.user._id,
       avatarUrl:this.props.auth.user.avatarUrl,
-      surkl_id: surkl.surkl_id
+      surkl_id: surkl._id
     }
-    this.props.requestToJoinSurkl(JSON.stringify(request));
+    this.socket.emit('request-to-join-surkl', request);
+    //this.props.requestToJoinSurkl(JSON.stringify(request));
     let btn = document.getElementById('goog-ani');
     btn.classList.add('request-animation');
   }
@@ -80,7 +88,8 @@ import './surkls.scss';
 Surkls.propTypes = {
   auth:PropTypes.object,
   fetchSurkls: PropTypes.func,
-  requestToJoinSurkl: PropTypes.func
+  requestToJoinSurkl: PropTypes.func,
+  socket: PropTypes.object
 }
 function stateToProps(state){
   return{

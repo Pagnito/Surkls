@@ -96,11 +96,13 @@ module.exports = (app) => {
 	
 	/////////////////////////////////////////////////EDITS/////////////////////////////////////////////
 	app.post('/api/surkl/user/joinRequest', requireLogin, (req,res)=>{
+		console.log(req.body);
 		let requestingUser = {
 				user_id: req.body.user_id,
 				name: req.body.userName,
 				avatarUrl: req.body.avatarUrl
 		}
+		console.log('req user', requestingUser);
 		Surkl.findOneAndUpdate({_id: req.body.surkl_id}, {$push:{requests:requestingUser}}).then(resp=>{
 			let notifForAdmin = {
 				source: {

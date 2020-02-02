@@ -30,6 +30,9 @@ class Header extends Component {
 		this.socketId = ''
 		this.socket = this.props.socket;
 		this.current_room = 0;
+	}
+
+	createSocketChannels = () =>{
 		this.socket.on('msg',(msg, newUserToAdd)=>{
 			this.props.updateMsgs(msg, newUserToAdd)
 		})
@@ -57,12 +60,13 @@ class Header extends Component {
 		})
 		this.socket.on('declined-surkl',(notif_id)=>{
 			this.props.removeNotif(notif_id)
-		
 		})
-		
+		this.socket.on('request-to-join-surkl', (notif)=>{
+			this.props.addNotif(notif);
+		})
 	}
-
 	componentDidMount() {
+		this.createSocketChannels();
 		this.props.getDevices();
 	}
 	componentDidUpdate(prevProps){

@@ -92,7 +92,7 @@ class App extends Component {
 	render() {
 			return (
 				<Provider store={Store}>	
-					<Route exact path="/surkls" component={Surkls} />
+					<Route exact path="/surkls" render={(props)=><Surkls {...props} socket={this.socket}/>} />
 					<Route exact path="/settings" component={Settings} />
 					<Route exact path="/about" component={About} />
 					<Route 

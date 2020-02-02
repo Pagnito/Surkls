@@ -26,10 +26,8 @@ module.exports = (app) => {
 		res.json(req.user)
 	});
 	app.post('/auth/register', (req,res)=>{
-		console.log(req.body)
 		User.findOne({email:req.body.email}).then(user=>{
 			if(user){
-				console.log(user)
 				res.status(401).json({msg:"Email already exists"})
 			} else {
 				const hashedPassword = crypto.createHmac('sha256', keys.cookieSecret)

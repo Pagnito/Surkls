@@ -22,7 +22,6 @@ passport.use(
 			proxy: true
 		},
 		function(accessToken, refreshToken, profile, done) {
-			console.log(profile)
 			User.findOne({ twitterId: profile.id }, function(err, user) {
 				if (err) {
 					return done(err);

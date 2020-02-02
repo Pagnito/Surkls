@@ -176,6 +176,35 @@ module.exports = (io, socket, connectedUsers) => {
     );
   });
   /////////////////////////////////////////////////////////////
+  socket.on('request-to-join-surkl', (req)=>{
+    let requestingUser = {
+      user_id: req.user_id,
+      name: req.userName,
+      avatarUrl: req.avatarUrl
+  }
+  Surkl.findOneAndUpdate({_id: req.surkl_id}, {$push:{requests:requestingUser}}).then(resp=>{
+    let notifForAdmin = {
+      source: {
+        name:req.userName,
+        source_id:req.user_id,
+        avatarUrl:req.avatarUrl
+      },
+      notifType: 'add-to-surkl',
+      text: req.userName+' wants to join your Surkl',
+      date: Date.now()
+    }
+    User.findOneAndUpdate({_id: req.admin_id}, {
+      $inc: { notif_count: 1 },
+      $push:{notifs: {
+        $each: [notifForAdmin],
+        $position: 0
+      }}}).then(resp=>{
+      io.to(connectedUsers[req.admin_id].socketId).emit('request-to-join-surkl', notifForAdmin)
+      io.to(socket.id).emit('request-to-join-surkl-pending');
+    })
+  });
+  })
+  /////////////////////////////////////////////////////////////
   socket.on("add-to-surkl", (userToAdd, surkl) => {
     delete userToAdd.dms;
     delete userToAdd.followers;
