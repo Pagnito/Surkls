@@ -19,8 +19,21 @@ import './surkls.scss';
      this.createSocketChannels()
    }
    createSocketChannels = () =>{
-     this.socket.on('request-to-join-surkl-pending',(status)=>{
-       console.log('status', status)
+     this.socket.on('request-to-join-surkl-pending',(surkl_id)=>{
+       setTimeout(()=>{
+        this.setState(({surkls})=>{
+          surkls.forEach(surkl=>{
+            if(surkl._id===surkl_id){
+              surkl.requests.push(this.props.auth.user._id);
+              return false;
+            }
+          });
+          return {
+           surkls
+         }
+        })
+       },500)
+       
      })
    }
   requestToJoinSurkl = (surkl) =>{
@@ -30,7 +43,7 @@ import './surkls.scss';
       user_id:this.props.auth.user._id,
       avatarUrl:this.props.auth.user.avatarUrl,
       surkl_id: surkl._id
-    }
+    };
     this.socket.emit('request-to-join-surkl', request);
     //this.props.requestToJoinSurkl(JSON.stringify(request));
     let btn = document.getElementById('goog-ani');
@@ -43,7 +56,10 @@ import './surkls.scss';
       if( memberOf === surkl._id || ownerOf === surkl._id){
         return <div id="btnn"  className="surkls-surkl-btn">Member
         </div>
-      } else {
+      } else if(surkl.requests.indexOf(this.props.auth.user._id)>-1) {
+        return <div id="btnn"  className="surkls-surkl-btn">Pending...
+        </div>
+      }else {
         return <div onClick={() => this.requestToJoinSurkl(surkl)} className="surkls-surkl-actionbtn" >Join Surkl
         <div id="goog-ani"></div></div>
       }

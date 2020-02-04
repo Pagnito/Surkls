@@ -1,6 +1,6 @@
 Left Off At:
-	Create pending status for button after clicking it to request to join surkl
-	live updates for join surkl notifacations
+	finish live deletions for notifications starting with join surkl
+	bring back make admin in session function
 	
 Surkls To Do:
 

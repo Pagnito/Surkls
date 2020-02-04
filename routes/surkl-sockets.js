@@ -61,7 +61,6 @@ module.exports = (io, socket, connectedUsers) => {
     redClient.hset(
       "surkls-msgs",
       surkl.surkl_id,
-      JSON.stringify(msgs),
       (err, done) => {
         if (err) {
           io.to(socket.id).emit("videoChatError");
@@ -83,7 +82,6 @@ module.exports = (io, socket, connectedUsers) => {
         redClient.hset(
           "surkls-msgs",
           msg.surkl_id,
-          JSON.stringify(msgsArr),
           (err, done) => {
             if (err) {
               io.to(socket.id).emit("videoChatError");
@@ -177,12 +175,7 @@ module.exports = (io, socket, connectedUsers) => {
   });
   /////////////////////////////////////////////////////////////
   socket.on('request-to-join-surkl', (req)=>{
-    let requestingUser = {
-      user_id: req.user_id,
-      name: req.userName,
-      avatarUrl: req.avatarUrl
-  }
-  Surkl.findOneAndUpdate({_id: req.surkl_id}, {$push:{requests:requestingUser}}).then(resp=>{
+  Surkl.findOneAndUpdate({_id: req.surkl_id}, {$push:{requests:req.user_id}}).then(resp=>{
     let notifForAdmin = {
       source: {
         name:req.userName,
@@ -199,8 +192,8 @@ module.exports = (io, socket, connectedUsers) => {
         $each: [notifForAdmin],
         $position: 0
       }}}).then(resp=>{
-      io.to(connectedUsers[req.admin_id].socketId).emit('request-to-join-surkl', notifForAdmin)
-      io.to(socket.id).emit('request-to-join-surkl-pending');
+        io.to(socket.id).emit('request-to-join-surkl-pending', req.surkl_id);
+        io.to(connectedUsers[req.admin_id].socketId).emit('request-to-join-surkl', notifForAdmin)
     })
   });
   })

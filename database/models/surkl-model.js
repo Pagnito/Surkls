@@ -14,11 +14,7 @@ const SurklSchema = new Schema({
     avatarUrl: String
   },
   memberIds: [String],
-  requests: [{
-    user_id: String,
-    userName: String,
-    avatarUrl: String
-  }],
+  requests: [String],
   members:[{
     user_id: String,
     userName:String,
