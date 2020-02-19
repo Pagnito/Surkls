@@ -109,7 +109,22 @@
       margin-top: 5px;
       text-align: center;
     }
+    .profileModalAskAdmin{
+      cursor: pointer;
+      border-radius:5px;
+      width:100%;
+      margin-top: 5px;
+      text-align: center;
+      cursor: pointer;
+      padding:5px;
+      box-sizing: border-box;
+      border: 1px solid rgba(0,0,0,.7);
+    }
     .profileModalPassAdmin:hover {
+      background: #FECC44;
+      color: #282828;
+    }
+    .profileModalAskAdmin:hover {
       background: #FECC44;
       color: #282828;
     }

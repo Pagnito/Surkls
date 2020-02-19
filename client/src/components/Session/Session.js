@@ -696,6 +696,12 @@ class Session extends Component {
     }, 1500);
   };
 
+  giveAdminRights = () => {
+    this.socket.emit('change-session-admin', this.props.session);
+  }
+  askForAdminRights = () => {
+
+  }
   updateClientList = () => {
     if (
       this.props.session.clients !== undefined &&
@@ -714,14 +720,14 @@ class Session extends Component {
                 src={url}
                 className="clientSquareAv"
               />
-              <ProfileModal addToSurkl={()=>this.addToSurkl(client, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}} simple={false} id={'p-modal-'+client.id} user={client}/>
+              <ProfileModal giveAdminRights={this.giveAdminRights} addToSurkl={()=>this.addToSurkl(client, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}} simple={false} id={'p-modal-'+client.id} user={client}/>
             </div>
           );
         } else {
           return (
             <div className="clientImgRightWrap" key={client._id}>
               <img src={url} className="clientSquareAv" />
-              <ProfileModal addToSurkl={()=>this.addToSurkl(client, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
+              <ProfileModal askForAdminRights={this.askForAdminRights} addToSurkl={()=>this.addToSurkl(client, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
             </div>
           );
         }

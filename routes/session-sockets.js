@@ -273,6 +273,14 @@ module.exports = (io, socket) => {
 	/////////////////////////////////^^^^^^^^signaling^^^^^^^^////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////handling discussion content//////////////////////////////////
+	socket.on('change-session-admin', (obj) => {
+		redClient.hget('rooms', obj.sessionKey, (err, sessionStr)=>{
+			let sessionObj = JSON.parse(sessionStr);
+			console.log(sessionObj)
+		})
+	})
+
+
 	socket.on('youtubeList', (listObj) => {
 		let listString = JSON.stringify(listObj.list);
 		redClient.hset('youtubeLists', listObj.sessionKey, listString);

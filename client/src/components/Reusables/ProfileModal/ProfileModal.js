@@ -34,6 +34,7 @@ function ProfileModal(props) {
         </div>
       )
     } else {
+      console.log('bruh')
       let addToSurklBtn = !user.memberOf ? (
         <div
           onClick={() => addToSurkl(user, user.mySurkl)}
@@ -47,11 +48,11 @@ function ProfileModal(props) {
       );
      
         let askAdminBtn = user.isAdmin ? (
-          <div className="profileModalPassAdmin">Ask for admin rights</div>
+          <div className="profileModalAskAdmin">Ask for admin rights</div>
         ) : (
           <div className="profileModalPassAdmin">Give admin rights</div>
         );
-        askAdminBtn = user._id === user._id ? "" : askAdminBtn;
+        //askAdminBtn = user._id === user._id ? "" : askAdminBtn;
         return (
           <div style={position} className="profileModal">
              <div style={{display: triangle.top ? 'flex' : 'none'}} className="prof-modal-top-arrow-wrap">
@@ -86,6 +87,7 @@ function ProfileModal(props) {
               </div>
               {askAdminBtn}
             </div>
+           
             <div style={{display: triangle.bottom ? 'flex' : 'none'}} className="prof-modal-bottom-arrow-wrap">
                 <div style={triangle.position} className="prof-modal-bottom-arrow"></div>
               </div>
