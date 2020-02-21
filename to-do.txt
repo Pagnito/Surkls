@@ -1,5 +1,6 @@
 Left Off At:
 	finish live deletions for notifications starting with join surkl
+	change from using isAdmin to using admin: socketId/mongoId
 	bring back make admin in session function
 	
 Surkls To Do:

@@ -130,7 +130,6 @@ class SessionContentTwitter extends Component {
 	};
 
 	openTweet = (tweetId, userId) => {
-		console.log('WTF');
 		let url = `https://twitter.com/${userId.toString()}/status/${tweetId}`;
 		window.open(url, 'mywin', 'width=660,height=620,screenX=600,right=50,screenY=50,top=50,status=yes');
 	};

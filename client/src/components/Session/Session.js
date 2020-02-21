@@ -84,7 +84,7 @@ class Session extends Component {
     this.socket.emit("unpickThisVideo", playState);
   };
   saveYoutubeListRedis = youtubeList => {
-    if (this.props.session.isAdmin) {
+    if (this.props.session.admin === this.socket.id) {
       let listObj = {
         sessionKey: this.props.session.sessionKey,
         list: youtubeList
@@ -264,7 +264,7 @@ class Session extends Component {
     if (this.socketChanneledCreated === false) {
       this.socket.on("session", sessionObj => {
         if (sessionObj.clients.length === 1) {
-          sessionObj.isAdmin = true;
+          sessionObj.admin = this.socket.id;
         }
         this.props.updateSession(sessionObj);
       });
@@ -422,7 +422,6 @@ class Session extends Component {
       viewers: [],
       exists: false,
       sessionKey: "",
-      isAdmin: false,
       creatingSession: false,
       videoId: "",
       msgs: [],
@@ -740,7 +739,7 @@ class Session extends Component {
       this.props.session.viewers.length > 0
     ) {
       return this.props.session.viewers.map((viewer) => {
-        let url = viewer.avatarUrl ? viewer.avatarUrl : "/assets/whitehat.jpg";
+        let url = viewer.avatarUrl ? viewer.avatarUrl : "/assets/whitehat.jpg"
         if (viewer.isAdmin) {
           return (
             <div className="viewerImgRightWrap" key={viewer._id}>

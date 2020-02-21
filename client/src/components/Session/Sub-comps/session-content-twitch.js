@@ -14,6 +14,7 @@ class SessionContentTwitch extends Component {
       videoPicked: false,
       playingVideo: ""
     };
+    this.socket = this.props.socket;
     this.token = "myeqv7fcl1x0mv6uotktjmnuwck42n";
     this.twitchByUsers = "https://api.twitch.tv/helix/search/channels&query=";
     this.twitchByGame =
@@ -136,7 +137,7 @@ class SessionContentTwitch extends Component {
   hideVideo = () => {
     if (this.state.videoPicked) {
       this.YTPlayer = null;
-      if (this.props.session.isAdmin) {
+      if (this.props.session.admin === this.socket.id) {
         this.props.unpickThisVideo({
           activePlatform: "twitch",
           videoId: {},
@@ -155,7 +156,7 @@ class SessionContentTwitch extends Component {
     });
   };
   sendPickedVideo = videoId => {
-    if (this.props.session.isAdmin) {
+    if (this.props.session.admin === this.socket.id) {
       this.props.sendVideoSignal({
         activePlatform: "twitch",
         videoId: { id: videoId, platform: "twitch" },
@@ -338,7 +339,8 @@ SessionContentTwitch.propTypes = {
   sendVideoSignal: PropTypes.func,
   unpickThisVideo: PropTypes.func,
   askForVideoCurrentTime: PropTypes.func,
-  sendVideoCurrentTime: PropTypes.func
+  sendVideoCurrentTime: PropTypes.func,
+  socket: PropTypes.object
 };
 function stateToProps(state) {
   return {

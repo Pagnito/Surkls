@@ -41,6 +41,7 @@ module.exports = (io, socket) => {
 									console.log(err);
 								}
 								let sessionObj = JSON.parse(sessionStr);
+								console.log(sessionObj);
 								if (sessionObj.viewers.length < sessionObj.maxViewers) {
 									socket.join(session.sessionKey);
 									viewer = Object.assign({ socketId: socket.id }, session.user);
@@ -70,7 +71,6 @@ module.exports = (io, socket) => {
 									if (sessionObj.viewers.length === sessionObj.maxViewers) {
 										sessionObj.maxedOutViewers = true;
 									}
-									delete sessionObj.isAdmin;
 									redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
 										redClient.hget('session-msgs', session.sessionKey, (err, msgs) => {
 											if (err) console.log(err);
@@ -116,7 +116,6 @@ module.exports = (io, socket) => {
 									socket.emit('roomEntranceError', err);
 								}
 								let sessionObj = JSON.parse(sessionStr);
-								
 								if(session.sessionType==='stream' && sessionObj.clients.length===1) {
 									io.to(socket.id).emit('connect-error', {type: 'maxedOut', msg: 'Streamer is already present'})
 								} else {
@@ -148,7 +147,6 @@ module.exports = (io, socket) => {
 											if (sessionObj.clients.length === sessionObj.maxMembers) {
 												sessionObj.maxedOut = true;
 											}
-											delete sessionObj.isAdmin;
 											redClient.hset('rooms', session.sessionKey, JSON.stringify(sessionObj), () => {
 												redClient.hget('session-msgs', session.sessionKey, (err, msgs) => {
 													if (err) console.log(err);
@@ -158,6 +156,7 @@ module.exports = (io, socket) => {
 														activePlatform: sessionObj.activePlatform,
 														videoId: sessionObj.videoId,
 														playing: sessionObj.playing,
+														admin: sessionObj.admin,
 														sessionType: sessionObj.sessionType,
 														requestingTime: sessionObj.requestingTime,
 														maxMembers: sessionObj.maxMembers,
@@ -189,7 +188,7 @@ module.exports = (io, socket) => {
 							io.to(socket.id).emit('creatingSessionError', err);
 						}
 						if (exists === 0) {
-							client = Object.assign({ socketId: socket.id, isAdmin: true }, session.user);
+							client = Object.assign({ socketId: socket.id, admin: socket.id }, session.user);
 							let sessionObj = {
 								sessionKey: session.sessionKey,
 								exists: true,
@@ -276,7 +275,7 @@ module.exports = (io, socket) => {
 	socket.on('change-session-admin', (obj) => {
 		redClient.hget('rooms', obj.sessionKey, (err, sessionStr)=>{
 			let sessionObj = JSON.parse(sessionStr);
-			console.log(sessionObj)
+			console.log(sessionObj);
 		})
 	})
 

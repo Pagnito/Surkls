@@ -23,6 +23,7 @@ const initialState = {
 	activePlatform: 'youtube',
 	tweetId: '',
 	twitterId: '',
+	admin: '',
 	trends: [],
 	playing: false,
 	videoId:'',

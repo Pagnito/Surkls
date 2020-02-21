@@ -13,6 +13,7 @@ class SessionContentDailymotion extends Component {
 			videos: [],
 			videoPicked: false
 		};
+		this.socket = this.props.socket;
 		this.DMapi =
 			'https://api.dailymotion.com/videos/?fields=thumbnail_medium_url,id,title&page=1&limit=50&search=';
 		this.DMurl = 'https://www.dailymotion.com/embed/video/';
@@ -76,7 +77,7 @@ class SessionContentDailymotion extends Component {
 	hideVideo = () => {
 		if (this.state.videoPicked) {
 			this.YTPlayer = null;
-			if (this.props.session.isAdmin) {
+			if (this.props.session.admin === this.socket.id) {
 				this.props.unpickThisVideo({
 					activePlatform: 'dailymotion',
 					videoId: {},
@@ -95,7 +96,7 @@ class SessionContentDailymotion extends Component {
 		});
 	};
 	sendPickedVideo = (videoId) => {
-		if (this.props.session.isAdmin) {
+		if (this.props.session.admin === this.socket.id) {
 			this.props.sendVideoSignal({
 				activePlatform: 'dailymotion',
 				videoId: {id:videoId, platform:'dailymotion'},
@@ -208,7 +209,8 @@ SessionContentDailymotion.propTypes = {
 	unpickThisVideo: PropTypes.func,
 	saveYoutubeListRedis: PropTypes.func,
 	askForVideoCurrentTime: PropTypes.func,
-	sendVideoCurrentTime: PropTypes.func
+	sendVideoCurrentTime: PropTypes.func,
+	socket: PropTypes.object
 };
 function stateToProps(state) {
 	return {

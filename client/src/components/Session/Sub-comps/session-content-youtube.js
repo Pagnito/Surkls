@@ -14,6 +14,7 @@ class SessionContentYoutube extends Component {
 			videos: [],
 			videoPicked: false
 		};
+		this.socket = this.props.socket;
 		this.apiKeys = ['AIzaSyDws9NT1IvkAYPH98VYsIKFXffKNVmU-Jc',
 										'AIzaSyC-NVEgdByg61B92oFIbXkWBm-mqrW6FwU',
 										'AIzaSyBYjnyqxqjLo5B5cJjlo-KkEzQYLp6dqPE',
@@ -79,7 +80,7 @@ class SessionContentYoutube extends Component {
 				}
 				
 			}		
-			if (prop.youtubeList !== prevProps.session.youtubeList && prop.isAdmin)  {
+			if (prop.youtubeList !== prevProps.session.youtubeList && prop.admin === this.socket.id)  {
 				setTimeout(()=>{this.props.saveYoutubeListRedis(prop.youtubeList)},500)
 			}
 		}
@@ -101,7 +102,7 @@ class SessionContentYoutube extends Component {
         this.showVideo(prop.videoId);
       }
     }
-		//if (this.props.session.category && this.state.videos.length === 0 && prop.isAdmin) {
+		//if (this.props.session.category && this.state.videos.length === 0 && prop.admin === this.socket.id) {
 			this.fetchIt(this.apiKeys, '')		
 		//}
 	};
@@ -112,7 +113,7 @@ class SessionContentYoutube extends Component {
 			}	
 			if(this.YTPlayer.destroyed){
 				this.YTPlayer = null;
-				if(this.props.session.isAdmin){
+				if(this.props.session.admin === this.socket.id){
 					this.props.unpickThisVideo({
 						activePlatform:'youtube',
 						videoId:{}, 
@@ -150,7 +151,7 @@ class SessionContentYoutube extends Component {
 		});
 	};
 	sendPickedVideo = (videoId) =>{
-		if(this.props.session.isAdmin){
+		if(this.props.session.admin === this.socket.id){
 			this.props.sendVideoSignal({
 				activePlatform:'youtube',
 				videoId:{platfrom: 'youtube', id:videoId}, 
@@ -211,7 +212,7 @@ class SessionContentYoutube extends Component {
 		}
 
 	render() {
-		//if (this.props.session.isAdmin) {
+		//if (this.props.session.admin === this.socket.id) {
 			if (this.state.videoPicked) {
 				return (
 					<div className="discContent">
@@ -254,7 +255,8 @@ SessionContentYoutube.propTypes = {
 	unpickThisVideo: PropTypes.func,
 	saveYoutubeListRedis: PropTypes.func,
 	askForVideoCurrentTime: PropTypes.func,
-	sendVideoCurrentTime: PropTypes.func
+	sendVideoCurrentTime: PropTypes.func,
+	socket: PropTypes.object
 };
 function stateToProps(state) {
 	return {
