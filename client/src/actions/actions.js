@@ -195,11 +195,11 @@ export const removeKeys = (payload, cb) => dispatch => {
   });
   cb();
 };
-export const newAdmin = () => {
+export const newAdmin = (id) => {
   return {
     type: NEW_ADMIN,
     payload: {
-      isAdmin: true
+      admin: id 
     }
   };
 };

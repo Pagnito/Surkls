@@ -188,7 +188,7 @@ module.exports = (io, socket) => {
 							io.to(socket.id).emit('creatingSessionError', err);
 						}
 						if (exists === 0) {
-							client = Object.assign({ socketId: socket.id, admin: socket.id }, session.user);
+							client = Object.assign({ socketId: socket.id, isAdmin: true }, session.user);
 							let sessionObj = {
 								sessionKey: session.sessionKey,
 								exists: true,
@@ -272,13 +272,24 @@ module.exports = (io, socket) => {
 	/////////////////////////////////^^^^^^^^signaling^^^^^^^^////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////handling discussion content//////////////////////////////////
-	socket.on('change-session-admin', (obj) => {
+	socket.on('change-session-admin', (obj, new_admin_id) => {
 		redClient.hget('rooms', obj.sessionKey, (err, sessionStr)=>{
 			let sessionObj = JSON.parse(sessionStr);
-			console.log(sessionObj);
+			sessionObj.admin = new_admin_id;
+			sessionObj.clients.forEach(client=>{
+				if(client.socketId === new_admin_id){
+					client.isAdmin = true;
+					client.admin = new_admin_id;
+					return;
+				}
+			})
+			redClient.hset('rooms', obj.sessionKey, JSON.stringify(sessionObj));
+			io.in(obj.sessionKey).emit('new-session-admin', sessionObj);
 		})
 	})
-
+	socket.on('admin-switch-request', (user, admin)=>{
+		io.to(admin.socketId).emit('admin-rights-request', user);
+	})
 
 	socket.on('youtubeList', (listObj) => {
 		let listString = JSON.stringify(listObj.list);
@@ -287,7 +298,7 @@ module.exports = (io, socket) => {
 
 	
 	socket.on('sharingLink', (linkObj) => {
-		socket.to(linkObj.sessionKey).emit('sharingLink', linkObj.link);
+		io.in(linkObj.sessionKey).emit('sharingLink', linkObj.link);
 	});
 	socket.on('pickThisVideo', (videoObj) => {
 		redClient.hget('rooms', videoObj.sessionKey, (err, sessionStr) => {
@@ -350,7 +361,7 @@ module.exports = (io, socket) => {
 				if (err) {
 					io.to(socket.id).emit('videoChatError');
 				}
-				io.to(msg.session_id).emit('receive-session-msgs', msgsArr);
+				io.in(msg.session_id).emit('receive-session-msgs', msgsArr);
 			});
 		});
 	});

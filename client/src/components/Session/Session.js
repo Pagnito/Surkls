@@ -10,8 +10,8 @@ import {
   closeMenus,
   removeKeys
 } from "actions/actions";
-import ProfileModal from '../Reusables/ProfileModal/ProfileModal';
-import ChatBox from '../Reusables/ChatBox/ChatBox';
+import ProfileModal from "../Reusables/ProfileModal/ProfileModal";
+import ChatBox from "../Reusables/ChatBox/ChatBox";
 import PropTypes from "prop-types";
 import { openDMs, addMultiToDMs, addSessDMs } from "actions/dm-actions";
 import Dropdown from "components/Reusables/DropMenu/drop-menu-mutable";
@@ -28,15 +28,6 @@ class Session extends Component {
       streamSize: {
         height: 400,
         width: 400
-      },
-      profileModal: {
-        vis: false,
-        pos: false,
-        user: {
-          avatar: "",
-          userName: "",
-          description: ""
-        }
       },
       shareLink: "",
       msgs: [],
@@ -299,7 +290,10 @@ class Session extends Component {
         this.props.unpickThisVideoAction(videoObj);
       });
       this.socket.on("adminLeftImAdminNow", () => {
-        this.props.newAdmin();
+        this.props.newAdmin(this.socket.id);
+      });
+      this.socket.on("new-session-admin", (sessionObj) => {
+        this.props.updateSession(sessionObj);
       });
       this.socket.on("session-data", sessionData => {
         this.props.updateSession({ youtubeList: sessionData });
@@ -400,13 +394,14 @@ class Session extends Component {
     }
     this.socket.emit("leave", this.props.session.sessionKey);
     this.socket.removeListener("createOrJoin");
-		this.socket.removeListener("signal");
-		this.socket.removeListener("session");
+    this.socket.removeListener("signal");
+    this.socket.removeListener("session");
     this.socket.removeListener("setup-vid-dms");
     this.socket.removeListener("recieveMsgs");
     this.socket.removeListener("pickThisVideo");
     this.socket.removeListener("unpickThisVideo");
     this.socket.removeListener("adminLeftImAdminNow");
+    this.socket.removeListener("new-session-admin");
     this.socket.removeListener("youtubeList");
     this.socket.removeListener("giveMeVideoCurrentTime");
     this.socket.removeListener("hereIsVideoCurrentTime");
@@ -430,7 +425,7 @@ class Session extends Component {
   }
 
   startAsStreamer = () => {
-    if (this.props.match.params.type==='stream') {
+    if (this.props.match.params.type === "stream") {
       document.getElementById("streamOfMe").style.display = "none";
       this.createVideo("streamer_stream", "muted").then(({ vid }) => {
         this.startOrJoin(vid);
@@ -453,9 +448,8 @@ class Session extends Component {
           startingOrJoining = false;
         }
         session.inSession = true;
-        session.noCam = this.props.match.params.type === 'viewer'
-          ? true
-          : false;
+        session.noCam =
+          this.props.match.params.type === "viewer" ? true : false;
         session.sessionKey = this.props.match.params.id;
         session.creatingSession = startingOrJoining;
         if (this.props.auth.user.userName) {
@@ -548,7 +542,7 @@ class Session extends Component {
           this.startOrJoin();
         }
       }
-    } 
+    }
     // else if (this.props.session.surfing) {
     //   if (prevProps.location.pathname !== this.props.location.pathname) {
     //     //this.handleSurfCleanUp();
@@ -581,8 +575,8 @@ class Session extends Component {
   }
 
   componentDidMount() {
-		console.log("MOUNTED");
-		this.createSocketChannels()
+    console.log("MOUNTED");
+    this.createSocketChannels();
     ////start session button provides creatingSession = true in props if creating session
     ////notShareLink is provided if clicked via join button
     ///those props being passed to the server which will handle
@@ -594,7 +588,7 @@ class Session extends Component {
     };
     if (this.props.session.notShareLink || this.props.session.creatingSession) {
       if (this.props.session.sessionKey && !this.alreadyStarted) {
-        if (this.props.match.params.type === 'stream') {
+        if (this.props.match.params.type === "stream") {
           this.startAsStreamer();
         } else {
           this.startOrJoin();
@@ -678,7 +672,7 @@ class Session extends Component {
       dm_user.thread_id = this.props.auth.user.dms[dm_user._id].thread_id;
     }
     delete dm_user._id;
-    
+
     this.props.openDMs(dm_user, user => {
       this.socket.emit("clear-notifs", user);
     });
@@ -695,22 +689,22 @@ class Session extends Component {
     }, 1500);
   };
 
-  giveAdminRights = () => {
-    this.socket.emit('change-session-admin', this.props.session);
-  }
-  askForAdminRights = () => {
-
-  }
+  giveAdminRights = (id) => {
+    this.socket.emit("change-session-admin", this.props.session, id);
+  };
+  askForAdminRights = (admin) => {
+    this.socket.emit('admin-rights-request', this.props.auth, admin)
+  };
   updateClientList = () => {
     if (
       this.props.session.clients !== undefined &&
       this.props.session.clients.length > 0
     ) {
-      return this.props.session.clients.map((client) => {
+      return this.props.session.clients.map(client => {
         let url = client.avatarUrl ? client.avatarUrl : "/assets/whitehat.jpg";
         if (client.isAdmin) {
           return (
-            <div key={client._id} className="clientImgRightWrap" >
+            <div key={client._id} className="clientImgRightWrap">
               <img
                 style={{
                   border: "2px solid #FECC44",
@@ -719,14 +713,38 @@ class Session extends Component {
                 src={url}
                 className="clientSquareAv"
               />
-              <ProfileModal giveAdminRights={this.giveAdminRights} addToSurkl={()=>this.addToSurkl(client, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}} simple={false} id={'p-modal-'+client.id} user={client}/>
+              <ProfileModal
+                curr_user={this.props.auth.user}
+                giveAdminRights={() =>this.giveAdminRights(client.socketId)}
+                addToSurkl={() =>
+                  this.addToSurkl(client, this.props.auth.user.mySurkl)
+                }
+                openDMs={this.openDMs}
+                position={{ bottom: "58px", left: "-10px" }}
+                triangle={{ bottom: true, position: { marginLeft: "20px" } }}
+                simple={false}
+                id={"p-modal-" + client.id}
+                user={client}
+              />
             </div>
           );
         } else {
           return (
             <div className="clientImgRightWrap" key={client._id}>
               <img src={url} className="clientSquareAv" />
-              <ProfileModal askForAdminRights={this.askForAdminRights} addToSurkl={()=>this.addToSurkl(client, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'58px', left:'-10px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+client.id} user={client} />
+              <ProfileModal
+                curr_user={this.props.auth.user}
+                askForAdminRights={()=>this.askForAdminRights(client)}
+                addToSurkl={() =>
+                  this.addToSurkl(client, this.props.auth.user.mySurkl)
+                }
+                openDMs={this.openDMs}
+                position={{ bottom: "58px", left: "-10px" }}
+                triangle={{ bottom: true, position: { marginLeft: "20px" } }}
+                simple={false}
+                id={"p-modal-" + client.id}
+                user={client}
+              />
             </div>
           );
         }
@@ -738,8 +756,8 @@ class Session extends Component {
       this.props.session.viewers !== undefined &&
       this.props.session.viewers.length > 0
     ) {
-      return this.props.session.viewers.map((viewer) => {
-        let url = viewer.avatarUrl ? viewer.avatarUrl : "/assets/whitehat.jpg"
+      return this.props.session.viewers.map(viewer => {
+        let url = viewer.avatarUrl ? viewer.avatarUrl : "/assets/whitehat.jpg";
         if (viewer.isAdmin) {
           return (
             <div className="viewerImgRightWrap" key={viewer._id}>
@@ -751,14 +769,34 @@ class Session extends Component {
                 src={url}
                 className="viewerSquareAv"
               />
-              <ProfileModal addToSurkl={()=>this.addToSurkl(viewer, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'52px', left:'-14px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
+              <ProfileModal
+                addToSurkl={() =>
+                  this.addToSurkl(viewer, this.props.auth.user.mySurkl)
+                }
+                openDMs={this.openDMs}
+                position={{ bottom: "52px", left: "-14px" }}
+                triangle={{ bottom: true, position: { marginLeft: "20px" } }}
+                simple={false}
+                id={"p-modal-" + viewer.id}
+                user={viewer}
+              />
             </div>
           );
         } else {
           return (
             <div className="viewerImgRightWrap" key={viewer._id}>
               <img key={viewer.id} src={url} className="viewerSquareAv" />
-              <ProfileModal addToSurkl={()=>this.addToSurkl(viewer, this.props.auth.user.mySurkl)} openDMs={this.openDMs} position={{bottom:'52px', left:'-14px'}} triangle={{bottom:true, position:{marginLeft:'20px'}}}  simple={false} id={'p-modal-'+viewer.id} user={viewer} />
+              <ProfileModal
+                addToSurkl={() =>
+                  this.addToSurkl(viewer, this.props.auth.user.mySurkl)
+                }
+                openDMs={this.openDMs}
+                position={{ bottom: "52px", left: "-14px" }}
+                triangle={{ bottom: true, position: { marginLeft: "20px" } }}
+                simple={false}
+                id={"p-modal-" + viewer.id}
+                user={viewer}
+              />
             </div>
           );
         }
@@ -793,95 +831,123 @@ class Session extends Component {
       let possibleUrlImg;
       let date = new Date(msg.date);
       let locale = date.toLocaleDateString();
-			let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-			let time = date.getHours() + ':' + minutes;
-			let fullDate = locale + ' ' + time;
+      let minutes =
+        date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+      let time = date.getHours() + ":" + minutes;
+      let fullDate = locale + " " + time;
       let url = msg.avatar ? msg.avatar : "/assets/whitehat.jpg";
-      if(msg.image_id){
+      if (msg.image_id) {
         return (
-					<div key={ind} className="session-chat-msg-wrap">
-						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="session-chat-msg">
-							<div className="session-chat-msg-av-wrap">
-								{url ? (
-									<img onClick={()=>this.createMention(msg.userName)} data-user={JSON.stringify(msg)} className="session-chat-msgAvatar" src={url} />
-								) : (
-									''
-								)}
-							</div>
-							<div className="session-chat-HeaderNmsg">
-								{msg.userName ? (
-									<div className="session-chat-MsgUserInfo">
-										<div className="session-chat-MsgName">{msg.userName}</div>
-										<div className="session-chat-MsgDate">{fullDate}</div>
-									</div>
-								) : (
-									''
-								)}
-								<div className="session-chat-MsgText">
-									<img
-										style={{ display: 'none', marginTop: '7px' }}
-										className="img"
-										data-imageid={msg.image_id}
-										src={'oof'}
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-				);
+          <div key={ind} className="session-chat-msg-wrap">
+            <div
+              style={{ paddingTop: msg.userName ? "5px" : "0px" }}
+              className="session-chat-msg"
+            >
+              <div className="session-chat-msg-av-wrap">
+                {url ? (
+                  <img
+                    onClick={() => this.createMention(msg.userName)}
+                    data-user={JSON.stringify(msg)}
+                    className="session-chat-msgAvatar"
+                    src={url}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="session-chat-HeaderNmsg">
+                {msg.userName ? (
+                  <div className="session-chat-MsgUserInfo">
+                    <div className="session-chat-MsgName">{msg.userName}</div>
+                    <div className="session-chat-MsgDate">{fullDate}</div>
+                  </div>
+                ) : (
+                  ""
+                )}
+                <div className="session-chat-MsgText">
+                  <img
+                    style={{ display: "none", marginTop: "7px" }}
+                    className="img"
+                    data-imageid={msg.image_id}
+                    src={"oof"}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       } else {
         if (
-					/(http|https)/.test(msg.msgText) &&
-					/(.com|.net|.io|.us| .uk |.info|.org|.co)/.test(msg.msgText) &&
-					/(jpeg|jpg|gif|png)/.test(msg.msgText)
-				) {
-					possibleUrlImg = (
-						<img style={{display:'none'}} onLoad={this.resizeImg} src={msg.msgText} />
-					);
-				} else {
-					possibleUrlImg = msg.msgText;
-					if(/(\ ?@.*)/g.test(msg.msgText)){
-						let split = msg.msgText.split(' ');
-					possibleUrlImg = split.map((msg, key)=>{
-						if(/^(\ ?@.*)/.test(msg)){
-							return <span style={{color:'#FFCD44'}} key={key}>{' '+msg+' '}</span>
-						} else {
-							return msg
-						}
-					})
-					}
+          /(http|https)/.test(msg.msgText) &&
+          /(.com|.net|.io|.us| .uk |.info|.org|.co)/.test(msg.msgText) &&
+          /(jpeg|jpg|gif|png)/.test(msg.msgText)
+        ) {
+          possibleUrlImg = (
+            <img
+              style={{ display: "none" }}
+              onLoad={this.resizeImg}
+              src={msg.msgText}
+            />
+          );
+        } else {
+          possibleUrlImg = msg.msgText;
+          if (/(\ ?@.*)/g.test(msg.msgText)) {
+            let split = msg.msgText.split(" ");
+            possibleUrlImg = split.map((msg, key) => {
+              if (/^(\ ?@.*)/.test(msg)) {
+                return (
+                  <span style={{ color: "#FFCD44" }} key={key}>
+                    {" " + msg + " "}
+                  </span>
+                );
+              } else {
+                return msg;
+              }
+            });
+          }
         }
         return (
           <div key={ind} className="session-chat-msg-wrap">
-						<div style={{ paddingTop: msg.userName ? '5px' : '0px' }} className="session-chat-msg">
-							<div className="session-chat-msg-av-wrap">
-								{url ? (
-									<img onClick={()=>this.createMention(msg.userName)} data-user={JSON.stringify(msg)} className="session-chat-msgAvatar" src={url} />
-								) : (
-									''
-								)}
-							</div>
-							<div className="session-chat-HeaderNmsg">
-								{msg.userName ? (
-									<div className="session-chat-MsgUserInfo">
-										<div className="session-chat-MsgName">{msg.userName}</div>
-										<div className="session-chat-MsgDate">{fullDate}</div>
-									</div>
-								) : (
-									''
-								)}
-								<div style={{ padding: msg.userName ? '5px' : '0px' }} className="session-chat-MsgText">{possibleUrlImg}</div>
-							</div>
-						</div>
-					</div>
+            <div
+              style={{ paddingTop: msg.userName ? "5px" : "0px" }}
+              className="session-chat-msg"
+            >
+              <div className="session-chat-msg-av-wrap">
+                {url ? (
+                  <img
+                    onClick={() => this.createMention(msg.userName)}
+                    data-user={JSON.stringify(msg)}
+                    className="session-chat-msgAvatar"
+                    src={url}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="session-chat-HeaderNmsg">
+                {msg.userName ? (
+                  <div className="session-chat-MsgUserInfo">
+                    <div className="session-chat-MsgName">{msg.userName}</div>
+                    <div className="session-chat-MsgDate">{fullDate}</div>
+                  </div>
+                ) : (
+                  ""
+                )}
+                <div
+                  style={{ padding: msg.userName ? "5px" : "0px" }}
+                  className="session-chat-MsgText"
+                >
+                  {possibleUrlImg}
+                </div>
+              </div>
+            </div>
+          </div>
         );
-      }  
+      }
     });
   };
 
-  
-
-  createVideo = (id = "", muted=null) => {
+  createVideo = (id = "", muted = null) => {
     return new Promise(resolve => {
       let constraints = {
         width: "100%",
@@ -896,7 +962,9 @@ class Session extends Component {
       video.autoplay = true;
       video.setAttribute("id", id);
       video.setAttribute("class", "stream");
-      if(muted!==null){video.muted = true};
+      if (muted !== null) {
+        video.muted = true;
+      }
       videoWrap.appendChild(video);
       streamRows.appendChild(videoWrap);
       resolve({ vid: video, vidWrap: videoWrap });
@@ -1084,21 +1152,25 @@ class Session extends Component {
     if (/viewer/.test(this.props.match.params.type)) {
       return (
         <div id="sessionLeftAsideSettings">
-        <div id="restOfSettings">
-          <div id="viewersInRoom">
-             {this.updateViewerList()}
-          </div>
-          {/* <select id="sessVidDevices" />
+          <div id="restOfSettings">
+            <div id="viewersInRoom">{this.updateViewerList()}</div>
+            {/* <select id="sessVidDevices" />
         <select id="sessAudDevices" /> */}
+          </div>
         </div>
-      </div>
-      )
-      
+      );
     } else {
       return (
         <div id="sessionLeftAsideSettings">
           <video id="streamOfMe" muted="muted" autoPlay />
-          <div style={{marginLeft: /stream/.test(this.props.match.params.type) ? '25px' : '10px'}} id="toggleDevices">
+          <div
+            style={{
+              marginLeft: /stream/.test(this.props.match.params.type)
+                ? "25px"
+                : "10px"
+            }}
+            id="toggleDevices"
+          >
             <div onClick={this.toggleAudio} id="toggleAudio">
               <svg
                 aria-hidden="true"
@@ -1131,11 +1203,11 @@ class Session extends Component {
           </div>
           <div id="restOfSettings">
             <div id="whosInRoom">
-               {/trio/.test(this.props.match.params.type) ?  this.updateClientList() : ""}
+              {/trio/.test(this.props.match.params.type)
+                ? this.updateClientList()
+                : ""}
             </div>
-            <div id="viewersInRoom">
-               {this.updateViewerList()}
-            </div>
+            <div id="viewersInRoom">{this.updateViewerList()}</div>
             {/* <select id="sessVidDevices" />
 					<select id="sessAudDevices" /> */}
           </div>
@@ -1143,8 +1215,17 @@ class Session extends Component {
       );
     }
   };
-  
+  askForAdminRightsBanner = () =>{
+    if(this.props.session.admin_request!==null){
+      return (
+        <div id="admin-ask-banner">
 
+        </div>
+      )
+    } else {
+      return "";
+    }
+  }
   //////////////////////////////////////////////RENDER//////////////////////////////////////////////////
   render() {
     if (this.props.auth.user == null || this.props.session === null) {
@@ -1156,6 +1237,7 @@ class Session extends Component {
     } else {
       return (
         <div onClick={this.closeMenus} id="session">
+         
           <div
             style={{
               display:
@@ -1195,10 +1277,15 @@ class Session extends Component {
             </div>
             <div id="chatSection">
               <div id="chatBox">
-                <ChatBox match={this.props.match} type='session' socket={this.props.socket} />
+                <ChatBox
+                  match={this.props.match}
+                  type="session"
+                  socket={this.props.socket}
+                />
               </div>
             </div>
           </div>
+          {this.askForAdminRightsBanner()}
         </div>
       );
     }
@@ -1235,19 +1322,16 @@ function stateToProps(state) {
     dms: state.dms
   };
 }
-export default connect(
-  stateToProps,
-  {
-    sendTweetAction,
-    getDevices,
-    sendThisVideoAction,
-    newAdmin,
-    unpickThisVideoAction,
-    updateSession,
-    closeMenus,
-    openDMs,
-    addMultiToDMs,
-    addSessDMs,
-    removeKeys
-  }
-)(Session);
+export default connect(stateToProps, {
+  sendTweetAction,
+  getDevices,
+  sendThisVideoAction,
+  newAdmin,
+  unpickThisVideoAction,
+  updateSession,
+  closeMenus,
+  openDMs,
+  addMultiToDMs,
+  addSessDMs,
+  removeKeys
+})(Session);

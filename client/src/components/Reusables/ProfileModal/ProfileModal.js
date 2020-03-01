@@ -2,9 +2,9 @@ import React from "react";
 import "./ProfileModal.scss";
 import PropTypes from "prop-types";
 function ProfileModal(props) {
-  let {user, position, triangle, openDMs, addToSurkl} = props;
+  let {curr_user, user, position, triangle, openDMs, addToSurkl} = props;
   if (!user.guest) {
-    if (props.simple) {
+    if (props.simple===true) {
       return (
           <div style={position} className="profileModal">
             <div style={{display: triangle.top ? 'flex' : 'none'}} className="prof-modal-top-arrow-wrap">
@@ -34,7 +34,6 @@ function ProfileModal(props) {
         </div>
       )
     } else {
-      console.log('bruh')
       let addToSurklBtn = !user.memberOf ? (
         <div
           onClick={() => addToSurkl(user, user.mySurkl)}
@@ -47,7 +46,7 @@ function ProfileModal(props) {
         ""
       );
      
-        let askAdminBtn = user.isAdmin ? (
+        let askAdminBtn =  user.isAdmin ? (
           <div className="profileModalAskAdmin">Ask for admin rights</div>
         ) : (
           <div className="profileModalPassAdmin">Give admin rights</div>
@@ -76,7 +75,7 @@ function ProfileModal(props) {
             <div className="profileModalMemberOf">
               {user.memberOf ? "Member of " + user.memberOf.name : ""}
             </div>
-            <div className="profileModalActions">
+            {curr_user._id === user._id ? "" : <div className="profileModalActions">
               {addToSurklBtn}
               <div
                 onClick={() => openDMs(user)}
@@ -86,7 +85,7 @@ function ProfileModal(props) {
                 Send a Message
               </div>
               {askAdminBtn}
-            </div>
+            </div>}
            
             <div style={{display: triangle.bottom ? 'flex' : 'none'}} className="prof-modal-bottom-arrow-wrap">
                 <div style={triangle.position} className="prof-modal-bottom-arrow"></div>

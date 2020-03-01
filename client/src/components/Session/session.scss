@@ -5,6 +5,15 @@
 	height: calc(100vh - 55px);
 	margin-top: 55px;
 	background-color: #282828;
+	#admin-ask-banner {
+		position: fixed;
+		right:30px;
+		top:70px;
+		background: #282828;
+		width:250px;
+		height:80px;
+		border-radius:5px;
+	}
 	#session-err-modal-bg{
 		justify-content: center;
 		align-items: center;
