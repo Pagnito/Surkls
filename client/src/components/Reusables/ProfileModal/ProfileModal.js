@@ -47,7 +47,7 @@ function ProfileModal(props) {
       );
      
         let askAdminBtn =  user.isAdmin ? (
-          <div className="profileModalAskAdmin">Ask for admin rights</div>
+          <div className="profileModalAskAdmin" onClick={() => props.askForAdminRights(user)}>Ask for admin rights</div>
         ) : (
           <div className="profileModalPassAdmin">Give admin rights</div>
         );
@@ -106,6 +106,7 @@ ProfileModal.propTypes = {
   addToSurkl: PropTypes.func,
   pointing: PropTypes.string,
   position: PropTypes.object,
-  triangle: PropTypes.object
+  triangle: PropTypes.object,
+  askForAdminRights: PropTypes.func
 };
 export default ProfileModal;

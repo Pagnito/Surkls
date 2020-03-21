@@ -10,9 +10,37 @@
 		right:30px;
 		top:70px;
 		background: #282828;
-		width:250px;
+		width:300px;
 		height:80px;
+		color:#F4FBFB;
 		border-radius:5px;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		border-left: 5px solid #FACA43;
+		#admin-ask-text {
+			margin-top:10px;
+			font-family: 'Comfortaa';
+		}
+		#admin-ask-buttons {
+			margin-top: 15px;
+			display:flex;
+			justify-content: space-around;
+			width:60%;
+			button {
+				background-color:#FACA43;
+				font-family: 'Comfortaa';	
+				padding: 5px 10px 5px 10px;
+				font-size:16px;
+				border-radius: 3px;
+				border: none;
+			}
+			button:hover {
+				background-color: #EAB937;
+				cursor:pointer;
+			}
+		}
+		
 	}
 	#session-err-modal-bg{
 		justify-content: center;

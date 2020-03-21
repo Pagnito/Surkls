@@ -21,6 +21,15 @@ import SessionContentTwitter from "./Sub-comps/session-content-twitter";
 import SessionContentTwitch from "./Sub-comps/session-content-twitch";
 import "./session.scss";
 import "../Loader1/loader1.scss";
+const spliceObj = (obj, keys) => {
+	let spliced = {};
+	keys.forEach((k) => {
+		if (obj[k]) {
+			spliced[k] = obj[k];
+		}
+	});
+	return spliced;
+};
 class Session extends Component {
   constructor(props) {
     super(props);
@@ -279,6 +288,9 @@ class Session extends Component {
       });
       this.socket.on("setup-vid-dms", users => {
         this.props.addMultiToDMs(users);
+      });
+      this.socket.on("admin-rights-request", (user) => {
+        this.props.updateSession({admin_request: user})
       });
       this.socket.on("recieveMsgs", data => {
         this.props.updateSession({ msgs: data });
@@ -652,7 +664,7 @@ class Session extends Component {
       );
     } else if (this.props.session.activePlatform === "twitter") {
       return (
-        <SessionContentTwitter sendTweetToOthers={this.sendTweetToOthers} />
+        <SessionContentTwitter socket={this.socket} sendTweetToOthers={this.sendTweetToOthers} />
       );
     }
   };
@@ -690,11 +702,32 @@ class Session extends Component {
   };
 
   giveAdminRights = (id) => {
+    console.log(id)
     this.socket.emit("change-session-admin", this.props.session, id);
+    this.props.updateSession({admin_request: null});
   };
   askForAdminRights = (admin) => {
-    this.socket.emit('admin-rights-request', this.props.auth, admin)
+    console.log(this.socket.socketId)
+    let userObj = spliceObj(this.props.auth.user, ['userName', '_id'])
+    userObj.socketId = this.socket.id;
+    this.socket.emit('admin-switch-request', userObj, admin);
   };
+  askForAdminRightsBanner = () =>{
+    console.log(this.props.session.admin_request)
+    if(this.props.session.admin_request!==null){
+      return (
+        <div id="admin-ask-banner">
+          <div id="admin-ask-text">{this.props.session.admin_request.userName} is asking to take control</div>
+          <div id="admin-ask-buttons">
+            <button onClick={()=>this.giveAdminRights(this.props.session.admin_request.socketId)}>Give</button>
+            <button>Deny</button>
+          </div>
+        </div>
+      )
+    } else {
+      return "";
+    }
+  }
   updateClientList = () => {
     if (
       this.props.session.clients !== undefined &&
@@ -715,7 +748,7 @@ class Session extends Component {
               />
               <ProfileModal
                 curr_user={this.props.auth.user}
-                giveAdminRights={() =>this.giveAdminRights(client.socketId)}
+                askForAdminRights={this.askForAdminRights}
                 addToSurkl={() =>
                   this.addToSurkl(client, this.props.auth.user.mySurkl)
                 }
@@ -734,7 +767,7 @@ class Session extends Component {
               <img src={url} className="clientSquareAv" />
               <ProfileModal
                 curr_user={this.props.auth.user}
-                askForAdminRights={()=>this.askForAdminRights(client)}
+                giveAdminRights={() =>this.giveAdminRights(client.socketId)}
                 addToSurkl={() =>
                   this.addToSurkl(client, this.props.auth.user.mySurkl)
                 }
@@ -790,6 +823,7 @@ class Session extends Component {
                 addToSurkl={() =>
                   this.addToSurkl(viewer, this.props.auth.user.mySurkl)
                 }
+                
                 openDMs={this.openDMs}
                 position={{ bottom: "52px", left: "-14px" }}
                 triangle={{ bottom: true, position: { marginLeft: "20px" } }}
@@ -1021,42 +1055,43 @@ class Session extends Component {
   startStream = videoEl => {
     return new Promise(resolve => {
       if (/viewer/.test(this.props.match.params.type) === false) {
-        if (videoEl !== null && videoEl.srcObject === null) {
-          if (this.stream === null) {
-            navigator.mediaDevices
-              .getUserMedia({
-                audio: {
-                  deviceId: this.props.session.mic
-                    ? this.props.session.mic
-                    : "default"
-                },
-                video: {
-                  width: 250,
-                  height: 250,
-                  deviceId: this.props.session.cam
-                    ? this.props.session.cam
-                    : "default"
-                }
-              })
-              .then(stream => {
-                videoEl.srcObject = stream;
-                this.stream = stream;
-                stream.getTracks().forEach(track => {
-                  this.track.push(track);
-                });
+        resolve();
+        // if (videoEl !== null && videoEl.srcObject === null) {
+        //   if (this.stream === null) {
+        //     navigator.mediaDevices
+        //       .getUserMedia({
+        //         audio: {
+        //           deviceId: this.props.session.mic
+        //             ? this.props.session.mic
+        //             : "default"
+        //         },
+        //         video: {
+        //           width: 250,
+        //           height: 250,
+        //           deviceId: this.props.session.cam
+        //             ? this.props.session.cam
+        //             : "default"
+        //         }
+        //       })
+        //       .then(stream => {
+        //         videoEl.srcObject = stream;
+        //         this.stream = stream;
+        //         stream.getTracks().forEach(track => {
+        //           this.track.push(track);
+        //         });
 
-                resolve();
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          } else {
-            videoEl.srcObject = this.stream;
-            resolve();
-          }
-        } else {
-          resolve();
-        }
+        //         resolve();
+        //       })
+        //       .catch(err => {
+        //         console.log(err);
+        //       });
+        //   } else {
+        //     videoEl.srcObject = this.stream;
+        //     resolve();
+        //   }
+        // } else {
+        //   resolve();
+        // }
       } else {
         resolve();
       }
@@ -1215,17 +1250,7 @@ class Session extends Component {
       );
     }
   };
-  askForAdminRightsBanner = () =>{
-    if(this.props.session.admin_request!==null){
-      return (
-        <div id="admin-ask-banner">
-
-        </div>
-      )
-    } else {
-      return "";
-    }
-  }
+  
   //////////////////////////////////////////////RENDER//////////////////////////////////////////////////
   render() {
     if (this.props.auth.user == null || this.props.session === null) {

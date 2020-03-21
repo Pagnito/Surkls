@@ -12,6 +12,7 @@ import {
 import { isEmpty } from '../../tools/isEmpty';
 const initialState = {
 	inSession: false,
+	admin_request: null,
 	youtubeList: [],
 	dailymotionList: [],
 	twitchStreams: [],

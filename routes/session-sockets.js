@@ -280,7 +280,10 @@ module.exports = (io, socket) => {
 				if(client.socketId === new_admin_id){
 					client.isAdmin = true;
 					client.admin = new_admin_id;
-					return;
+		
+				} else {
+					client.isAdmin = false;
+					client.admin = new_admin_id;
 				}
 			})
 			redClient.hset('rooms', obj.sessionKey, JSON.stringify(sessionObj));
@@ -288,6 +291,8 @@ module.exports = (io, socket) => {
 		})
 	})
 	socket.on('admin-switch-request', (user, admin)=>{
+		console.log('user', user);
+		console.log('admin', admin)
 		io.to(admin.socketId).emit('admin-rights-request', user);
 	})
 
