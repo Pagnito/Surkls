@@ -731,7 +731,6 @@ class Session extends Component {
     }
   }
   updateClientList = () => {
-   
     if (
       this.props.session.clients !== undefined &&
       this.props.session.clients.length > 0
