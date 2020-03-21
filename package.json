@@ -8,7 +8,7 @@
     "npm": "6.9.0"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run build --prefix client && node server.js",
     "server": "nodemon server.js",
     "client": "npm run start --prefix client",
     "b": "npm run build --prefix client",
