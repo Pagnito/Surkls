@@ -58,7 +58,7 @@
     "node-sass": "*",
     "regenerator-runtime": "*",
     "sass-loader": "*",
-    "webpack": "*",
+    "webpack": "4.42.0",
     "webpack-cli": "*",
     "webpack-dev-server": "*"
   }
