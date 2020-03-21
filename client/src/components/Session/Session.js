@@ -707,11 +707,13 @@ class Session extends Component {
     this.props.updateSession({admin_request: null});
   };
   askForAdminRights = (admin) => {
-    console.log(this.socket.socketId)
     let userObj = spliceObj(this.props.auth.user, ['userName', '_id'])
     userObj.socketId = this.socket.id;
     this.socket.emit('admin-switch-request', userObj, admin);
   };
+  denyAdminRights = () => {
+    this.props.updateSession({admin_request: null});
+  }
   askForAdminRightsBanner = () =>{
     console.log(this.props.session.admin_request)
     if(this.props.session.admin_request!==null){
@@ -720,7 +722,7 @@ class Session extends Component {
           <div id="admin-ask-text">{this.props.session.admin_request.userName} is asking to take control</div>
           <div id="admin-ask-buttons">
             <button onClick={()=>this.giveAdminRights(this.props.session.admin_request.socketId)}>Give</button>
-            <button>Deny</button>
+            <button onClick={this.denyAdminRights}>Deny</button>
           </div>
         </div>
       )
@@ -729,11 +731,14 @@ class Session extends Component {
     }
   }
   updateClientList = () => {
+   
     if (
       this.props.session.clients !== undefined &&
       this.props.session.clients.length > 0
     ) {
       return this.props.session.clients.map(client => {
+        let addToSurklIfOwner = this.props.auth.user.mySurkl && this.props.auth.user.mySurkl !== null ? 
+        ()=> this.addToSurkl(client, this.props.auth.user.mySurkl) : null;
         let url = client.avatarUrl ? client.avatarUrl : "/assets/whitehat.jpg";
         if (client.isAdmin) {
           return (
@@ -749,9 +754,7 @@ class Session extends Component {
               <ProfileModal
                 curr_user={this.props.auth.user}
                 askForAdminRights={this.askForAdminRights}
-                addToSurkl={() =>
-                  this.addToSurkl(client, this.props.auth.user.mySurkl)
-                }
+                addToSurkl={addToSurklIfOwner}
                 openDMs={this.openDMs}
                 position={{ bottom: "58px", left: "-10px" }}
                 triangle={{ bottom: true, position: { marginLeft: "20px" } }}
@@ -768,9 +771,7 @@ class Session extends Component {
               <ProfileModal
                 curr_user={this.props.auth.user}
                 giveAdminRights={() =>this.giveAdminRights(client.socketId)}
-                addToSurkl={() =>
-                  this.addToSurkl(client, this.props.auth.user.mySurkl)
-                }
+                addToSurkl={addToSurklIfOwner}
                 openDMs={this.openDMs}
                 position={{ bottom: "58px", left: "-10px" }}
                 triangle={{ bottom: true, position: { marginLeft: "20px" } }}
