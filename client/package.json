@@ -17,8 +17,7 @@
   },
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --mode development",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "start": "webpack-dev-server --mode development"
   },
   "keywords": [],
   "author": "",

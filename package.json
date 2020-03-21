@@ -8,12 +8,13 @@
     "npm": "6.9.0"
   },
   "scripts": {
-    "start": "npm install --prefix client && npm run build --prefix client && node server.js",
+    "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm run start --prefix client",
     "b": "npm run build --prefix client",
     "dev": "NODE_ENV=dev concurrently \"npm run server\" \"npm run client\"",
-    "test": "nodemon --exec 'mocha -R min"
+    "test": "nodemon --exec 'mocha -R min",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
