@@ -1,3 +1,4 @@
+console.log('ENV', process.env.ENV)
 export  const socketUrl = {
-  url: process.env.ENV === 'production' ? 'https://surkls.herokuapp.com' : 'http://localhost:4000'
+  url: 'https://surkls.herokuapp.com' 
 }
