@@ -1055,43 +1055,42 @@ class Session extends Component {
   startStream = videoEl => {
     return new Promise(resolve => {
       if (/viewer/.test(this.props.match.params.type) === false) {
-        resolve();
-        // if (videoEl !== null && videoEl.srcObject === null) {
-        //   if (this.stream === null) {
-        //     navigator.mediaDevices
-        //       .getUserMedia({
-        //         audio: {
-        //           deviceId: this.props.session.mic
-        //             ? this.props.session.mic
-        //             : "default"
-        //         },
-        //         video: {
-        //           width: 250,
-        //           height: 250,
-        //           deviceId: this.props.session.cam
-        //             ? this.props.session.cam
-        //             : "default"
-        //         }
-        //       })
-        //       .then(stream => {
-        //         videoEl.srcObject = stream;
-        //         this.stream = stream;
-        //         stream.getTracks().forEach(track => {
-        //           this.track.push(track);
-        //         });
+        if (videoEl !== null && videoEl.srcObject === null) {
+          if (this.stream === null) {
+            navigator.mediaDevices
+              .getUserMedia({
+                audio: {
+                  deviceId: this.props.session.mic
+                    ? this.props.session.mic
+                    : "default"
+                },
+                video: {
+                  width: 250,
+                  height: 250,
+                  deviceId: this.props.session.cam
+                    ? this.props.session.cam
+                    : "default"
+                }
+              })
+              .then(stream => {
+                videoEl.srcObject = stream;
+                this.stream = stream;
+                stream.getTracks().forEach(track => {
+                  this.track.push(track);
+                });
 
-        //         resolve();
-        //       })
-        //       .catch(err => {
-        //         console.log(err);
-        //       });
-        //   } else {
-        //     videoEl.srcObject = this.stream;
-        //     resolve();
-        //   }
-        // } else {
-        //   resolve();
-        // }
+                resolve();
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          } else {
+            videoEl.srcObject = this.stream;
+            resolve();
+          }
+        } else {
+          resolve();
+        }
       } else {
         resolve();
       }
