@@ -70,9 +70,10 @@ module.exports = (io, socket, connectedUsers) => {
   });
   /////////////////////////////////////////////////////////////
   socket.on("surkl-msg", msg => {
+    console.log(msg)
     redClient.hget("surkls-msgs", msg.surkl_id, (err, msgs) => {
       if (err) {
-        socket.emit("videoChatError");
+        socket.emit("surkl-chat-error");
       } else if (msgs !== null) {
         let msgsArr = JSON.parse(msgs);
         if (msgsArr.length > 200) {
@@ -82,11 +83,13 @@ module.exports = (io, socket, connectedUsers) => {
         redClient.hset(
           "surkls-msgs",
           msg.surkl_id,
+          JSON.stringify(msgsArr),
           (err, done) => {
             if (err) {
-              io.to(socket.id).emit("videoChatError");
-            }
-            io.to(msg.surkl_id).emit("receive-surkl-msgs", msgsArr);
+              io.to(socket.id).emit("surk-chat-error");
+            } else {
+              io.to(msg.surkl_id).emit("receive-surkl-msgs", msgsArr);
+            }       
           }
         );
         if (msg.mentions) {
