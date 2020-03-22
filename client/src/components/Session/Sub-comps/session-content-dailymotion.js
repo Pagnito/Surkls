@@ -40,9 +40,10 @@ class SessionContentDailymotion extends Component {
 		}
 	};
 	componentDidUpdate = (prevProps) => {
-    let prop = this.props.session;
+		let prop = this.props.session;
+		console.log('prev', prevProps)
     if(prop){
-      if (prop.videoId.id && prop.videoId.id !== prevProps.session.videoId.id && prop.videoId.length.id > 0) {
+      if (prop.videoId.id && prop.videoId.id !== prevProps.session.videoId.id && prop.videoId.id.length > 0) {
         this.showVideo(prop.videoId.id+'?autoplay=1');
       }
     }
@@ -96,6 +97,7 @@ class SessionContentDailymotion extends Component {
 		});
 	};
 	sendPickedVideo = (videoId) => {
+		console.log('picking', videoId)
 		if (this.props.session.admin === this.socket.id) {
 			this.props.sendVideoSignal({
 				activePlatform: 'dailymotion',
