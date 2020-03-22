@@ -2,6 +2,7 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 
 let env = process.env.NODE_ENV ==='production' ? 'prod' : 'dev';
@@ -68,6 +69,11 @@ module.exports = {
             new CopyWebpackPlugin([
               { from: './assets', to: './assets' }
             ]),
+            new webpack.DefinePlugin({
+              'process.env': {
+                ENV: JSON.stringify(process.env.NODE_ENV)
+              }
+            })
   ],
   devServer: {
     port: 3000,

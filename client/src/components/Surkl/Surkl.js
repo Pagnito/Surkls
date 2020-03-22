@@ -123,7 +123,7 @@ class Surkl extends Component {
 				dm_user.thread_id = this.props.auth.user.dms[dm_user.user_id].thread_id;
 			}
 			delete dm_user._id;
-			this.props.openDMs(dm_user, (user) => {
+			this.props.openDMs(dm_user, () => {
 				this.socket.emit('clear-msg-notifs', this.props.auth.user);
 			});
 		}

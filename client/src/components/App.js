@@ -5,7 +5,6 @@ import { Route, withRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setUserMedia } from '../../tools/setUserMedia';
 import io from 'socket.io-client';
-import {socketUrl} from '../../tools/socketUrl';
 import {names} from '../../tools/names';
 import Store from '../store';
 import SignUp from 'components/Sign-up/Sign-up';
@@ -26,8 +25,9 @@ const Entries = Loadable({
 
 class App extends Component {
 	constructor(props){
+		console.log(process.env)
 		super(props);
-		this.socket = io(socketUrl.url);
+		this.socket = io(process.env.ENV === 'dev' ? 'http://localhost:4000' : 'https://surkls.herokuapp.com');
 		this.socket.on('setup-complete', (ppl)=>{
 			Store.dispatch({
 				type:SETUP_COMPLETE,
