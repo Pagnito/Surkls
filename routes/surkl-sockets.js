@@ -72,6 +72,8 @@ module.exports = (io, socket, connectedUsers) => {
   socket.on("surkl-msg", msg => {
     console.log(msg)
     redClient.hget("surkls-msgs", msg.surkl_id, (err, msgs) => {
+      console.log('err', err)
+      console.log(msgs)
       if (err) {
         socket.emit("surkl-chat-error");
       } else if (msgs !== null) {
