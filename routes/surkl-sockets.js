@@ -76,9 +76,9 @@ module.exports = (io, socket, connectedUsers) => {
       console.log(msgs)
       if (err) {
         socket.emit("surkl-chat-error");
-      } else if (msgs !== null) {
+      } else {
         console.log('bruh')
-        let msgsArr = JSON.parse(msgs);
+        let msgsArr = msgs !==null ? JSON.parse(msgs) : [];
         if (msgsArr.length > 200) {
           msgsArr = msgsArr.slice(msgsArr.length - 200);
         }
