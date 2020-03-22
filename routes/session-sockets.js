@@ -191,6 +191,7 @@ module.exports = (io, socket) => {
 							io.to(socket.id).emit('creatingSessionError', err);
 						}
 						if (exists === 0) {
+							console.log('WTFFFFFF')
 							client = Object.assign({ socketId: socket.id, isAdmin: true }, session.user);
 							let sessionObj = {
 								sessionKey: session.sessionKey,
