@@ -702,7 +702,6 @@ class Session extends Component {
   };
 
   giveAdminRights = (id) => {
-    console.log(id)
     this.socket.emit("change-session-admin", this.props.session, id);
     this.props.updateSession({admin_request: null});
   };
@@ -715,7 +714,6 @@ class Session extends Component {
     this.props.updateSession({admin_request: null});
   }
   askForAdminRightsBanner = () =>{
-    console.log(this.props.session.admin_request)
     if(this.props.session.admin_request!==null){
       return (
         <div id="admin-ask-banner">

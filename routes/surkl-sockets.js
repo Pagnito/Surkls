@@ -70,14 +70,10 @@ module.exports = (io, socket, connectedUsers) => {
   });
   /////////////////////////////////////////////////////////////
   socket.on("surkl-msg", msg => {
-    console.log(msg)
     redClient.hget("surkls-msgs", msg.surkl_id, (err, msgs) => {
-      console.log('err', err)
-      console.log(msgs)
       if (err) {
         socket.emit("surkl-chat-error");
       } else {
-        console.log('bruh')
         let msgsArr = msgs !==null ? JSON.parse(msgs) : [];
         if (msgsArr.length > 200) {
           msgsArr = msgsArr.slice(msgsArr.length - 200);
