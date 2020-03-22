@@ -15,6 +15,9 @@ const spliceObj = (obj, keys) => {
 	});
 	return spliced;
 };
+redClient.set('hello', 'hey', ()=>{
+	console.log('redis set hello')
+});
 module.exports = (io, socket) => {
 	socket.on('createOrJoin', function(sessionObj) {
 		console.log('///////////////////////////////////////////////////');
