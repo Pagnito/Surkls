@@ -186,6 +186,9 @@ module.exports = (io, socket) => {
 				//////////creating session//////////
 				if (session.sessionKey !== undefined && session.sessionKey !== 'undefined') {
 					socketInSession[socket.id] = session.sessionKey;
+					console.log("BRUUUUUUH")
+					console.log(socketInSession);
+					console.log(session);
 					redClient.hexists('rooms', session.sessionKey, (err, exists) => {
 						if (err) {
 							io.to(socket.id).emit('creatingSessionError', err);
