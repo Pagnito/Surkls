@@ -33,7 +33,7 @@ mongoose
 
 /////////////////////////////////////middlewares/////////////////////////////////////
 //app.use(cors())
-app.use(helmet())
+app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
