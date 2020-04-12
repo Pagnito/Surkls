@@ -233,9 +233,9 @@ class Header extends Component {
 		this.socket.emit('approve-join-surkl-req', notif, this.props.auth.user.mySurkl);
 		this.socket.emit('delete-notif', this.props.auth.user._id, notif);
 	}
-	declineSurklJoinRequest = (notif) => {
-		//this.socket.emit('decline-join-surkl-req', notif);
-		this.socket.emit('delete-notif', this.props.auth.user._id, notif);
+	declineSurklJoinRequest = (notif, ) => {
+		this.socket.emit('decline-join-surkl-req', notif);
+		//this.socket.emit('delete-notif', this.props.auth.user._id, notif);
 	}
 	deleteStaticNotifaction = (notif) =>{
 	  this.socket.emit('delete-notif', this.props.auth.user._id, notif);

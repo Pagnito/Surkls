@@ -184,6 +184,7 @@ module.exports = (io, socket, connectedUsers) => {
         source_id:req.user_id,
         avatarUrl:req.avatarUrl
       },
+      for:{typeOf: 'surkl-request', surkl_id:req.surkl_id},
       notifType: 'add-to-surkl',
       text: req.userName+' wants to join your Surkl',
       date: Date.now()
@@ -235,6 +236,13 @@ module.exports = (io, socket, connectedUsers) => {
 
     //Surkl.updateOne({_id: surkl._id}, {$push:userToAdd}).exec()
   });
+  ///////////////////////////////////////////////////////////////
+  socket.on("decline-join-surkl-req", (data, surkl) => { 
+    console.log(data, surkl)
+    Surkl.findByIdAndUpdate()
+
+  });
+  ///////////////////////////////////////////////////////////////
   socket.on("approve-join-surkl-req", (data, surkl) => { 
     let notif = {
       source: {

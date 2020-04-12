@@ -30,6 +30,10 @@ const UserSchema = new Schema({
       adminName: String,
       avatarUrl:String
     },
+    for:{
+      typeOf:String,
+      surkl_id: String
+    },
     notifType: String,
     text: String,
     date: { type: Date, default: Date.now }
